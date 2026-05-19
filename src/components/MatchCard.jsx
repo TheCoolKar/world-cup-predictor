@@ -28,17 +28,19 @@ function FlagEmoji({ country }) {
   return <span className="text-2xl leading-none">{flag}</span>;
 }
 
+const DOT_COLOR = { W: "#c8f000", D: "#f59e0b", L: "#ef4444" };
+const DOT_LABEL = { W: "Win", D: "Draw", L: "Loss" };
+
 function FormDots({ form }) {
-  if (!form) return null;
+  const slots = Array.from({ length: 5 }, (_, i) => form?.[i] ?? null);
   return (
-    <div className="flex gap-0.5 justify-center mt-1">
-      {form.split("").map((r, i) => (
+    <div className="flex gap-1 justify-center items-center h-3">
+      {slots.map((r, i) => (
         <span
           key={i}
-          className={`w-2 h-2 rounded-full ${
-            r === "W" ? "bg-green-500" : r === "D" ? "bg-yellow-400" : "bg-red-400"
-          }`}
-          title={r === "W" ? "Win" : r === "D" ? "Draw" : "Loss"}
+          title={r ? DOT_LABEL[r] : "No data"}
+          className="w-2 h-2 rounded-full inline-block"
+          style={{ background: r ? DOT_COLOR[r] : "rgba(255,255,255,0.1)" }}
         />
       ))}
     </div>
@@ -66,78 +68,116 @@ export default function MatchCard({ match }) {
   });
 
   return (
-    <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden border border-gray-100">
+    <div
+      className="rounded-2xl overflow-hidden flex flex-col transition-transform duration-150 hover:-translate-y-0.5"
+      style={{
+        background: "rgba(255,255,255,0.04)",
+        border: "1px solid rgba(255,255,255,0.08)",
+      }}
+    >
       {/* Top bar */}
-      <div className="bg-gradient-to-r from-green-700 to-green-600 px-4 py-2 flex justify-between items-center">
-        <span className="text-xs font-semibold text-green-100 uppercase tracking-wide">
-          Matchday {matchday}
+      <div
+        className="px-4 py-2 flex justify-between items-center"
+        style={{ background: "rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+      >
+        <span
+          className="text-xs font-bold uppercase tracking-widest"
+          style={{ color: "#c8f000" }}
+        >
+          MD {matchday}
         </span>
         <div className="flex items-center gap-2">
           {prediction?.usedForm && (
-            <span className="text-xs bg-green-500 text-white px-1.5 py-0.5 rounded font-medium">
-              + Form
+            <span
+              className="text-xs font-semibold px-1.5 py-0.5 rounded"
+              style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000" }}
+            >
+              ELO + Form
             </span>
           )}
-          <span className="text-xs text-green-200">{formattedDate}</span>
+          <span className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>{formattedDate}</span>
         </div>
       </div>
 
       {/* Teams */}
-      <div className="px-5 pt-5 pb-3 flex items-start justify-between gap-3">
+      <div className="px-4 pt-4 pb-2 flex items-center justify-between gap-2 flex-1">
         {/* Home */}
-        <div className="flex flex-col items-center gap-1 flex-1">
+        <div className="flex flex-col items-center gap-1.5 flex-1 min-w-0">
           <FlagEmoji country={home} />
-          <span className={`text-sm font-bold text-center leading-tight ${isFavoriteHome ? "text-green-700" : "text-gray-700"}`}>
+          <span
+            className="text-xs font-bold text-center leading-tight line-clamp-2 w-full"
+            style={{ color: isFavoriteHome ? "#c8f000" : "rgba(255,255,255,0.5)" }}
+          >
             {home}
           </span>
-          {prediction && (
-            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${isFavoriteHome ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
-              {homePct.toFixed(1)}%
-            </span>
-          )}
+          <span
+            className="text-xs font-semibold px-2 py-0.5 rounded-full whitespace-nowrap"
+            style={{
+              background: isFavoriteHome ? "rgba(200,240,0,0.15)" : "rgba(255,255,255,0.05)",
+              color: isFavoriteHome ? "#c8f000" : "rgba(255,255,255,0.3)",
+            }}
+          >
+            {homePct.toFixed(1)}%
+          </span>
           <FormDots form={formHome?.recentForm} />
         </div>
 
         {/* VS */}
-        <div className="flex flex-col items-center shrink-0 pt-1">
-          <span className="text-base font-black text-gray-300">VS</span>
-          {time && <span className="text-xs text-gray-400 mt-0.5">{time}</span>}
+        <div className="flex flex-col items-center gap-0.5 shrink-0 px-1">
+          <span className="text-sm font-black" style={{ color: "rgba(255,255,255,0.1)" }}>VS</span>
+          {time && <span className="text-xs whitespace-nowrap" style={{ color: "rgba(255,255,255,0.18)" }}>{time}</span>}
         </div>
 
         {/* Away */}
-        <div className="flex flex-col items-center gap-1 flex-1">
+        <div className="flex flex-col items-center gap-1.5 flex-1 min-w-0">
           <FlagEmoji country={away} />
-          <span className={`text-sm font-bold text-center leading-tight ${!isFavoriteHome ? "text-green-700" : "text-gray-700"}`}>
+          <span
+            className="text-xs font-bold text-center leading-tight line-clamp-2 w-full"
+            style={{ color: !isFavoriteHome ? "#c8f000" : "rgba(255,255,255,0.5)" }}
+          >
             {away}
           </span>
-          {prediction && (
-            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${!isFavoriteHome ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
-              {awayPct.toFixed(1)}%
-            </span>
-          )}
+          <span
+            className="text-xs font-semibold px-2 py-0.5 rounded-full whitespace-nowrap"
+            style={{
+              background: !isFavoriteHome ? "rgba(200,240,0,0.15)" : "rgba(255,255,255,0.05)",
+              color: !isFavoriteHome ? "#c8f000" : "rgba(255,255,255,0.3)",
+            }}
+          >
+            {awayPct.toFixed(1)}%
+          </span>
           <FormDots form={formAway?.recentForm} />
         </div>
       </div>
 
       {/* Probability bar */}
-      {prediction && (
-        <div className="px-5 pb-4">
-          <div className="flex h-1.5 rounded-full overflow-hidden bg-gray-100">
-            <div className="bg-green-500 rounded-l-full" style={{ width: `${homePct}%` }} />
-            <div className="bg-blue-400 rounded-r-full" style={{ width: `${awayPct}%` }} />
-          </div>
+      <div className="px-4 pt-1 pb-3">
+        <div className="flex h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+          <div
+            className="transition-all duration-500"
+            style={{ width: `${homePct}%`, background: "linear-gradient(90deg, #c8f000, #84cc16)" }}
+          />
+          <div
+            className="transition-all duration-500"
+            style={{ width: `${awayPct}%`, background: "linear-gradient(90deg, #dc2626, #b91c1c)" }}
+          />
         </div>
-      )}
+        <div className="flex justify-between mt-1">
+          <span className="text-xs" style={{ color: "rgba(255,255,255,0.12)" }}>home</span>
+          <span className="text-xs" style={{ color: "rgba(255,255,255,0.12)" }}>away</span>
+        </div>
+      </div>
 
-      {/* Venue */}
-      {city && (
-        <div className="px-5 pb-3 flex items-center gap-1.5">
-          <svg className="w-3 h-3 text-gray-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-          </svg>
-          <span className="text-xs text-gray-400 truncate">{city}</span>
-        </div>
-      )}
+      {/* Footer */}
+      <div
+        className="px-4 pb-3 pt-2 flex items-center gap-1.5"
+        style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
+      >
+        <svg className="w-3 h-3 shrink-0" style={{ color: "rgba(255,255,255,0.18)" }} fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+        </svg>
+        <span className="text-xs truncate" style={{ color: "rgba(255,255,255,0.18)" }}>{city ?? "TBD"}</span>
+      </div>
     </div>
   );
 }
