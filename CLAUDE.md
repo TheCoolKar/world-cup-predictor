@@ -33,7 +33,7 @@ world-cup-predictor/
 │   │   ├── GroupStage.jsx      # all group stage matches
 │   │   └── Leaderboard.jsx     # leaderboard page
 │   ├── utils/
-│   │   └── predictions.js      # ELO prediction formula
+│   │   └── Predictions.js      # ELO prediction formula
 │   ├── data/
 │   │   ├── elo_ratings.json    # ELO ratings for all 48 WC teams
 │   │   └── wc2026_fixtures.json # all 104 World Cup fixtures
@@ -46,7 +46,7 @@ world-cup-predictor/
 ```
 
 ## Core prediction logic
-ELO win probability formula lives in `src/utils/predictions.js`:
+ELO win probability formula lives in `src/utils/Predictions.js`:
 ```js
 export function predictMatch(eloHome, eloAway) {
   const diff = eloAway - eloHome;
@@ -80,7 +80,7 @@ export function predictMatch(eloHome, eloAway) {
 ## Code conventions
 - Functional React components only, no class components
 - Component files use PascalCase (e.g. `MatchCard.jsx`)
-- Utility files use camelCase (e.g. `predictions.js`)
+- Utility files use camelCase (e.g. `Predictions.js`)
 - Keep components small — if a file exceeds ~100 lines, split it
 - No inline styles — use Tailwind classes only
 - All data files live in `src/data/`, never fetch external APIs in Phase 1
