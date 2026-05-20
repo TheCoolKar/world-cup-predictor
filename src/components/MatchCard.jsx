@@ -1,8 +1,10 @@
-import { predictMatch } from "../utils/Predictions";
+import { useState }       from "react";
+import { predictMatch }  from "../utils/Predictions";
 import eloRatings        from "../data/elo_ratings.json";
 import teamForm          from "../data/team_form.json";
 import historicalStats   from "../data/team_historical_stats.json";
 import h2hStats          from "../data/h2h_stats.json";
+import H2HModal          from "./H2HModal";
 
 const FLAG_CODES = {
   "Mexico": "mx", "South Africa": "za", "South Korea": "kr", "Czechia": "cz",
@@ -62,6 +64,8 @@ function FormDots({ form }) {
 }
 
 export default function MatchCard({ match }) {
+  const [showH2H,    setShowH2H]    = useState(false);
+  const [h2hHovered, setH2hHovered] = useState(false);
   const { home, away, date, time, city, matchday } = match;
 
   const eloHome      = eloRatings[home];
@@ -171,11 +175,17 @@ export default function MatchCard({ match }) {
         </div>
       </div>
 
-      {/* H2H strip */}
+      {/* H2H strip — clickable */}
       {h2h?.allTime?.played > 0 && (
-        <div
-          className="mx-4 mb-2 px-3 py-1.5 rounded-lg flex items-center justify-between gap-2"
-          style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}
+        <button
+          onClick={() => setShowH2H(true)}
+          onMouseEnter={() => setH2hHovered(true)}
+          onMouseLeave={() => setH2hHovered(false)}
+          className="mx-4 mb-2 px-3 py-1.5 rounded-lg flex items-center justify-between gap-2 w-[calc(100%-2rem)] transition-all duration-150"
+          style={{
+            background: h2hHovered ? "rgba(200,240,0,0.07)"  : "rgba(255,255,255,0.04)",
+            border:     h2hHovered ? "1px solid rgba(200,240,0,0.2)" : "1px solid rgba(255,255,255,0.06)",
+          }}
         >
           <span className="text-xs font-bold" style={{ color: "rgba(255,255,255,0.25)" }}>H2H</span>
           <div className="flex items-center gap-1.5 text-xs font-semibold">
@@ -183,10 +193,25 @@ export default function MatchCard({ match }) {
             <span style={{ color: "rgba(255,255,255,0.25)" }}>{h2h.allTime.draws}D</span>
             <span style={{ color: "#ef4444" }}>{h2h.allTime.awayTeamWins}L</span>
           </div>
-          <span className="text-xs" style={{ color: "rgba(255,255,255,0.2)" }}>
-            {h2h.allTime.played} meetings
-          </span>
-        </div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs" style={{ color: "rgba(255,255,255,0.2)" }}>
+              {h2h.allTime.played} meetings
+            </span>
+            <svg className="w-3 h-3" style={{ color: "rgba(255,255,255,0.2)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </button>
+      )}
+
+      {/* H2H Modal */}
+      {showH2H && h2h && (
+        <H2HModal
+          h2h={h2h}
+          home={home}
+          away={away}
+          onClose={() => setShowH2H(false)}
+        />
       )}
 
       {/* Probability bar */}
