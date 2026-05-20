@@ -1,5 +1,5 @@
 import { useState }       from "react";
-import { predictMatch }  from "../utils/Predictions";
+import { predictMatch, predictScore } from "../utils/Predictions";
 import eloRatings        from "../data/elo_ratings.json";
 import teamForm          from "../data/team_form.json";
 import historicalStats   from "../data/team_historical_stats.json";
@@ -84,6 +84,10 @@ export default function MatchCard({ match }) {
     ? predictMatch(eloHome, eloAway, apiFormHome, apiFormAway, histHome?.competitive, histAway?.competitive)
     : null;
 
+  const score = prediction
+    ? predictScore(histHome?.competitive, histAway?.competitive, prediction.homeWin / 100)
+    : null;
+
   const homePct = prediction?.homeWin ?? 50;
   const awayPct = prediction?.awayWin ?? 50;
   const isFavoriteHome = homePct >= awayPct;
@@ -147,10 +151,36 @@ export default function MatchCard({ match }) {
           <FormDots form={formStrHome} />
         </div>
 
-        {/* VS */}
-        <div className="flex flex-col items-center gap-0.5 shrink-0 px-1">
-          <span className="text-sm font-black" style={{ color: "rgba(255,255,255,0.1)" }}>VS</span>
-          {time && <span className="text-xs whitespace-nowrap" style={{ color: "rgba(255,255,255,0.18)" }}>{time}</span>}
+        {/* Score prediction */}
+        <div className="flex flex-col items-center gap-1 shrink-0 px-1">
+          {score ? (
+            <>
+              <span
+                style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: "1.6rem",
+                  letterSpacing: "0.08em",
+                  lineHeight: 1,
+                  color: "white",
+                }}
+              >
+                {score.home} – {score.away}
+              </span>
+              <span className="text-xs font-medium tracking-wide" style={{ color: "#c8f000", opacity: 0.7 }}>
+                predicted
+              </span>
+              <span className="text-xs" style={{ color: "rgba(255,255,255,0.18)" }}>
+                xG {score.xGHome} – {score.xGAway}
+              </span>
+            </>
+          ) : (
+            <span className="text-sm font-black" style={{ color: "rgba(255,255,255,0.1)" }}>VS</span>
+          )}
+          {time && (
+            <span className="text-xs whitespace-nowrap mt-0.5" style={{ color: "rgba(255,255,255,0.18)" }}>
+              {time}
+            </span>
+          )}
         </div>
 
         {/* Away */}
