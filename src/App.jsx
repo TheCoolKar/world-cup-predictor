@@ -1,6 +1,4 @@
-import { useState } from "react";
 import GroupStage from "./pages/GroupStage";
-import Bracket    from "./pages/Bracket";
 import banner from "./assets/worldcupbanner.webp";
 import trophy from "./assets/worldcuppng.webp";
 import "./index.css";
@@ -11,14 +9,7 @@ const HOST_NATIONS = [
   { name: "Mexico", flag: "🇲🇽" },
 ];
 
-const TABS = [
-  { id: "groups",  label: "Group Stage" },
-  { id: "bracket", label: "Bracket" },
-];
-
 export default function App() {
-  const [activeTab, setActiveTab] = useState("groups");
-
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#1a0533" }}>
 
@@ -117,38 +108,9 @@ export default function App() {
         <div className="absolute bottom-0 left-0 right-0 h-12" style={{ background: "linear-gradient(to bottom, transparent, #1a0533)" }} />
       </header>
 
-      {/* ── Tab bar ── */}
-      <div
-        className="sticky top-0 z-40 flex justify-center px-4 py-3"
-        style={{ background: "rgba(26,5,51,0.9)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}
-      >
-        <div
-          className="flex rounded-xl p-1 gap-1"
-          style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
-        >
-          {TABS.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className="px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-150"
-              style={{
-                background: activeTab === tab.id
-                  ? "linear-gradient(135deg, #c8f000, #84cc16)"
-                  : "transparent",
-                color: activeTab === tab.id ? "#1a0533" : "rgba(255,255,255,0.5)",
-                letterSpacing: "0.02em",
-              }}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* ── Main content ── */}
       <main className="flex-1" style={{ background: "#1a0533" }}>
-        {activeTab === "groups"  && <GroupStage />}
-        {activeTab === "bracket" && <Bracket />}
+        <GroupStage />
       </main>
 
       {/* ── Footer ── */}
