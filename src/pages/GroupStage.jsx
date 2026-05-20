@@ -95,18 +95,27 @@ export default function GroupStage() {
                 </div>
               </button>
 
-              {isOpen && (
-                <div
-                  className="px-4 pb-5 pt-1"
-                  style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
-                >
-                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 mt-4">
-                    {matches.map((match) => (
-                      <MatchCard key={match.id} match={match} />
-                    ))}
+              {/* Slide wrapper — grid-template-rows animates from 0fr → 1fr smoothly */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateRows: isOpen ? "1fr" : "0fr",
+                  transition: "grid-template-rows 0.35s ease",
+                }}
+              >
+                <div style={{ overflow: "hidden" }}>
+                  <div
+                    className="px-4 pb-5 pt-1"
+                    style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
+                  >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 mt-4">
+                      {matches.map((match) => (
+                        <MatchCard key={match.id} match={match} />
+                      ))}
+                    </div>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
           );
         })}

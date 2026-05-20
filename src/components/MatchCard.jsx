@@ -1,6 +1,8 @@
 import { predictMatch } from "../utils/Predictions";
-import eloRatings from "../data/elo_ratings.json";
-import teamForm from "../data/team_form.json";
+import eloRatings        from "../data/elo_ratings.json";
+import teamForm          from "../data/team_form.json";
+import historicalStats   from "../data/team_historical_stats.json";
+import h2hStats          from "../data/h2h_stats.json";
 
 const FLAG_CODES = {
   "Mexico": "mx", "South Africa": "za", "South Korea": "kr", "Czechia": "cz",
@@ -31,8 +33,20 @@ function FlagEmoji({ country }) {
 const DOT_COLOR = { W: "#c8f000", D: "#f59e0b", L: "#ef4444" };
 const DOT_LABEL = { W: "Win", D: "Draw", L: "Loss" };
 
+// Returns exactly 5 W/D/L chars. Prefers live API form; falls back to
+// Kaggle historical recent form so every team always has dots shown.
+function getFormString(apiForm, histStats) {
+  const api  = apiForm?.recentForm  ?? "";
+  const hist = histStats?.recent?.recentForm ?? "";
+  const src  = api.length >= 5 ? api : hist;
+  return src.slice(0, 5).padEnd(5, "?"); // "?" renders as empty dot
+}
+
 function FormDots({ form }) {
-  const slots = Array.from({ length: 5 }, (_, i) => form?.[i] ?? null);
+  const slots = Array.from({ length: 5 }, (_, i) => {
+    const r = form?.[i];
+    return r === "W" || r === "D" || r === "L" ? r : null;
+  });
   return (
     <div className="flex gap-1 justify-center items-center h-3">
       {slots.map((r, i) => (
@@ -50,13 +64,20 @@ function FormDots({ form }) {
 export default function MatchCard({ match }) {
   const { home, away, date, time, city, matchday } = match;
 
-  const eloHome = eloRatings[home];
-  const eloAway = eloRatings[away];
-  const formHome = teamForm[home] ?? null;
-  const formAway = teamForm[away] ?? null;
+  const eloHome      = eloRatings[home];
+  const eloAway      = eloRatings[away];
+  const apiFormHome  = teamForm[home]        ?? null;
+  const apiFormAway  = teamForm[away]        ?? null;
+  const histHome     = historicalStats[home] ?? null;
+  const histAway     = historicalStats[away] ?? null;
+  const h2h          = h2hStats[match.id]   ?? null;
+
+  // Form strings — exactly 5 chars, API preferred, Kaggle as fallback
+  const formStrHome = getFormString(apiFormHome, histHome);
+  const formStrAway = getFormString(apiFormAway, histAway);
 
   const prediction = eloHome && eloAway
-    ? predictMatch(eloHome, eloAway, formHome, formAway)
+    ? predictMatch(eloHome, eloAway, apiFormHome, apiFormAway, histHome?.competitive, histAway?.competitive)
     : null;
 
   const homePct = prediction?.homeWin ?? 50;
@@ -119,7 +140,7 @@ export default function MatchCard({ match }) {
           >
             {homePct.toFixed(1)}%
           </span>
-          <FormDots form={formHome?.recentForm} />
+          <FormDots form={formStrHome} />
         </div>
 
         {/* VS */}
@@ -146,9 +167,27 @@ export default function MatchCard({ match }) {
           >
             {awayPct.toFixed(1)}%
           </span>
-          <FormDots form={formAway?.recentForm} />
+          <FormDots form={formStrAway} />
         </div>
       </div>
+
+      {/* H2H strip */}
+      {h2h?.allTime?.played > 0 && (
+        <div
+          className="mx-4 mb-2 px-3 py-1.5 rounded-lg flex items-center justify-between gap-2"
+          style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}
+        >
+          <span className="text-xs font-bold" style={{ color: "rgba(255,255,255,0.25)" }}>H2H</span>
+          <div className="flex items-center gap-1.5 text-xs font-semibold">
+            <span style={{ color: "#c8f000" }}>{h2h.allTime.homeTeamWins}W</span>
+            <span style={{ color: "rgba(255,255,255,0.25)" }}>{h2h.allTime.draws}D</span>
+            <span style={{ color: "#ef4444" }}>{h2h.allTime.awayTeamWins}L</span>
+          </div>
+          <span className="text-xs" style={{ color: "rgba(255,255,255,0.2)" }}>
+            {h2h.allTime.played} meetings
+          </span>
+        </div>
+      )}
 
       {/* Probability bar */}
       <div className="px-4 pt-1 pb-3">

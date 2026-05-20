@@ -1,0 +1,2606 @@
+{
+  "A1": {
+    "fixtureId": "A1",
+    "home": "Mexico",
+    "away": "South Africa",
+    "allTime": {
+      "played": 4,
+      "homeTeamWins": 2,
+      "awayTeamWins": 1,
+      "draws": 1,
+      "homeTeamGoals": 10,
+      "awayTeamGoals": 5
+    },
+    "since2010": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 1,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 1
+    },
+    "last5Meetings": [
+      {
+        "date": "2010-06-11",
+        "homeTeam": "South Africa",
+        "awayTeam": "Mexico",
+        "homeScore": 1,
+        "awayScore": 1,
+        "tournament": "FIFA World Cup"
+      },
+      {
+        "date": "2005-07-08",
+        "homeTeam": "South Africa",
+        "awayTeam": "Mexico",
+        "homeScore": 2,
+        "awayScore": 1,
+        "tournament": "Gold Cup"
+      },
+      {
+        "date": "2000-06-07",
+        "homeTeam": "Mexico",
+        "awayTeam": "South Africa",
+        "homeScore": 4,
+        "awayScore": 2,
+        "tournament": "USA Cup"
+      },
+      {
+        "date": "1993-10-06",
+        "homeTeam": "Mexico",
+        "awayTeam": "South Africa",
+        "homeScore": 4,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "A2": {
+    "fixtureId": "A2",
+    "home": "South Korea",
+    "away": "Czechia",
+    "allTime": {
+      "played": 3,
+      "homeTeamWins": 1,
+      "awayTeamWins": 1,
+      "draws": 1,
+      "homeTeamGoals": 4,
+      "awayTeamGoals": 8
+    },
+    "since2010": {
+      "played": 1,
+      "homeTeamWins": 1,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 1
+    },
+    "last5Meetings": [
+      {
+        "date": "2016-06-05",
+        "homeTeam": "Czechia",
+        "awayTeam": "South Korea",
+        "homeScore": 1,
+        "awayScore": 2,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2001-08-15",
+        "homeTeam": "Czechia",
+        "awayTeam": "South Korea",
+        "homeScore": 5,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1998-05-27",
+        "homeTeam": "South Korea",
+        "awayTeam": "Czechia",
+        "homeScore": 2,
+        "awayScore": 2,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "A3": {
+    "fixtureId": "A3",
+    "home": "Mexico",
+    "away": "South Korea",
+    "allTime": {
+      "played": 14,
+      "homeTeamWins": 8,
+      "awayTeamWins": 3,
+      "draws": 3,
+      "homeTeamGoals": 28,
+      "awayTeamGoals": 15
+    },
+    "since2010": {
+      "played": 4,
+      "homeTeamWins": 3,
+      "awayTeamWins": 0,
+      "draws": 1,
+      "homeTeamGoals": 11,
+      "awayTeamGoals": 5
+    },
+    "last5Meetings": [
+      {
+        "date": "2025-09-09",
+        "homeTeam": "Mexico",
+        "awayTeam": "South Korea",
+        "homeScore": 2,
+        "awayScore": 2,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2020-11-14",
+        "homeTeam": "Mexico",
+        "awayTeam": "South Korea",
+        "homeScore": 3,
+        "awayScore": 2,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2018-06-23",
+        "homeTeam": "South Korea",
+        "awayTeam": "Mexico",
+        "homeScore": 1,
+        "awayScore": 2,
+        "tournament": "FIFA World Cup"
+      },
+      {
+        "date": "2014-01-29",
+        "homeTeam": "Mexico",
+        "awayTeam": "South Korea",
+        "homeScore": 4,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2006-02-15",
+        "homeTeam": "Mexico",
+        "awayTeam": "South Korea",
+        "homeScore": 0,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "A4": {
+    "fixtureId": "A4",
+    "home": "Czechia",
+    "away": "South Africa",
+    "allTime": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 1,
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 2
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "1997-12-13",
+        "homeTeam": "South Africa",
+        "awayTeam": "Czechia",
+        "homeScore": 2,
+        "awayScore": 2,
+        "tournament": "Confederations Cup"
+      }
+    ]
+  },
+  "A5": {
+    "fixtureId": "A5",
+    "home": "Czechia",
+    "away": "Mexico",
+    "allTime": {
+      "played": 1,
+      "homeTeamWins": 1,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 1
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "2000-02-08",
+        "homeTeam": "Mexico",
+        "awayTeam": "Czechia",
+        "homeScore": 1,
+        "awayScore": 2,
+        "tournament": "Lunar New Year Cup"
+      }
+    ]
+  },
+  "A6": {
+    "fixtureId": "A6",
+    "home": "South Africa",
+    "away": "South Korea",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "B1": {
+    "fixtureId": "B1",
+    "home": "Canada",
+    "away": "Bosnia and Herzegovina",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "B2": {
+    "fixtureId": "B2",
+    "home": "Qatar",
+    "away": "Switzerland",
+    "allTime": {
+      "played": 1,
+      "homeTeamWins": 1,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 1,
+      "homeTeamWins": 1,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "2018-11-14",
+        "homeTeam": "Switzerland",
+        "awayTeam": "Qatar",
+        "homeScore": 0,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "B3": {
+    "fixtureId": "B3",
+    "home": "Canada",
+    "away": "Qatar",
+    "allTime": {
+      "played": 1,
+      "homeTeamWins": 1,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 1,
+      "homeTeamWins": 1,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "2022-09-23",
+        "homeTeam": "Canada",
+        "awayTeam": "Qatar",
+        "homeScore": 2,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "B4": {
+    "fixtureId": "B4",
+    "home": "Switzerland",
+    "away": "Bosnia and Herzegovina",
+    "allTime": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 2
+    },
+    "since2010": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 2
+    },
+    "last5Meetings": [
+      {
+        "date": "2016-03-29",
+        "homeTeam": "Switzerland",
+        "awayTeam": "Bosnia and Herzegovina",
+        "homeScore": 0,
+        "awayScore": 2,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "B5": {
+    "fixtureId": "B5",
+    "home": "Switzerland",
+    "away": "Canada",
+    "allTime": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 3
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "2002-05-15",
+        "homeTeam": "Switzerland",
+        "awayTeam": "Canada",
+        "homeScore": 1,
+        "awayScore": 3,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "B6": {
+    "fixtureId": "B6",
+    "home": "Bosnia and Herzegovina",
+    "away": "Qatar",
+    "allTime": {
+      "played": 2,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 1,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 3
+    },
+    "since2010": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 1,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 1
+    },
+    "last5Meetings": [
+      {
+        "date": "2010-08-10",
+        "homeTeam": "Bosnia and Herzegovina",
+        "awayTeam": "Qatar",
+        "homeScore": 1,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2000-01-24",
+        "homeTeam": "Qatar",
+        "awayTeam": "Bosnia and Herzegovina",
+        "homeScore": 2,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "C1": {
+    "fixtureId": "C1",
+    "home": "Brazil",
+    "away": "Morocco",
+    "allTime": {
+      "played": 3,
+      "homeTeamWins": 2,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 6,
+      "awayTeamGoals": 2
+    },
+    "since2010": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 2
+    },
+    "last5Meetings": [
+      {
+        "date": "2023-03-25",
+        "homeTeam": "Morocco",
+        "awayTeam": "Brazil",
+        "homeScore": 2,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1998-06-16",
+        "homeTeam": "Brazil",
+        "awayTeam": "Morocco",
+        "homeScore": 3,
+        "awayScore": 0,
+        "tournament": "FIFA World Cup"
+      },
+      {
+        "date": "1997-10-09",
+        "homeTeam": "Brazil",
+        "awayTeam": "Morocco",
+        "homeScore": 2,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "C2": {
+    "fixtureId": "C2",
+    "home": "Haiti",
+    "away": "Scotland",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "C3": {
+    "fixtureId": "C3",
+    "home": "Brazil",
+    "away": "Haiti",
+    "allTime": {
+      "played": 3,
+      "homeTeamWins": 3,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 17,
+      "awayTeamGoals": 1
+    },
+    "since2010": {
+      "played": 1,
+      "homeTeamWins": 1,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 7,
+      "awayTeamGoals": 1
+    },
+    "last5Meetings": [
+      {
+        "date": "2016-06-08",
+        "homeTeam": "Brazil",
+        "awayTeam": "Haiti",
+        "homeScore": 7,
+        "awayScore": 1,
+        "tournament": "Copa América"
+      },
+      {
+        "date": "2004-08-18",
+        "homeTeam": "Haiti",
+        "awayTeam": "Brazil",
+        "homeScore": 0,
+        "awayScore": 6,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1974-04-21",
+        "homeTeam": "Brazil",
+        "awayTeam": "Haiti",
+        "homeScore": 4,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "C4": {
+    "fixtureId": "C4",
+    "home": "Scotland",
+    "away": "Morocco",
+    "allTime": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 3
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "1998-06-23",
+        "homeTeam": "Scotland",
+        "awayTeam": "Morocco",
+        "homeScore": 0,
+        "awayScore": 3,
+        "tournament": "FIFA World Cup"
+      }
+    ]
+  },
+  "C5": {
+    "fixtureId": "C5",
+    "home": "Scotland",
+    "away": "Brazil",
+    "allTime": {
+      "played": 10,
+      "homeTeamWins": 0,
+      "awayTeamWins": 8,
+      "draws": 2,
+      "homeTeamGoals": 3,
+      "awayTeamGoals": 16
+    },
+    "since2010": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 2
+    },
+    "last5Meetings": [
+      {
+        "date": "2011-03-27",
+        "homeTeam": "Brazil",
+        "awayTeam": "Scotland",
+        "homeScore": 2,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1998-06-10",
+        "homeTeam": "Brazil",
+        "awayTeam": "Scotland",
+        "homeScore": 2,
+        "awayScore": 1,
+        "tournament": "FIFA World Cup"
+      },
+      {
+        "date": "1990-06-20",
+        "homeTeam": "Brazil",
+        "awayTeam": "Scotland",
+        "homeScore": 1,
+        "awayScore": 0,
+        "tournament": "FIFA World Cup"
+      },
+      {
+        "date": "1987-05-26",
+        "homeTeam": "Scotland",
+        "awayTeam": "Brazil",
+        "homeScore": 0,
+        "awayScore": 2,
+        "tournament": "Rous Cup"
+      },
+      {
+        "date": "1982-06-18",
+        "homeTeam": "Brazil",
+        "awayTeam": "Scotland",
+        "homeScore": 4,
+        "awayScore": 1,
+        "tournament": "FIFA World Cup"
+      }
+    ]
+  },
+  "C6": {
+    "fixtureId": "C6",
+    "home": "Morocco",
+    "away": "Haiti",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "D1": {
+    "fixtureId": "D1",
+    "home": "USA",
+    "away": "Paraguay",
+    "allTime": {
+      "played": 9,
+      "homeTeamWins": 5,
+      "awayTeamWins": 2,
+      "draws": 2,
+      "homeTeamGoals": 12,
+      "awayTeamGoals": 7
+    },
+    "since2010": {
+      "played": 4,
+      "homeTeamWins": 3,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 4,
+      "awayTeamGoals": 2
+    },
+    "last5Meetings": [
+      {
+        "date": "2025-11-15",
+        "homeTeam": "USA",
+        "awayTeam": "Paraguay",
+        "homeScore": 2,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2018-03-27",
+        "homeTeam": "USA",
+        "awayTeam": "Paraguay",
+        "homeScore": 1,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2016-06-11",
+        "homeTeam": "USA",
+        "awayTeam": "Paraguay",
+        "homeScore": 1,
+        "awayScore": 0,
+        "tournament": "Copa América"
+      },
+      {
+        "date": "2011-03-29",
+        "homeTeam": "USA",
+        "awayTeam": "Paraguay",
+        "homeScore": 0,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2007-07-02",
+        "homeTeam": "USA",
+        "awayTeam": "Paraguay",
+        "homeScore": 1,
+        "awayScore": 3,
+        "tournament": "Copa América"
+      }
+    ]
+  },
+  "D2": {
+    "fixtureId": "D2",
+    "home": "Australia",
+    "away": "Türkiye",
+    "allTime": {
+      "played": 2,
+      "homeTeamWins": 0,
+      "awayTeamWins": 2,
+      "draws": 0,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 4
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "2004-05-24",
+        "homeTeam": "Australia",
+        "awayTeam": "Türkiye",
+        "homeScore": 0,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2004-05-21",
+        "homeTeam": "Australia",
+        "awayTeam": "Türkiye",
+        "homeScore": 1,
+        "awayScore": 3,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "D3": {
+    "fixtureId": "D3",
+    "home": "USA",
+    "away": "Australia",
+    "allTime": {
+      "played": 4,
+      "homeTeamWins": 2,
+      "awayTeamWins": 1,
+      "draws": 1,
+      "homeTeamGoals": 5,
+      "awayTeamGoals": 3
+    },
+    "since2010": {
+      "played": 2,
+      "homeTeamWins": 2,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 5,
+      "awayTeamGoals": 2
+    },
+    "last5Meetings": [
+      {
+        "date": "2025-10-14",
+        "homeTeam": "USA",
+        "awayTeam": "Australia",
+        "homeScore": 2,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2010-06-05",
+        "homeTeam": "Australia",
+        "awayTeam": "USA",
+        "homeScore": 1,
+        "awayScore": 3,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1998-11-06",
+        "homeTeam": "USA",
+        "awayTeam": "Australia",
+        "homeScore": 0,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1992-06-13",
+        "homeTeam": "USA",
+        "awayTeam": "Australia",
+        "homeScore": 0,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "D4": {
+    "fixtureId": "D4",
+    "home": "Türkiye",
+    "away": "Paraguay",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "D5": {
+    "fixtureId": "D5",
+    "home": "Türkiye",
+    "away": "USA",
+    "allTime": {
+      "played": 5,
+      "homeTeamWins": 2,
+      "awayTeamWins": 2,
+      "draws": 1,
+      "homeTeamGoals": 7,
+      "awayTeamGoals": 7
+    },
+    "since2010": {
+      "played": 3,
+      "homeTeamWins": 1,
+      "awayTeamWins": 2,
+      "draws": 0,
+      "homeTeamGoals": 4,
+      "awayTeamGoals": 5
+    },
+    "last5Meetings": [
+      {
+        "date": "2025-06-07",
+        "homeTeam": "USA",
+        "awayTeam": "Türkiye",
+        "homeScore": 1,
+        "awayScore": 2,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2014-06-01",
+        "homeTeam": "USA",
+        "awayTeam": "Türkiye",
+        "homeScore": 2,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2010-05-29",
+        "homeTeam": "USA",
+        "awayTeam": "Türkiye",
+        "homeScore": 2,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2003-06-19",
+        "homeTeam": "Türkiye",
+        "awayTeam": "USA",
+        "homeScore": 2,
+        "awayScore": 1,
+        "tournament": "Confederations Cup"
+      },
+      {
+        "date": "1991-09-04",
+        "homeTeam": "Türkiye",
+        "awayTeam": "USA",
+        "homeScore": 1,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "D6": {
+    "fixtureId": "D6",
+    "home": "Paraguay",
+    "away": "Australia",
+    "allTime": {
+      "played": 5,
+      "homeTeamWins": 0,
+      "awayTeamWins": 2,
+      "draws": 3,
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 4
+    },
+    "since2010": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 1
+    },
+    "last5Meetings": [
+      {
+        "date": "2010-10-09",
+        "homeTeam": "Australia",
+        "awayTeam": "Paraguay",
+        "homeScore": 1,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2006-10-07",
+        "homeTeam": "Australia",
+        "awayTeam": "Paraguay",
+        "homeScore": 1,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2000-06-15",
+        "homeTeam": "Australia",
+        "awayTeam": "Paraguay",
+        "homeScore": 2,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2000-06-12",
+        "homeTeam": "Australia",
+        "awayTeam": "Paraguay",
+        "homeScore": 0,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2000-06-09",
+        "homeTeam": "Australia",
+        "awayTeam": "Paraguay",
+        "homeScore": 0,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "E1": {
+    "fixtureId": "E1",
+    "home": "Germany",
+    "away": "Curaçao",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "E2": {
+    "fixtureId": "E2",
+    "home": "Ivory Coast",
+    "away": "Ecuador",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "E3": {
+    "fixtureId": "E3",
+    "home": "Germany",
+    "away": "Ivory Coast",
+    "allTime": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 1,
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 2
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "2009-11-18",
+        "homeTeam": "Germany",
+        "awayTeam": "Ivory Coast",
+        "homeScore": 2,
+        "awayScore": 2,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "E4": {
+    "fixtureId": "E4",
+    "home": "Ecuador",
+    "away": "Curaçao",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "E5": {
+    "fixtureId": "E5",
+    "home": "Ecuador",
+    "away": "Germany",
+    "allTime": {
+      "played": 2,
+      "homeTeamWins": 0,
+      "awayTeamWins": 2,
+      "draws": 0,
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 7
+    },
+    "since2010": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 4
+    },
+    "last5Meetings": [
+      {
+        "date": "2013-05-29",
+        "homeTeam": "Ecuador",
+        "awayTeam": "Germany",
+        "homeScore": 2,
+        "awayScore": 4,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2006-06-20",
+        "homeTeam": "Germany",
+        "awayTeam": "Ecuador",
+        "homeScore": 3,
+        "awayScore": 0,
+        "tournament": "FIFA World Cup"
+      }
+    ]
+  },
+  "E6": {
+    "fixtureId": "E6",
+    "home": "Curaçao",
+    "away": "Ivory Coast",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "F1": {
+    "fixtureId": "F1",
+    "home": "Netherlands",
+    "away": "Japan",
+    "allTime": {
+      "played": 3,
+      "homeTeamWins": 2,
+      "awayTeamWins": 0,
+      "draws": 1,
+      "homeTeamGoals": 6,
+      "awayTeamGoals": 2
+    },
+    "since2010": {
+      "played": 2,
+      "homeTeamWins": 1,
+      "awayTeamWins": 0,
+      "draws": 1,
+      "homeTeamGoals": 3,
+      "awayTeamGoals": 2
+    },
+    "last5Meetings": [
+      {
+        "date": "2013-11-16",
+        "homeTeam": "Netherlands",
+        "awayTeam": "Japan",
+        "homeScore": 2,
+        "awayScore": 2,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2010-06-19",
+        "homeTeam": "Netherlands",
+        "awayTeam": "Japan",
+        "homeScore": 1,
+        "awayScore": 0,
+        "tournament": "FIFA World Cup"
+      },
+      {
+        "date": "2009-09-05",
+        "homeTeam": "Netherlands",
+        "awayTeam": "Japan",
+        "homeScore": 3,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "F2": {
+    "fixtureId": "F2",
+    "home": "Sweden",
+    "away": "Tunisia",
+    "allTime": {
+      "played": 4,
+      "homeTeamWins": 2,
+      "awayTeamWins": 1,
+      "draws": 1,
+      "homeTeamGoals": 3,
+      "awayTeamGoals": 2
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "2003-02-12",
+        "homeTeam": "Tunisia",
+        "awayTeam": "Sweden",
+        "homeScore": 1,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1999-02-10",
+        "homeTeam": "Tunisia",
+        "awayTeam": "Sweden",
+        "homeScore": 0,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1992-04-22",
+        "homeTeam": "Tunisia",
+        "awayTeam": "Sweden",
+        "homeScore": 0,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1976-02-28",
+        "homeTeam": "Tunisia",
+        "awayTeam": "Sweden",
+        "homeScore": 1,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "F3": {
+    "fixtureId": "F3",
+    "home": "Netherlands",
+    "away": "Sweden",
+    "allTime": {
+      "played": 25,
+      "homeTeamWins": 11,
+      "awayTeamWins": 8,
+      "draws": 6,
+      "homeTeamGoals": 47,
+      "awayTeamGoals": 48
+    },
+    "since2010": {
+      "played": 4,
+      "homeTeamWins": 2,
+      "awayTeamWins": 1,
+      "draws": 1,
+      "homeTeamGoals": 9,
+      "awayTeamGoals": 5
+    },
+    "last5Meetings": [
+      {
+        "date": "2017-10-10",
+        "homeTeam": "Netherlands",
+        "awayTeam": "Sweden",
+        "homeScore": 2,
+        "awayScore": 0,
+        "tournament": "FIFA World Cup qualification"
+      },
+      {
+        "date": "2016-09-06",
+        "homeTeam": "Sweden",
+        "awayTeam": "Netherlands",
+        "homeScore": 1,
+        "awayScore": 1,
+        "tournament": "FIFA World Cup qualification"
+      },
+      {
+        "date": "2011-10-11",
+        "homeTeam": "Sweden",
+        "awayTeam": "Netherlands",
+        "homeScore": 3,
+        "awayScore": 2,
+        "tournament": "UEFA Euro qualification"
+      },
+      {
+        "date": "2010-10-12",
+        "homeTeam": "Netherlands",
+        "awayTeam": "Sweden",
+        "homeScore": 4,
+        "awayScore": 1,
+        "tournament": "UEFA Euro qualification"
+      },
+      {
+        "date": "2008-11-19",
+        "homeTeam": "Netherlands",
+        "awayTeam": "Sweden",
+        "homeScore": 3,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "F4": {
+    "fixtureId": "F4",
+    "home": "Tunisia",
+    "away": "Japan",
+    "allTime": {
+      "played": 5,
+      "homeTeamWins": 1,
+      "awayTeamWins": 4,
+      "draws": 0,
+      "homeTeamGoals": 3,
+      "awayTeamGoals": 6
+    },
+    "since2010": {
+      "played": 2,
+      "homeTeamWins": 1,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 3,
+      "awayTeamGoals": 2
+    },
+    "last5Meetings": [
+      {
+        "date": "2022-06-14",
+        "homeTeam": "Japan",
+        "awayTeam": "Tunisia",
+        "homeScore": 0,
+        "awayScore": 3,
+        "tournament": "Kirin Cup"
+      },
+      {
+        "date": "2015-03-27",
+        "homeTeam": "Japan",
+        "awayTeam": "Tunisia",
+        "homeScore": 2,
+        "awayScore": 0,
+        "tournament": "Kirin Challenge Cup"
+      },
+      {
+        "date": "2003-10-08",
+        "homeTeam": "Tunisia",
+        "awayTeam": "Japan",
+        "homeScore": 0,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2002-06-14",
+        "homeTeam": "Japan",
+        "awayTeam": "Tunisia",
+        "homeScore": 2,
+        "awayScore": 0,
+        "tournament": "FIFA World Cup"
+      },
+      {
+        "date": "1996-10-13",
+        "homeTeam": "Japan",
+        "awayTeam": "Tunisia",
+        "homeScore": 1,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "F5": {
+    "fixtureId": "F5",
+    "home": "Japan",
+    "away": "Sweden",
+    "allTime": {
+      "played": 4,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 3,
+      "homeTeamGoals": 4,
+      "awayTeamGoals": 5
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "2002-05-25",
+        "homeTeam": "Japan",
+        "awayTeam": "Sweden",
+        "homeScore": 1,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1997-02-13",
+        "homeTeam": "Japan",
+        "awayTeam": "Sweden",
+        "homeScore": 0,
+        "awayScore": 1,
+        "tournament": "King's Cup"
+      },
+      {
+        "date": "1996-02-22",
+        "homeTeam": "Japan",
+        "awayTeam": "Sweden",
+        "homeScore": 1,
+        "awayScore": 1,
+        "tournament": "Lunar New Year Cup"
+      },
+      {
+        "date": "1995-06-10",
+        "homeTeam": "Sweden",
+        "awayTeam": "Japan",
+        "homeScore": 2,
+        "awayScore": 2,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "F6": {
+    "fixtureId": "F6",
+    "home": "Tunisia",
+    "away": "Netherlands",
+    "allTime": {
+      "played": 3,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 2,
+      "homeTeamGoals": 3,
+      "awayTeamGoals": 7
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "2009-02-11",
+        "homeTeam": "Tunisia",
+        "awayTeam": "Netherlands",
+        "homeScore": 1,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1994-01-19",
+        "homeTeam": "Tunisia",
+        "awayTeam": "Netherlands",
+        "homeScore": 2,
+        "awayScore": 2,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1978-04-05",
+        "homeTeam": "Tunisia",
+        "awayTeam": "Netherlands",
+        "homeScore": 0,
+        "awayScore": 4,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "G1": {
+    "fixtureId": "G1",
+    "home": "Belgium",
+    "away": "Egypt",
+    "allTime": {
+      "played": 4,
+      "homeTeamWins": 1,
+      "awayTeamWins": 3,
+      "draws": 0,
+      "homeTeamGoals": 4,
+      "awayTeamGoals": 7
+    },
+    "since2010": {
+      "played": 2,
+      "homeTeamWins": 1,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 4,
+      "awayTeamGoals": 2
+    },
+    "last5Meetings": [
+      {
+        "date": "2022-11-18",
+        "homeTeam": "Egypt",
+        "awayTeam": "Belgium",
+        "homeScore": 2,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2018-06-06",
+        "homeTeam": "Belgium",
+        "awayTeam": "Egypt",
+        "homeScore": 3,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2005-02-09",
+        "homeTeam": "Egypt",
+        "awayTeam": "Belgium",
+        "homeScore": 4,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1999-03-30",
+        "homeTeam": "Belgium",
+        "awayTeam": "Egypt",
+        "homeScore": 0,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "G2": {
+    "fixtureId": "G2",
+    "home": "Iran",
+    "away": "New Zealand",
+    "allTime": {
+      "played": 2,
+      "homeTeamWins": 1,
+      "awayTeamWins": 0,
+      "draws": 1,
+      "homeTeamGoals": 3,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "2003-10-12",
+        "homeTeam": "Iran",
+        "awayTeam": "New Zealand",
+        "homeScore": 3,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1973-08-12",
+        "homeTeam": "New Zealand",
+        "awayTeam": "Iran",
+        "homeScore": 0,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "G3": {
+    "fixtureId": "G3",
+    "home": "Belgium",
+    "away": "Iran",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "G4": {
+    "fixtureId": "G4",
+    "home": "New Zealand",
+    "away": "Egypt",
+    "allTime": {
+      "played": 3,
+      "homeTeamWins": 0,
+      "awayTeamWins": 2,
+      "draws": 1,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 3
+    },
+    "since2010": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 1
+    },
+    "last5Meetings": [
+      {
+        "date": "2024-03-22",
+        "homeTeam": "Egypt",
+        "awayTeam": "New Zealand",
+        "homeScore": 1,
+        "awayScore": 0,
+        "tournament": "FIFA Series"
+      },
+      {
+        "date": "1999-07-15",
+        "homeTeam": "Egypt",
+        "awayTeam": "New Zealand",
+        "homeScore": 1,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1999-07-10",
+        "homeTeam": "Egypt",
+        "awayTeam": "New Zealand",
+        "homeScore": 1,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "G5": {
+    "fixtureId": "G5",
+    "home": "Egypt",
+    "away": "Iran",
+    "allTime": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 1,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 1
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "2000-06-07",
+        "homeTeam": "Iran",
+        "awayTeam": "Egypt",
+        "homeScore": 1,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "G6": {
+    "fixtureId": "G6",
+    "home": "New Zealand",
+    "away": "Belgium",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "H1": {
+    "fixtureId": "H1",
+    "home": "Spain",
+    "away": "Cape Verde",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "H2": {
+    "fixtureId": "H2",
+    "home": "Saudi Arabia",
+    "away": "Uruguay",
+    "allTime": {
+      "played": 3,
+      "homeTeamWins": 1,
+      "awayTeamWins": 1,
+      "draws": 1,
+      "homeTeamGoals": 4,
+      "awayTeamGoals": 4
+    },
+    "since2010": {
+      "played": 2,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 1,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 2
+    },
+    "last5Meetings": [
+      {
+        "date": "2018-06-20",
+        "homeTeam": "Uruguay",
+        "awayTeam": "Saudi Arabia",
+        "homeScore": 1,
+        "awayScore": 0,
+        "tournament": "FIFA World Cup"
+      },
+      {
+        "date": "2014-10-10",
+        "homeTeam": "Saudi Arabia",
+        "awayTeam": "Uruguay",
+        "homeScore": 1,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2002-03-27",
+        "homeTeam": "Saudi Arabia",
+        "awayTeam": "Uruguay",
+        "homeScore": 3,
+        "awayScore": 2,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "H3": {
+    "fixtureId": "H3",
+    "home": "Spain",
+    "away": "Saudi Arabia",
+    "allTime": {
+      "played": 3,
+      "homeTeamWins": 3,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 9,
+      "awayTeamGoals": 2
+    },
+    "since2010": {
+      "played": 2,
+      "homeTeamWins": 2,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 8,
+      "awayTeamGoals": 2
+    },
+    "last5Meetings": [
+      {
+        "date": "2012-09-07",
+        "homeTeam": "Spain",
+        "awayTeam": "Saudi Arabia",
+        "homeScore": 5,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2010-05-29",
+        "homeTeam": "Spain",
+        "awayTeam": "Saudi Arabia",
+        "homeScore": 3,
+        "awayScore": 2,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2006-06-23",
+        "homeTeam": "Saudi Arabia",
+        "awayTeam": "Spain",
+        "homeScore": 0,
+        "awayScore": 1,
+        "tournament": "FIFA World Cup"
+      }
+    ]
+  },
+  "H4": {
+    "fixtureId": "H4",
+    "home": "Uruguay",
+    "away": "Cape Verde",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "H5": {
+    "fixtureId": "H5",
+    "home": "Cape Verde",
+    "away": "Saudi Arabia",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "H6": {
+    "fixtureId": "H6",
+    "home": "Uruguay",
+    "away": "Spain",
+    "allTime": {
+      "played": 10,
+      "homeTeamWins": 0,
+      "awayTeamWins": 5,
+      "draws": 5,
+      "homeTeamGoals": 8,
+      "awayTeamGoals": 16
+    },
+    "since2010": {
+      "played": 2,
+      "homeTeamWins": 0,
+      "awayTeamWins": 2,
+      "draws": 0,
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 5
+    },
+    "last5Meetings": [
+      {
+        "date": "2013-06-16",
+        "homeTeam": "Spain",
+        "awayTeam": "Uruguay",
+        "homeScore": 2,
+        "awayScore": 1,
+        "tournament": "Confederations Cup"
+      },
+      {
+        "date": "2013-02-06",
+        "homeTeam": "Spain",
+        "awayTeam": "Uruguay",
+        "homeScore": 3,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2005-08-17",
+        "homeTeam": "Spain",
+        "awayTeam": "Uruguay",
+        "homeScore": 2,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1995-01-18",
+        "homeTeam": "Spain",
+        "awayTeam": "Uruguay",
+        "homeScore": 2,
+        "awayScore": 2,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1991-09-04",
+        "homeTeam": "Spain",
+        "awayTeam": "Uruguay",
+        "homeScore": 2,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "I1": {
+    "fixtureId": "I1",
+    "home": "France",
+    "away": "Senegal",
+    "allTime": {
+      "played": 2,
+      "homeTeamWins": 0,
+      "awayTeamWins": 2,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 3
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "2002-05-31",
+        "homeTeam": "France",
+        "awayTeam": "Senegal",
+        "homeScore": 0,
+        "awayScore": 1,
+        "tournament": "FIFA World Cup"
+      },
+      {
+        "date": "1963-04-18",
+        "homeTeam": "Senegal",
+        "awayTeam": "France",
+        "homeScore": 2,
+        "awayScore": 0,
+        "tournament": "African Friendship Games"
+      }
+    ]
+  },
+  "I2": {
+    "fixtureId": "I2",
+    "home": "Iraq",
+    "away": "Norway",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "I3": {
+    "fixtureId": "I3",
+    "home": "France",
+    "away": "Iraq",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "I4": {
+    "fixtureId": "I4",
+    "home": "Norway",
+    "away": "Senegal",
+    "allTime": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 2
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "2006-03-01",
+        "homeTeam": "Senegal",
+        "awayTeam": "Norway",
+        "homeScore": 2,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "I5": {
+    "fixtureId": "I5",
+    "home": "Norway",
+    "away": "France",
+    "allTime": {
+      "played": 16,
+      "homeTeamWins": 5,
+      "awayTeamWins": 7,
+      "draws": 4,
+      "homeTeamGoals": 22,
+      "awayTeamGoals": 22
+    },
+    "since2010": {
+      "played": 2,
+      "homeTeamWins": 1,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 5
+    },
+    "last5Meetings": [
+      {
+        "date": "2014-05-27",
+        "homeTeam": "France",
+        "awayTeam": "Norway",
+        "homeScore": 4,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "2010-08-11",
+        "homeTeam": "Norway",
+        "awayTeam": "France",
+        "homeScore": 2,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1998-02-25",
+        "homeTeam": "France",
+        "awayTeam": "Norway",
+        "homeScore": 3,
+        "awayScore": 3,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1995-07-22",
+        "homeTeam": "Norway",
+        "awayTeam": "France",
+        "homeScore": 0,
+        "awayScore": 0,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1989-09-05",
+        "homeTeam": "Norway",
+        "awayTeam": "France",
+        "homeScore": 1,
+        "awayScore": 1,
+        "tournament": "FIFA World Cup qualification"
+      }
+    ]
+  },
+  "I6": {
+    "fixtureId": "I6",
+    "home": "Senegal",
+    "away": "Iraq",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "J1": {
+    "fixtureId": "J1",
+    "home": "Argentina",
+    "away": "Algeria",
+    "allTime": {
+      "played": 1,
+      "homeTeamWins": 1,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 4,
+      "awayTeamGoals": 3
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "2007-06-05",
+        "homeTeam": "Algeria",
+        "awayTeam": "Argentina",
+        "homeScore": 3,
+        "awayScore": 4,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "J2": {
+    "fixtureId": "J2",
+    "home": "Austria",
+    "away": "Jordan",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "J3": {
+    "fixtureId": "J3",
+    "home": "Argentina",
+    "away": "Austria",
+    "allTime": {
+      "played": 2,
+      "homeTeamWins": 1,
+      "awayTeamWins": 0,
+      "draws": 1,
+      "homeTeamGoals": 6,
+      "awayTeamGoals": 2
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "1990-05-03",
+        "homeTeam": "Austria",
+        "awayTeam": "Argentina",
+        "homeScore": 1,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1980-05-21",
+        "homeTeam": "Austria",
+        "awayTeam": "Argentina",
+        "homeScore": 1,
+        "awayScore": 5,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "J4": {
+    "fixtureId": "J4",
+    "home": "Jordan",
+    "away": "Algeria",
+    "allTime": {
+      "played": 2,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 1,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 7
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "2004-05-30",
+        "homeTeam": "Algeria",
+        "awayTeam": "Jordan",
+        "homeScore": 1,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      },
+      {
+        "date": "1974-09-29",
+        "homeTeam": "Algeria",
+        "awayTeam": "Jordan",
+        "homeScore": 6,
+        "awayScore": 0,
+        "tournament": "Kuneitra Cup"
+      }
+    ]
+  },
+  "J5": {
+    "fixtureId": "J5",
+    "home": "Algeria",
+    "away": "Austria",
+    "allTime": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 2
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": [
+      {
+        "date": "1982-06-21",
+        "homeTeam": "Algeria",
+        "awayTeam": "Austria",
+        "homeScore": 0,
+        "awayScore": 2,
+        "tournament": "FIFA World Cup"
+      }
+    ]
+  },
+  "J6": {
+    "fixtureId": "J6",
+    "home": "Jordan",
+    "away": "Argentina",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "K1": {
+    "fixtureId": "K1",
+    "home": "Portugal",
+    "away": "DR Congo",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "K2": {
+    "fixtureId": "K2",
+    "home": "Uzbekistan",
+    "away": "Colombia",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "K3": {
+    "fixtureId": "K3",
+    "home": "Portugal",
+    "away": "Uzbekistan",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "K4": {
+    "fixtureId": "K4",
+    "home": "Colombia",
+    "away": "DR Congo",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "K5": {
+    "fixtureId": "K5",
+    "home": "Colombia",
+    "away": "Portugal",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "K6": {
+    "fixtureId": "K6",
+    "home": "DR Congo",
+    "away": "Uzbekistan",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "L1": {
+    "fixtureId": "L1",
+    "home": "England",
+    "away": "Croatia",
+    "allTime": {
+      "played": 11,
+      "homeTeamWins": 6,
+      "awayTeamWins": 3,
+      "draws": 2,
+      "homeTeamGoals": 22,
+      "awayTeamGoals": 13
+    },
+    "since2010": {
+      "played": 4,
+      "homeTeamWins": 2,
+      "awayTeamWins": 1,
+      "draws": 1,
+      "homeTeamGoals": 4,
+      "awayTeamGoals": 3
+    },
+    "last5Meetings": [
+      {
+        "date": "2021-06-13",
+        "homeTeam": "England",
+        "awayTeam": "Croatia",
+        "homeScore": 1,
+        "awayScore": 0,
+        "tournament": "UEFA Euro"
+      },
+      {
+        "date": "2018-11-18",
+        "homeTeam": "England",
+        "awayTeam": "Croatia",
+        "homeScore": 2,
+        "awayScore": 1,
+        "tournament": "UEFA Nations League"
+      },
+      {
+        "date": "2018-10-12",
+        "homeTeam": "Croatia",
+        "awayTeam": "England",
+        "homeScore": 0,
+        "awayScore": 0,
+        "tournament": "UEFA Nations League"
+      },
+      {
+        "date": "2018-07-11",
+        "homeTeam": "Croatia",
+        "awayTeam": "England",
+        "homeScore": 2,
+        "awayScore": 1,
+        "tournament": "FIFA World Cup"
+      },
+      {
+        "date": "2009-09-09",
+        "homeTeam": "England",
+        "awayTeam": "Croatia",
+        "homeScore": 5,
+        "awayScore": 1,
+        "tournament": "FIFA World Cup qualification"
+      }
+    ]
+  },
+  "L2": {
+    "fixtureId": "L2",
+    "home": "Ghana",
+    "away": "Panama",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "L3": {
+    "fixtureId": "L3",
+    "home": "England",
+    "away": "Ghana",
+    "allTime": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 1,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 1
+    },
+    "since2010": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 1,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 1
+    },
+    "last5Meetings": [
+      {
+        "date": "2011-03-29",
+        "homeTeam": "England",
+        "awayTeam": "Ghana",
+        "homeScore": 1,
+        "awayScore": 1,
+        "tournament": "Friendly"
+      }
+    ]
+  },
+  "L4": {
+    "fixtureId": "L4",
+    "home": "Panama",
+    "away": "Croatia",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  },
+  "L5": {
+    "fixtureId": "L5",
+    "home": "Panama",
+    "away": "England",
+    "allTime": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 6
+    },
+    "since2010": {
+      "played": 1,
+      "homeTeamWins": 0,
+      "awayTeamWins": 1,
+      "draws": 0,
+      "homeTeamGoals": 1,
+      "awayTeamGoals": 6
+    },
+    "last5Meetings": [
+      {
+        "date": "2018-06-24",
+        "homeTeam": "England",
+        "awayTeam": "Panama",
+        "homeScore": 6,
+        "awayScore": 1,
+        "tournament": "FIFA World Cup"
+      }
+    ]
+  },
+  "L6": {
+    "fixtureId": "L6",
+    "home": "Croatia",
+    "away": "Ghana",
+    "allTime": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "since2010": {
+      "played": 0,
+      "homeTeamWins": 0,
+      "awayTeamWins": 0,
+      "draws": 0,
+      "homeTeamGoals": 0,
+      "awayTeamGoals": 0
+    },
+    "last5Meetings": []
+  }
+}
