@@ -1,4 +1,7 @@
+import { useState } from "react";
 import GroupStage from "./pages/GroupStage";
+import Predict from "./pages/Predict";
+import Bracket from "./pages/Bracket";
 import banner from "./assets/worldcupbanner.webp";
 import trophy from "./assets/worldcuppng.webp";
 import "./index.css";
@@ -9,7 +12,25 @@ const HOST_NATIONS = [
   { name: "Mexico", flag: "🇲🇽" },
 ];
 
+const TABS = [
+  { id: "predictions", label: "ELO Predictions"  },
+  { id: "picks",       label: "Group Stage Picks" },
+  { id: "bracket",     label: "Knockout Bracket"  },
+];
+
+const GROUPS = ["A","B","C","D","E","F","G","H","I","J","K","L"];
+
 export default function App() {
+  const [activeTab,       setActiveTab]       = useState("predictions");
+  const [submittedGroups, setSubmittedGroups] = useState({});
+
+  const bracketUnlocked = GROUPS.every((g) => submittedGroups[g]);
+
+  function handleNavigate(tab) {
+    if (tab === "bracket" && !bracketUnlocked) return;
+    setActiveTab(tab);
+  }
+
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#1a0533" }}>
 
@@ -108,9 +129,79 @@ export default function App() {
         <div className="absolute bottom-0 left-0 right-0 h-12" style={{ background: "linear-gradient(to bottom, transparent, #1a0533)" }} />
       </header>
 
+      {/* ── Tab bar ── */}
+      <div
+        className="sticky top-0 z-10"
+        style={{ background: "rgba(26,5,51,0.92)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+      >
+        <div className="max-w-4xl mx-auto px-4 flex gap-1 py-2">
+          {TABS.map((tab) => {
+            const isActive = activeTab === tab.id;
+            const isLocked = tab.id === "bracket" && !bracketUnlocked;
+            return (
+              // Wrapper div holds the native tooltip — disabled buttons swallow pointer events
+              <div key={tab.id} className="relative group" style={{ display: "inline-block" }}>
+                <button
+                  onClick={() => handleNavigate(tab.id)}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-150"
+                  style={
+                    isActive
+                      ? { background: "#c8f000", color: "#0a0014", cursor: "pointer" }
+                      : isLocked
+                      ? { background: "transparent", color: "rgba(255,255,255,0.25)", cursor: "not-allowed" }
+                      : { background: "transparent", color: "rgba(255,255,255,0.45)", cursor: "pointer" }
+                  }
+                >
+                  {tab.label}
+                  {isLocked && (
+                    <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  )}
+                </button>
+
+                {/* Custom tooltip shown on hover when locked */}
+                {isLocked && (
+                  <div
+                    className="absolute left-1/2 top-full mt-2 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+                    style={{ transform: "translateX(-50%)", whiteSpace: "nowrap" }}
+                  >
+                    <div
+                      className="text-xs font-semibold px-3 py-2 rounded-lg"
+                      style={{ background: "#1a0533", border: "1px solid rgba(200,240,0,0.3)", color: "rgba(255,255,255,0.75)" }}
+                    >
+                      Submit all 12 groups first
+                    </div>
+                    <div
+                      className="mx-auto mt-0"
+                      style={{
+                        width: 0, height: 0,
+                        borderLeft: "5px solid transparent",
+                        borderRight: "5px solid transparent",
+                        borderBottom: "5px solid rgba(200,240,0,0.3)",
+                        position: "absolute", top: -5, left: "50%", transform: "translateX(-50%) rotate(180deg)",
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       {/* ── Main content ── */}
       <main className="flex-1" style={{ background: "#1a0533" }}>
-        <GroupStage />
+        {activeTab === "predictions" && <GroupStage />}
+        {activeTab === "picks"       && (
+          <Predict
+            submittedGroups={submittedGroups}
+            setSubmittedGroups={setSubmittedGroups}
+            onNavigate={handleNavigate}
+          />
+        )}
+        {activeTab === "bracket" && bracketUnlocked && <Bracket />}
       </main>
 
       {/* ── Footer ── */}
