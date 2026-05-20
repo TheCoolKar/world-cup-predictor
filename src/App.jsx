@@ -1,4 +1,7 @@
-import GroupStage from "./pages/GroupStage";
+import { useState }  from "react";
+import GroupStage   from "./pages/GroupStage";
+import Bracket      from "./pages/Bracket";
+import MyBracket    from "./pages/MyBracket";
 import banner from "./assets/worldcupbanner.webp";
 import trophy from "./assets/worldcuppng.webp";
 import "./index.css";
@@ -9,30 +12,34 @@ const HOST_NATIONS = [
   { name: "Mexico", flag: "🇲🇽" },
 ];
 
+const TABS = [
+  { id: "groups",    label: "Group Stage"   },
+  { id: "bracket",   label: "AI Bracket"    },
+  { id: "mybracket", label: "My Bracket"    },
+];
+
 export default function App() {
+  const [activeTab, setActiveTab] = useState("groups");
+
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#1a0533" }}>
 
       {/* ── Hero banner ── */}
       <header className="relative overflow-hidden" style={{ minHeight: 340 }}>
 
-        {/* Banner image */}
         <img
           src={banner}
           alt="FIFA World Cup 2026"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
 
-        {/* Dark overlay so left-side text is readable */}
         <div
           className="absolute inset-0"
           style={{ background: "linear-gradient(90deg, rgba(15,4,40,0.82) 0%, rgba(15,4,40,0.55) 50%, rgba(15,4,40,0.1) 100%)" }}
         />
 
-        {/* Content */}
         <div className="relative max-w-4xl mx-auto px-6 py-12 flex items-center gap-8 h-full" style={{ minHeight: 340 }}>
 
-          {/* Trophy logo */}
           <div className="shrink-0 hidden sm:block">
             <img
               src={trophy}
@@ -42,7 +49,6 @@ export default function App() {
             />
           </div>
 
-          {/* Text block */}
           <div className="flex flex-col gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.3em] mb-2" style={{ color: "#c8f000" }}>
@@ -67,7 +73,6 @@ export default function App() {
               <span className="font-semibold text-white">12 groups</span> — blended with real team form data.
             </p>
 
-            {/* Host nations */}
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.3)" }}>
                 Hosted by
@@ -84,11 +89,10 @@ export default function App() {
               ))}
             </div>
 
-            {/* Stats row */}
             <div className="flex gap-6 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
               {[
-                { value: "48",  label: "Teams" },
-                { value: "12",  label: "Groups" },
+                { value: "48",  label: "Teams"   },
+                { value: "12",  label: "Groups"  },
                 { value: "104", label: "Matches" },
               ].map((s) => (
                 <div key={s.label}>
@@ -104,13 +108,42 @@ export default function App() {
           </div>
         </div>
 
-        {/* Bottom fade into page bg */}
         <div className="absolute bottom-0 left-0 right-0 h-12" style={{ background: "linear-gradient(to bottom, transparent, #1a0533)" }} />
       </header>
 
+      {/* ── Tab bar ── */}
+      <div
+        className="sticky top-0 z-40 flex justify-center px-4 py-3"
+        style={{ background: "rgba(26,5,51,0.92)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+      >
+        <div
+          className="flex rounded-xl p-1 gap-1"
+          style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+        >
+          {TABS.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className="px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-150"
+              style={{
+                background: activeTab === tab.id
+                  ? "linear-gradient(135deg, #c8f000, #84cc16)"
+                  : "transparent",
+                color: activeTab === tab.id ? "#1a0533" : "rgba(255,255,255,0.5)",
+                letterSpacing: "0.02em",
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* ── Main content ── */}
       <main className="flex-1" style={{ background: "#1a0533" }}>
-        <GroupStage />
+        {activeTab === "groups"    && <GroupStage />}
+        {activeTab === "bracket"   && <Bracket />}
+        {activeTab === "mybracket" && <MyBracket />}
       </main>
 
       {/* ── Footer ── */}
