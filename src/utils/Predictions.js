@@ -18,10 +18,11 @@ const W_ELO  = 0.55;
 const W_HIST = 0.25;
 const W_API  = 0.20;
 
-// Normalize an ELO rating to 0–100.
-// Anchored to realistic national team range: 1400 (bottom) → 2200 (top).
-function eloToScore(elo) {
-  return Math.min(100, Math.max(0, ((elo - 1400) / 800) * 100));
+// Normalize a FIFA ranking points value to 0–100.
+// Anchored to realistic WC team range: 1000 (floor) → 1950 (ceiling).
+// Confirmed range for WC 2026 teams: ~1261 (Curaçao) → ~1877 (France).
+function eloToScore(fifaPoints) {
+  return Math.min(100, Math.max(0, ((fifaPoints - 1000) / 950) * 100));
 }
 
 export function predictMatch(
