@@ -101,7 +101,6 @@ const TEAM_IDS = {
   "South Africa":           181,
   "Cape Verde":             204,
   "DR Congo":               164,
-  "Nigeria":                 19,
 
   // AFC
   "Japan":                   30,
@@ -136,15 +135,15 @@ const CONF_LEAGUES = {
     { league: 10, season: 2024 }, // International Friendlies
   ],
   CONMEBOL: [
-    { league: 34, season: 2026 }, // WC Qualification South America
+    { league: 34, season: 2024 }, // WC Qualification South America (free tier max: 2024)
     { league: 10, season: 2024 }, // International Friendlies
   ],
   CAF: [
-    { league: 29, season: 2025 }, // Africa Cup of Nations 2025
-    { league: 30, season: 2025 }, // CAF WC Qualification 2026
+    { league: 29, season: 2023 }, // Africa Cup of Nations 2023
+    { league: 30, season: 2024 }, // CAF WC Qualification (free tier max: 2024)
   ],
   AFC: [
-    { league: 27, season: 2026 }, // WC Qualification Asia
+    { league: 27, season: 2024 }, // WC Qualification Asia (free tier max: 2024)
     { league: 10, season: 2024 }, // International Friendlies
   ],
   CONCACAF: [
@@ -153,7 +152,7 @@ const CONF_LEAGUES = {
   ],
   OFC: [
     { league: 10, season: 2024 }, // Friendlies (best available for OFC teams)
-    { league: 10, season: 2025 }, // Try 2025 friendlies too
+    { league: 10, season: 2023 }, // Fallback to 2023 friendlies
   ],
 };
 
@@ -168,7 +167,7 @@ const TEAM_CONF = {
 
   "Morocco": "CAF", "Algeria": "CAF", "Senegal": "CAF", "Ivory Coast": "CAF",
   "Egypt": "CAF", "Tunisia": "CAF", "Ghana": "CAF", "South Africa": "CAF",
-  "Cape Verde": "CAF", "DR Congo": "CAF", "Nigeria": "CAF",
+  "Cape Verde": "CAF", "DR Congo": "CAF",
 
   "Japan": "AFC", "South Korea": "AFC", "Iran": "AFC", "Saudi Arabia": "AFC",
   "Uzbekistan": "AFC", "Jordan": "AFC", "Iraq": "AFC", "Qatar": "AFC",
