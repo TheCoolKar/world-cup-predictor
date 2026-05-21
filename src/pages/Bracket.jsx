@@ -375,7 +375,7 @@ export default function Bracket() {
             <RoundColumn title="Quarterfinal" matches={qfResults.slice(0, 2)}  labelFn={i => `QF · ${i + 1}`} />
             <Connector />
 
-            {/* Centre column: SF1 → Champion ← SF2 */}
+            {/* Centre column: SF1 → Champion ← SF2 → 3rd Place */}
             <div className="flex flex-col items-center gap-3 shrink-0">
               <p
                 className="font-bold uppercase tracking-widest text-center mb-1"
@@ -388,6 +388,18 @@ export default function Bracket() {
                 <ChampionCard team={finalResult.winner} />
               </div>
               <KOMatch result={sfResults[1]} label="SF 2" />
+
+              {/* 3rd place — sits naturally below the two SF losers */}
+              <div className="flex flex-col items-center gap-2 mt-1 w-full">
+                <div className="flex items-center gap-2 w-full">
+                  <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.08)" }} />
+                  <span style={{ color: "#94a3b8", fontSize: "0.6rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", whiteSpace: "nowrap" }}>
+                    🥉 3rd Place
+                  </span>
+                  <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.08)" }} />
+                </div>
+                <KOMatch result={thirdPlace} label="3rd Place" isThirdPlace />
+              </div>
             </div>
 
             <Connector />
@@ -400,16 +412,6 @@ export default function Bracket() {
           </div>
         </div>
 
-        {/* 3rd place play-off */}
-        <div className="mt-6">
-          <p
-            className="font-bold uppercase tracking-widest mb-2"
-            style={{ color: "#94a3b8", fontSize: "0.6rem" }}
-          >
-            3rd Place Play-Off
-          </p>
-          <KOMatch result={thirdPlace} label="3rd Place" isThirdPlace />
-        </div>
       </section>
 
     </div>
