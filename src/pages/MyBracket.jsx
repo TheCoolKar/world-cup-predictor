@@ -23,6 +23,9 @@ import {
   getBracket,       saveBracket,     clearBracket,
   getBracketScores, setBracketScore, clearBracketScores,
 } from "../utils/storage";
+import { supabase } from "../lib/supabase";
+import { useAuth }  from "../hooks/useAuth";
+import AuthModal    from "../components/AuthModal";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -289,45 +292,79 @@ function MiniStandings({ standings, thirds }) {
 
 // ── Group card ────────────────────────────────────────────────────────────────
 
-function GroupCard({ group, picks, scores, onPick, onScore, standings, thirds, mode }) {
+function GroupCard({ group, picks, scores, onPick, onScore, standings, thirds, mode, isOpen, onToggle }) {
   const matches=GROUP_MATCHES.filter(m=>m.group===group);
   const picked=matches.filter(m=>picks[m.id]).length;
   const done=picked===matches.length;
+  const teams=[...new Set(matches.flatMap(m=>[m.home,m.away]))];
   const byDay={};
   for (const m of matches) { if(!byDay[m.matchday])byDay[m.matchday]=[]; byDay[m.matchday].push(m); }
 
   return (
     <div className="rounded-xl overflow-hidden"
-      style={{border:`1px solid ${done?"rgba(200,240,0,0.2)":"rgba(255,255,255,0.07)"}`,background:done?"rgba(200,240,0,0.02)":"rgba(255,255,255,0.03)"}}>
-      <div className="flex items-center justify-between px-3 py-2"
-        style={{borderBottom:"1px solid rgba(255,255,255,0.06)",background:"rgba(255,255,255,0.04)"}}>
+      style={{
+        border:`1px solid ${done?"rgba(200,240,0,0.2)":isOpen?"rgba(200,240,0,0.15)":"rgba(255,255,255,0.07)"}`,
+        background:done?"rgba(200,240,0,0.02)":isOpen?"rgba(255,255,255,0.03)":"transparent",
+      }}>
+
+      {/* Clickable header */}
+      <button
+        onClick={onToggle}
+        className="w-full flex items-center justify-between px-3 py-2.5 transition-colors hover:bg-white/[0.03]"
+        style={{background:"transparent"}}
+      >
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0"
-            style={{background:done?"linear-gradient(135deg,#c8f000,#84cc16)":"rgba(255,255,255,0.1)"}}>
-            <span style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"0.75rem",color:done?"#1a0533":"rgba(255,255,255,0.7)"}}>
-              {group}
-            </span>
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+            style={{background:done?"linear-gradient(135deg,#c8f000,#84cc16)":isOpen?"rgba(200,240,0,0.15)":"rgba(255,255,255,0.08)"}}>
+            {done
+              ? <span className="text-xs font-black" style={{color:"#1a0533"}}>✓</span>
+              : <span style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"0.8rem",color:isOpen?"#c8f000":"rgba(255,255,255,0.6)"}}>
+                  {group}
+                </span>
+            }
           </div>
-          <span className="text-xs font-bold text-white">Group {group}</span>
+          <div className="text-left">
+            <span className="text-xs font-bold text-white">Group {group}</span>
+            {!isOpen && (
+              <p className="text-xs leading-none mt-0.5" style={{color:"rgba(255,255,255,0.28)",fontSize:"0.6rem"}}>
+                {teams.slice(0,2).join(" · ")} · …
+              </p>
+            )}
+          </div>
         </div>
-        <span className="text-xs font-semibold" style={{color:done?"#c8f000":"rgba(255,255,255,0.3)"}}>
-          {picked}/{matches.length}
-        </span>
-      </div>
-      {Object.entries(byDay).map(([day,dayMatches])=>(
-        <div key={day}>
-          <div className="px-3 py-1" style={{background:"rgba(255,255,255,0.02)",borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
-            <span style={{fontSize:"0.6rem",fontWeight:700,color:"rgba(255,255,255,0.2)",textTransform:"uppercase",letterSpacing:"0.1em"}}>
-              Matchday {day}
-            </span>
-          </div>
-          {dayMatches.map(m=>(
-            <MatchPickRow key={m.id} match={m} pick={picks[m.id]} score={scores[m.id]}
-              onPickChange={onPick} onScoreChange={onScore} mode={mode} />
+        <div className="flex items-center gap-2.5 shrink-0">
+          <span className="text-xs font-semibold" style={{color:done?"#c8f000":"rgba(255,255,255,0.3)"}}>
+            {picked}/{matches.length}
+          </span>
+          <svg
+            className="w-3.5 h-3.5 transition-transform duration-200"
+            style={{color:"rgba(255,255,255,0.3)",transform:isOpen?"rotate(180deg)":"rotate(0deg)"}}
+            fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/>
+          </svg>
+        </div>
+      </button>
+
+      {/* Collapsible body */}
+      {isOpen && (
+        <div style={{borderTop:"1px solid rgba(255,255,255,0.06)"}}>
+          {Object.entries(byDay).map(([day,dayMatches])=>(
+            <div key={day}>
+              <div className="px-3 py-1" style={{background:"rgba(255,255,255,0.02)",borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
+                <span style={{fontSize:"0.6rem",fontWeight:700,color:"rgba(255,255,255,0.2)",textTransform:"uppercase",letterSpacing:"0.1em"}}>
+                  Matchday {day}
+                </span>
+              </div>
+              {dayMatches.map(m=>(
+                <MatchPickRow key={m.id} match={m} pick={picks[m.id]} score={scores[m.id]}
+                  onPickChange={onPick} onScoreChange={onScore} mode={mode} />
+              ))}
+            </div>
           ))}
+          <MiniStandings standings={standings} thirds={thirds}/>
         </div>
-      ))}
-      <MiniStandings standings={standings} thirds={thirds}/>
+      )}
     </div>
   );
 }
@@ -463,8 +500,9 @@ function ModeToggle({ mode, onChange }) {
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function MyBracket() {
-  const [view,   setView]   = useState("groups");
-  const [mode,   setMode]   = useState("winner");
+  const [view,      setView]      = useState("groups");
+  const [mode,      setMode]      = useState("winner");
+  const [openGroup, setOpenGroup] = useState("A");
   const [picks,  setPicks]  = useState(()=>getPicks());
   const [scores, setScores] = useState(()=>getScores());
   const [bw,     setBw]     = useState(()=>{
@@ -475,6 +513,43 @@ export default function MyBracket() {
     return { ...emptyWinners(), ...saved };
   });
   const [bScores,setBScores]= useState(()=>getBracketScores());
+
+  const { user, loading: authLoading, signOut } = useAuth();
+  const [showAuth,      setShowAuth]      = useState(false);
+  const [authModalMode, setAuthModalMode] = useState("login");
+  const [skippedAuth,   setSkippedAuth]   = useState(false);
+  const [submitting,   setSubmitting]   = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // null | "success" | "error"
+  const [submitError,  setSubmitError]  = useState(null);
+
+  // Show welcome prompt if not logged in and hasn't skipped yet
+  const showWelcome = !authLoading && !user && !skippedAuth;
+
+  async function handleSubmit() {
+    if (!user) { setShowAuth(true); return; }
+    setSubmitting(true);
+    setSubmitStatus(null);
+    try {
+      const { error } = await supabase.from("submissions").upsert({
+        user_id:           user.id,
+        email:             user.email,
+        display_name:      user.user_metadata?.display_name ?? "",
+        picks,
+        scores,
+        bracket:           bw,
+        bracket_scores:    bScores,
+        group_picks_count: Object.keys(picks).length,
+        updated_at:        new Date().toISOString(),
+      }, { onConflict: "user_id" });
+      if (error) throw error;
+      setSubmitStatus("success");
+    } catch (err) {
+      setSubmitError(err.message);
+      setSubmitStatus("error");
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   const { byGroup, thirds, r32Slots } = useMemo(()=>{
     const byGroup=computeAllStandings(picks);
@@ -557,14 +632,93 @@ export default function MyBracket() {
   return (
     <div className="px-4 py-10" style={{maxWidth:"100vw"}}>
 
+      {/* ── Welcome / sign-in prompt ── */}
+      {showWelcome && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{background:"rgba(10,2,26,0.92)",backdropFilter:"blur(8px)"}}>
+          <div className="relative w-full max-w-sm rounded-2xl p-8 text-center"
+            style={{
+              background:"linear-gradient(160deg,#1f0645 0%,#160336 100%)",
+              border:"1px solid rgba(255,255,255,0.1)",
+              boxShadow:"0 24px 80px rgba(0,0,0,0.7)",
+            }}>
+
+            <div className="text-5xl mb-4">🏆</div>
+
+            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{color:"#ef4444"}}>
+              $1,000 Challenge
+            </p>
+            <h3 className="text-white mb-2 leading-none"
+              style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"2rem",letterSpacing:"0.04em"}}>
+              Make My Bracket
+            </h3>
+            <p className="text-sm mb-6" style={{color:"rgba(255,255,255,0.45)"}}>
+              Sign in to save your predictions and enter the $1,000 group stage challenge.
+              Your picks are always saved locally even if you skip.
+            </p>
+
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => { setAuthModalMode("signup"); setShowAuth(true); }}
+                className="w-full py-3 rounded-xl font-black text-sm transition-all duration-150 active:scale-95"
+                style={{background:"linear-gradient(135deg,#dc2626,#b91c1c)",color:"white",boxShadow:"0 0 24px rgba(220,38,38,0.4)"}}>
+                Create Account & Enter
+              </button>
+              <button
+                onClick={() => { setAuthModalMode("login"); setShowAuth(true); }}
+                className="w-full py-3 rounded-xl font-black text-sm transition-all duration-150 active:scale-95"
+                style={{background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.12)",color:"rgba(255,255,255,0.8)"}}>
+                Sign In
+              </button>
+              <button
+                onClick={() => setSkippedAuth(true)}
+                className="text-xs mt-1 transition-colors"
+                style={{color:"rgba(255,255,255,0.25)"}}
+                onMouseEnter={e=>e.currentTarget.style.color="rgba(255,255,255,0.5)"}
+                onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.25)"}>
+                Skip for now — I'll sign in before submitting
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Auth modal */}
+      {showAuth && (
+        <AuthModal
+          initialMode={authModalMode}
+          onClose={() => setShowAuth(false)}
+          onAuth={() => {
+            setShowAuth(false);
+            setSkippedAuth(false);
+          }}
+        />
+      )}
+
       {/* Header */}
       <div className="mb-6" style={{maxWidth:860}}>
-        <h2 className="text-white mb-1"
-          style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"2rem",letterSpacing:"0.08em"}}>
-          My Bracket
-        </h2>
+        <div className="flex items-start justify-between gap-4 flex-wrap mb-1">
+          <h2 className="text-white"
+            style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"2rem",letterSpacing:"0.08em"}}>
+            Make My Bracket
+          </h2>
+          {user && (
+            <div className="flex items-center gap-2 text-xs">
+              <span className="px-2 py-1 rounded-full font-semibold"
+                style={{background:"rgba(200,240,0,0.1)",border:"1px solid rgba(200,240,0,0.2)",color:"#c8f000"}}>
+                ✓ {user.user_metadata?.display_name || user.email}
+              </span>
+              <button onClick={signOut}
+                style={{color:"rgba(255,255,255,0.3)"}}
+                onMouseEnter={e=>e.currentTarget.style.color="rgba(255,255,255,0.6)"}
+                onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.3)"}>
+                Sign out
+              </button>
+            </div>
+          )}
+        </div>
         <p className="text-sm mb-4" style={{color:"rgba(255,255,255,0.35)"}}>
-          Predict all 72 group matches then pick your way through the knockout bracket.
+          Your predictions - Predict group stages right and win $1000!
         </p>
         <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-3">
@@ -623,15 +777,85 @@ export default function MyBracket() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="flex flex-col gap-2">
             {GROUPS.map(g=>(
               <GroupCard key={g} group={g} picks={picks} scores={scores}
                 onPick={handleGroupPick} onScore={handleGroupScore}
-                standings={byGroup[g]} thirds={thirds} mode={mode}/>
+                standings={byGroup[g]} thirds={thirds} mode={mode}
+                isOpen={openGroup===g}
+                onToggle={()=>setOpenGroup(prev=>prev===g?null:g)}
+              />
             ))}
           </div>
         </div>
       )}
+
+      {/* ══ SUBMIT BAR ══════════════════════════════════════════════════════ */}
+      <div className="mt-8 mb-2 flex items-center gap-4 flex-wrap p-5 rounded-2xl"
+        style={{
+          background: allPicked
+            ? "linear-gradient(135deg, rgba(220,38,38,0.12), rgba(185,28,28,0.08))"
+            : "rgba(255,255,255,0.03)",
+          border: `1px solid ${allPicked ? "rgba(220,38,38,0.3)" : "rgba(255,255,255,0.08)"}`,
+        }}>
+
+        <div className="flex-1 min-w-0">
+          {submitStatus === "success" ? (
+            <>
+              <p className="font-bold text-sm" style={{color:"#c8f000"}}>🎉 Bracket submitted!</p>
+              <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.4)"}}>
+                Your picks are saved. You can update them any time before the tournament starts.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="font-bold text-sm text-white">
+                {allPicked ? "Ready to submit! 🏆" : `${totalMatches - pickedCount} picks remaining`}
+              </p>
+              <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.35)"}}>
+                {allPicked
+                  ? "All group stage picks complete — lock in your bracket to enter the $1,000 challenge."
+                  : "Complete all 48 group stage matches to submit your official entry."}
+              </p>
+              {submitStatus === "error" && (
+                <p className="text-xs mt-1" style={{color:"#ef4444"}}>{submitError}</p>
+              )}
+            </>
+          )}
+        </div>
+
+        <button
+          onClick={handleSubmit}
+          disabled={submitting || !allPicked}
+          className="shrink-0 px-6 py-3 rounded-xl font-black text-sm transition-all duration-150 active:scale-95"
+          style={{
+            background: !allPicked
+              ? "rgba(255,255,255,0.06)"
+              : submitting
+              ? "rgba(220,38,38,0.4)"
+              : submitStatus === "success"
+              ? "linear-gradient(135deg,#c8f000,#84cc16)"
+              : "linear-gradient(135deg,#dc2626,#b91c1c)",
+            color: !allPicked
+              ? "rgba(255,255,255,0.25)"
+              : submitStatus === "success"
+              ? "#1a0533"
+              : "white",
+            cursor: !allPicked ? "not-allowed" : "pointer",
+            boxShadow: allPicked && submitStatus !== "success"
+              ? "0 0 24px rgba(220,38,38,0.4)"
+              : "none",
+          }}
+        >
+          {submitting
+            ? "Saving…"
+            : submitStatus === "success"
+            ? "✓ Saved"
+            : user
+            ? "Submit My Bracket"
+            : "Sign In & Submit"}
+        </button>
+      </div>
 
       {/* ══ KNOCKOUT BRACKET ════════════════════════════════════════════════ */}
       {view==="knockout"&&(

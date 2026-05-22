@@ -281,14 +281,22 @@ export default function Bracket() {
 
       {/* Page header */}
       <div className="mb-8">
-        <h2
-          className="text-white mb-1"
-          style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2rem", letterSpacing: "0.08em" }}
-        >
-          AI Bracket Prediction
-        </h2>
+        <div className="flex items-center gap-3 mb-1">
+          <h2
+            className="text-white"
+            style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2rem", letterSpacing: "0.08em" }}
+          >
+            Simulated Bracket
+          </h2>
+          <span
+            className="text-xs font-black px-2 py-1 rounded-md self-end mb-1"
+            style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000", letterSpacing: "0.08em" }}
+          >
+            AI
+          </span>
+        </div>
         <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>
-          Full tournament simulated using ELO ratings + historical form — no user input required
+          Full tournament simulated using ELO ratings + historical form — read only, no user input
         </p>
       </div>
 
