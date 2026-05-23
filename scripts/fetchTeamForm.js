@@ -78,7 +78,7 @@ const TEAM_IDS = {
   "Scotland":                35,
   "Sweden":                  14,
   "Czechia":                 29,
-  "Bosnia and Herzegovina":  21,
+  "Bosnia":  21,
   "Türkiye":                777,  // Turkey — verify if 0 results returned
   "Norway":                  53,
 
@@ -160,7 +160,7 @@ const TEAM_CONF = {
   "England": "UEFA", "France": "UEFA", "Germany": "UEFA", "Spain": "UEFA",
   "Portugal": "UEFA", "Netherlands": "UEFA", "Belgium": "UEFA", "Croatia": "UEFA",
   "Switzerland": "UEFA", "Austria": "UEFA", "Scotland": "UEFA", "Sweden": "UEFA",
-  "Czechia": "UEFA", "Bosnia and Herzegovina": "UEFA", "Türkiye": "UEFA", "Norway": "UEFA",
+  "Czechia": "UEFA", "Bosnia": "UEFA", "Türkiye": "UEFA", "Norway": "UEFA",
 
   "Argentina": "CONMEBOL", "Brazil": "CONMEBOL", "Uruguay": "CONMEBOL",
   "Colombia": "CONMEBOL", "Ecuador": "CONMEBOL", "Paraguay": "CONMEBOL",

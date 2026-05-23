@@ -251,7 +251,7 @@
   "B1": {
     "fixtureId": "B1",
     "home": "Canada",
-    "away": "Bosnia and Herzegovina",
+    "away": "Bosnia",
     "allTime": {
       "played": 0,
       "homeTeamWins": 0,
@@ -335,7 +335,7 @@
   "B4": {
     "fixtureId": "B4",
     "home": "Switzerland",
-    "away": "Bosnia and Herzegovina",
+    "away": "Bosnia",
     "allTime": {
       "played": 1,
       "homeTeamWins": 0,
@@ -356,7 +356,7 @@
       {
         "date": "2016-03-29",
         "homeTeam": "Switzerland",
-        "awayTeam": "Bosnia and Herzegovina",
+        "awayTeam": "Bosnia",
         "homeScore": 0,
         "awayScore": 2,
         "tournament": "Friendly"
@@ -396,7 +396,7 @@
   },
   "B6": {
     "fixtureId": "B6",
-    "home": "Bosnia and Herzegovina",
+    "home": "Bosnia",
     "away": "Qatar",
     "allTime": {
       "played": 2,
@@ -417,7 +417,7 @@
     "last5Meetings": [
       {
         "date": "2010-08-10",
-        "homeTeam": "Bosnia and Herzegovina",
+        "homeTeam": "Bosnia",
         "awayTeam": "Qatar",
         "homeScore": 1,
         "awayScore": 1,
@@ -426,7 +426,7 @@
       {
         "date": "2000-01-24",
         "homeTeam": "Qatar",
-        "awayTeam": "Bosnia and Herzegovina",
+        "awayTeam": "Bosnia",
         "homeScore": 2,
         "awayScore": 0,
         "tournament": "Friendly"

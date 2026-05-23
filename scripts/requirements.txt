@@ -1,0 +1,4 @@
+# Install with:  pip3 install -r scripts/requirements.txt
+# On macOS, use pip3 (not pip) or: python3 -m pip install -r scripts/requirements.txt
+numpy>=1.21
+scikit-learn>=1.0

@@ -44,7 +44,7 @@ const WC_TEAMS = [
   "Germany", "Netherlands", "Switzerland", "Belgium", "Croatia", "Uruguay",
   "Austria", "Colombia", "Morocco", "Scotland", "Japan", "Mexico",
   "Sweden", "USA", "Norway", "Algeria", "Czechia", "Senegal",
-  "South Korea", "Ecuador", "Bosnia and Herzegovina", "Nigeria", "Iran",
+  "South Korea", "Ecuador", "Bosnia", "Nigeria", "Iran",
   "Canada", "Australia", "Ivory Coast", "Egypt", "Tunisia", "Paraguay",
   "Ghana", "Saudi Arabia", "Panama", "South Africa", "Uzbekistan",
   "Jordan", "Iraq", "Qatar", "DR Congo", "New Zealand", "Cape Verde",

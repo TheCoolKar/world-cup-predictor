@@ -6,12 +6,12 @@
   { "id": "A5", "group": "A", "matchday": 3, "home": "Czechia",      "away": "Mexico",       "date": "2026-06-24", "time": "9:00 PM ET",  "venue": "Mexico City Stadium",           "city": "Mexico City, Mexico" },
   { "id": "A6", "group": "A", "matchday": 3, "home": "South Africa", "away": "South Korea",  "date": "2026-06-24", "time": "9:00 PM ET",  "venue": "Estadio Monterrey",              "city": "Guadalupe, Mexico" },
 
-  { "id": "B1", "group": "B", "matchday": 1, "home": "Canada",                "away": "Bosnia and Herzegovina", "date": "2026-06-12", "time": "3:00 PM ET",  "venue": "Toronto Stadium",                "city": "Toronto, Canada" },
+  { "id": "B1", "group": "B", "matchday": 1, "home": "Canada",                "away": "Bosnia", "date": "2026-06-12", "time": "3:00 PM ET",  "venue": "Toronto Stadium",                "city": "Toronto, Canada" },
   { "id": "B2", "group": "B", "matchday": 1, "home": "Qatar",                 "away": "Switzerland",            "date": "2026-06-13", "time": "3:00 PM ET",  "venue": "San Francisco Bay Area Stadium", "city": "Santa Clara, USA" },
   { "id": "B3", "group": "B", "matchday": 2, "home": "Canada",                "away": "Qatar",                  "date": "2026-06-18", "time": "6:00 PM ET",  "venue": "BC Place",                       "city": "Vancouver, Canada" },
-  { "id": "B4", "group": "B", "matchday": 2, "home": "Switzerland",           "away": "Bosnia and Herzegovina", "date": "2026-06-18", "time": "3:00 PM ET",  "venue": "Los Angeles Stadium",            "city": "Inglewood, USA" },
+  { "id": "B4", "group": "B", "matchday": 2, "home": "Switzerland",           "away": "Bosnia", "date": "2026-06-18", "time": "3:00 PM ET",  "venue": "Los Angeles Stadium",            "city": "Inglewood, USA" },
   { "id": "B5", "group": "B", "matchday": 3, "home": "Switzerland",           "away": "Canada",                 "date": "2026-06-24", "time": "3:00 PM ET",  "venue": "BC Place",                       "city": "Vancouver, Canada" },
-  { "id": "B6", "group": "B", "matchday": 3, "home": "Bosnia and Herzegovina","away": "Qatar",                  "date": "2026-06-24", "time": "3:00 PM ET",  "venue": "Seattle Stadium",                "city": "Seattle, USA" },
+  { "id": "B6", "group": "B", "matchday": 3, "home": "Bosnia","away": "Qatar",                  "date": "2026-06-24", "time": "3:00 PM ET",  "venue": "Seattle Stadium",                "city": "Seattle, USA" },
 
   { "id": "C1", "group": "C", "matchday": 1, "home": "Brazil",   "away": "Morocco",  "date": "2026-06-13", "time": "6:00 PM ET",  "venue": "New York New Jersey Stadium",    "city": "East Rutherford, USA" },
   { "id": "C2", "group": "C", "matchday": 1, "home": "Haiti",    "away": "Scotland", "date": "2026-06-13", "time": "9:00 PM ET",  "venue": "Boston Stadium",                 "city": "Foxborough, USA" },

@@ -8,7 +8,7 @@ import H2HModal          from "./H2HModal";
 
 const FLAG_CODES = {
   "Mexico": "mx", "South Africa": "za", "South Korea": "kr", "Czechia": "cz",
-  "Canada": "ca", "Qatar": "qa", "Switzerland": "ch", "Bosnia and Herzegovina": "ba",
+  "Canada": "ca", "Qatar": "qa", "Switzerland": "ch", "Bosnia": "ba",
   "Brazil": "br", "Morocco": "ma", "Haiti": "ht", "Scotland": "gb-sct",
   "USA": "us", "Paraguay": "py", "Australia": "au", "Türkiye": "tr",
   "Germany": "de", "Curaçao": "cw", "Ivory Coast": "ci", "Ecuador": "ec",
@@ -64,8 +64,9 @@ function FormDots({ form }) {
 }
 
 export default function MatchCard({ match }) {
-  const [showH2H,    setShowH2H]    = useState(false);
-  const [h2hHovered, setH2hHovered] = useState(false);
+  const [showH2H,       setShowH2H]       = useState(false);
+  const [h2hHovered,    setH2hHovered]    = useState(false);
+  const [showBreakdown, setShowBreakdown] = useState(false);
   const { home, away, date, time, city, matchday } = match;
 
   const eloHome      = eloRatings[home];
@@ -81,7 +82,7 @@ export default function MatchCard({ match }) {
   const formStrAway = getFormString(apiFormAway, histAway);
 
   const prediction = eloHome && eloAway
-    ? predictMatch(eloHome, eloAway, apiFormHome, apiFormAway, histHome?.competitive, histAway?.competitive)
+    ? predictMatch(eloHome, eloAway, apiFormHome, apiFormAway, histHome?.competitive, histAway?.competitive, h2h, match.id)
     : null;
 
   const score = prediction
@@ -115,18 +116,90 @@ export default function MatchCard({ match }) {
         >
           MD {matchday}
         </span>
-        <div className="flex items-center gap-2">
-          {prediction?.usedForm && (
+        <div className="flex items-center gap-2 relative">
+          {prediction?.usedMarket && (
             <span
-              className="text-xs font-semibold px-1.5 py-0.5 rounded"
-              style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000" }}
+              className="text-xs font-semibold px-1.5 py-0.5 rounded cursor-pointer select-none"
+              style={{ background: "rgba(99,102,241,0.18)", color: "#a5b4fc", border: "1px solid rgba(99,102,241,0.3)" }}
+              onClick={() => setShowBreakdown(v => !v)}
             >
-              ELO + Form
+              📈 Market
             </span>
           )}
+          {prediction?.usedForm && !prediction?.usedMarket && (
+            <span
+              className="text-xs font-semibold px-1.5 py-0.5 rounded cursor-pointer select-none"
+              style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000" }}
+              onClick={() => setShowBreakdown(v => !v)}
+            >
+              AI Model
+            </span>
+          )}
+
+          {/* ── Prediction breakdown popover ── */}
+          {showBreakdown && prediction && (
+            <div
+              className="absolute right-0 top-7 z-50 rounded-xl p-3 text-xs flex flex-col gap-2"
+              style={{ background: "#1a0a2e", border: "1px solid rgba(255,255,255,0.12)", minWidth: 210, boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}
+              onClick={e => e.stopPropagation()}
+            >
+              <p className="font-black uppercase tracking-wider mb-0.5" style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.6rem" }}>
+                Prediction Breakdown
+              </p>
+
+              {/* Model row */}
+              <div className="flex items-center justify-between gap-3">
+                <span style={{ color: "rgba(255,255,255,0.45)" }}>
+                  {prediction.model?.includes("trained") ? "🧠 Trained model" : "🧮 Seed model"}
+                </span>
+                <span className="font-bold tabular-nums" style={{ color: "#c8f000" }}>
+                  {prediction.usedMarket
+                    ? `${(prediction.homeWin / 0.45 * 0.45).toFixed(0)}%`  // approx back-calculation
+                    : `${prediction.homeWin}%`
+                  }
+                </span>
+              </div>
+
+              {/* Market row */}
+              {prediction.usedMarket && (
+                <div className="flex items-center justify-between gap-3">
+                  <span style={{ color: "rgba(255,255,255,0.45)" }}>📈 Polymarket odds</span>
+                  <span className="font-bold tabular-nums" style={{ color: "#a5b4fc" }}>
+                    {prediction.marketOdds?.home}%
+                  </span>
+                </div>
+              )}
+
+              {/* Divider */}
+              <div style={{ height: 1, background: "rgba(255,255,255,0.08)" }} />
+
+              {/* Blended result */}
+              <div className="flex items-center justify-between gap-3">
+                <span className="font-bold" style={{ color: "rgba(255,255,255,0.7)" }}>
+                  {prediction.usedMarket ? "Blended (55/45)" : "Final"}
+                </span>
+                <span className="font-black tabular-nums" style={{ color: "white" }}>
+                  {home} {prediction.homeWin}% — {prediction.awayWin}% {away}
+                </span>
+              </div>
+
+              {/* Model tag */}
+              <p style={{ color: "rgba(255,255,255,0.2)", fontSize: "0.58rem", marginTop: 2 }}>
+                Model: {prediction.model}
+              </p>
+
+              <button
+                className="text-xs mt-1 self-end"
+                style={{ color: "rgba(255,255,255,0.25)" }}
+                onClick={() => setShowBreakdown(false)}
+              >
+                close ✕
+              </button>
+            </div>
+          )}
+        </div>
           <span className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>{formattedDate}</span>
         </div>
-      </div>
 
       {/* Teams */}
       <div className="px-4 pt-4 pb-2 flex items-center justify-between gap-2 flex-1">

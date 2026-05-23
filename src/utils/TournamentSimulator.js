@@ -24,12 +24,14 @@ function getHist(team)     { return historicalStats[team]   ?? null; }
 function getElo(team)      { return eloRatings[team]        ?? 1400; }
 
 /** Predict a match and return { homeWin (0-1), awayWin (0-1), score } */
-function simulateMatch(home, away) {
+function simulateMatch(home, away, fixtureId = null) {
   const pred = predictMatch(
     getElo(home), getElo(away),
     getApiForm(home), getApiForm(away),
     getHist(home)?.competitive,
     getHist(away)?.competitive,
+    null,        // h2h — not pre-computed for simulator
+    fixtureId,   // Polymarket fixture ID (group stage only)
   );
   const homeWinProb = pred.homeWin / 100;
   const score = predictScore(
@@ -66,8 +68,8 @@ function simulateGroupStage() {
   const groupResults = {}; // group → array of { home, away, homeGoals, awayGoals, homeWinProb }
 
   for (const fixture of fixtures) {
-    const { group, home, away } = fixture;
-    const { homeWinProb, score } = simulateMatch(home, away);
+    const { id, group, home, away } = fixture;
+    const { homeWinProb, score } = simulateMatch(home, away, id);
     if (!groupResults[group]) groupResults[group] = [];
     groupResults[group].push({ home, away, homeGoals: score.home, awayGoals: score.away, homeWinProb });
   }

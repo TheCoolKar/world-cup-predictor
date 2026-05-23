@@ -2,7 +2,7 @@ import { setPick } from "../utils/storage";
 
 const FLAG_CODES = {
   "Mexico": "mx", "South Africa": "za", "South Korea": "kr", "Czechia": "cz",
-  "Canada": "ca", "Qatar": "qa", "Switzerland": "ch", "Bosnia and Herzegovina": "ba",
+  "Canada": "ca", "Qatar": "qa", "Switzerland": "ch", "Bosnia": "ba",
   "Brazil": "br", "Morocco": "ma", "Haiti": "ht", "Scotland": "gb-sct",
   "USA": "us", "Paraguay": "py", "Australia": "au", "Türkiye": "tr",
   "Germany": "de", "Curaçao": "cw", "Ivory Coast": "ci", "Ecuador": "ec",

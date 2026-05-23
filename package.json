@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "fetch-odds": "python3 scripts/fetch_polymarket_odds.py",
+    "train-model": "python3 scripts/train_model.py"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.1",
