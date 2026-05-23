@@ -1,8 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "../lib/supabase";
 
-// Add a provider here only after enabling it in Supabase Dashboard → Authentication → Providers
-// and completing the OAuth app setup with the provider (Google Cloud, Azure, Apple Developer).
 const OAUTH_PROVIDERS = [
   {
     id: "google",
@@ -16,42 +14,44 @@ const OAUTH_PROVIDERS = [
       </svg>
     ),
   },
-  // Apple requires an Apple Developer account + App ID + Service ID + private key.
-  // Uncomment once configured in Supabase Dashboard → Authentication → Providers → Apple.
-  // {
-  //   id: "apple",
-  //   label: "Apple",
-  //   icon: (
-  //     <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-  //       <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.4c1.39.07 2.36.74 3.19.8 1.21-.24 2.39-.93 3.68-.84 1.58.13 2.77.76 3.55 1.96-3.26 1.95-2.5 5.9.63 7.04-.58 1.59-1.35 3.16-3.05 3.92zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
-  //     </svg>
-  //   ),
-  // },
-  // Microsoft requires an Azure app registration with a client ID + secret.
-  // Uncomment once configured in Supabase Dashboard → Authentication → Providers → Azure.
-  // {
-  //   id: "azure",
-  //   label: "Microsoft",
-  //   icon: (
-  //     <svg viewBox="0 0 24 24" width="18" height="18">
-  //       <path fill="#f25022" d="M1 1h10v10H1z"/>
-  //       <path fill="#7fba00" d="M13 1h10v10H13z"/>
-  //       <path fill="#00a4ef" d="M1 13h10v10H1z"/>
-  //       <path fill="#ffb900" d="M13 13h10v10H13z"/>
-  //     </svg>
-  //   ),
-  // },
 ];
 
+function usernameValid(u) {
+  return /^[a-zA-Z0-9_]{3,20}$/.test(u);
+}
+
 export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
-  const [mode,        setMode]        = useState(initialMode); // "login" | "signup" | "magic"
-  const [email,       setEmail]       = useState("");
-  const [name,        setName]        = useState("");
-  const [password,    setPassword]    = useState("");
-  const [loading,     setLoading]     = useState(false);
-  const [oauthLoading,setOauthLoading]= useState(null); // provider id while redirecting
-  const [error,       setError]       = useState(null);
-  const [sent,        setSent]        = useState(false);
+  const [mode,         setMode]         = useState(initialMode);
+  const [email,        setEmail]        = useState("");
+  const [name,         setName]         = useState("");
+  const [username,     setUsername]     = useState("");
+  const [usernameState,setUsernameState]= useState("idle"); // "idle"|"checking"|"taken"|"available"
+  const [password,     setPassword]     = useState("");
+  const [loading,      setLoading]      = useState(false);
+  const [oauthLoading, setOauthLoading] = useState(null);
+  const [error,        setError]        = useState(null);
+  const [sent,         setSent]         = useState(false);
+  const debounceRef = useRef(null);
+
+  // Live username uniqueness check
+  useEffect(() => {
+    if (mode !== "signup") return;
+    if (!username) { setUsernameState("idle"); return; }
+    if (!usernameValid(username)) { setUsernameState("idle"); return; }
+
+    setUsernameState("checking");
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("username", username.toLowerCase())
+        .maybeSingle();
+      setUsernameState(data ? "taken" : "available");
+    }, 450);
+
+    return () => clearTimeout(debounceRef.current);
+  }, [username, mode]);
 
   async function handleOAuth(provider) {
     setError(null);
@@ -62,7 +62,6 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
         options: { redirectTo: window.location.origin },
       });
       if (error) throw error;
-      // Browser will redirect — no further action needed here
     } catch (err) {
       setError(err.message);
       setOauthLoading(null);
@@ -72,13 +71,19 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
-    setLoading(true);
 
+    if (mode === "signup" && usernameState !== "available") {
+      setError("Please choose a valid, available username.");
+      return;
+    }
+
+    setLoading(true);
     try {
       if (mode === "magic") {
         const { error } = await supabase.auth.signInWithOtp({ email });
         if (error) throw error;
         setSent(true);
+
       } else if (mode === "signup") {
         const { data, error } = await supabase.auth.signUp({
           email,
@@ -86,11 +91,22 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
           options: { data: { display_name: name } },
         });
         if (error) throw error;
-        if (data.user) onAuth(data.user, name);
+
+        // Create profile row with unique username
+        if (data.user) {
+          const { error: profileError } = await supabase.from("profiles").insert({
+            id:         data.user.id,
+            username:   username.toLowerCase(),
+            avatar_url: null,
+          });
+          if (profileError) throw profileError;
+          onAuth(data.user);
+        }
+
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        if (data.user) onAuth(data.user, data.user.user_metadata?.display_name ?? "");
+        if (data.user) onAuth(data.user);
       }
     } catch (err) {
       setError(err.message);
@@ -110,6 +126,20 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
     outline: "none",
   };
 
+  const usernameBorderColor =
+    usernameState === "available" ? "rgba(200,240,0,0.6)" :
+    usernameState === "taken"     ? "rgba(239,68,68,0.6)" :
+    usernameState === "checking"  ? "rgba(255,255,255,0.3)" :
+    "rgba(255,255,255,0.12)";
+
+  const usernameHint =
+    usernameState === "checking"  ? { text: "Checking…",   color: "rgba(255,255,255,0.3)" } :
+    usernameState === "available" ? { text: "✓ Available", color: "#c8f000" } :
+    usernameState === "taken"     ? { text: "✗ Already taken", color: "#ef4444" } :
+    username && !usernameValid(username)
+      ? { text: "3–20 chars, letters/numbers/underscore only", color: "rgba(255,255,255,0.3)" }
+      : null;
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -121,6 +151,8 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
           background: "linear-gradient(160deg, #1f0645 0%, #160336 100%)",
           border: "1px solid rgba(255,255,255,0.1)",
           boxShadow: "0 24px 80px rgba(0,0,0,0.6)",
+          maxHeight: "90vh",
+          overflowY: "auto",
         }}
       >
         <button
@@ -131,15 +163,12 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
           onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.07)"; e.currentTarget.style.color = "rgba(255,255,255,0.4)"; }}
         >✕</button>
 
-        {/* Title */}
         <div className="mb-6">
           <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "#ef4444" }}>
             {mode === "signup" ? "Create Account" : "Sign In"}
           </p>
-          <h3
-            className="text-white leading-none"
-            style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.8rem", letterSpacing: "0.04em" }}
-          >
+          <h3 className="text-white leading-none"
+            style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.8rem", letterSpacing: "0.04em" }}>
             {mode === "magic" ? "Magic Link Login" : mode === "signup" ? "Join the Challenge" : "Save Your Bracket"}
           </h3>
           <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.35)" }}>
@@ -158,55 +187,84 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+
+            {/* OAuth */}
+            <div className="flex flex-col gap-2 mb-1">
+              {OAUTH_PROVIDERS.map((p) => {
+                const isLoading = oauthLoading === p.id;
+                return (
+                  <button key={p.id} type="button" onClick={() => handleOAuth(p.id)}
+                    disabled={!!oauthLoading || loading}
+                    className="w-full flex items-center justify-center gap-2.5 py-2.5 rounded-xl font-semibold text-sm transition-all active:scale-95"
+                    style={{
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.11)",
+                      color: isLoading ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.8)",
+                    }}
+                    onMouseEnter={e => { if (!oauthLoading) { e.currentTarget.style.background = "rgba(255,255,255,0.11)"; }}}
+                    onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
+                  >
+                    {isLoading
+                      ? <span className="w-4 h-4 rounded-full border-2 animate-spin" style={{ borderColor: "rgba(255,255,255,0.3)", borderTopColor: "transparent" }} />
+                      : p.icon}
+                    <span>{isLoading ? `Connecting…` : `Continue with ${p.label}`}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.08)" }} />
+              <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.2)" }}>or</span>
+              <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.08)" }} />
+            </div>
+
+            {/* Name (signup only) */}
             {mode === "signup" && (
               <div>
-                <label className="block text-xs font-semibold mb-1.5" style={{ color: "rgba(255,255,255,0.5)" }}>
-                  Your Name
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Alex Smith"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  style={inputStyle}
+                <label className="block text-xs font-semibold mb-1.5" style={{ color: "rgba(255,255,255,0.5)" }}>Display Name</label>
+                <input type="text" required placeholder="e.g. Karim Assaad" value={name}
+                  onChange={e => setName(e.target.value)} style={inputStyle}
                   onFocus={e => e.target.style.borderColor = "rgba(200,240,0,0.4)"}
-                  onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.12)"}
-                />
+                  onBlur={e  => e.target.style.borderColor = "rgba(255,255,255,0.12)"} />
               </div>
             )}
 
-            <div>
-              <label className="block text-xs font-semibold mb-1.5" style={{ color: "rgba(255,255,255,0.5)" }}>
-                Email
-              </label>
-              <input
-                type="email"
-                required
-                placeholder="you@example.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                style={inputStyle}
-                onFocus={e => e.target.style.borderColor = "rgba(200,240,0,0.4)"}
-                onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.12)"}
-              />
-            </div>
-
-            {mode !== "magic" && (
+            {/* Username (signup only) */}
+            {mode === "signup" && (
               <div>
                 <label className="block text-xs font-semibold mb-1.5" style={{ color: "rgba(255,255,255,0.5)" }}>
-                  Password
+                  Username <span style={{ color: "rgba(255,255,255,0.25)", fontWeight: 400 }}>(unique, public)</span>
                 </label>
-                <input
-                  type="password"
-                  required
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  style={inputStyle}
+                <input type="text" required placeholder="e.g. karim_wc26" value={username}
+                  onChange={e => setUsername(e.target.value.replace(/\s/g, ""))}
+                  maxLength={20}
+                  style={{ ...inputStyle, borderColor: usernameBorderColor }}
+                  onFocus={e => e.target.style.borderColor = usernameBorderColor}
+                  onBlur={e  => e.target.style.borderColor = usernameBorderColor} />
+                {usernameHint && (
+                  <p className="text-xs mt-1" style={{ color: usernameHint.color }}>{usernameHint.text}</p>
+                )}
+              </div>
+            )}
+
+            {/* Email */}
+            <div>
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: "rgba(255,255,255,0.5)" }}>Email</label>
+              <input type="email" required placeholder="you@example.com" value={email}
+                onChange={e => setEmail(e.target.value)} style={inputStyle}
+                onFocus={e => e.target.style.borderColor = "rgba(200,240,0,0.4)"}
+                onBlur={e  => e.target.style.borderColor = "rgba(255,255,255,0.12)"} />
+            </div>
+
+            {/* Password */}
+            {mode !== "magic" && (
+              <div>
+                <label className="block text-xs font-semibold mb-1.5" style={{ color: "rgba(255,255,255,0.5)" }}>Password</label>
+                <input type="password" required placeholder="••••••••" value={password}
+                  onChange={e => setPassword(e.target.value)} style={inputStyle}
                   onFocus={e => e.target.style.borderColor = "rgba(200,240,0,0.4)"}
-                  onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.12)"}
-                />
+                  onBlur={e  => e.target.style.borderColor = "rgba(255,255,255,0.12)"} />
               </div>
             )}
 
@@ -216,75 +274,31 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
               </p>
             )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 rounded-xl font-black text-sm transition-all duration-150 active:scale-95 mt-1"
+            <button type="submit" disabled={loading || (mode === "signup" && usernameState !== "available")}
+              className="w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95 mt-1"
               style={{
-                background: loading ? "rgba(200,240,0,0.3)" : "linear-gradient(135deg, #c8f000, #84cc16)",
+                background: loading ? "rgba(200,240,0,0.3)" : "linear-gradient(135deg,#c8f000,#84cc16)",
                 color: "#1a0533",
-                opacity: loading ? 0.7 : 1,
-              }}
-            >
+                opacity: loading || (mode === "signup" && usernameState !== "available") ? 0.6 : 1,
+                cursor: mode === "signup" && usernameState !== "available" ? "not-allowed" : "pointer",
+              }}>
               {loading ? "Please wait…" : mode === "signup" ? "Create Account & Save" : mode === "magic" ? "Send Magic Link" : "Sign In & Save Bracket"}
             </button>
-
-            {/* Divider */}
-            <div className="flex items-center gap-3 mt-2">
-              <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.08)" }} />
-              <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.2)" }}>or continue with</span>
-              <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.08)" }} />
-            </div>
-
-            {/* ── OAuth buttons ── */}
-            <div className="flex flex-col gap-2">
-              {OAUTH_PROVIDERS.map((p) => {
-                const isLoading = oauthLoading === p.id;
-                return (
-                  <button
-                    key={p.id}
-                    type="button"
-                    onClick={() => handleOAuth(p.id)}
-                    disabled={!!oauthLoading || loading}
-                    className="w-full flex items-center justify-center gap-2.5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-150 active:scale-95"
-                    style={{
-                      background: "rgba(255,255,255,0.06)",
-                      border: "1px solid rgba(255,255,255,0.11)",
-                      color: isLoading ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.8)",
-                      opacity: oauthLoading && !isLoading ? 0.45 : 1,
-                      cursor: oauthLoading && !isLoading ? "not-allowed" : "pointer",
-                    }}
-                    onMouseEnter={e => { if (!oauthLoading) { e.currentTarget.style.background = "rgba(255,255,255,0.11)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)"; } }}
-                    onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.11)"; }}
-                  >
-                    {isLoading ? (
-                      <span className="w-4 h-4 rounded-full border-2 animate-spin" style={{ borderColor: "rgba(255,255,255,0.3)", borderTopColor: "transparent" }} />
-                    ) : (
-                      p.icon
-                    )}
-                    <span>{isLoading ? `Connecting to ${p.label}…` : `Continue with ${p.label}`}</span>
-                  </button>
-                );
-              })}
-            </div>
           </form>
         )}
 
-        {/* Mode switcher */}
         {!sent && (
           <div className="mt-4 flex flex-col gap-1.5 items-center">
             {mode === "login" && (
               <>
                 <button onClick={() => { setMode("signup"); setError(null); }}
-                  className="text-xs transition-colors"
-                  style={{ color: "rgba(255,255,255,0.35)" }}
+                  className="text-xs transition-colors" style={{ color: "rgba(255,255,255,0.35)" }}
                   onMouseEnter={e => e.currentTarget.style.color = "#c8f000"}
                   onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.35)"}>
                   No account? Sign up →
                 </button>
                 <button onClick={() => { setMode("magic"); setError(null); }}
-                  className="text-xs transition-colors"
-                  style={{ color: "rgba(255,255,255,0.25)" }}
+                  className="text-xs transition-colors" style={{ color: "rgba(255,255,255,0.25)" }}
                   onMouseEnter={e => e.currentTarget.style.color = "rgba(255,255,255,0.6)"}
                   onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.25)"}>
                   Or use a magic link (no password)
@@ -293,8 +307,7 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
             )}
             {mode === "signup" && (
               <button onClick={() => { setMode("login"); setError(null); }}
-                className="text-xs transition-colors"
-                style={{ color: "rgba(255,255,255,0.35)" }}
+                className="text-xs transition-colors" style={{ color: "rgba(255,255,255,0.35)" }}
                 onMouseEnter={e => e.currentTarget.style.color = "#c8f000"}
                 onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.35)"}>
                 Already have an account? Sign in →
@@ -302,8 +315,7 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
             )}
             {mode === "magic" && (
               <button onClick={() => { setMode("login"); setError(null); }}
-                className="text-xs transition-colors"
-                style={{ color: "rgba(255,255,255,0.35)" }}
+                className="text-xs transition-colors" style={{ color: "rgba(255,255,255,0.35)" }}
                 onMouseEnter={e => e.currentTarget.style.color = "#c8f000"}
                 onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.35)"}>
                 ← Use email + password instead
