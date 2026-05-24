@@ -17,12 +17,7 @@
 import { useState, useMemo }  from "react";
 import fixtures                from "../data/wc2026_fixtures.json";
 import eloRatings              from "../data/elo_ratings.json";
-import {
-  getPicks,         setPick,         clearPicks,
-  getScores,        setScore,        clearScores,
-  getBracket,       saveBracket,     clearBracket,
-  getBracketScores, setBracketScore, clearBracketScores,
-} from "../utils/storage";
+import { upsertBracket } from "../utils/storage";
 import { supabase } from "../lib/supabase";
 import { useAuth }  from "../hooks/useAuth";
 import AuthModal    from "../components/AuthModal";
@@ -78,9 +73,14 @@ function computeThirds(byGroup) {
 
 // ── R32 slot builder ──────────────────────────────────────────────────────────
 
-function buildR32Slots(byGroup, thirds) {
-  const pos=(g,i)=>byGroup[g]?.[i]?.team??null;
-  const t=i=>thirds[i]?.team??null;
+function isGroupComplete(g, picks) {
+  return GROUP_MATCHES.filter(m => m.group === g).every(m => picks[m.id] != null);
+}
+
+function buildR32Slots(byGroup, thirds, picks) {
+  const pos=(g,i)=>isGroupComplete(g,picks) ? (byGroup[g]?.[i]?.team??null) : null;
+  const validThirds=thirds.map(t=>isGroupComplete(t.group,picks)?t:{team:null});
+  const t=i=>validThirds[i]?.team??null;
   const pairs=[["A","B"],["C","D"],["E","F"],["G","H"],["I","J"],["K","L"]];
   const slots=[];
   for (const [g1,g2] of pairs) {
@@ -227,9 +227,9 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode })
         <span className={getFlagClass(home) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
       </div>
       <div className="flex gap-1 shrink-0">
-        <BTN value="home" label="1" activeColor="#c8f000"  activeText="#1a0533"/>
+        <BTN value="home" label="H" activeColor="#c8f000"  activeText="#1a0533"/>
         <BTN value="draw" label="X" activeColor="#f59e0b"  activeText="#1a0533"/>
-        <BTN value="away" label="2" activeColor="#ef4444"  activeText="white"  />
+        <BTN value="away" label="A" activeColor="#ef4444"  activeText="white"  />
       </div>
       <div className="flex items-center gap-1.5 flex-1 min-w-0">
         <span className={getFlagClass(away) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
@@ -445,8 +445,7 @@ function BracketMatch({ home, away, winner, onPick, onForcePick, onScore, score,
         style={{background:isW?"rgba(200,240,0,0.15)":"transparent",cursor:isTbd?"default":"pointer",opacity:isL?0.3:1}}>
         {!isTbd && <span className={getFlagClass(team) ?? ''} style={{fontSize:'1rem',lineHeight:1,display:'inline-block',flexShrink:0}} />}
         <span className="text-xs font-semibold truncate flex-1 leading-tight"
-          style={{color:isW?"#c8f000":isTbd?"rgba(255,255,255,0.18)":"rgba(255,255,255,0.8)"}}
-          onClick={e=>{if(team){e.stopPropagation();openTeam(team);}}}>
+          style={{color:isW?"#c8f000":isTbd?"rgba(255,255,255,0.18)":"rgba(255,255,255,0.8)"}}>
           {team??"TBD"}
         </span>
         {isW&&<span className="text-xs shrink-0" style={{color:"#c8f000"}}>✓</span>}
@@ -485,7 +484,7 @@ function ModeToggle({ mode, onChange }) {
       </div>
       <span className="text-xs" style={{color:"rgba(255,255,255,0.2)"}}>
         {mode==="winner"
-          ? "Group: 1=home · X=draw · 2=away  |  Bracket: click to advance"
+          ? "Group: H=home · X=draw · A=away  |  Bracket: click to advance"
           : "Enter goals for each team — result and winner are auto-determined"}
       </span>
     </div>
@@ -494,20 +493,23 @@ function ModeToggle({ mode, onChange }) {
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 
-export default function MyBracket() {
+export default function MyBracket({ bracketData, onBack }) {
   const [view,      setView]      = useState("groups");
-  const [mode,      setMode]      = useState("winner");
+  const mode = bracketData?.mode ?? "winner";
   const [openGroup, setOpenGroup] = useState("A");
-  const [picks,  setPicks]  = useState(()=>getPicks());
-  const [scores, setScores] = useState(()=>getScores());
+  const [picks,  setPicks]  = useState(()=> bracketData?.picks  ?? {});
+  const [scores, setScores] = useState(()=> bracketData?.scores ?? {});
   const [bw,     setBw]     = useState(()=>{
-    const saved = getBracket();
-    if (!saved) return emptyWinners();
-    // Merge with emptyWinners so any keys missing from older saves (e.g. "3P")
-    // are always present — prevents TypeError crashes on legacy localStorage data.
-    return { ...emptyWinners(), ...saved };
+    const saved = bracketData?.bracket ?? null;
+    return { ...emptyWinners(), ...(saved ?? {}) };
   });
-  const [bScores,setBScores]= useState(()=>getBracketScores());
+  const [bScores,setBScores]= useState(()=> bracketData?.bracketScores ?? {});
+
+  // Persist the whole bracket object whenever anything changes
+  function save(newPicks, newScores, newBw, newBScores) {
+    if (!bracketData) return;
+    upsertBracket({ ...bracketData, picks: newPicks, scores: newScores, bracket: newBw, bracketScores: newBScores });
+  }
 
   const { user, loading: authLoading, signOut } = useAuth();
   const [showAuth,      setShowAuth]      = useState(false);
@@ -549,7 +551,7 @@ export default function MyBracket() {
   const { byGroup, thirds, r32Slots } = useMemo(()=>{
     const byGroup=computeAllStandings(picks);
     const thirds=computeThirds(byGroup);
-    return { byGroup, thirds, r32Slots:buildR32Slots(byGroup,thirds) };
+    return { byGroup, thirds, r32Slots:buildR32Slots(byGroup,thirds,picks) };
   },[picks]);
 
   const pickedCount  = Object.keys(picks).length;
@@ -567,58 +569,64 @@ export default function MyBracket() {
   // ── Handlers ────────────────────────────────────────────────────────────────
 
   function handleGroupPick(matchId, pick) {
-    setPick(matchId,pick);
-    setPicks(prev=>({...prev,[matchId]:pick}));
-    const fresh=emptyWinners();
-    setBw(fresh); saveBracket(fresh);
-    setBScores({}); clearBracketScores();
+    const newPicks = {...picks, [matchId]: pick};
+    const fresh = emptyWinners();
+    setPicks(newPicks);
+    setBw(fresh);
+    setBScores({});
+    save(newPicks, scores, fresh, {});
   }
 
   function handleGroupScore(matchId, h, a) {
-    setScore(matchId,h,a);
-    setScores(prev=>({...prev,[matchId]:{home:h,away:a}}));
+    const newScores = {...scores, [matchId]:{home:h,away:a}};
+    setScores(newScores);
+    save(picks, newScores, bw, bScores);
   }
 
   function handleBracketPick(round, matchIdx, team) {
     const next=applyPick(bw,round,matchIdx,team,false);
-    setBw(next); saveBracket(next);
+    setBw(next); save(picks, scores, next, bScores);
   }
 
   function handleBracketForcePick(round, matchIdx, team) {
     const next=applyPick(bw,round,matchIdx,team,true);
-    setBw(next); saveBracket(next);
+    setBw(next); save(picks, scores, next, bScores);
   }
 
   function handleBracketScore(scoreKey, h, a) {
-    setBracketScore(scoreKey,h,a);
-    setBScores(prev=>({...prev,[scoreKey]:{home:h,away:a}}));
+    const newBs = {...bScores, [scoreKey]:{home:h,away:a}};
+    setBScores(newBs);
+    save(picks, scores, bw, newBs);
   }
 
   function handle3PPick(team) {
     const next={...bw,"3P":[team===bw["3P"][0]?null:team]};
-    setBw(next); saveBracket(next);
+    setBw(next); save(picks, scores, next, bScores);
   }
 
   function handle3PScore(h, a) {
     const key="3P_0";
-    setBracketScore(key,h,a);
-    setBScores(prev=>({...prev,[key]:{home:h,away:a}}));
+    const newBs = {...bScores, [key]:{home:h,away:a}};
+    setBScores(newBs);
     if (sf1Loser&&sf2Loser&&h!==a) {
       const winner=h>a?sf1Loser:sf2Loser;
       const next={...bw,"3P":[winner]};
-      setBw(next); saveBracket(next);
+      setBw(next); save(picks, scores, next, newBs);
+    } else {
+      save(picks, scores, bw, newBs);
     }
   }
 
   function handle3PForcePick(team) {
-    if (bw["3P"][0] === team) return; // no-op — already set
+    if (bw["3P"][0] === team) return;
     const next={...bw,"3P":[team]};
-    setBw(next); saveBracket(next);
+    setBw(next); save(picks, scores, next, bScores);
   }
 
   function handleResetAll() {
-    clearPicks(); clearScores(); clearBracket(); clearBracketScores();
-    setPicks({}); setScores({}); setBw(emptyWinners()); setBScores({});
+    const fresh = emptyWinners();
+    setPicks({}); setScores({}); setBw(fresh); setBScores({});
+    save({}, {}, fresh, {});
   }
 
   const champion=bw.F[0];
@@ -626,6 +634,28 @@ export default function MyBracket() {
 
   return (
     <div className="px-4 py-10" style={{maxWidth:"100vw"}}>
+
+      {/* ── Back bar + bracket name ── */}
+      {onBack && (
+        <div className="flex items-center gap-3 mb-6">
+          <button onClick={onBack}
+            className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg transition-all"
+            style={{background:"rgba(255,255,255,0.06)",color:"rgba(255,255,255,0.5)",border:"1px solid rgba(255,255,255,0.09)"}}
+            onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,0.1)";e.currentTarget.style.color="white";}}
+            onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.06)";e.currentTarget.style.color="rgba(255,255,255,0.5)";}}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            My Brackets
+          </button>
+          <span className="text-sm font-black text-white truncate"
+            style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"1.3rem",letterSpacing:"0.05em"}}>
+            {bracketData?.name ?? "Bracket"}
+          </span>
+          <span className="ml-auto text-xs px-2 py-0.5 rounded-full font-semibold"
+            style={{background:"rgba(200,240,0,0.1)",color:"#c8f000",border:"1px solid rgba(200,240,0,0.2)"}}>
+            Auto-saved
+          </span>
+        </div>
+      )}
 
       {/* ── Welcome / sign-in prompt ── */}
       {showWelcome && (
@@ -752,8 +782,6 @@ export default function MyBracket() {
       {/* ══ GROUP STAGE ══════════════════════════════════════════════════════ */}
       {view==="groups"&&(
         <div>
-          <ModeToggle mode={mode} onChange={setMode}/>
-
           {allPicked&&(
             <div className="flex items-center gap-3 mb-5 px-4 py-3 rounded-xl"
               style={{background:"rgba(200,240,0,0.06)",border:"1px solid rgba(200,240,0,0.2)"}}>
@@ -855,8 +883,6 @@ export default function MyBracket() {
       {/* ══ KNOCKOUT BRACKET ════════════════════════════════════════════════ */}
       {view==="knockout"&&(
         <div>
-          <ModeToggle mode={mode} onChange={setMode}/>
-
           {!allPicked&&(
             <div className="flex items-center gap-3 mb-5 px-4 py-3 rounded-xl"
               style={{background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.2)"}}>

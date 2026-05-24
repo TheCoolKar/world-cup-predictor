@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import GroupStage    from "./pages/GroupStage";
 import Bracket       from "./pages/Bracket";
 import MyBracket     from "./pages/MyBracket";
+import MyBrackets    from "./pages/MyBrackets";
+import { getBracketById } from "./utils/storage";
 import Profile       from "./pages/Profile";
 import Dashboard     from "./pages/Dashboard";
 import Rules         from "./pages/Rules";
@@ -120,8 +122,9 @@ export default function App() {
   const [showAdmin,   setShowAdmin]   = useState(false);
   const [showAuth,    setShowAuth]    = useState(false);
   const [authMode,    setAuthMode]    = useState("login");
-  const [sidebarOpen, setSidebarOpen] = useState(false);   // mobile overlay
-  const [collapsed,   setCollapsed]   = useState(false);   // desktop collapse
+  const [sidebarOpen,     setSidebarOpen]     = useState(false);
+  const [collapsed,       setCollapsed]       = useState(false);
+  const [activeBracketId, setActiveBracketId] = useState(null);
 
   const { user, loading: authLoading, signOut } = useAuth();
   const displayName = user
@@ -133,6 +136,7 @@ export default function App() {
   function navigate(tab) {
     setActiveTab(tab);
     setSidebarOpen(false);
+    if (tab !== "mine") setActiveBracketId(null);
   }
 
   // ── Nav item ─────────────────────────────────────────────────────────────────
@@ -235,7 +239,7 @@ export default function App() {
 
         <div className="shrink-0" style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "12px 0" }} />
 
-        <SideNavItem label="My Bracket"  icon={<IconEdit />}   active={activeTab === "mine"} onClick={() => navigate("mine")} accent="#ef4444" />
+        <SideNavItem label="My Brackets" icon={<IconEdit />}   active={activeTab === "mine"} onClick={() => navigate("mine")} accent="#ef4444" />
         <SideNavItem label="Teams"       icon={<IconShield />} active={activeTab === "teams"} onClick={() => navigate("teams")} accent="#c8f000" />
 
         <div className="shrink-0" style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "12px 0" }} />
@@ -462,7 +466,14 @@ export default function App() {
             <main className="flex-1" style={{ background: "#1a0533" }}>
               {activeTab === "groups"    && <GroupStage />}
               {activeTab === "bracket"   && <Bracket />}
-              {activeTab === "mine"      && <MyBracket />}
+              {activeTab === "mine"      && (
+                activeBracketId
+                  ? <MyBracket
+                      bracketData={getBracketById(activeBracketId)}
+                      onBack={() => setActiveBracketId(null)}
+                    />
+                  : <MyBrackets onOpen={(id) => setActiveBracketId(id)} />
+              )}
               {activeTab === "teams"     && <Teams />}
               {activeTab === "dashboard" && <Dashboard onNavigate={navigate} />}
               {activeTab === "profile"   && <Profile   onNavigate={navigate} />}
