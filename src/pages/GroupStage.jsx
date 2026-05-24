@@ -1,11 +1,13 @@
 import { useState } from "react";
 import fixtures from "../data/wc2026_fixtures.json";
 import MatchCard from "../components/MatchCard";
+import { useTeamModal } from "../context/TeamModalContext";
 
 const GROUPS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
 
 export default function GroupStage() {
   const [openGroup, setOpenGroup] = useState(null);
+  const { openTeam } = useTeamModal();
 
   function toggle(group) {
     setOpenGroup((prev) => (prev === group ? null : group));
@@ -71,7 +73,16 @@ export default function GroupStage() {
                   <div className="text-left">
                     <p className="text-sm font-bold text-white leading-none">Group {group}</p>
                     <p className="text-xs mt-1 leading-tight" style={{ color: "rgba(255,255,255,0.35)" }}>
-                      {teams.join(" · ")}
+                      {teams.map((t, i) => (
+                        <span key={t}>
+                          {i > 0 && <span style={{ color: "rgba(255,255,255,0.2)" }}> · </span>}
+                          <span
+                            className="hover:underline"
+                            style={{ cursor: "pointer", color: "rgba(255,255,255,0.5)" }}
+                            onClick={e => { e.stopPropagation(); openTeam(t); }}
+                          >{t}</span>
+                        </span>
+                      ))}
                     </p>
                   </div>
                 </div>

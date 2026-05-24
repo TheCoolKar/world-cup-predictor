@@ -1,0 +1,772 @@
+{
+  "Argentina": {
+    "formation": "4-3-3", "coach": "Lionel Scaloni",
+    "players": [
+      { "name": "Emiliano Martínez", "pos": "GK", "club": "Aston Villa",      "age": 32 },
+      { "name": "Nahuel Molina",     "pos": "RB", "club": "Atlético Madrid",  "age": 26 },
+      { "name": "Cristian Romero",   "pos": "CB", "club": "Tottenham",        "age": 26 },
+      { "name": "Lisandro Martínez", "pos": "CB", "club": "Man United",       "age": 27 },
+      { "name": "Nicolás Tagliafico","pos": "LB", "club": "Lyon",             "age": 32 },
+      { "name": "Rodrigo De Paul",   "pos": "CM", "club": "Atlético Madrid",  "age": 30 },
+      { "name": "Enzo Fernández",    "pos": "CM", "club": "Chelsea",          "age": 24 },
+      { "name": "Alexis Mac Allister","pos":"CM", "club": "Liverpool",        "age": 26 },
+      { "name": "Lionel Messi",      "pos": "RW", "club": "Inter Miami",      "age": 38 },
+      { "name": "Julián Álvarez",    "pos": "ST", "club": "Atlético Madrid",  "age": 25 },
+      { "name": "Lautaro Martínez",  "pos": "LW", "club": "Inter Milan",      "age": 27 }
+    ]
+  },
+  "France": {
+    "formation": "4-3-3", "coach": "Didier Deschamps",
+    "players": [
+      { "name": "Mike Maignan",      "pos": "GK", "club": "AC Milan",         "age": 29 },
+      { "name": "Jules Koundé",      "pos": "RB", "club": "Barcelona",        "age": 26 },
+      { "name": "William Saliba",    "pos": "CB", "club": "Arsenal",          "age": 24 },
+      { "name": "Dayot Upamecano",   "pos": "CB", "club": "Bayern Munich",    "age": 26 },
+      { "name": "Theo Hernández",    "pos": "LB", "club": "AC Milan",         "age": 27 },
+      { "name": "Aurélien Tchouaméni","pos":"CM", "club": "Real Madrid",      "age": 25 },
+      { "name": "Adrien Rabiot",     "pos": "CM", "club": "Juventus",         "age": 30 },
+      { "name": "Antoine Griezmann", "pos": "CM", "club": "Atlético Madrid",  "age": 35 },
+      { "name": "Ousmane Dembélé",   "pos": "RW", "club": "PSG",             "age": 28 },
+      { "name": "Kylian Mbappé",     "pos": "ST", "club": "Real Madrid",      "age": 27 },
+      { "name": "Marcus Thuram",     "pos": "LW", "club": "Inter Milan",      "age": 27 }
+    ]
+  },
+  "Brazil": {
+    "formation": "4-3-3", "coach": "Dorival Júnior",
+    "players": [
+      { "name": "Alisson",           "pos": "GK", "club": "Liverpool",        "age": 32 },
+      { "name": "Danilo",            "pos": "RB", "club": "Juventus",         "age": 33 },
+      { "name": "Marquinhos",        "pos": "CB", "club": "PSG",              "age": 31 },
+      { "name": "Gabriel Magalhães", "pos": "CB", "club": "Arsenal",          "age": 27 },
+      { "name": "Guilherme Arana",   "pos": "LB", "club": "Atlético Mineiro", "age": 27 },
+      { "name": "Bruno Guimarães",   "pos": "CM", "club": "Newcastle",        "age": 27 },
+      { "name": "Lucas Paquetá",     "pos": "CM", "club": "West Ham",         "age": 27 },
+      { "name": "Raphinha",          "pos": "RW", "club": "Barcelona",        "age": 28 },
+      { "name": "Vinícius Jr",       "pos": "LW", "club": "Real Madrid",      "age": 24 },
+      { "name": "Rodrygo",           "pos": "RW", "club": "Real Madrid",      "age": 24 },
+      { "name": "Endrick",           "pos": "ST", "club": "Real Madrid",      "age": 18 }
+    ]
+  },
+  "Spain": {
+    "formation": "4-3-3", "coach": "Luis de la Fuente",
+    "players": [
+      { "name": "David Raya",        "pos": "GK", "club": "Arsenal",          "age": 29 },
+      { "name": "Dani Carvajal",     "pos": "RB", "club": "Real Madrid",      "age": 32 },
+      { "name": "Aymeric Laporte",   "pos": "CB", "club": "Al-Nassr",         "age": 31 },
+      { "name": "Robin Le Normand",  "pos": "CB", "club": "Atlético Madrid",  "age": 28 },
+      { "name": "Alejandro Grimaldo","pos": "LB", "club": "Bayer Leverkusen", "age": 29 },
+      { "name": "Rodri",             "pos": "CM", "club": "Man City",         "age": 28 },
+      { "name": "Pedri",             "pos": "CM", "club": "Barcelona",        "age": 23 },
+      { "name": "Fabián Ruiz",       "pos": "CM", "club": "PSG",              "age": 28 },
+      { "name": "Lamine Yamal",      "pos": "RW", "club": "Barcelona",        "age": 18 },
+      { "name": "Álvaro Morata",     "pos": "ST", "club": "AC Milan",         "age": 32 },
+      { "name": "Nico Williams",     "pos": "LW", "club": "Athletic Club",    "age": 22 }
+    ]
+  },
+  "Germany": {
+    "formation": "4-2-3-1", "coach": "Julian Nagelsmann",
+    "players": [
+      { "name": "Manuel Neuer",      "pos": "GK", "club": "Bayern Munich",    "age": 40 },
+      { "name": "Joshua Kimmich",    "pos": "RB", "club": "Bayern Munich",    "age": 29 },
+      { "name": "Antonio Rüdiger",   "pos": "CB", "club": "Real Madrid",      "age": 32 },
+      { "name": "Jonathan Tah",      "pos": "CB", "club": "Bayer Leverkusen", "age": 29 },
+      { "name": "Maximilian Mittelstädt","pos":"LB","club":"Stuttgart",       "age": 27 },
+      { "name": "Toni Kroos",        "pos": "CM", "club": "Real Madrid",      "age": 35 },
+      { "name": "Robert Andrich",    "pos": "CM", "club": "Bayer Leverkusen", "age": 30 },
+      { "name": "Florian Wirtz",     "pos": "AM", "club": "Bayer Leverkusen", "age": 22 },
+      { "name": "Jamal Musiala",     "pos": "AM", "club": "Bayern Munich",    "age": 22 },
+      { "name": "Leroy Sané",        "pos": "RW", "club": "Bayern Munich",    "age": 30 },
+      { "name": "Kai Havertz",       "pos": "ST", "club": "Arsenal",          "age": 26 }
+    ]
+  },
+  "England": {
+    "formation": "4-2-3-1", "coach": "Thomas Tuchel",
+    "players": [
+      { "name": "Jordan Pickford",   "pos": "GK", "club": "Everton",          "age": 32 },
+      { "name": "Kyle Walker",       "pos": "RB", "club": "Man City",         "age": 36 },
+      { "name": "John Stones",       "pos": "CB", "club": "Man City",         "age": 31 },
+      { "name": "Marc Guéhi",        "pos": "CB", "club": "Crystal Palace",   "age": 24 },
+      { "name": "Kieran Trippier",   "pos": "LB", "club": "Newcastle",        "age": 35 },
+      { "name": "Declan Rice",       "pos": "CM", "club": "Arsenal",          "age": 27 },
+      { "name": "Kobbie Mainoo",     "pos": "CM", "club": "Man United",       "age": 20 },
+      { "name": "Jude Bellingham",   "pos": "AM", "club": "Real Madrid",      "age": 22 },
+      { "name": "Bukayo Saka",       "pos": "RW", "club": "Arsenal",          "age": 23 },
+      { "name": "Harry Kane",        "pos": "ST", "club": "Bayern Munich",    "age": 32 },
+      { "name": "Phil Foden",        "pos": "LW", "club": "Man City",         "age": 26 }
+    ]
+  },
+  "Portugal": {
+    "formation": "4-3-3", "coach": "Roberto Martínez",
+    "players": [
+      { "name": "Diogo Costa",       "pos": "GK", "club": "Porto",            "age": 25 },
+      { "name": "Diogo Dalot",       "pos": "RB", "club": "Man United",       "age": 25 },
+      { "name": "Rúben Dias",        "pos": "CB", "club": "Man City",         "age": 27 },
+      { "name": "António Silva",     "pos": "CB", "club": "Benfica",          "age": 22 },
+      { "name": "Nuno Mendes",       "pos": "LB", "club": "PSG",              "age": 22 },
+      { "name": "João Palhinha",     "pos": "CM", "club": "Bayern Munich",    "age": 29 },
+      { "name": "Bruno Fernandes",   "pos": "CM", "club": "Man United",       "age": 31 },
+      { "name": "Bernardo Silva",    "pos": "CM", "club": "Man City",         "age": 30 },
+      { "name": "Cristiano Ronaldo", "pos": "RW", "club": "Al-Nassr",         "age": 41 },
+      { "name": "Gonçalo Ramos",     "pos": "ST", "club": "PSG",              "age": 23 },
+      { "name": "Rafael Leão",       "pos": "LW", "club": "AC Milan",         "age": 26 }
+    ]
+  },
+  "Netherlands": {
+    "formation": "4-3-3", "coach": "Ronald Koeman",
+    "players": [
+      { "name": "Bart Verbruggen",   "pos": "GK", "club": "Brighton",         "age": 22 },
+      { "name": "Denzel Dumfries",   "pos": "RB", "club": "Inter Milan",      "age": 28 },
+      { "name": "Virgil van Dijk",   "pos": "CB", "club": "Liverpool",        "age": 33 },
+      { "name": "Stefan de Vrij",    "pos": "CB", "club": "Inter Milan",      "age": 33 },
+      { "name": "Nathan Aké",        "pos": "LB", "club": "Man City",         "age": 30 },
+      { "name": "Frenkie de Jong",   "pos": "CM", "club": "Barcelona",        "age": 28 },
+      { "name": "Tijjani Reijnders", "pos": "CM", "club": "AC Milan",         "age": 26 },
+      { "name": "Xavi Simons",       "pos": "AM", "club": "PSG",              "age": 22 },
+      { "name": "Cody Gakpo",        "pos": "LW", "club": "Liverpool",        "age": 25 },
+      { "name": "Memphis Depay",     "pos": "ST", "club": "Corinthians",      "age": 31 },
+      { "name": "Donyell Malen",     "pos": "RW", "club": "Dortmund",         "age": 26 }
+    ]
+  },
+  "Belgium": {
+    "formation": "4-3-3", "coach": "Domenico Tedesco",
+    "players": [
+      { "name": "Thibaut Courtois",  "pos": "GK", "club": "Real Madrid",      "age": 32 },
+      { "name": "Thomas Meunier",    "pos": "RB", "club": "Trabzonspor",      "age": 33 },
+      { "name": "Wout Faes",         "pos": "CB", "club": "Leicester",        "age": 27 },
+      { "name": "Jan Vertonghen",    "pos": "CB", "club": "Anderlecht",       "age": 38 },
+      { "name": "Leandro Trossard",  "pos": "LB", "club": "Arsenal",          "age": 29 },
+      { "name": "Kevin De Bruyne",   "pos": "CM", "club": "Man City",         "age": 34 },
+      { "name": "Youri Tielemans",   "pos": "CM", "club": "Aston Villa",      "age": 28 },
+      { "name": "Amadou Onana",      "pos": "CM", "club": "Aston Villa",      "age": 23 },
+      { "name": "Dodi Lukebakio",    "pos": "RW", "club": "Sevilla",          "age": 27 },
+      { "name": "Romelu Lukaku",     "pos": "ST", "club": "Napoli",           "age": 31 },
+      { "name": "Lois Openda",       "pos": "LW", "club": "Leipzig",          "age": 24 }
+    ]
+  },
+  "Uruguay": {
+    "formation": "4-3-3", "coach": "Marcelo Bielsa",
+    "players": [
+      { "name": "Sergio Rochet",     "pos": "GK", "club": "Nacional",         "age": 30 },
+      { "name": "Nahitan Nández",    "pos": "RB", "club": "Cagliari",         "age": 28 },
+      { "name": "Ronald Araújo",     "pos": "CB", "club": "Barcelona",        "age": 25 },
+      { "name": "José M. Giménez",   "pos": "CB", "club": "Atlético Madrid",  "age": 29 },
+      { "name": "Mathías Olivera",   "pos": "LB", "club": "Napoli",           "age": 27 },
+      { "name": "Federico Valverde", "pos": "CM", "club": "Real Madrid",      "age": 26 },
+      { "name": "Rodrigo Bentancur", "pos": "CM", "club": "Tottenham",        "age": 27 },
+      { "name": "Manuel Ugarte",     "pos": "CM", "club": "PSG",              "age": 23 },
+      { "name": "Facundo Pellistri", "pos": "RW", "club": "Man United",       "age": 23 },
+      { "name": "Darwin Núñez",      "pos": "ST", "club": "Liverpool",        "age": 25 },
+      { "name": "Maximiliano Araújo","pos": "LW", "club": "St. Louis City",   "age": 24 }
+    ]
+  },
+  "USA": {
+    "formation": "4-3-3", "coach": "Mauricio Pochettino",
+    "players": [
+      { "name": "Matt Turner",       "pos": "GK", "club": "Crystal Palace",   "age": 30 },
+      { "name": "Sergiño Dest",      "pos": "RB", "club": "PSV",              "age": 24 },
+      { "name": "Chris Richards",    "pos": "CB", "club": "Crystal Palace",   "age": 24 },
+      { "name": "Tim Ream",          "pos": "CB", "club": "Fulham",           "age": 37 },
+      { "name": "Antonee Robinson",  "pos": "LB", "club": "Fulham",           "age": 27 },
+      { "name": "Tyler Adams",       "pos": "CM", "club": "Bournemouth",      "age": 26 },
+      { "name": "Weston McKennie",   "pos": "CM", "club": "Juventus",         "age": 27 },
+      { "name": "Christian Pulisic", "pos": "AM", "club": "AC Milan",         "age": 27 },
+      { "name": "Timothy Weah",      "pos": "RW", "club": "Juventus",         "age": 24 },
+      { "name": "Ricardo Pepi",      "pos": "ST", "club": "PSV",              "age": 22 },
+      { "name": "Gio Reyna",         "pos": "LW", "club": "Dortmund",         "age": 23 }
+    ]
+  },
+  "Mexico": {
+    "formation": "4-3-3", "coach": "Javier Aguirre",
+    "players": [
+      { "name": "Guillermo Ochoa",   "pos": "GK", "club": "Salernitana",      "age": 39 },
+      { "name": "Jorge Sánchez",     "pos": "RB", "club": "Ajax",             "age": 27 },
+      { "name": "César Montes",      "pos": "CB", "club": "Espanyol",         "age": 27 },
+      { "name": "Johan Vásquez",     "pos": "CB", "club": "Genoa",            "age": 26 },
+      { "name": "Jesús Gallardo",    "pos": "LB", "club": "Monterrey",        "age": 30 },
+      { "name": "Edson Álvarez",     "pos": "CM", "club": "West Ham",         "age": 27 },
+      { "name": "Luis Chávez",       "pos": "CM", "club": "Pachuca",          "age": 28 },
+      { "name": "Hirving Lozano",    "pos": "RW", "club": "PSV",              "age": 29 },
+      { "name": "Alexis Vega",       "pos": "AM", "club": "Chivas",           "age": 27 },
+      { "name": "Santiago Giménez",  "pos": "ST", "club": "Feyenoord",        "age": 23 },
+      { "name": "Julián Quiñones",   "pos": "LW", "club": "Club América",     "age": 27 }
+    ]
+  },
+  "Canada": {
+    "formation": "4-3-3", "coach": "Jesse Marsch",
+    "players": [
+      { "name": "Maxi Crepeau",      "pos": "GK", "club": "LA Galaxy",        "age": 30 },
+      { "name": "Richie Laryea",     "pos": "RB", "club": "Nottm Forest",     "age": 29 },
+      { "name": "Kamal Miller",      "pos": "CB", "club": "Orlando City",     "age": 28 },
+      { "name": "Alistair Johnston", "pos": "CB", "club": "Celtic",           "age": 26 },
+      { "name": "Alphonso Davies",   "pos": "LB", "club": "Bayern Munich",    "age": 24 },
+      { "name": "Stephen Eustáquio", "pos": "CM", "club": "Porto",            "age": 27 },
+      { "name": "Atiba Hutchinson",  "pos": "CM", "club": "Besiktas",         "age": 41 },
+      { "name": "Tajon Buchanan",    "pos": "RW", "club": "Inter Milan",      "age": 25 },
+      { "name": "Liam Millar",       "pos": "LW", "club": "Basel",            "age": 24 },
+      { "name": "Jonathan David",    "pos": "ST", "club": "Lille",            "age": 24 },
+      { "name": "Cyle Larin",        "pos": "ST", "club": "Club Brugge",      "age": 29 }
+    ]
+  },
+  "Morocco": {
+    "formation": "4-3-3", "coach": "Walid Regragui",
+    "players": [
+      { "name": "Yassine Bounou",    "pos": "GK", "club": "Al-Hilal",         "age": 33 },
+      { "name": "Achraf Hakimi",     "pos": "RB", "club": "PSG",              "age": 26 },
+      { "name": "Nayef Aguerd",      "pos": "CB", "club": "West Ham",         "age": 28 },
+      { "name": "Romain Saïss",      "pos": "CB", "club": "Besiktas",         "age": 34 },
+      { "name": "Noussair Mazraoui", "pos": "LB", "club": "Man United",       "age": 27 },
+      { "name": "Sofyan Amrabat",    "pos": "CM", "club": "Fiorentina",       "age": 28 },
+      { "name": "Azzedine Ounahi",   "pos": "CM", "club": "Marseille",        "age": 24 },
+      { "name": "Selim Amallah",     "pos": "CM", "club": "Sevilla",          "age": 27 },
+      { "name": "Hakim Ziyech",      "pos": "RW", "club": "Galatasaray",      "age": 32 },
+      { "name": "Youssef En-Nesyri", "pos": "ST", "club": "Fenerbahçe",       "age": 27 },
+      { "name": "Soufiane Rahimi",   "pos": "LW", "club": "Al-Ain",           "age": 25 }
+    ]
+  },
+  "Japan": {
+    "formation": "4-3-3", "coach": "Hajime Moriyasu",
+    "players": [
+      { "name": "Shuichi Gonda",     "pos": "GK", "club": "Shimizu S-Pulse", "age": 35 },
+      { "name": "Hiroki Sakai",      "pos": "RB", "club": "Urawa Reds",       "age": 34 },
+      { "name": "Ko Itakura",        "pos": "CB", "club": "Borussia M'bach",  "age": 27 },
+      { "name": "Takehiro Tomiyasu", "pos": "CB", "club": "Arsenal",          "age": 26 },
+      { "name": "Yuto Nagatomo",     "pos": "LB", "club": "FC Tokyo",         "age": 38 },
+      { "name": "Wataru Endo",       "pos": "CM", "club": "Liverpool",        "age": 31 },
+      { "name": "Junya Ito",         "pos": "RW", "club": "Reims",            "age": 31 },
+      { "name": "Daichi Kamada",     "pos": "AM", "club": "Crystal Palace",   "age": 28 },
+      { "name": "Kaoru Mitoma",      "pos": "LW", "club": "Brighton",         "age": 27 },
+      { "name": "Ayase Ueda",        "pos": "ST", "club": "Feyenoord",        "age": 26 },
+      { "name": "Ritsu Doan",        "pos": "RW", "club": "Freiburg",         "age": 26 }
+    ]
+  },
+  "South Korea": {
+    "formation": "4-3-3", "coach": "Hong Myung-bo",
+    "players": [
+      { "name": "Kim Seung-gyu",     "pos": "GK", "club": "Vissel Kobe",      "age": 34 },
+      { "name": "Kim Moon-hwan",     "pos": "RB", "club": "Jeonbuk Motors",   "age": 28 },
+      { "name": "Kim Min-jae",       "pos": "CB", "club": "Bayern Munich",    "age": 28 },
+      { "name": "Jung Seung-hyun",   "pos": "CB", "club": "Kashima Antlers",  "age": 31 },
+      { "name": "Kim Jin-su",        "pos": "LB", "club": "Jeonbuk Motors",   "age": 32 },
+      { "name": "Jung Woo-young",    "pos": "CM", "club": "Al-Qadsiah",       "age": 34 },
+      { "name": "Lee Jae-sung",      "pos": "CM", "club": "Mainz",            "age": 32 },
+      { "name": "Son Heung-min",     "pos": "LW", "club": "Tottenham",        "age": 34 },
+      { "name": "Hwang In-beom",     "pos": "CM", "club": "Feyenoord",        "age": 28 },
+      { "name": "Cho Gue-sung",      "pos": "ST", "club": "Midtjylland",      "age": 26 },
+      { "name": "Hwang Hee-chan",    "pos": "RW", "club": "Wolves",           "age": 28 }
+    ]
+  },
+  "Colombia": {
+    "formation": "4-3-3", "coach": "Néstor Lorenzo",
+    "players": [
+      { "name": "Camilo Vargas",     "pos": "GK", "club": "Atlas",            "age": 33 },
+      { "name": "Daniel Muñoz",      "pos": "RB", "club": "Crystal Palace",   "age": 28 },
+      { "name": "Dávinson Sánchez",  "pos": "CB", "club": "Galatasaray",      "age": 28 },
+      { "name": "Yerry Mina",        "pos": "CB", "club": "Everton",          "age": 30 },
+      { "name": "Johan Mojica",      "pos": "LB", "club": "Rayo Vallecano",   "age": 32 },
+      { "name": "Richard Ríos",      "pos": "CM", "club": "Palmeiras",        "age": 24 },
+      { "name": "Jefferson Lerma",   "pos": "CM", "club": "Crystal Palace",   "age": 30 },
+      { "name": "James Rodríguez",   "pos": "AM", "club": "Rayo Vallecano",   "age": 33 },
+      { "name": "Cucho Hernández",   "pos": "RW", "club": "Columbus Crew",    "age": 25 },
+      { "name": "Jhon Duran",        "pos": "ST", "club": "Aston Villa",      "age": 21 },
+      { "name": "Luis Díaz",         "pos": "LW", "club": "Liverpool",        "age": 27 }
+    ]
+  },
+  "Croatia": {
+    "formation": "4-3-3", "coach": "Zlatko Dalić",
+    "players": [
+      { "name": "Dominik Livaković", "pos": "GK", "club": "Fenerbahçe",       "age": 29 },
+      { "name": "Josip Stanišić",    "pos": "RB", "club": "Bayer Leverkusen", "age": 24 },
+      { "name": "Duje Ćaleta-Car",   "pos": "CB", "club": "Southampton",      "age": 28 },
+      { "name": "Josip Šutalo",      "pos": "CB", "club": "Ajax",             "age": 24 },
+      { "name": "Joško Gvardiol",    "pos": "LB", "club": "Man City",         "age": 22 },
+      { "name": "Luka Modrić",       "pos": "CM", "club": "Real Madrid",      "age": 40 },
+      { "name": "Mateo Kovačić",     "pos": "CM", "club": "Man City",         "age": 30 },
+      { "name": "Marcelo Brozović",  "pos": "CM", "club": "Al-Nassr",         "age": 32 },
+      { "name": "Ivan Perišić",      "pos": "LW", "club": "Hajduk Split",     "age": 36 },
+      { "name": "Andrej Kramarić",   "pos": "ST", "club": "Hoffenheim",       "age": 33 },
+      { "name": "Ante Budimir",      "pos": "ST", "club": "Osasuna",          "age": 33 }
+    ]
+  },
+  "Senegal": {
+    "formation": "4-3-3", "coach": "Aliou Cissé",
+    "players": [
+      { "name": "Edouard Mendy",     "pos": "GK", "club": "Al-Ahli",          "age": 32 },
+      { "name": "Formose Mendy",     "pos": "RB", "club": "Brest",            "age": 25 },
+      { "name": "Kalidou Koulibaly", "pos": "CB", "club": "Al-Hilal",         "age": 33 },
+      { "name": "Abdou Diallo",      "pos": "CB", "club": "Leipzig",          "age": 28 },
+      { "name": "Niakhate Nuno",     "pos": "LB", "club": "Nottm Forest",     "age": 28 },
+      { "name": "Idrissa Gueye",     "pos": "CM", "club": "Everton",          "age": 35 },
+      { "name": "Cheikhou Kouyaté",  "pos": "CM", "club": "Nottm Forest",     "age": 34 },
+      { "name": "Nampalys Mendy",    "pos": "CM", "club": "Leicester",        "age": 32 },
+      { "name": "Ismaïla Sarr",      "pos": "RW", "club": "Crystal Palace",   "age": 26 },
+      { "name": "Boulaye Dia",       "pos": "ST", "club": "Lazio",            "age": 27 },
+      { "name": "Sadio Mané",        "pos": "LW", "club": "Al-Nassr",         "age": 34 }
+    ]
+  },
+  "Egypt": {
+    "formation": "4-2-3-1", "coach": "Hossam Hassan",
+    "players": [
+      { "name": "Mohamed El-Shenawy","pos": "GK", "club": "Al-Ahly",          "age": 36 },
+      { "name": "Ahmed Fatouh",      "pos": "RB", "club": "Al-Ahly",          "age": 26 },
+      { "name": "Ahmed Hegazi",      "pos": "CB", "club": "Al-Ittihad",       "age": 33 },
+      { "name": "Omar Kamal",        "pos": "CB", "club": "Al-Ahly",          "age": 24 },
+      { "name": "Omar Gaber",        "pos": "LB", "club": "LA Galaxy",        "age": 33 },
+      { "name": "Mohamed Elneny",    "pos": "CM", "club": "Arsenal",          "age": 32 },
+      { "name": "Tarek Hamed",       "pos": "CM", "club": "Al-Ahly",          "age": 35 },
+      { "name": "Omar Marmoush",     "pos": "AM", "club": "Man City",         "age": 26 },
+      { "name": "Mohamed Salah",     "pos": "RW", "club": "Liverpool",        "age": 34 },
+      { "name": "Mostafa Mohamed",   "pos": "ST", "club": "Galatasaray",      "age": 27 },
+      { "name": "Ramadan Sobhi",     "pos": "LW", "club": "Al-Ahly",          "age": 27 }
+    ]
+  },
+  "Switzerland": {
+    "formation": "4-2-3-1", "coach": "Murat Yakin",
+    "players": [
+      { "name": "Yann Sommer",       "pos": "GK", "club": "Inter Milan",      "age": 36 },
+      { "name": "Silvan Widmer",     "pos": "RB", "club": "Mainz",            "age": 31 },
+      { "name": "Manuel Akanji",     "pos": "CB", "club": "Man City",         "age": 29 },
+      { "name": "Fabian Schär",      "pos": "CB", "club": "Newcastle",        "age": 32 },
+      { "name": "Ricardo Rodríguez", "pos": "LB", "club": "Torino",           "age": 32 },
+      { "name": "Granit Xhaka",      "pos": "CM", "club": "Bayer Leverkusen", "age": 32 },
+      { "name": "Remo Freuler",      "pos": "CM", "club": "Bologna",          "age": 32 },
+      { "name": "Michel Aebischer",  "pos": "AM", "club": "Bologna",          "age": 27 },
+      { "name": "Ruben Vargas",      "pos": "RW", "club": "Augsburg",         "age": 26 },
+      { "name": "Breel Embolo",      "pos": "ST", "club": "Monaco",           "age": 27 },
+      { "name": "Dan Ndoye",         "pos": "LW", "club": "Bologna",          "age": 23 }
+    ]
+  },
+  "Norway": {
+    "formation": "4-3-3", "coach": "Ståle Solbakken",
+    "players": [
+      { "name": "Ørjan Nyland",      "pos": "GK", "club": "Brentford",        "age": 34 },
+      { "name": "Julian Ryerson",    "pos": "RB", "club": "Dortmund",         "age": 27 },
+      { "name": "Andreas Hanche-Olsen","pos":"CB","club":"Hoffenheim",        "age": 27 },
+      { "name": "Leo Østigård",      "pos": "CB", "club": "Napoli",           "age": 25 },
+      { "name": "Birger Meling",     "pos": "LB", "club": "Rennes",           "age": 29 },
+      { "name": "Sander Berge",      "pos": "CM", "club": "Fulham",           "age": 26 },
+      { "name": "Mathias Normann",   "pos": "CM", "club": "Trabzonspor",      "age": 28 },
+      { "name": "Martin Ødegaard",   "pos": "AM", "club": "Arsenal",          "age": 27 },
+      { "name": "Mohamed Elyounoussi","pos":"RW", "club": "Southampton",      "age": 30 },
+      { "name": "Erling Haaland",    "pos": "ST", "club": "Man City",         "age": 25 },
+      { "name": "Alexander Sørloth", "pos": "LW", "club": "Atlético Madrid",  "age": 29 }
+    ]
+  },
+  "Ecuador": {
+    "formation": "4-3-3", "coach": "Sébastien Beccacece",
+    "players": [
+      { "name": "Alexander Domínguez","pos":"GK", "club": "Liga de Quito",    "age": 37 },
+      { "name": "Byron Castillo",    "pos": "RB", "club": "León",             "age": 27 },
+      { "name": "Piero Hincapié",    "pos": "CB", "club": "Bayer Leverkusen", "age": 22 },
+      { "name": "Xavier Arreaga",    "pos": "CB", "club": "Seattle Sounders", "age": 30 },
+      { "name": "Pervis Estupiñán",  "pos": "LB", "club": "Brighton",         "age": 26 },
+      { "name": "Moisés Caicedo",    "pos": "CM", "club": "Chelsea",          "age": 23 },
+      { "name": "José Cifuentes",    "pos": "CM", "club": "Leeds",            "age": 26 },
+      { "name": "Ángel Mena",        "pos": "RW", "club": "León",             "age": 35 },
+      { "name": "Kendry Páez",       "pos": "AM", "club": "Chelsea",          "age": 18 },
+      { "name": "Enner Valencia",    "pos": "ST", "club": "Independiente",    "age": 35 },
+      { "name": "Jeremy Sarmiento",  "pos": "LW", "club": "Brighton",         "age": 22 }
+    ]
+  },
+  "Iran": {
+    "formation": "4-3-3", "coach": "Amir Ghalenoei",
+    "players": [
+      { "name": "Alireza Beiranvand", "pos":"GK", "club": "Persepolis",       "age": 32 },
+      { "name": "Sadegh Moharrami",  "pos": "RB", "club": "Dinamo Zagreb",    "age": 28 },
+      { "name": "Majid Hosseini",    "pos": "CB", "club": "Trabzonspor",      "age": 26 },
+      { "name": "Milad Mohammadi",   "pos": "LB", "club": "AEK Athens",       "age": 30 },
+      { "name": "Saeid Ezatolahi",   "pos": "CM", "club": "Celta Vigo",       "age": 28 },
+      { "name": "Ali Gholizadeh",    "pos": "RW", "club": "Charleroi",        "age": 27 },
+      { "name": "Ahmad Noorollahi",  "pos": "CM", "club": "Persepolis",       "age": 31 },
+      { "name": "Alireza Jahanbakhsh","pos":"LW", "club": "Feyenoord",        "age": 31 },
+      { "name": "Mehdi Taremi",      "pos": "ST", "club": "Inter Milan",      "age": 32 },
+      { "name": "Sardar Azmoun",     "pos": "ST", "club": "Roma",             "age": 29 },
+      { "name": "Ramin Rezaeian",    "pos": "RB", "club": "Kortrijk",         "age": 34 }
+    ]
+  },
+  "Austria": {
+    "formation": "4-3-3", "coach": "Ralf Rangnick",
+    "players": [
+      { "name": "Patrick Pentz",     "pos": "GK", "club": "Bayer Leverkusen", "age": 27 },
+      { "name": "Stefan Posch",      "pos": "RB", "club": "Bologna",          "age": 27 },
+      { "name": "Kevin Danso",       "pos": "CB", "club": "Lens",             "age": 25 },
+      { "name": "Philipp Lienhart",  "pos": "CB", "club": "Freiburg",         "age": 29 },
+      { "name": "Philipp Mwene",     "pos": "LB", "club": "Mainz",            "age": 30 },
+      { "name": "Konrad Laimer",     "pos": "CM", "club": "Bayern Munich",    "age": 27 },
+      { "name": "Nicolas Seiwald",   "pos": "CM", "club": "Leipzig",          "age": 23 },
+      { "name": "Marcel Sabitzer",   "pos": "AM", "club": "Dortmund",         "age": 30 },
+      { "name": "Florian Kainz",     "pos": "LW", "club": "FC Köln",          "age": 31 },
+      { "name": "Christoph Baumgartner","pos":"RW","club":"Leipzig",          "age": 25 },
+      { "name": "Michael Gregoritsch","pos":"ST", "club": "Freiburg",         "age": 30 }
+    ]
+  },
+  "Türkiye": {
+    "formation": "4-2-3-1", "coach": "Vincenzo Montella",
+    "players": [
+      { "name": "Mert Günok",        "pos": "GK", "club": "Beşiktaş",         "age": 35 },
+      { "name": "Zeki Çelik",        "pos": "RB", "club": "Roma",             "age": 27 },
+      { "name": "Samet Akaydin",     "pos": "CB", "club": "Sevilla",          "age": 27 },
+      { "name": "Kaan Ayhan",        "pos": "CB", "club": "Galatasaray",      "age": 30 },
+      { "name": "Ferdi Kadıoğlu",    "pos": "LB", "club": "Brighton",         "age": 25 },
+      { "name": "Hakan Çalhanoğlu",  "pos": "CM", "club": "Inter Milan",      "age": 30 },
+      { "name": "Salih Özcan",       "pos": "CM", "club": "Dortmund",         "age": 26 },
+      { "name": "Arda Güler",        "pos": "AM", "club": "Real Madrid",      "age": 20 },
+      { "name": "Kerem Aktürkoğlu",  "pos": "RW", "club": "Galatasaray",      "age": 25 },
+      { "name": "Baris Alper Yilmaz","pos": "LW", "club": "Galatasaray",      "age": 24 },
+      { "name": "Yusuf Yazici",      "pos": "ST", "club": "LOSC Lille",       "age": 27 }
+    ]
+  },
+  "Scotland": {
+    "formation": "3-5-2", "coach": "Steve Clarke",
+    "players": [
+      { "name": "Angus Gunn",        "pos": "GK", "club": "Norwich",          "age": 28 },
+      { "name": "Grant Hanley",      "pos": "CB", "club": "Norwich",          "age": 33 },
+      { "name": "Liam Cooper",       "pos": "CB", "club": "Hearts",           "age": 33 },
+      { "name": "Kieran Tierney",    "pos": "CB", "club": "Arsenal",          "age": 27 },
+      { "name": "Aaron Hickey",      "pos": "RWB","club": "Brentford",        "age": 22 },
+      { "name": "Andrew Robertson",  "pos": "LWB","club": "Liverpool",        "age": 30 },
+      { "name": "Scott McTominay",   "pos": "CM", "club": "Napoli",           "age": 27 },
+      { "name": "Callum McGregor",   "pos": "CM", "club": "Celtic",           "age": 31 },
+      { "name": "John McGinn",       "pos": "CM", "club": "Aston Villa",      "age": 30 },
+      { "name": "Lawrence Shankland","pos": "ST", "club": "Hearts",           "age": 29 },
+      { "name": "Che Adams",         "pos": "ST", "club": "Southampton",      "age": 28 }
+    ]
+  },
+  "Czechia": {
+    "formation": "4-2-3-1", "coach": "Ivan Hašek",
+    "players": [
+      { "name": "Jiří Pavlenka",     "pos": "GK", "club": "Bremen",           "age": 32 },
+      { "name": "Vladimír Coufal",   "pos": "RB", "club": "West Ham",         "age": 32 },
+      { "name": "Tomáš Holeš",       "pos": "CB", "club": "Slavia Prague",    "age": 31 },
+      { "name": "Ladislav Krejčí",   "pos": "CB", "club": "Bologna",          "age": 23 },
+      { "name": "Jan Bořil",         "pos": "LB", "club": "Slavia Prague",    "age": 33 },
+      { "name": "Tomáš Souček",      "pos": "CM", "club": "West Ham",         "age": 29 },
+      { "name": "Lukáš Holeš",       "pos": "CM", "club": "Slavia Prague",    "age": 28 },
+      { "name": "Ondřej Lingr",      "pos": "RW", "club": "Feyenoord",        "age": 25 },
+      { "name": "Jakub Jankto",      "pos": "LW", "club": "Sparta Prague",    "age": 28 },
+      { "name": "Patrik Schick",     "pos": "ST", "club": "Bayer Leverkusen", "age": 29 },
+      { "name": "Tomáš Čvančara",    "pos": "ST", "club": "Mönchengladbach",  "age": 24 }
+    ]
+  },
+  "Sweden": {
+    "formation": "4-3-3", "coach": "Jon Dahl Tomasson",
+    "players": [
+      { "name": "Robin Olsen",       "pos": "GK", "club": "Aston Villa",      "age": 34 },
+      { "name": "Emil Krafth",       "pos": "RB", "club": "Newcastle",        "age": 29 },
+      { "name": "Isak Hien",         "pos": "CB", "club": "Atalanta",         "age": 24 },
+      { "name": "Victor Lindelöf",   "pos": "CB", "club": "Man United",       "age": 30 },
+      { "name": "Ludwig Augustinsson","pos":"LB", "club": "Werder Bremen",    "age": 30 },
+      { "name": "Albin Ekdal",       "pos": "CM", "club": "Sampdoria",        "age": 34 },
+      { "name": "Emil Forsberg",     "pos": "AM", "club": "Leipzig",          "age": 32 },
+      { "name": "Dejan Kulusevski",  "pos": "RW", "club": "Tottenham",        "age": 25 },
+      { "name": "Alexander Isak",    "pos": "ST", "club": "Newcastle",        "age": 25 },
+      { "name": "Marcus Berg",       "pos": "ST", "club": "Krasnodar",        "age": 37 },
+      { "name": "Anthony Elanga",    "pos": "LW", "club": "Nottm Forest",     "age": 22 }
+    ]
+  },
+  "Australia": {
+    "formation": "4-3-3", "coach": "Tony Popovic",
+    "players": [
+      { "name": "Mathew Ryan",       "pos": "GK", "club": "Real Sociedad",    "age": 32 },
+      { "name": "Nathaniel Atkinson","pos": "RB", "club": "Hearts",           "age": 24 },
+      { "name": "Harry Souttar",     "pos": "CB", "club": "Leicester",        "age": 25 },
+      { "name": "Kye Rowles",        "pos": "CB", "club": "Hearts",           "age": 26 },
+      { "name": "Aziz Behich",       "pos": "LB", "club": "Dundee Utd",       "age": 32 },
+      { "name": "Jackson Irvine",    "pos": "CM", "club": "St. Pauli",        "age": 31 },
+      { "name": "Riley McGree",      "pos": "CM", "club": "Middlesbrough",    "age": 25 },
+      { "name": "Ajdin Hrustic",     "pos": "CM", "club": "Hellas Verona",    "age": 27 },
+      { "name": "Martin Boyle",      "pos": "RW", "club": "Al-Faisaly",       "age": 31 },
+      { "name": "Mitchell Duke",     "pos": "ST", "club": "Fagiano Okayama",  "age": 33 },
+      { "name": "Craig Goodwin",     "pos": "LW", "club": "Adelaide United",  "age": 32 }
+    ]
+  },
+  "Ghana": {
+    "formation": "4-3-3", "coach": "Otto Addo",
+    "players": [
+      { "name": "Richard Ofori",     "pos": "GK", "club": "Orlando Pirates",  "age": 30 },
+      { "name": "Daniel Amartey",    "pos": "RB", "club": "Leicester",        "age": 29 },
+      { "name": "Alexander Djiku",   "pos": "CB", "club": "Fenerbahçe",       "age": 29 },
+      { "name": "Andy Yiadom",       "pos": "CB", "club": "Reading",          "age": 31 },
+      { "name": "Gideon Mensah",     "pos": "LB", "club": "Auxerre",          "age": 25 },
+      { "name": "Thomas Partey",     "pos": "CM", "club": "Arsenal",          "age": 31 },
+      { "name": "Baba Rahman",       "pos": "CM", "club": "Reading",          "age": 30 },
+      { "name": "Antoine Semenyo",   "pos": "RW", "club": "Bournemouth",      "age": 24 },
+      { "name": "Mohammed Kudus",    "pos": "AM", "club": "West Ham",         "age": 24 },
+      { "name": "Jordan Ayew",       "pos": "ST", "club": "Crystal Palace",   "age": 32 },
+      { "name": "Inaki Williams",    "pos": "LW", "club": "Athletic Club",    "age": 30 }
+    ]
+  },
+  "Algeria": {
+    "formation": "4-3-3", "coach": "Vladimir Petkovic",
+    "players": [
+      { "name": "Raïs M'Bolhi",      "pos": "GK", "club": "Al-Ettifaq",       "age": 37 },
+      { "name": "Youcef Atal",       "pos": "RB", "club": "Nice",             "age": 28 },
+      { "name": "Djamel Benlamri",   "pos": "CB", "club": "Al-Ittihad",       "age": 34 },
+      { "name": "Aïssa Mandi",       "pos": "CB", "club": "Villarreal",       "age": 32 },
+      { "name": "Ramy Bensebaini",   "pos": "LB", "club": "Dortmund",         "age": 28 },
+      { "name": "Ismaël Bennacer",   "pos": "CM", "club": "AC Milan",         "age": 26 },
+      { "name": "Ramiz Zerrouki",    "pos": "CM", "club": "Freiburg",         "age": 26 },
+      { "name": "Haris Belkebla",    "pos": "CM", "club": "Stade Brestois",   "age": 31 },
+      { "name": "Riyad Mahrez",      "pos": "RW", "club": "Al-Ahli",          "age": 33 },
+      { "name": "Baghdad Bounedjah", "pos": "ST", "club": "Al-Sadd",          "age": 32 },
+      { "name": "Yacine Brahimi",    "pos": "LW", "club": "Al-Qadsiah",       "age": 34 }
+    ]
+  },
+  "Saudi Arabia": {
+    "formation": "4-3-3", "coach": "Roberto Mancini",
+    "players": [
+      { "name": "Mohammed Al-Owais", "pos": "GK", "club": "Al-Hilal",         "age": 32 },
+      { "name": "Sultan Al-Ghannam","pos": "RB",  "club": "Al-Hilal",         "age": 27 },
+      { "name": "Ali Al-Bulayhi",    "pos": "LB", "club": "Al-Hilal",         "age": 33 },
+      { "name": "Hassan Tambakti",   "pos": "CB", "club": "Al-Hilal",         "age": 23 },
+      { "name": "Abdulelah Al-Amri", "pos": "CB", "club": "Al-Shabab",        "age": 27 },
+      { "name": "Sami Al-Najei",     "pos": "CM", "club": "Al-Ittihad",       "age": 28 },
+      { "name": "Abdelhamid Al-Dosari","pos":"CM","club":"Al-Qadsiah",        "age": 27 },
+      { "name": "Salem Al-Dawsari",  "pos": "LW", "club": "Al-Hilal",         "age": 32 },
+      { "name": "Mohammed Al-Buraikan","pos":"ST","club":"Al-Fateh",          "age": 25 },
+      { "name": "Firas Al-Buraikan", "pos": "RW", "club": "Al-Fateh",         "age": 26 },
+      { "name": "Haitham Asiri",     "pos": "AM", "club": "Al-Wehda",         "age": 25 }
+    ]
+  },
+  "Tunisia": {
+    "formation": "4-3-3", "coach": "Jalel Kadri",
+    "players": [
+      { "name": "Aymen Dahmen",      "pos": "GK", "club": "Montpellier",      "age": 28 },
+      { "name": "Mohamed Drager",    "pos": "RB", "club": "FC Lausanne",      "age": 27 },
+      { "name": "Montassar Talbi",   "pos": "CB", "club": "Lorient",          "age": 25 },
+      { "name": "Dylan Bronn",       "pos": "CB", "club": "Salernitana",      "age": 28 },
+      { "name": "Ali Abdi",          "pos": "LB", "club": "Watford",          "age": 28 },
+      { "name": "Ellyes Skhiri",     "pos": "CM", "club": "Frankfurt",        "age": 28 },
+      { "name": "Aïssa Laïdouni",    "pos": "CM", "club": "Ferencváros",      "age": 28 },
+      { "name": "Wahbi Khazri",      "pos": "AM", "club": "Montpellier",      "age": 33 },
+      { "name": "Youssef Msakni",    "pos": "RW", "club": "Al-Arabi",         "age": 33 },
+      { "name": "Issam Jebali",      "pos": "ST", "club": "Odense",           "age": 30 },
+      { "name": "Naim Sliti",        "pos": "LW", "club": "Kasımpaşa",        "age": 31 }
+    ]
+  },
+  "Ivory Coast": {
+    "formation": "4-3-3", "coach": "Emerse Faé",
+    "players": [
+      { "name": "Yahia Fofana",      "pos": "GK", "club": "Chelsea",          "age": 27 },
+      { "name": "Serge Aurier",      "pos": "RB", "club": "Villarreal",       "age": 31 },
+      { "name": "Eric Bailly",       "pos": "CB", "club": "Besiktas",         "age": 30 },
+      { "name": "Odilon Kossounou",  "pos": "CB", "club": "Bayer Leverkusen", "age": 23 },
+      { "name": "Ghislain Konan",    "pos": "LB", "club": "Reims",            "age": 27 },
+      { "name": "Franck Kessié",     "pos": "CM", "club": "Al-Ahli",          "age": 27 },
+      { "name": "Jean-Michaël Seri", "pos": "CM", "club": "Anderlecht",       "age": 32 },
+      { "name": "Ibrahim Sangaré",   "pos": "CM", "club": "Nottm Forest",     "age": 26 },
+      { "name": "Nicolas Pépé",      "pos": "RW", "club": "Nice",             "age": 29 },
+      { "name": "Sébastien Haller",  "pos": "ST", "club": "Dortmund",         "age": 30 },
+      { "name": "Simon Adingra",     "pos": "LW", "club": "Brighton",         "age": 22 }
+    ]
+  },
+  "Morocco":     { "formation": "4-3-3", "coach": "Walid Regragui", "players": [] },
+  "South Africa": {
+    "formation": "4-4-2", "coach": "Hugo Broos",
+    "players": [
+      { "name": "Ronwen Williams",   "pos": "GK", "club": "Mamelodi Sundowns","age": 32 },
+      { "name": "Reeve Frosler",     "pos": "RB", "club": "Kaizer Chiefs",    "age": 27 },
+      { "name": "Siyanda Xulu",      "pos": "CB", "club": "Mamelodi Sundowns","age": 31 },
+      { "name": "Rushine de Reuck",  "pos": "CB", "club": "Mamelodi Sundowns","age": 29 },
+      { "name": "Sifiso Hlanti",     "pos": "LB", "club": "Kaizer Chiefs",    "age": 32 },
+      { "name": "Bongani Zungu",     "pos": "CM", "club": "Amiens",           "age": 31 },
+      { "name": "Teboho Mokoena",    "pos": "CM", "club": "Mamelodi Sundowns","age": 27 },
+      { "name": "Themba Zwane",      "pos": "RW", "club": "Mamelodi Sundowns","age": 32 },
+      { "name": "Percy Tau",         "pos": "LW", "club": "Al-Ahly",          "age": 30 },
+      { "name": "Evidence Makgopa",  "pos": "ST", "club": "Bafana Bafana",    "age": 23 },
+      { "name": "Lyle Foster",       "pos": "ST", "club": "Burnley",          "age": 23 }
+    ]
+  },
+  "Bosnia": {
+    "formation": "4-3-3", "coach": "Sergej Barbarez",
+    "players": [
+      { "name": "Ibrahim Šehić",     "pos": "GK", "club": "Al-Wahda",         "age": 36 },
+      { "name": "Amar Dedić",        "pos": "RB", "club": "RB Salzburg",      "age": 22 },
+      { "name": "Anel Ahmedhodžić",  "pos": "CB", "club": "Sheffield Utd",    "age": 25 },
+      { "name": "Sead Kolašinac",    "pos": "LB", "club": "Marseille",        "age": 31 },
+      { "name": "Denis Džanmović",   "pos": "CM", "club": "FK Sarajevo",      "age": 28 },
+      { "name": "Ermedin Demirović", "pos": "ST", "club": "Augsburg",         "age": 26 },
+      { "name": "Amer Gojak",        "pos": "CM", "club": "Dinamo Zagreb",    "age": 28 },
+      { "name": "Edin Džeko",        "pos": "ST", "club": "Fenerbahçe",       "age": 38 },
+      { "name": "Rade Krunic",       "pos": "AM", "club": "Fenerbahçe",       "age": 30 },
+      { "name": "Dario Šarić",       "pos": "CM", "club": "Osasuna",          "age": 30 },
+      { "name": "Kenan Zahirović",   "pos": "LW", "club": "FK Sarajevo",      "age": 24 }
+    ]
+  },
+  "Qatar": {
+    "formation": "4-3-3", "coach": "Marquez Lopez",
+    "players": [
+      { "name": "Meshaal Barsham",   "pos": "GK", "club": "Al-Sadd",          "age": 27 },
+      { "name": "Pedro Miguel",      "pos": "LB", "club": "Al-Sadd",          "age": 31 },
+      { "name": "Bassam Al-Rawi",    "pos": "CB", "club": "Al-Gharafa",       "age": 27 },
+      { "name": "Boualem Khoukhi",   "pos": "CB", "club": "Al-Sadd",          "age": 34 },
+      { "name": "Karim Boudiaf",     "pos": "CM", "club": "Al-Duhail",        "age": 30 },
+      { "name": "Akram Afif",        "pos": "LW", "club": "Al-Sadd",          "age": 27 },
+      { "name": "Assim Madibo",      "pos": "CM", "club": "FC Dallas",        "age": 25 },
+      { "name": "Hassan Al-Haydos",  "pos": "AM", "club": "Al-Sadd",          "age": 32 },
+      { "name": "Almoez Ali",        "pos": "ST", "club": "Al-Duhail",        "age": 28 },
+      { "name": "Yusuf Abdurisag",   "pos": "RW", "club": "Al-Sadd",          "age": 24 },
+      { "name": "Mohammed Muntari",  "pos": "ST", "club": "Al-Duhail",        "age": 28 }
+    ]
+  },
+  "Panama": {
+    "formation": "4-4-2", "coach": "Thomas Christiansen",
+    "players": [
+      { "name": "Luis Mejía",        "pos": "GK", "club": "Independiente",    "age": 28 },
+      { "name": "Éric Davis",        "pos": "RB", "club": "Minneapolis City", "age": 31 },
+      { "name": "Roderick Miller",   "pos": "CB", "club": "Cavalier SC",      "age": 28 },
+      { "name": "Harold Cummings",   "pos": "CB", "club": "Sporting KC",      "age": 28 },
+      { "name": "Édgar Bárcenas",    "pos": "LW", "club": "FC Nürnberg",      "age": 30 },
+      { "name": "Adalberto Carrasquilla","pos":"CM","club":"Getafe",          "age": 26 },
+      { "name": "Anibal Godoy",      "pos": "CM", "club": "Nashville SC",     "age": 35 },
+      { "name": "Cédric Itten",      "pos": "RW", "club": "FC Nürnberg",      "age": 27 },
+      { "name": "José Fajardo",      "pos": "LW", "club": "Pumas UNAM",       "age": 26 },
+      { "name": "Ismael Díaz",       "pos": "ST", "club": "Porto",            "age": 23 },
+      { "name": "Cecilio Waterman",  "pos": "ST", "club": "Once Caldas",      "age": 30 }
+    ]
+  },
+  "Paraguay": {
+    "formation": "4-3-3", "coach": "Gustavo Alfaro",
+    "players": [
+      { "name": "Antony Silva",      "pos": "GK", "club": "Olimpia",          "age": 38 },
+      { "name": "Omar Alderete",     "pos": "CB", "club": "Getafe",           "age": 27 },
+      { "name": "Gustavo Gómez",     "pos": "CB", "club": "Palmeiras",        "age": 31 },
+      { "name": "Júnior Alonso",     "pos": "CB", "club": "Atlético Mineiro", "age": 30 },
+      { "name": "Matías Espinoza",   "pos": "LB", "club": "Newell's Old Boys","age": 25 },
+      { "name": "Rodrigo Rojas",     "pos": "RB", "club": "River Plate",      "age": 27 },
+      { "name": "Miguel Almirón",    "pos": "AM", "club": "Newcastle",        "age": 30 },
+      { "name": "Mathías Villasanti","pos": "CM", "club": "Grêmio",           "age": 27 },
+      { "name": "Gabriel Avalos",    "pos": "ST", "club": "Cerro Porteño",    "age": 34 },
+      { "name": "Ángel Romero",      "pos": "RW", "club": "Club América",     "age": 31 },
+      { "name": "Antonio Sanabria",  "pos": "ST", "club": "Torino",           "age": 28 }
+    ]
+  },
+  "Colombia":  { "formation": "4-3-3", "coach": "Néstor Lorenzo", "players": [] },
+  "New Zealand": {
+    "formation": "4-4-2", "coach": "Darren Bazeley",
+    "players": [
+      { "name": "Oli Sail",          "pos": "GK", "club": "Wellington Phoenix","age": 27 },
+      { "name": "Liberato Cacace",   "pos": "LB", "club": "Empoli",           "age": 23 },
+      { "name": "Winston Reid",      "pos": "CB", "club": "Brentford",        "age": 36 },
+      { "name": "Michael Boxall",    "pos": "CB", "club": "Minnesota United", "age": 35 },
+      { "name": "Finn Surman",       "pos": "RB", "club": "Wellington Phoenix","age": 25 },
+      { "name": "Joe Bell",          "pos": "CM", "club": "Nashville SC",     "age": 25 },
+      { "name": "Callum McCowatt",   "pos": "CM", "club": "Wellington Phoenix","age": 25 },
+      { "name": "Elijah Just",       "pos": "CM", "club": "Wellington Phoenix","age": 22 },
+      { "name": "Marco Rojas",       "pos": "LW", "club": "Wellington Phoenix","age": 33 },
+      { "name": "Chris Wood",        "pos": "ST", "club": "Nottm Forest",     "age": 32 },
+      { "name": "Hamish Watson",     "pos": "RW", "club": "Wellington Phoenix","age": 26 }
+    ]
+  },
+  "Iraq": {
+    "formation": "4-3-3", "coach": "Jesús Casas",
+    "players": [
+      { "name": "Jalal Hassan",      "pos": "GK", "club": "Al-Zawraa",        "age": 35 },
+      { "name": "Saad Natiq",        "pos": "RB", "club": "Al-Shorta",        "age": 27 },
+      { "name": "Ali Adnan",         "pos": "LB", "club": "Nöttinge",         "age": 31 },
+      { "name": "Rebin Sulaka",      "pos": "CB", "club": "Dalkurd FF",       "age": 28 },
+      { "name": "Yaser Kasim",       "pos": "CM", "club": "Livingston",       "age": 33 },
+      { "name": "Ibrahim Bayesh",    "pos": "CM", "club": "Al-Quwa Al-Jawiya","age": 27 },
+      { "name": "Amjed Attwan",      "pos": "CM", "club": "Al-Zawraa",        "age": 25 },
+      { "name": "Aymen Hussein",     "pos": "ST", "club": "Al-Zawraa",        "age": 28 },
+      { "name": "Mohanad Ali",       "pos": "ST", "club": "Asiacell FC",      "age": 26 },
+      { "name": "Humam Tariq",       "pos": "RW", "club": "Al-Quwa Al-Jawiya","age": 24 },
+      { "name": "Ahmed Yasin",       "pos": "LW", "club": "Randers FC",       "age": 30 }
+    ]
+  },
+  "Jordan": {
+    "formation": "4-4-2", "coach": "Hossam Hassan",
+    "players": [
+      { "name": "Yazan Al-Naimat",   "pos": "GK", "club": "Al-Jazeera",       "age": 29 },
+      { "name": "Badr Al-Rawabdeh",  "pos": "RB", "club": "Al-Faisaly",       "age": 25 },
+      { "name": "Yazeed Abo Laila",  "pos": "CB", "club": "Al-Wehdat",        "age": 27 },
+      { "name": "Ahmad Saleh",       "pos": "CB", "club": "Al-Qadsia",        "age": 28 },
+      { "name": "Ehsan Haddad",      "pos": "LB", "club": "Al-Jazeera",       "age": 28 },
+      { "name": "Musa Al-Taamari",   "pos": "LW", "club": "Montpellier",      "age": 26 },
+      { "name": "Nizar Al-Rashdan",  "pos": "CM", "club": "Al-Wahdat",        "age": 29 },
+      { "name": "Oday Dabbagh",      "pos": "ST", "club": "Angers SCO",       "age": 24 },
+      { "name": "Ahmad Abu Eid",     "pos": "RW", "club": "Al-Faisaly",       "age": 26 },
+      { "name": "Baha Faisal",       "pos": "ST", "club": "Al-Wahdat",        "age": 25 },
+      { "name": "Ali Olwan",         "pos": "CM", "club": "Al-Jazeera",       "age": 30 }
+    ]
+  },
+  "Uzbekistan": {
+    "formation": "4-3-3", "coach": "Srecko Katanec",
+    "players": [
+      { "name": "Utkir Yusupov",     "pos": "GK", "club": "Pakhtakor",        "age": 31 },
+      { "name": "Dostonbek Khamdamov","pos":"RB", "club": "Pakhtakor",        "age": 24 },
+      { "name": "Sherzod Nishonov",  "pos": "CB", "club": "Pakhtakor",        "age": 27 },
+      { "name": "Rustam Yusupov",    "pos": "CB", "club": "Pakhtakor",        "age": 29 },
+      { "name": "Abbosbek Fayzullaev","pos":"LW", "club": "CSKA Moscow",      "age": 22 },
+      { "name": "Jaloliddin Masharipov","pos":"AM","club":"Pakhtakor",        "age": 29 },
+      { "name": "Otabek Shukurov",   "pos": "CM", "club": "Pakhtakor",        "age": 27 },
+      { "name": "Eldor Shomurodov",  "pos": "ST", "club": "Roma",             "age": 28 },
+      { "name": "Jamshid Iskanderov","pos": "RW", "club": "Pakhtakor",        "age": 24 },
+      { "name": "Jasur Yakhshiboev", "pos": "ST", "club": "Pakhtakor",        "age": 26 },
+      { "name": "Otabek Jurayev",    "pos": "LB", "club": "Al-Jazira",        "age": 25 }
+    ]
+  },
+  "Cape Verde": {
+    "formation": "4-3-3", "coach": "Bubista",
+    "players": [
+      { "name": "Vozinha",           "pos": "GK", "club": "Grasshoppers",     "age": 32 },
+      { "name": "Stopira",           "pos": "CB", "club": "Getafe",           "age": 34 },
+      { "name": "Roberto Lopes",     "pos": "CB", "club": "Bohemian FC",      "age": 29 },
+      { "name": "Diney",             "pos": "LB", "club": "CD Aves",          "age": 28 },
+      { "name": "Marco Soares",      "pos": "RB", "club": "Paços de Ferreira","age": 28 },
+      { "name": "Ryan Mendes",       "pos": "LW", "club": "Lille",            "age": 34 },
+      { "name": "Sory Kaba",         "pos": "ST", "club": "Extremadura UD",   "age": 29 },
+      { "name": "Garry Rodrigues",   "pos": "RW", "club": "Galatasaray",      "age": 32 },
+      { "name": "Willy Semedo",      "pos": "CM", "club": "Nantes",           "age": 30 },
+      { "name": "Steven Fortes",     "pos": "CM", "club": "Al-Qadsiah",       "age": 32 },
+      { "name": "Nuno Borges",       "pos": "AM", "club": "Sporting CP",      "age": 24 }
+    ]
+  },
+  "DR Congo": {
+    "formation": "4-3-3", "coach": "Sébastien Desabre",
+    "players": [
+      { "name": "Joël Kiassumbua",   "pos": "GK", "club": "Eupen",            "age": 33 },
+      { "name": "Chancel Mbemba",    "pos": "CB", "club": "Marseille",        "age": 30 },
+      { "name": "Arthur Masuaku",    "pos": "LB", "club": "Besiktas",         "age": 30 },
+      { "name": "Marcel Tisserand",  "pos": "CB", "club": "Getafe",           "age": 30 },
+      { "name": "Cédric Bakambu",    "pos": "ST", "club": "Marseille",        "age": 33 },
+      { "name": "Yannick Bolasie",   "pos": "RW", "club": "Middlesbrough",    "age": 34 },
+      { "name": "Edo Kayembe",       "pos": "CM", "club": "Watford",          "age": 26 },
+      { "name": "Théo Bongonda",     "pos": "LW", "club": "Genk",             "age": 28 },
+      { "name": "Elia Meschack",     "pos": "CM", "club": "Genk",             "age": 24 },
+      { "name": "Dodi Lukebakio",    "pos": "RW", "club": "Sevilla",          "age": 27 },
+      { "name": "Silas Mvumpa",      "pos": "ST", "club": "VfB Stuttgart",    "age": 24 }
+    ]
+  },
+  "Curaçao": {
+    "formation": "4-4-2", "coach": "Rèmko Bicentini",
+    "players": [
+      { "name": "Eloy Room",         "pos": "GK", "club": "FC Cincinnati",    "age": 33 },
+      { "name": "Cuco Martina",      "pos": "RB", "club": "Sparta Rotterdam", "age": 34 },
+      { "name": "Juriën Timber",     "pos": "CB", "club": "Arsenal",          "age": 23 },
+      { "name": "Derrick Luckassen", "pos": "CB", "club": "Ludogorets",       "age": 29 },
+      { "name": "Leandro Bacuna",    "pos": "LB", "club": "Middlesbrough",    "age": 32 },
+      { "name": "Jarchinio Antonia", "pos": "LW", "club": "Twente",           "age": 31 },
+      { "name": "Rubio Rubin",       "pos": "ST", "club": "Austin FC",        "age": 29 },
+      { "name": "Luciano Narsingh",  "pos": "RW", "club": "Swansea",          "age": 33 },
+      { "name": "Rangelo Janga",     "pos": "ST", "club": "Troyes",           "age": 32 },
+      { "name": "Gevaro Nepomuceno", "pos": "CM", "club": "NAC Breda",        "age": 30 },
+      { "name": "Quentin Thurman",   "pos": "CM", "club": "Guaraní",          "age": 26 }
+    ]
+  },
+  "Haiti": {
+    "formation": "4-3-3", "coach": "Marc Collat",
+    "players": [
+      { "name": "Johny Placide",     "pos": "GK", "club": "Guingamp",         "age": 36 },
+      { "name": "Florent Tata",      "pos": "RB", "club": "US Avranches",     "age": 26 },
+      { "name": "Andrew Jean-Baptiste","pos":"CB","club": "Nottm Forest",     "age": 33 },
+      { "name": "Steeven Langil",    "pos": "LW", "club": "Angers",           "age": 33 },
+      { "name": "Wilde-Donald Guerrier","pos":"RW","club":"Royal Mouscron",   "age": 31 },
+      { "name": "Duckens Nazon",     "pos": "ST", "club": "Sint-Truiden",     "age": 30 },
+      { "name": "Frantzdy Pierrot",  "pos": "ST", "club": "New England Rev",  "age": 30 },
+      { "name": "Déninson Saint-Félix","pos":"CM","club":"Le Mans FC",        "age": 27 },
+      { "name": "Mechack Jérôme",    "pos": "CB", "club": "Colorado Rapids",  "age": 31 },
+      { "name": "Ricardo Ade",       "pos": "CM", "club": "US Mondeville",    "age": 26 },
+      { "name": "Nazon Kervens",     "pos": "AM", "club": "Mons Calpe",       "age": 29 }
+    ]
+  }
+}

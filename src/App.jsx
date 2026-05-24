@@ -1,4 +1,4 @@
-import { useState }  from "react";
+import { useState, useEffect } from "react";
 import GroupStage    from "./pages/GroupStage";
 import Bracket       from "./pages/Bracket";
 import MyBracket     from "./pages/MyBracket";
@@ -7,9 +7,12 @@ import Dashboard     from "./pages/Dashboard";
 import Rules         from "./pages/Rules";
 import Admin         from "./pages/Admin";
 import AuthModal     from "./components/AuthModal";
+import TeamModal     from "./pages/TeamModal";
+import Teams         from "./pages/Teams";
 import { useAuth }   from "./hooks/useAuth";
 import banner        from "./assets/worldcupbanner.webp";
 import trophy        from "./assets/worldcuppng.webp";
+import wclogo        from "./assets/worldcuplogo.webp";
 import "./index.css";
 
 const HOST_NATIONS = [
@@ -32,6 +35,82 @@ const IconChevronLeft  = () => <svg width="14" height="14" viewBox="0 0 24 24" f
 const IconChevronRight = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>;
 const IconUser         = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>;
 const IconBarChart     = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>;
+const IconShield       = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>;
+
+// ── Countdown ─────────────────────────────────────────────────────────────────
+
+const WC_START = new Date("2026-06-11T19:00:00-05:00"); // kick-off: Mexico City
+
+function useCountdown() {
+  const [timeLeft, setTimeLeft] = useState(() => Math.max(0, WC_START - Date.now()));
+  useEffect(() => {
+    const id = setInterval(() => setTimeLeft(Math.max(0, WC_START - Date.now())), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const total   = Math.floor(timeLeft / 1000);
+  const days    = Math.floor(total / 86400);
+  const hours   = Math.floor((total % 86400) / 3600);
+  const minutes = Math.floor((total % 3600) / 60);
+  const seconds = total % 60;
+  return { days, hours, minutes, seconds, started: timeLeft === 0 };
+}
+
+function CountdownBanner() {
+  const { days, hours, minutes, seconds, started } = useCountdown();
+  const pad = n => String(n).padStart(2, "0");
+
+  return (
+    <div
+      className="w-full flex items-center justify-center gap-6 px-4 py-2 shrink-0"
+      style={{ background: "linear-gradient(90deg, #1a3a8f 0%, #1e40af 50%, #1a3a8f 100%)", borderBottom: "1px solid rgba(255,255,255,0.1)" }}
+    >
+      {/* Left: FIFA branding */}
+      <div className="hidden sm:flex items-center gap-3">
+        <img src={wclogo} alt="FIFA World Cup 2026" className="w-8 h-8 object-contain" />
+        <div>
+          <p className="font-black text-white leading-none" style={{ fontSize: "0.75rem", letterSpacing: "0.04em" }}>
+            FIFA World Cup 2026™
+          </p>
+          <p style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.55)", fontWeight: 600, letterSpacing: "0.06em" }}>
+            11 June – 19 July 2026
+          </p>
+        </div>
+      </div>
+
+      <div className="hidden sm:block w-px h-6" style={{ background: "rgba(255,255,255,0.15)" }} />
+
+      {/* Countdown units */}
+      {started ? (
+        <div className="flex items-center gap-2">
+            <img src={wclogo} alt="" className="w-6 h-6 object-contain" />
+            <p className="font-black text-white tracking-widest text-sm">🔴 LIVE NOW</p>
+          </div>
+      ) : (
+        <div className="flex items-center gap-4">
+          {[
+            { value: days,    label: "days"  },
+            { value: hours,   label: "hours" },
+            { value: minutes, label: "mins"  },
+            { value: seconds, label: "secs"  },
+          ].map(({ value, label }, i) => (
+            <div key={label} className="flex items-start gap-4">
+              {i > 0 && <span className="font-black text-white opacity-40 mt-0.5" style={{ fontSize: "1.1rem", lineHeight: 1 }}>:</span>}
+              <div className="text-center">
+                <p className="font-black text-white leading-none tabular-nums"
+                  style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(1.2rem, 3vw, 1.6rem)", letterSpacing: "0.04em" }}>
+                  {label === "days" ? days : pad(value)}
+                </p>
+                <p style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.5)", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginTop: 2 }}>
+                  {label}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 // ── App ───────────────────────────────────────────────────────────────────────
 
@@ -157,6 +236,7 @@ export default function App() {
         <div className="shrink-0" style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "12px 0" }} />
 
         <SideNavItem label="My Bracket"  icon={<IconEdit />}   active={activeTab === "mine"} onClick={() => navigate("mine")} accent="#ef4444" />
+        <SideNavItem label="Teams"       icon={<IconShield />} active={activeTab === "teams"} onClick={() => navigate("teams")} accent="#c8f000" />
 
         <div className="shrink-0" style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "12px 0" }} />
 
@@ -264,7 +344,11 @@ export default function App() {
   // ── Render ────────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen flex" style={{ background: "#1a0533" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: "#1a0533" }}>
+
+      <CountdownBanner />
+
+      <div className="flex flex-1 min-h-0">
 
       {/* Mobile overlay */}
       {sidebarOpen && (
@@ -379,6 +463,7 @@ export default function App() {
               {activeTab === "groups"    && <GroupStage />}
               {activeTab === "bracket"   && <Bracket />}
               {activeTab === "mine"      && <MyBracket />}
+              {activeTab === "teams"     && <Teams />}
               {activeTab === "dashboard" && <Dashboard onNavigate={navigate} />}
               {activeTab === "profile"   && <Profile   onNavigate={navigate} />}
             </main>
@@ -410,6 +495,8 @@ export default function App() {
       {showRules && <Rules  onClose={() => setShowRules(false)} />}
       {showAdmin && <Admin  onClose={() => setShowAdmin(false)} />}
       {showAuth  && <AuthModal initialMode={authMode} onClose={() => setShowAuth(false)} onAuth={() => setShowAuth(false)} />}
+      <TeamModal />
+      </div>{/* end flex row */}
     </div>
   );
 }

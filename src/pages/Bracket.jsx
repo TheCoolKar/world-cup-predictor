@@ -9,6 +9,7 @@
 
 import { useMemo }            from "react";
 import { simulateTournament } from "../utils/TournamentSimulator";
+import { useTeamModal }       from "../context/TeamModalContext";
 
 // ── Flag helper ───────────────────────────────────────────────────────────────
 
@@ -25,7 +26,6 @@ const FLAG_CODES = {
   "Argentina": "ar", "Algeria": "dz", "Austria": "at", "Jordan": "jo",
   "Portugal": "pt", "DR Congo": "cd", "Uzbekistan": "uz", "Colombia": "co",
   "England": "gb-eng", "Croatia": "hr", "Ghana": "gh", "Panama": "pa",
-  "Nigeria": "ng",
 };
 
 function flagEmoji(country) {
@@ -42,6 +42,7 @@ function flagEmoji(country) {
 
 function GroupTable({ group, rows, thirds }) {
   const thirdTeams = new Set(thirds.map(t => t.team));
+  const { openTeam } = useTeamModal();
 
   return (
     <div
@@ -95,8 +96,9 @@ function GroupTable({ group, rows, thirds }) {
               <span className="text-xs w-3 shrink-0" style={{ color: "rgba(255,255,255,0.25)" }}>{i + 1}</span>
               <span className="text-sm leading-none shrink-0">{flagEmoji(t.team)}</span>
               <span
-                className="text-xs font-semibold truncate"
+                className="text-xs font-semibold truncate cursor-pointer hover:underline"
                 style={{ color: qualifies ? "#c8f000" : thirdBest ? "#f59e0b" : "rgba(255,255,255,0.35)" }}
+                onClick={() => openTeam(t.team)}
               >
                 {t.team}
               </span>
@@ -139,15 +141,17 @@ function GroupTable({ group, rows, thirds }) {
 // ── Knockout match card (read-only) ───────────────────────────────────────────
 
 function TeamRow({ team, pct, isWinner, accent }) {
+  const { openTeam } = useTeamModal();
   return (
     <div
       className="flex items-center gap-2 px-3 py-2"
       style={{ background: isWinner ? `${accent}18` : "transparent" }}
     >
-      <span className="text-base leading-none shrink-0">{flagEmoji(team)}</span>
+      <span className="text-base leading-none shrink-0 cursor-pointer" onClick={() => openTeam(team)}>{flagEmoji(team)}</span>
       <span
-        className="text-xs font-semibold flex-1 truncate"
+        className="text-xs font-semibold flex-1 truncate cursor-pointer hover:underline"
         style={{ color: isWinner ? accent : "rgba(255,255,255,0.4)" }}
+        onClick={() => openTeam(team)}
       >
         {team}
       </span>

@@ -1,6 +1,7 @@
 import { useState }       from "react";
 import { predictMatch, predictScore } from "../utils/Predictions";
 import eloRatings        from "../data/elo_ratings.json";
+import { useTeamModal }  from "../context/TeamModalContext";
 import teamForm          from "../data/team_form.json";
 import historicalStats   from "../data/team_historical_stats.json";
 import h2hStats          from "../data/h2h_stats.json";
@@ -64,6 +65,7 @@ function FormDots({ form }) {
 }
 
 export default function MatchCard({ match }) {
+  const { openTeam } = useTeamModal();
   const [showH2H,       setShowH2H]       = useState(false);
   const [h2hHovered,    setH2hHovered]    = useState(false);
   const [showBreakdown, setShowBreakdown] = useState(false);
@@ -204,10 +206,11 @@ export default function MatchCard({ match }) {
       {/* Teams */}
       <div className="px-4 pt-4 pb-2 flex items-center justify-between gap-2 flex-1">
         {/* Home */}
-        <div className="flex flex-col items-center gap-1.5 flex-1 min-w-0">
+        <div className="flex flex-col items-center gap-1.5 flex-1 min-w-0 cursor-pointer group/home"
+          onClick={() => openTeam(home)}>
           <FlagEmoji country={home} />
           <span
-            className="text-xs font-bold text-center leading-tight line-clamp-2 w-full"
+            className="text-xs font-bold text-center leading-tight line-clamp-2 w-full group-hover/home:underline"
             style={{ color: isFavoriteHome ? "#c8f000" : "rgba(255,255,255,0.5)" }}
           >
             {home}
@@ -257,10 +260,11 @@ export default function MatchCard({ match }) {
         </div>
 
         {/* Away */}
-        <div className="flex flex-col items-center gap-1.5 flex-1 min-w-0">
+        <div className="flex flex-col items-center gap-1.5 flex-1 min-w-0 cursor-pointer group/away"
+          onClick={() => openTeam(away)}>
           <FlagEmoji country={away} />
           <span
-            className="text-xs font-bold text-center leading-tight line-clamp-2 w-full"
+            className="text-xs font-bold text-center leading-tight line-clamp-2 w-full group-hover/away:underline"
             style={{ color: !isFavoriteHome ? "#c8f000" : "rgba(255,255,255,0.5)" }}
           >
             {away}

@@ -26,6 +26,7 @@ import {
 import { supabase } from "../lib/supabase";
 import { useAuth }  from "../hooks/useAuth";
 import AuthModal    from "../components/AuthModal";
+import { useTeamModal } from "../context/TeamModalContext";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -57,7 +58,7 @@ const FLAG_CODES = {
   "France":"fr","Senegal":"sn","Norway":"no","Iraq":"iq",
   "Argentina":"ar","Algeria":"dz","Austria":"at","Jordan":"jo",
   "Portugal":"pt","DR Congo":"cd","Uzbekistan":"uz","Colombia":"co",
-  "England":"gb-eng","Croatia":"hr","Ghana":"gh","Panama":"pa","Nigeria":"ng",
+  "England":"gb-eng","Croatia":"hr","Ghana":"gh","Panama":"pa",
 };
 
 function getFlag(name) {
@@ -198,6 +199,7 @@ function ScorePicker({ value, onChange }) {
 
 function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode }) {
   const { home, away, matchday } = match;
+  const { openTeam } = useTeamModal();
   const hVal = score?.home??0, aVal = score?.away??0;
   const hasScore = score!=null;
   const homeW = mode==="score" ? (hasScore&&hVal>aVal) : pick==="home";
@@ -207,11 +209,17 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode })
   const nameColor = (win,draw) =>
     win ? "#c8f000" : draw ? "#f59e0b" : "rgba(255,255,255,0.75)";
 
+  const teamNameStyle = (color) => ({color, cursor:"pointer", textDecoration:"underline", textDecorationColor:"transparent", textUnderlineOffset:2});
+  const teamHover = e => { e.currentTarget.style.textDecorationColor = "currentColor"; };
+  const teamLeave = e => { e.currentTarget.style.textDecorationColor = "transparent"; };
+
   if (mode==="score") {
     return (
       <div className="flex items-center gap-1.5 py-2 px-3">
         <div className="flex items-center gap-1 flex-1 min-w-0 justify-end">
-          <span className="text-xs font-semibold truncate text-right" style={{color:nameColor(homeW,drawV)}}>{home}</span>
+          <span className="text-xs font-semibold truncate text-right"
+            style={teamNameStyle(nameColor(homeW,drawV))}
+            onClick={()=>openTeam(home)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{home}</span>
           <span className="text-base leading-none shrink-0">{getFlag(home)}</span>
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
@@ -221,7 +229,9 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode })
         </div>
         <div className="flex items-center gap-1 flex-1 min-w-0">
           <span className="text-base leading-none shrink-0">{getFlag(away)}</span>
-          <span className="text-xs font-semibold truncate" style={{color:nameColor(awayW,drawV)}}>{away}</span>
+          <span className="text-xs font-semibold truncate"
+            style={teamNameStyle(nameColor(awayW,drawV))}
+            onClick={()=>openTeam(away)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{away}</span>
         </div>
         <span style={{color:"rgba(255,255,255,0.18)",fontSize:"0.6rem",flexShrink:0}}>MD{matchday}</span>
       </div>
@@ -238,7 +248,9 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode })
   return (
     <div className="flex items-center gap-2 py-1.5 px-3">
       <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
-        <span className="text-xs font-semibold truncate text-right" style={{color:homeW?"#c8f000":"rgba(255,255,255,0.75)"}}>{home}</span>
+        <span className="text-xs font-semibold truncate text-right"
+          style={teamNameStyle(homeW?"#c8f000":"rgba(255,255,255,0.75)")}
+          onClick={()=>openTeam(home)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{home}</span>
         <span className="text-base leading-none shrink-0">{getFlag(home)}</span>
       </div>
       <div className="flex gap-1 shrink-0">
@@ -248,7 +260,9 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode })
       </div>
       <div className="flex items-center gap-1.5 flex-1 min-w-0">
         <span className="text-base leading-none shrink-0">{getFlag(away)}</span>
-        <span className="text-xs font-semibold truncate" style={{color:awayW?"#ef4444":"rgba(255,255,255,0.75)"}}>{away}</span>
+        <span className="text-xs font-semibold truncate"
+          style={teamNameStyle(awayW?"#ef4444":"rgba(255,255,255,0.75)")}
+          onClick={()=>openTeam(away)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{away}</span>
       </div>
       <span style={{color:"rgba(255,255,255,0.18)",fontSize:"0.6rem",flexShrink:0}}>MD{matchday}</span>
     </div>
@@ -259,6 +273,7 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode })
 
 function MiniStandings({ standings, thirds }) {
   const thirdTeams=new Set(thirds.map(t=>t.team));
+  const { openTeam } = useTeamModal();
   return (
     <div className="pt-2 mt-2" style={{borderTop:"1px solid rgba(255,255,255,0.06)"}}>
       {standings.map((t,i)=>{
@@ -268,7 +283,8 @@ function MiniStandings({ standings, thirds }) {
             <span className="text-xs w-3 shrink-0" style={{color:"rgba(255,255,255,0.25)"}}>{i+1}</span>
             <span className="text-sm leading-none shrink-0">{getFlag(t.team)}</span>
             <span className="text-xs flex-1 font-semibold truncate"
-              style={{color:q?"#c8f000":t3?"#f59e0b":"rgba(255,255,255,0.35)"}}>
+              style={{color:q?"#c8f000":t3?"#f59e0b":"rgba(255,255,255,0.35)",cursor:"pointer"}}
+              onClick={()=>openTeam(t.team)}>
               {t.team}
             </span>
             {(q||t3)&&(
@@ -372,6 +388,7 @@ function GroupCard({ group, picks, scores, onPick, onScore, standings, thirds, m
 // ── Knockout: bracket match card ──────────────────────────────────────────────
 
 function BracketMatch({ home, away, winner, onPick, onForcePick, onScore, score, scoreMode, isFinal }) {
+  const { openTeam } = useTeamModal();
   const hVal=score?.home??0, aVal=score?.away??0;
   const hasScore=score!=null;
   const isTied=scoreMode&&hasScore&&hVal===aVal&&home&&away;
@@ -403,7 +420,9 @@ function BracketMatch({ home, away, winner, onPick, onForcePick, onScore, score,
         <div className="flex items-center gap-2 px-2.5 py-2"
           style={{background:effectiveWinner===home?"rgba(200,240,0,0.12)":"transparent",opacity:homeOpacity,transition:"opacity 0.15s"}}>
           <span className="text-sm leading-none shrink-0" style={{minWidth:20}}>{home?getFlag(home):""}</span>
-          <span className="text-xs font-semibold truncate flex-1" style={{color:effectiveWinner===home?"#c8f000":!home?"rgba(255,255,255,0.18)":"rgba(255,255,255,0.8)"}}>
+          <span className="text-xs font-semibold truncate flex-1"
+            style={{color:effectiveWinner===home?"#c8f000":!home?"rgba(255,255,255,0.18)":"rgba(255,255,255,0.8)",cursor:home?"pointer":"default"}}
+            onClick={()=>home&&openTeam(home)}>
             {home??"TBD"}
           </span>
           {home&&<ScorePicker value={hVal} onChange={chHome}/>}
@@ -433,7 +452,9 @@ function BracketMatch({ home, away, winner, onPick, onForcePick, onScore, score,
         <div className="flex items-center gap-2 px-2.5 py-2"
           style={{background:effectiveWinner===away?"rgba(200,240,0,0.12)":"transparent",opacity:awayOpacity,transition:"opacity 0.15s"}}>
           <span className="text-sm leading-none shrink-0" style={{minWidth:20}}>{away?getFlag(away):""}</span>
-          <span className="text-xs font-semibold truncate flex-1" style={{color:effectiveWinner===away?"#c8f000":!away?"rgba(255,255,255,0.18)":"rgba(255,255,255,0.8)"}}>
+          <span className="text-xs font-semibold truncate flex-1"
+            style={{color:effectiveWinner===away?"#c8f000":!away?"rgba(255,255,255,0.18)":"rgba(255,255,255,0.8)",cursor:away?"pointer":"default"}}
+            onClick={()=>away&&openTeam(away)}>
             {away??"TBD"}
           </span>
           {away&&<ScorePicker value={aVal} onChange={chAway}/>}
@@ -451,7 +472,8 @@ function BracketMatch({ home, away, winner, onPick, onForcePick, onScore, score,
         style={{background:isW?"rgba(200,240,0,0.15)":"transparent",cursor:isTbd?"default":"pointer",opacity:isL?0.3:1}}>
         <span className="text-sm leading-none shrink-0" style={{minWidth:20}}>{isTbd?"":getFlag(team)}</span>
         <span className="text-xs font-semibold truncate flex-1 leading-tight"
-          style={{color:isW?"#c8f000":isTbd?"rgba(255,255,255,0.18)":"rgba(255,255,255,0.8)"}}>
+          style={{color:isW?"#c8f000":isTbd?"rgba(255,255,255,0.18)":"rgba(255,255,255,0.8)"}}
+          onClick={e=>{if(team){e.stopPropagation();openTeam(team);}}}>
           {team??"TBD"}
         </span>
         {isW&&<span className="text-xs shrink-0" style={{color:"#c8f000"}}>✓</span>}
