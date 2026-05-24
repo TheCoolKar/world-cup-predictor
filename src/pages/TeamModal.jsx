@@ -1,34 +1,9 @@
 import { useTeamModal } from "../context/TeamModalContext";
+import { getFlagClass } from '../utils/flags';
 import eloRatings from "../data/elo_ratings.json";
 import teamForm   from "../data/team_form.json";
 import history    from "../data/team_history.json";
 import lineups    from "../data/team_lineups.json";
-
-const FLAG_CODES = {
-  "Mexico":"mx","South Africa":"za","South Korea":"kr","Czechia":"cz",
-  "Canada":"ca","Qatar":"qa","Switzerland":"ch","Bosnia":"ba",
-  "Brazil":"br","Morocco":"ma","Haiti":"ht","Scotland":"gb-sct",
-  "USA":"us","Paraguay":"py","Australia":"au","Türkiye":"tr",
-  "Germany":"de","Curaçao":"cw","Ivory Coast":"ci","Ecuador":"ec",
-  "Netherlands":"nl","Japan":"jp","Sweden":"se","Tunisia":"tn",
-  "Belgium":"be","Egypt":"eg","Iran":"ir","New Zealand":"nz",
-  "Spain":"es","Cape Verde":"cv","Saudi Arabia":"sa","Uruguay":"uy",
-  "France":"fr","Senegal":"sn","Norway":"no","Iraq":"iq",
-  "Argentina":"ar","Algeria":"dz","Austria":"at","Jordan":"jo",
-  "Portugal":"pt","DR Congo":"cd","Uzbekistan":"uz","Colombia":"co",
-  "England":"gb-eng","Croatia":"hr","Ghana":"gh","Panama":"pa",
-};
-
-function getFlag(name) {
-  if (!name) return "";
-  const code = FLAG_CODES[name];
-  if (!code) return "🏳️";
-  if (code === "gb-sct") return "🏴󠁧󠁢󠁳󠁣󠁴󠁿";
-  if (code === "gb-eng") return "🏴󠁧󠁢󠁥󠁮󠁧󠁿";
-  return code.toUpperCase().split("").map(c =>
-    String.fromCodePoint(0x1f1e6 - 65 + c.charCodeAt(0))
-  ).join("");
-}
 
 // All ELO values sorted to derive rank
 const ELO_ENTRIES = Object.entries(eloRatings)
@@ -129,7 +104,7 @@ export default function TeamModal() {
           </button>
 
           <div className="flex items-center gap-4">
-            <span style={{ fontSize: "3.5rem", lineHeight: 1 }}>{getFlag(team)}</span>
+            <span className={getFlagClass(team) ?? ''} style={{fontSize:'3.5rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
             <div>
               <p className="text-xs font-bold uppercase tracking-widest mb-0.5" style={{ color: "#c8f000" }}>
                 FIFA World Cup 2026

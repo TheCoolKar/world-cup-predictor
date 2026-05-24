@@ -6,31 +6,10 @@ import teamForm          from "../data/team_form.json";
 import historicalStats   from "../data/team_historical_stats.json";
 import h2hStats          from "../data/h2h_stats.json";
 import H2HModal          from "./H2HModal";
-
-const FLAG_CODES = {
-  "Mexico": "mx", "South Africa": "za", "South Korea": "kr", "Czechia": "cz",
-  "Canada": "ca", "Qatar": "qa", "Switzerland": "ch", "Bosnia": "ba",
-  "Brazil": "br", "Morocco": "ma", "Haiti": "ht", "Scotland": "gb-sct",
-  "USA": "us", "Paraguay": "py", "Australia": "au", "Türkiye": "tr",
-  "Germany": "de", "Curaçao": "cw", "Ivory Coast": "ci", "Ecuador": "ec",
-  "Netherlands": "nl", "Japan": "jp", "Sweden": "se", "Tunisia": "tn",
-  "Belgium": "be", "Egypt": "eg", "Iran": "ir", "New Zealand": "nz",
-  "Spain": "es", "Cape Verde": "cv", "Saudi Arabia": "sa", "Uruguay": "uy",
-  "France": "fr", "Senegal": "sn", "Norway": "no", "Iraq": "iq",
-  "Argentina": "ar", "Algeria": "dz", "Austria": "at", "Jordan": "jo",
-  "Portugal": "pt", "DR Congo": "cd", "Uzbekistan": "uz", "Colombia": "co",
-  "England": "gb-eng", "Croatia": "hr", "Ghana": "gh", "Panama": "pa",
-};
+import { getFlagClass } from "../utils/flags";
 
 function FlagEmoji({ country }) {
-  const code = FLAG_CODES[country];
-  if (!code) return <span className="text-2xl">🏳️</span>;
-  if (code === "gb-sct") return <span className="text-2xl leading-none">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>;
-  if (code === "gb-eng") return <span className="text-2xl leading-none">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>;
-  const flag = code.toUpperCase().split("").map((c) =>
-    String.fromCodePoint(0x1f1e6 - 65 + c.charCodeAt(0))
-  ).join("");
-  return <span className="text-2xl leading-none">{flag}</span>;
+  return <span className={getFlagClass(country) ?? ''} style={{fontSize:'1.8rem',lineHeight:1,display:'inline-block',flexShrink:0}} />;
 }
 
 const DOT_COLOR = { W: "#c8f000", D: "#f59e0b", L: "#ef4444" };

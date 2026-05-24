@@ -1,33 +1,8 @@
 import { useState } from "react";
+import { getFlagClass } from '../utils/flags';
 import eloRatings from "../data/elo_ratings.json";
 import fixtures   from "../data/wc2026_fixtures.json";
 import { useTeamModal } from "../context/TeamModalContext";
-
-const FLAG_CODES = {
-  "Mexico":"mx","South Africa":"za","South Korea":"kr","Czechia":"cz",
-  "Canada":"ca","Qatar":"qa","Switzerland":"ch","Bosnia":"ba",
-  "Brazil":"br","Morocco":"ma","Haiti":"ht","Scotland":"gb-sct",
-  "USA":"us","Paraguay":"py","Australia":"au","Türkiye":"tr",
-  "Germany":"de","Curaçao":"cw","Ivory Coast":"ci","Ecuador":"ec",
-  "Netherlands":"nl","Japan":"jp","Sweden":"se","Tunisia":"tn",
-  "Belgium":"be","Egypt":"eg","Iran":"ir","New Zealand":"nz",
-  "Spain":"es","Cape Verde":"cv","Saudi Arabia":"sa","Uruguay":"uy",
-  "France":"fr","Senegal":"sn","Norway":"no","Iraq":"iq",
-  "Argentina":"ar","Algeria":"dz","Austria":"at","Jordan":"jo",
-  "Portugal":"pt","DR Congo":"cd","Uzbekistan":"uz","Colombia":"co",
-  "England":"gb-eng","Croatia":"hr","Ghana":"gh","Panama":"pa",
-};
-
-function getFlag(name) {
-  if (!name) return "";
-  const code = FLAG_CODES[name];
-  if (!code) return "🏳️";
-  if (code === "gb-sct") return "🏴󠁧󠁢󠁳󠁣󠁴󠁿";
-  if (code === "gb-eng") return "🏴󠁧󠁢󠁥󠁮󠁧󠁿";
-  return code.toUpperCase().split("").map(c =>
-    String.fromCodePoint(0x1f1e6 - 65 + c.charCodeAt(0))
-  ).join("");
-}
 
 // Build group map from fixtures
 const GROUP_MAP = {};
@@ -105,7 +80,7 @@ export default function Teams() {
         </span>
 
         {/* Flag */}
-        <span style={{ fontSize: "1.8rem", lineHeight: 1, flexShrink: 0 }}>{getFlag(team.name)}</span>
+        <span className={getFlagClass(team.name) ?? ''} style={{fontSize:'1.8rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
 
         {/* Name + bar */}
         <div className="flex-1 min-w-0">

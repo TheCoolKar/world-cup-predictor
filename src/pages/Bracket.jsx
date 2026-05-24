@@ -10,33 +10,7 @@
 import { useMemo }            from "react";
 import { simulateTournament } from "../utils/TournamentSimulator";
 import { useTeamModal }       from "../context/TeamModalContext";
-
-// ── Flag helper ───────────────────────────────────────────────────────────────
-
-const FLAG_CODES = {
-  "Mexico": "mx", "South Africa": "za", "South Korea": "kr", "Czechia": "cz",
-  "Canada": "ca", "Qatar": "qa", "Switzerland": "ch", "Bosnia": "ba",
-  "Brazil": "br", "Morocco": "ma", "Haiti": "ht", "Scotland": "gb-sct",
-  "USA": "us", "Paraguay": "py", "Australia": "au", "Türkiye": "tr",
-  "Germany": "de", "Curaçao": "cw", "Ivory Coast": "ci", "Ecuador": "ec",
-  "Netherlands": "nl", "Japan": "jp", "Sweden": "se", "Tunisia": "tn",
-  "Belgium": "be", "Egypt": "eg", "Iran": "ir", "New Zealand": "nz",
-  "Spain": "es", "Cape Verde": "cv", "Saudi Arabia": "sa", "Uruguay": "uy",
-  "France": "fr", "Senegal": "sn", "Norway": "no", "Iraq": "iq",
-  "Argentina": "ar", "Algeria": "dz", "Austria": "at", "Jordan": "jo",
-  "Portugal": "pt", "DR Congo": "cd", "Uzbekistan": "uz", "Colombia": "co",
-  "England": "gb-eng", "Croatia": "hr", "Ghana": "gh", "Panama": "pa",
-};
-
-function flagEmoji(country) {
-  const code = FLAG_CODES[country];
-  if (!code) return "🏳️";
-  if (code === "gb-sct") return "🏴󠁧󠁢󠁳󠁣󠁴󠁿";
-  if (code === "gb-eng") return "🏴󠁧󠁢󠁥󠁮󠁧󠁿";
-  return code.toUpperCase().split("").map(c =>
-    String.fromCodePoint(0x1f1e6 - 65 + c.charCodeAt(0))
-  ).join("");
-}
+import { getFlagClass } from '../utils/flags';
 
 // ── Group Standings Table ─────────────────────────────────────────────────────
 
@@ -94,7 +68,7 @@ function GroupTable({ group, rows, thirds }) {
           >
             <div className="flex items-center gap-2 flex-1 min-w-0">
               <span className="text-xs w-3 shrink-0" style={{ color: "rgba(255,255,255,0.25)" }}>{i + 1}</span>
-              <span className="text-sm leading-none shrink-0">{flagEmoji(t.team)}</span>
+              <span className={getFlagClass(t.team) ?? ''} style={{fontSize:'1rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
               <span
                 className="text-xs font-semibold truncate cursor-pointer hover:underline"
                 style={{ color: qualifies ? "#c8f000" : thirdBest ? "#f59e0b" : "rgba(255,255,255,0.35)" }}
@@ -147,7 +121,7 @@ function TeamRow({ team, pct, isWinner, accent }) {
       className="flex items-center gap-2 px-3 py-2"
       style={{ background: isWinner ? `${accent}18` : "transparent" }}
     >
-      <span className="text-base leading-none shrink-0 cursor-pointer" onClick={() => openTeam(team)}>{flagEmoji(team)}</span>
+      <span className="cursor-pointer" onClick={() => openTeam(team)}><span className={getFlagClass(team) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} /></span>
       <span
         className="text-xs font-semibold flex-1 truncate cursor-pointer hover:underline"
         style={{ color: isWinner ? accent : "rgba(255,255,255,0.4)" }}
@@ -259,7 +233,7 @@ function ChampionCard({ team }) {
           boxShadow: "0 0 32px rgba(251,191,36,0.15)",
         }}
       >
-        <span style={{ fontSize: "2.5rem", lineHeight: 1 }}>{flagEmoji(team)}</span>
+        <span className={getFlagClass(team) ?? ''} style={{fontSize:'2.5rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
         <span
           className="text-white font-black text-center"
           style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.3rem", letterSpacing: "0.06em" }}
@@ -351,7 +325,7 @@ export default function Bracket() {
               style={{ background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.15)" }}
             >
               <span className="text-xs font-black" style={{ color: "#f59e0b" }}>#{i + 1}</span>
-              <span className="text-xl leading-none">{flagEmoji(t.team)}</span>
+              <span className={getFlagClass(t.team) ?? ''} style={{fontSize:'1.3rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
               <span
                 className="text-xs font-semibold text-center leading-tight"
                 style={{ color: "rgba(255,255,255,0.7)" }}

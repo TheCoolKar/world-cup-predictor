@@ -27,6 +27,7 @@ import { supabase } from "../lib/supabase";
 import { useAuth }  from "../hooks/useAuth";
 import AuthModal    from "../components/AuthModal";
 import { useTeamModal } from "../context/TeamModalContext";
+import { getFlagClass } from '../utils/flags';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -43,34 +44,6 @@ const ROUND_COUNTS  = { R32:16, R16:8, QF:4, SF:2, F:1 };
 
 const getElo = t => eloRatings[t] ?? 1400;
 const scoreToResult = (h, a) => h > a ? "home" : a > h ? "away" : "draw";
-
-// ── Flag helper ───────────────────────────────────────────────────────────────
-
-const FLAG_CODES = {
-  "Mexico":"mx","South Africa":"za","South Korea":"kr","Czechia":"cz",
-  "Canada":"ca","Qatar":"qa","Switzerland":"ch","Bosnia":"ba",
-  "Brazil":"br","Morocco":"ma","Haiti":"ht","Scotland":"gb-sct",
-  "USA":"us","Paraguay":"py","Australia":"au","Türkiye":"tr",
-  "Germany":"de","Curaçao":"cw","Ivory Coast":"ci","Ecuador":"ec",
-  "Netherlands":"nl","Japan":"jp","Sweden":"se","Tunisia":"tn",
-  "Belgium":"be","Egypt":"eg","Iran":"ir","New Zealand":"nz",
-  "Spain":"es","Cape Verde":"cv","Saudi Arabia":"sa","Uruguay":"uy",
-  "France":"fr","Senegal":"sn","Norway":"no","Iraq":"iq",
-  "Argentina":"ar","Algeria":"dz","Austria":"at","Jordan":"jo",
-  "Portugal":"pt","DR Congo":"cd","Uzbekistan":"uz","Colombia":"co",
-  "England":"gb-eng","Croatia":"hr","Ghana":"gh","Panama":"pa",
-};
-
-function getFlag(name) {
-  if (!name) return "";
-  const code = FLAG_CODES[name];
-  if (!code) return "🏳️";
-  if (code === "gb-sct") return "🏴󠁧󠁢󠁳󠁣󠁴󠁿";
-  if (code === "gb-eng") return "🏴󠁧󠁢󠁥󠁮󠁧󠁿";
-  return code.toUpperCase().split("").map(c =>
-    String.fromCodePoint(0x1f1e6 - 65 + c.charCodeAt(0))
-  ).join("");
-}
 
 // ── Group standings ───────────────────────────────────────────────────────────
 
@@ -220,7 +193,7 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode })
           <span className="text-xs font-semibold truncate text-right"
             style={teamNameStyle(nameColor(homeW,drawV))}
             onClick={()=>openTeam(home)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{home}</span>
-          <span className="text-base leading-none shrink-0">{getFlag(home)}</span>
+          <span className={getFlagClass(home) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
           <ScorePicker value={hVal} onChange={v=>{onScoreChange(match.id,v,aVal);onPickChange(match.id,scoreToResult(v,aVal));}} />
@@ -228,7 +201,7 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode })
           <ScorePicker value={aVal} onChange={v=>{onScoreChange(match.id,hVal,v);onPickChange(match.id,scoreToResult(hVal,v));}} />
         </div>
         <div className="flex items-center gap-1 flex-1 min-w-0">
-          <span className="text-base leading-none shrink-0">{getFlag(away)}</span>
+          <span className={getFlagClass(away) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
           <span className="text-xs font-semibold truncate"
             style={teamNameStyle(nameColor(awayW,drawV))}
             onClick={()=>openTeam(away)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{away}</span>
@@ -251,7 +224,7 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode })
         <span className="text-xs font-semibold truncate text-right"
           style={teamNameStyle(homeW?"#c8f000":"rgba(255,255,255,0.75)")}
           onClick={()=>openTeam(home)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{home}</span>
-        <span className="text-base leading-none shrink-0">{getFlag(home)}</span>
+        <span className={getFlagClass(home) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
       </div>
       <div className="flex gap-1 shrink-0">
         <BTN value="home" label="1" activeColor="#c8f000"  activeText="#1a0533"/>
@@ -259,7 +232,7 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode })
         <BTN value="away" label="2" activeColor="#ef4444"  activeText="white"  />
       </div>
       <div className="flex items-center gap-1.5 flex-1 min-w-0">
-        <span className="text-base leading-none shrink-0">{getFlag(away)}</span>
+        <span className={getFlagClass(away) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
         <span className="text-xs font-semibold truncate"
           style={teamNameStyle(awayW?"#ef4444":"rgba(255,255,255,0.75)")}
           onClick={()=>openTeam(away)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{away}</span>
@@ -281,7 +254,7 @@ function MiniStandings({ standings, thirds }) {
         return (
           <div key={t.team} className="flex items-center gap-2 px-3 py-1">
             <span className="text-xs w-3 shrink-0" style={{color:"rgba(255,255,255,0.25)"}}>{i+1}</span>
-            <span className="text-sm leading-none shrink-0">{getFlag(t.team)}</span>
+            <span className={getFlagClass(t.team) ?? ''} style={{fontSize:'1rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
             <span className="text-xs flex-1 font-semibold truncate"
               style={{color:q?"#c8f000":t3?"#f59e0b":"rgba(255,255,255,0.35)",cursor:"pointer"}}
               onClick={()=>openTeam(t.team)}>
@@ -419,7 +392,7 @@ function BracketMatch({ home, away, winner, onPick, onForcePick, onScore, score,
         {/* Home row */}
         <div className="flex items-center gap-2 px-2.5 py-2"
           style={{background:effectiveWinner===home?"rgba(200,240,0,0.12)":"transparent",opacity:homeOpacity,transition:"opacity 0.15s"}}>
-          <span className="text-sm leading-none shrink-0" style={{minWidth:20}}>{home?getFlag(home):""}</span>
+          <span className={getFlagClass(home) ?? ''} style={{fontSize:'1rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
           <span className="text-xs font-semibold truncate flex-1"
             style={{color:effectiveWinner===home?"#c8f000":!home?"rgba(255,255,255,0.18)":"rgba(255,255,255,0.8)",cursor:home?"pointer":"default"}}
             onClick={()=>home&&openTeam(home)}>
@@ -451,7 +424,7 @@ function BracketMatch({ home, away, winner, onPick, onForcePick, onScore, score,
         {/* Away row */}
         <div className="flex items-center gap-2 px-2.5 py-2"
           style={{background:effectiveWinner===away?"rgba(200,240,0,0.12)":"transparent",opacity:awayOpacity,transition:"opacity 0.15s"}}>
-          <span className="text-sm leading-none shrink-0" style={{minWidth:20}}>{away?getFlag(away):""}</span>
+          <span className={getFlagClass(away) ?? ''} style={{fontSize:'1rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
           <span className="text-xs font-semibold truncate flex-1"
             style={{color:effectiveWinner===away?"#c8f000":!away?"rgba(255,255,255,0.18)":"rgba(255,255,255,0.8)",cursor:away?"pointer":"default"}}
             onClick={()=>away&&openTeam(away)}>
@@ -470,7 +443,7 @@ function BracketMatch({ home, away, winner, onPick, onForcePick, onScore, score,
       <button onClick={()=>team&&onPick(team)} disabled={isTbd}
         className="w-full flex items-center gap-1.5 px-2.5 py-2 text-left transition-all duration-100 active:scale-95"
         style={{background:isW?"rgba(200,240,0,0.15)":"transparent",cursor:isTbd?"default":"pointer",opacity:isL?0.3:1}}>
-        <span className="text-sm leading-none shrink-0" style={{minWidth:20}}>{isTbd?"":getFlag(team)}</span>
+        {!isTbd && <span className={getFlagClass(team) ?? ''} style={{fontSize:'1rem',lineHeight:1,display:'inline-block',flexShrink:0}} />}
         <span className="text-xs font-semibold truncate flex-1 leading-tight"
           style={{color:isW?"#c8f000":isTbd?"rgba(255,255,255,0.18)":"rgba(255,255,255,0.8)"}}
           onClick={e=>{if(team){e.stopPropagation();openTeam(team);}}}>
@@ -960,7 +933,7 @@ export default function MyBracket() {
                   {champion?(
                     <>
                       <div className="text-3xl mb-2">🏆</div>
-                      <div className="text-2xl mb-1">{getFlag(champion)}</div>
+                      <span className={(getFlagClass(champion) ?? '') + ' mb-1'} style={{fontSize:'2rem',lineHeight:1,display:'inline-block'}} />
                       <p style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"1.2rem",letterSpacing:"0.04em",color:"#c8f000",lineHeight:1.1}}>
                         {champion}
                       </p>
@@ -1002,7 +975,7 @@ export default function MyBracket() {
                     {bw["3P"][0]&&(
                       <div className="flex items-center gap-2 px-3 py-2 rounded-xl"
                         style={{background:"rgba(148,163,184,0.08)",border:"1px solid rgba(148,163,184,0.18)"}}>
-                        <span className="text-lg leading-none">{getFlag(bw["3P"][0])}</span>
+                        <span className={getFlagClass(bw["3P"][0]) ?? ''} style={{fontSize:'1.3rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
                         <div>
                           <p className="font-black leading-none" style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"1rem",letterSpacing:"0.04em",color:"#94a3b8"}}>
                             {bw["3P"][0]}
