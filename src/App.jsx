@@ -9,6 +9,8 @@ import Dashboard     from "./pages/Dashboard";
 import Rules         from "./pages/Rules";
 import Admin         from "./pages/Admin";
 import AuthModal     from "./components/AuthModal";
+import DisclaimerModal, { hasAcceptedDisclaimer } from "./components/DisclaimerModal";
+import SignInGate from "./components/SignInGate";
 import TeamModal     from "./pages/TeamModal";
 import Teams         from "./pages/Teams";
 import { useAuth }   from "./hooks/useAuth";
@@ -125,6 +127,7 @@ export default function App() {
   const [sidebarOpen,     setSidebarOpen]     = useState(false);
   const [collapsed,       setCollapsed]       = useState(false);
   const [activeBracketId, setActiveBracketId] = useState(null);
+  const [disclaimerDone, setDisclaimerDone]   = useState(() => hasAcceptedDisclaimer());
 
   const { user, loading: authLoading, signOut } = useAuth();
   const displayName = user
@@ -141,12 +144,12 @@ export default function App() {
 
   // ── Nav item ─────────────────────────────────────────────────────────────────
 
-  function SideNavItem({ label, icon, active, onClick, accent = "#c8f000", muted = false }) {
+  function SideNavItem({ label, icon, active, onClick, accent = "#c8f000", muted = false, locked = false }) {
     const rgb = accent === "#ef4444" ? "239,68,68" : accent === "#f59e0b" ? "245,158,11" : "200,240,0";
     return (
       <button
         onClick={onClick}
-        title={collapsed ? label : undefined}
+        title={collapsed ? (locked ? `${label} — sign in required` : label) : undefined}
         className="w-full flex items-center rounded-xl transition-all duration-150"
         style={{
           gap:         collapsed ? 0 : 12,
@@ -165,7 +168,17 @@ export default function App() {
         <span style={{ color: active ? accent : "rgba(255,255,255,0.3)", flexShrink: 0 }}>
           {icon}
         </span>
-        {!collapsed && <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{label}</span>}
+        {!collapsed && (
+          <span className="flex-1 flex items-center justify-between min-w-0">
+            <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{label}</span>
+            {locked && (
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "rgba(255,255,255,0.2)", flexShrink: 0, marginLeft: 4 }}>
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            )}
+          </span>
+        )}
       </button>
     );
   }
@@ -234,8 +247,22 @@ export default function App() {
         )}
         {collapsed && <div style={{ height: 16 }} />}
 
-        <SideNavItem label="Group Stage"       icon={<IconGrid />}    active={activeTab === "groups"}  onClick={() => navigate("groups")}  accent="#c8f000" />
-        <SideNavItem label="Simulated Bracket" icon={<IconBracket />} active={activeTab === "bracket"} onClick={() => navigate("bracket")} accent="#c8f000" />
+        <SideNavItem
+          label="Group Stage"
+          icon={<IconGrid />}
+          active={activeTab === "groups"}
+          onClick={() => navigate("groups")}
+          accent="#c8f000"
+          locked={!user}
+        />
+        <SideNavItem
+          label="Simulated Bracket"
+          icon={<IconBracket />}
+          active={activeTab === "bracket"}
+          onClick={() => navigate("bracket")}
+          accent="#c8f000"
+          locked={!user}
+        />
 
         <div className="shrink-0" style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "12px 0" }} />
 
@@ -405,8 +432,8 @@ export default function App() {
         <div className="flex flex-col flex-1 min-w-0">
           <div className="flex flex-col flex-1 min-w-0">
 
-            {/* Hero — only on AI Predictions tabs */}
-            {(activeTab === "groups" || activeTab === "bracket") && (
+            {/* Hero — only on AI Predictions tabs for signed-in users */}
+            {(activeTab === "groups" || activeTab === "bracket") && user && (
               <header className="relative overflow-hidden shrink-0" style={{ minHeight: 320 }}>
                 <img src={banner} alt="FIFA World Cup 2026" className="absolute inset-0 w-full h-full object-cover object-center" />
                 <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,rgba(15,4,40,0.9) 0%,rgba(15,4,40,0.65) 55%,rgba(15,4,40,0.15) 100%)" }} />
@@ -464,8 +491,22 @@ export default function App() {
 
             {/* Page content */}
             <main className="flex-1" style={{ background: "#1a0533" }}>
-              {activeTab === "groups"    && <GroupStage />}
-              {activeTab === "bracket"   && <Bracket />}
+              {activeTab === "groups"  && (user
+                ? <GroupStage />
+                : <SignInGate
+                    tab="groups"
+                    onSignIn={() => { setAuthMode("login");  setShowAuth(true); }}
+                    onSignUp={() => { setAuthMode("signup"); setShowAuth(true); }}
+                  />
+              )}
+              {activeTab === "bracket" && (user
+                ? <Bracket />
+                : <SignInGate
+                    tab="bracket"
+                    onSignIn={() => { setAuthMode("login");  setShowAuth(true); }}
+                    onSignUp={() => { setAuthMode("signup"); setShowAuth(true); }}
+                  />
+              )}
               {activeTab === "mine"      && (
                 activeBracketId
                   ? <MyBracket
@@ -484,6 +525,8 @@ export default function App() {
               FIFA World Cup 2026 Predictor · ELO ratings + recent form · June 11 – July 19, 2026
               <span className="mx-2" style={{ color: "rgba(255,255,255,0.1)" }}>·</span>
               <button onClick={() => setShowRules(true)} className="underline underline-offset-2 transition-colors" style={{ color: "rgba(200,240,0,0.35)" }} onMouseEnter={e => e.currentTarget.style.color = "#c8f000"} onMouseLeave={e => e.currentTarget.style.color = "rgba(200,240,0,0.35)"}>Rules & Prize</button>
+              <span className="mx-2" style={{ color: "rgba(255,255,255,0.1)" }}>·</span>
+              <button onClick={() => setDisclaimerDone(false)} className="underline underline-offset-2 transition-colors" style={{ color: "rgba(255,255,255,0.2)" }} onMouseEnter={e => e.currentTarget.style.color = "rgba(255,255,255,0.5)"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.2)"}>Terms & Disclaimer</button>
               <span className="mx-2" style={{ color: "rgba(255,255,255,0.1)" }}>·</span>
               <button onClick={() => setShowAdmin(true)} className="transition-colors" style={{ color: "rgba(255,255,255,0.1)" }} onMouseEnter={e => e.currentTarget.style.color = "rgba(255,255,255,0.4)"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.1)"}>admin</button>
             </footer>
@@ -507,6 +550,9 @@ export default function App() {
       {showAdmin && <Admin  onClose={() => setShowAdmin(false)} />}
       {showAuth  && <AuthModal initialMode={authMode} onClose={() => setShowAuth(false)} onAuth={() => setShowAuth(false)} />}
       <TeamModal />
+
+      {/* Disclaimer — blocks site until user accepts */}
+      {!disclaimerDone && <DisclaimerModal onAccept={() => setDisclaimerDone(true)} />}
       </div>{/* end flex row */}
     </div>
   );

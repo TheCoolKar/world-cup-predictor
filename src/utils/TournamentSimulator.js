@@ -24,7 +24,7 @@ function getHist(team)     { return historicalStats[team]   ?? null; }
 function getElo(team)      { return eloRatings[team]        ?? 1400; }
 
 /** Predict a match and return { homeWin (0-1), awayWin (0-1), score } */
-function simulateMatch(home, away, fixtureId = null) {
+function simulateMatch(home, away, fixtureId = null, stage = "group") {
   const pred = predictMatch(
     getElo(home), getElo(away),
     getApiForm(home), getApiForm(away),
@@ -38,13 +38,14 @@ function simulateMatch(home, away, fixtureId = null) {
     getHist(home)?.competitive,
     getHist(away)?.competitive,
     homeWinProb,
+    { stage },
   );
   return { homeWinProb, awayWinProb: pred.awayWin / 100, score, signals: pred.signals };
 }
 
 /** In a knockout match, winner is whoever has prob ≥ 0.5. Ties broken by ELO. */
 function knockoutWinner(home, away) {
-  const { homeWinProb, score } = simulateMatch(home, away);
+  const { homeWinProb, score } = simulateMatch(home, away, null, "knockout");
   const homeWins = homeWinProb >= 0.5
     ? true
     : homeWinProb === 0.5

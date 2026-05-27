@@ -215,17 +215,30 @@ export function predictMatch(
   };
 }
 
-// ── Score prediction (Poisson model — unchanged) ──────────────────────────────
+// ── Score prediction (Poisson + three-way outcome model) ─────────────────────
 //
-// Expected goals (xG):
-//   xG = own_attack_rate × (opponent_defense_rate / base_rate)
+// v2 improvements over the original single-threshold model:
 //
-// The most likely scoreline CONSISTENT with the predicted win/draw/loss
-// outcome is returned (avoids the "low-xG draw beats strong favourite" bug).
+//  1. Three-way outcome weighting  (home-win / draw / away-win)
+//     Draws are no longer collapsed into a ±2.5% band around 50%.
+//     Draw probability is estimated from each team's historical draw rate,
+//     scaled down when one team heavily dominates.  This lets the model
+//     naturally predict 1-1, 0-0, 2-2, etc. at realistic frequencies —
+//     not just when homeWinProb is exactly at the tipping point.
+//
+//  2. xG scaled by win probability
+//     A heavy favourite tends to dominate possession and create more chances.
+//     A gentle log-odds scaling boosts the favourite's xG and reduces the
+//     underdog's, reflecting tactical reality without overpowering the
+//     historical stats.
+//
+//  3. Richer return value
+//     `prob`         — probability of the top scoreline (0-100 %)
+//     `alternatives` — top-3 runners-up, each as { score, prob }
+//     `etProb`       — % chance of reaching extra time (knockout stage only)
 
-const BASE_GOALS    = 1.35;
-const MAX_GOALS     = 6;
-const WIN_THRESHOLD = 0.525;
+const BASE_GOALS = 1.35;
+const MAX_GOALS  = 6;
 
 function poissonProb(lambda, k) {
   let p = Math.exp(-lambda);
@@ -233,49 +246,102 @@ function poissonProb(lambda, k) {
   return p;
 }
 
-export function predictScore(histHome, histAway, homeWinProb = 0.5) {
+/**
+ * Estimate full-time draw probability for a specific fixture.
+ *
+ * Blends each team's competitive draw rate with a lopsidedness penalty:
+ * very one-sided matchups draw far less often than evenly-matched ones.
+ *
+ * Output range: 8 % (90 %+ favourite) – 36 % (dead even)
+ */
+function estimateDrawProb(histHome, histAway, homeWinProb) {
+  const drH     = (histHome?.drawRate ?? 22) / 100;   // default 22 % ≈ WC group avg
+  const drA     = (histAway?.drawRate ?? 22) / 100;
+  const avgDraw = (drH + drA) / 2;
+
+  // lopsidedness: 0 = perfectly even, 1 = completely one-sided
+  const lopsidedness = 2 * Math.abs(homeWinProb - 0.5);
+  const drawFactor   = 1 - 0.6 * lopsidedness;   // 1.0 → 0.4 as match becomes one-sided
+
+  return Math.min(0.36, Math.max(0.08, avgDraw * drawFactor));
+}
+
+/**
+ * Predict the most likely final score.
+ *
+ * @param {object|null} histHome     team_historical_stats competitive entry
+ * @param {object|null} histAway
+ * @param {number}      homeWinProb  0–1  (binary win prob from predictMatch)
+ * @param {object}      [options]
+ * @param {"group"|"knockout"} [options.stage]  default "group"
+ *
+ * @returns {{
+ *   home:         number,
+ *   away:         number,
+ *   prob:         number,                     — % likelihood of this exact score
+ *   xGHome:       number,
+ *   xGAway:       number,
+ *   alternatives: Array<{score:string, prob:number}>,
+ *   etProb:       number|null,                — % ET chance (knockout only)
+ * }}
+ */
+export function predictScore(histHome, histAway, homeWinProb = 0.5, options = {}) {
+  const stage = options?.stage ?? "group";
+
   const atkH = histHome?.avgGoalsFor     ?? BASE_GOALS;
   const defH = histHome?.avgGoalsAgainst ?? BASE_GOALS;
   const atkA = histAway?.avgGoalsFor     ?? BASE_GOALS;
   const defA = histAway?.avgGoalsAgainst ?? BASE_GOALS;
 
-  // Dampened multiplier: prevents two elite defences collapsing each other's xG.
-  const xGHome = Math.max(0.3, Math.min(4.5, atkH * (defA + BASE_GOALS) / (2 * BASE_GOALS)));
-  const xGAway = Math.max(0.3, Math.min(4.5, atkA * (defH + BASE_GOALS) / (2 * BASE_GOALS)));
+  // Base xG — dampened Poisson (same formula as before)
+  let xGHome = Math.max(0.3, Math.min(4.5, atkH * (defA + BASE_GOALS) / (2 * BASE_GOALS)));
+  let xGAway = Math.max(0.3, Math.min(4.5, atkA * (defH + BASE_GOALS) / (2 * BASE_GOALS)));
 
-  let outcome;
-  if      (homeWinProb >= WIN_THRESHOLD)       outcome = "home";
-  else if (homeWinProb <= 1 - WIN_THRESHOLD)   outcome = "away";
-  else                                          outcome = "draw";
+  // Gently scale xG by win probability — favourites attack more, underdogs defend deeper.
+  // At 50/50: probScale = 1.0 (no change).  At 90 % win prob: scale ≈ 1.30.
+  const p = Math.max(0.05, Math.min(0.95, homeWinProb));
+  const probScale = Math.pow(p / (1 - p), 0.12);
+  xGHome = Math.max(0.3, Math.min(4.5, xGHome * probScale));
+  xGAway = Math.max(0.3, Math.min(4.5, xGAway / probScale));
 
-  let bestProb = -1, predHome = 0, predAway = 0;
-  const all = [];
+  // Three-way outcome weights  (pHome + pDraw + pAway = 1 by construction)
+  const drawProb = estimateDrawProb(histHome, histAway, homeWinProb);
+  const pHome    = homeWinProb       * (1 - drawProb);
+  const pDraw    = drawProb;
+  const pAway    = (1 - homeWinProb) * (1 - drawProb);
 
+  // Score every possible scoreline: Poisson probability × outcome weight
+  const scores = [];
+  let total = 0;
   for (let h = 0; h <= MAX_GOALS; h++) {
     for (let a = 0; a <= MAX_GOALS; a++) {
-      const prob = poissonProb(xGHome, h) * poissonProb(xGAway, a);
-      all.push({ h, a, prob });
-
-      const fits =
-        (outcome === "home" && h > a) ||
-        (outcome === "away" && a > h) ||
-        (outcome === "draw" && h === a);
-
-      if (fits && prob > bestProb) { bestProb = prob; predHome = h; predAway = a; }
+      const pp  = poissonProb(xGHome, h) * poissonProb(xGAway, a);
+      const ow  = h > a ? pHome : h < a ? pAway : pDraw;
+      const val = pp * ow;
+      scores.push({ h, a, prob: val });
+      total += val;
     }
   }
 
-  const alternatives = all
-    .sort((x, y) => y.prob - x.prob)
-    .filter(s => !(s.h === predHome && s.a === predAway))
-    .slice(0, 3)
-    .map(s => `${s.h}–${s.a}`);
+  // Normalise and rank
+  scores.forEach(s => { s.prob /= total; });
+  scores.sort((a, b) => b.prob - a.prob);
+
+  const best         = scores[0];
+  const alternatives = scores
+    .slice(1, 4)
+    .map(s => ({ score: `${s.h}–${s.a}`, prob: +(s.prob * 100).toFixed(1) }));
+
+  // Extra-time probability (knockout only) = estimated chance the match is level after 90 min
+  const etProb = stage === "knockout" ? +(pDraw * 100).toFixed(1) : null;
 
   return {
-    home: predHome,
-    away: predAway,
-    xGHome: +xGHome.toFixed(2),
-    xGAway: +xGAway.toFixed(2),
+    home:         best.h,
+    away:         best.a,
+    prob:         +(best.prob * 100).toFixed(1),
+    xGHome:       +xGHome.toFixed(2),
+    xGAway:       +xGAway.toFixed(2),
     alternatives,
+    etProb,
   };
 }

@@ -222,9 +222,17 @@ export default function MatchCard({ match }) {
                 {score.home} – {score.away}
               </span>
               <span className="text-xs font-medium tracking-wide" style={{ color: "#c8f000", opacity: 0.7 }}>
-                predicted
+                predicted · {score.prob}%
               </span>
-              <span className="text-xs" style={{ color: "rgba(255,255,255,0.18)" }}>
+              {score.alternatives?.length > 0 && (
+                <span
+                  className="text-center leading-tight"
+                  style={{ color: "rgba(255,255,255,0.22)", fontSize: "0.6rem" }}
+                >
+                  {score.alternatives.slice(0, 2).map(a => a.score).join(" / ")}
+                </span>
+              )}
+              <span className="text-xs" style={{ color: "rgba(255,255,255,0.15)" }}>
                 xG {score.xGHome} – {score.xGAway}
               </span>
             </>
