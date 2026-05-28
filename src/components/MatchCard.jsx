@@ -1,5 +1,6 @@
-import { useState }       from "react";
-import { predictMatch, predictScore } from "../utils/Predictions";
+import { useState, useMemo } from "react";
+import { predictMatch }      from "../utils/Predictions";
+import { simulateMatchMonteCarlo } from "../utils/TournamentSimulator";
 import eloRatings        from "../data/elo_ratings.json";
 import { useTeamModal }  from "../context/TeamModalContext";
 import teamForm          from "../data/team_form.json";
@@ -62,16 +63,21 @@ export default function MatchCard({ match }) {
   const formStrHome = getFormString(apiFormHome, histHome);
   const formStrAway = getFormString(apiFormAway, histAway);
 
+  // Metadata (model badges, market blend info) — kept from deterministic model
   const prediction = eloHome && eloAway
     ? predictMatch(eloHome, eloAway, apiFormHome, apiFormAway, histHome?.competitive, histAway?.competitive, h2h, match.id)
     : null;
 
-  const score = prediction
-    ? predictScore(histHome?.competitive, histAway?.competitive, prediction.homeWin / 100)
-    : null;
+  // Win/draw/away % and score come from Monte Carlo (2 000 Poisson samples)
+  const mc = useMemo(
+    () => simulateMatchMonteCarlo(home, away, match.id),
+    [home, away, match.id],
+  );
 
-  const homePct = prediction?.homeWin ?? 50;
-  const awayPct = prediction?.awayWin ?? 50;
+  const homePct        = mc.homeWin;
+  const drawPct        = mc.draw;
+  const awayPct        = mc.awayWin;
+  const score          = mc.score;
   const isFavoriteHome = homePct >= awayPct;
 
   const formattedDate = new Date(date + "T12:00:00").toLocaleDateString("en-US", {
@@ -134,10 +140,7 @@ export default function MatchCard({ match }) {
                   {prediction.model?.includes("trained") ? "🧠 Trained model" : "🧮 Seed model"}
                 </span>
                 <span className="font-bold tabular-nums" style={{ color: "#c8f000" }}>
-                  {prediction.usedMarket
-                    ? `${(prediction.homeWin / 0.45 * 0.45).toFixed(0)}%`  // approx back-calculation
-                    : `${prediction.homeWin}%`
-                  }
+                  {prediction.homeWin}%
                 </span>
               </div>
 
@@ -154,15 +157,26 @@ export default function MatchCard({ match }) {
               {/* Divider */}
               <div style={{ height: 1, background: "rgba(255,255,255,0.08)" }} />
 
-              {/* Blended result */}
+              {/* Monte Carlo result */}
               <div className="flex items-center justify-between gap-3">
                 <span className="font-bold" style={{ color: "rgba(255,255,255,0.7)" }}>
-                  {prediction.usedMarket ? "Blended (55/45)" : "Final"}
-                </span>
-                <span className="font-black tabular-nums" style={{ color: "white" }}>
-                  {home} {prediction.homeWin}% — {prediction.awayWin}% {away}
+                  🎲 Monte Carlo ({mc.simulations.toLocaleString()} sims)
                 </span>
               </div>
+              <div className="flex justify-between tabular-nums text-xs font-bold">
+                <span style={{ color: "#c8f000" }}>{home} {homePct}%</span>
+                <span style={{ color: "#f59e0b" }}>Draw {drawPct}%</span>
+                <span style={{ color: "#ef4444" }}>{away} {awayPct}%</span>
+              </div>
+              {mc.topScores.length > 0 && (
+                <div className="flex gap-2 flex-wrap mt-0.5">
+                  {mc.topScores.map(({ score: s, pct }) => (
+                    <span key={s} className="px-1.5 py-0.5 rounded text-xs" style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.5)" }}>
+                      {s.replace("-", "–")} <span style={{ color: "#c8f000" }}>{pct}%</span>
+                    </span>
+                  ))}
+                </div>
+              )}
 
               {/* Model tag */}
               <p style={{ color: "rgba(255,255,255,0.2)", fontSize: "0.58rem", marginTop: 2 }}>
@@ -300,21 +314,26 @@ export default function MatchCard({ match }) {
         />
       )}
 
-      {/* Probability bar */}
+      {/* Probability bar — three segments: home / draw / away */}
       <div className="px-4 pt-1 pb-3">
-        <div className="flex h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+        <div className="flex h-1.5 rounded-full overflow-hidden gap-px" style={{ background: "rgba(255,255,255,0.06)" }}>
           <div
             className="transition-all duration-500"
             style={{ width: `${homePct}%`, background: "linear-gradient(90deg, #c8f000, #84cc16)" }}
           />
           <div
             className="transition-all duration-500"
+            style={{ width: `${drawPct}%`, background: "#f59e0b" }}
+          />
+          <div
+            className="transition-all duration-500"
             style={{ width: `${awayPct}%`, background: "linear-gradient(90deg, #dc2626, #b91c1c)" }}
           />
         </div>
-        <div className="flex justify-between mt-1">
-          <span className="text-xs" style={{ color: "rgba(255,255,255,0.12)" }}>home</span>
-          <span className="text-xs" style={{ color: "rgba(255,255,255,0.12)" }}>away</span>
+        <div className="flex justify-between mt-1.5">
+          <span className="text-xs tabular-nums" style={{ color: "rgba(255,255,255,0.25)" }}>{homePct}%</span>
+          <span className="text-xs tabular-nums" style={{ color: "#f59e0b", opacity: 0.7 }}>{drawPct}% draw</span>
+          <span className="text-xs tabular-nums" style={{ color: "rgba(255,255,255,0.25)" }}>{awayPct}%</span>
         </div>
       </div>
 

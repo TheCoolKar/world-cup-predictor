@@ -46,13 +46,15 @@ function sigmoid(z) {
  * @param {object|null} h2h       h2h_stats entry for this fixture
  * @returns {{ homeWinProb, awayWinProb, features }}
  */
-function runLogisticRegression(eloHome, eloAway, histHome, histAway, h2h) {
+function runLogisticRegression(eloHome, eloAway, histHome, histAway, h2h, neutralSite = false) {
   // Feature 1 — ELO / FIFA ranking gap
   const eloDiff = (eloHome - eloAway) / 100;
 
   // Feature 2 — Competitive form gap (0-100 scale → normalise to 0-1)
-  const formH    = histHome?.formScore ?? 50;
-  const formA    = histAway?.formScore ?? 50;
+  const confH    = sampleConfidence(histHome?.played ?? 0);
+  const confA    = sampleConfidence(histAway?.played ?? 0);
+  const formH    = 50 + ((histHome?.formScore ?? 50) - 50) * confH;
+  const formA    = 50 + ((histAway?.formScore ?? 50) - 50) * confA;
   const formDiff = (formH - formA) / 100;
 
   // Feature 3 — Head-to-head win rate, centred at 0
@@ -64,18 +66,20 @@ function runLogisticRegression(eloHome, eloAway, histHome, histAway, h2h) {
   }
 
   // Features 4 & 5 — Attacking and defensive strength delta
-  const atkH    = histHome?.avgGoalsFor     ?? 1.35;
-  const atkA    = histAway?.avgGoalsFor     ?? 1.35;
-  const defH    = histHome?.avgGoalsAgainst ?? 1.35;
-  const defA    = histAway?.avgGoalsAgainst ?? 1.35;
+  const ratesH  = getAdjustedGoalRates(histHome, eloHome);
+  const ratesA  = getAdjustedGoalRates(histAway, eloAway);
+  const atkH    = ratesH.avgGoalsFor;
+  const atkA    = ratesA.avgGoalsFor;
+  const defH    = ratesH.avgGoalsAgainst;
+  const defA    = ratesA.avgGoalsAgainst;
   const atkDiff = atkH - atkA;   // positive → home attacks better
   const defDiff = defA - defH;   // positive → home defends better
 
   // Linear combination → sigmoid
   const z =
-    weights.intercept        +
+    (neutralSite ? 0 : weights.intercept) +
     weights.elo_diff     * eloDiff      +
-    weights.form_diff    * formDiff     +
+    Math.max(0.6, weights.form_diff) * formDiff +
     weights.h2h_centered * h2hCentered  +
     weights.atk_diff     * atkDiff      +
     weights.def_diff     * defDiff;
@@ -83,7 +87,7 @@ function runLogisticRegression(eloHome, eloAway, histHome, histAway, h2h) {
   return {
     homeWinProb: sigmoid(z),
     awayWinProb: 1 - sigmoid(z),   // draws absorbed into binary outcome
-    features: { eloDiff, formDiff, h2hCentered, atkDiff, defDiff, z },
+    features: { eloDiff, formDiff, h2hCentered, atkDiff, defDiff, confidenceHome: confH, confidenceAway: confA, neutralSite, z },
   };
 }
 
@@ -159,6 +163,7 @@ export function predictMatch(
   histFormHome = null, histFormAway = null,
   h2h          = null,
   fixtureId    = null,   // e.g. "A1" — used to look up Polymarket odds
+  options      = {},
 ) {
   const hasHistData = histFormHome?.played > 0 && histFormAway?.played > 0;
 
@@ -166,7 +171,7 @@ export function predictMatch(
 
   if (hasHistData) {
     // ── Primary: logistic regression ───────────────────────────────────────
-    const lr     = runLogisticRegression(eloHome, eloAway, histFormHome, histFormAway, h2h);
+    const lr     = runLogisticRegression(eloHome, eloAway, histFormHome, histFormAway, h2h, options.neutralSite);
     modelHomeProb = lr.homeWinProb;
     modelAwayProb = lr.awayWinProb;
     model         = weights._trained ? "logistic_trained" : "logistic_seed";
@@ -223,9 +228,35 @@ export function predictMatch(
 // The most likely scoreline CONSISTENT with the predicted win/draw/loss
 // outcome is returned (avoids the "low-xG draw beats strong favourite" bug).
 
-const BASE_GOALS    = 1.35;
-const MAX_GOALS     = 6;
-const WIN_THRESHOLD = 0.525;
+const BASE_GOALS = 1.35;
+const MAX_GOALS  = 6;
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function sampleConfidence(played = 0) {
+  return played / (played + 30);
+}
+
+function ratingStrength(fifaPoints = 1400) {
+  return clamp((fifaPoints - 1150) / 650, 0.35, 1.25);
+}
+
+export function getAdjustedGoalRates(hist, fifaPoints = 1400) {
+  const played = hist?.played ?? 0;
+  const confidence = sampleConfidence(played);
+  const strength = ratingStrength(fifaPoints);
+  const atk = hist?.avgGoalsFor ?? BASE_GOALS;
+  const def = hist?.avgGoalsAgainst ?? BASE_GOALS;
+
+  return {
+    avgGoalsFor: BASE_GOALS + confidence * (atk - BASE_GOALS) * strength,
+    avgGoalsAgainst: BASE_GOALS + confidence * (def - BASE_GOALS) * strength,
+    confidence,
+    strength,
+  };
+}
 
 function poissonProb(lambda, k) {
   let p = Math.exp(-lambda);
@@ -233,39 +264,57 @@ function poissonProb(lambda, k) {
   return p;
 }
 
-export function predictScore(histHome, histAway, homeWinProb = 0.5) {
-  const atkH = histHome?.avgGoalsFor     ?? BASE_GOALS;
-  const defH = histHome?.avgGoalsAgainst ?? BASE_GOALS;
-  const atkA = histAway?.avgGoalsFor     ?? BASE_GOALS;
-  const defA = histAway?.avgGoalsAgainst ?? BASE_GOALS;
+export function predictScore(histHome, histAway, homeWinProb = 0.5, eloHome = 1400, eloAway = 1400) {
+  const ratesH = getAdjustedGoalRates(histHome, eloHome);
+  const ratesA = getAdjustedGoalRates(histAway, eloAway);
+  const atkH = ratesH.avgGoalsFor;
+  const defH = ratesH.avgGoalsAgainst;
+  const atkA = ratesA.avgGoalsFor;
+  const defA = ratesA.avgGoalsAgainst;
 
-  // Dampened multiplier: prevents two elite defences collapsing each other's xG.
+  // Dampened xG — prevents two elite defences collapsing to near-zero
   const xGHome = Math.max(0.3, Math.min(4.5, atkH * (defA + BASE_GOALS) / (2 * BASE_GOALS)));
   const xGAway = Math.max(0.3, Math.min(4.5, atkA * (defH + BASE_GOALS) / (2 * BASE_GOALS)));
 
-  let outcome;
-  if      (homeWinProb >= WIN_THRESHOLD)       outcome = "home";
-  else if (homeWinProb <= 1 - WIN_THRESHOLD)   outcome = "away";
-  else                                          outcome = "draw";
+  // Nudge xGs toward the logistic-regression direction so the Poisson
+  // distribution aligns with the model's predicted winner (max ±0.25 goals).
+  const bias      = (homeWinProb - 0.5) * 0.9;
+  const adjXGHome = Math.max(0.3, xGHome + bias);
+  const adjXGAway = Math.max(0.3, xGAway - bias);
 
-  let bestProb = -1, predHome = 0, predAway = 0;
+  // Single pass: compute Poisson outcome probabilities AND collect all scorelines
+  let pHome = 0, pAway = 0;
   const all = [];
 
   for (let h = 0; h <= MAX_GOALS; h++) {
     for (let a = 0; a <= MAX_GOALS; a++) {
-      const prob = poissonProb(xGHome, h) * poissonProb(xGAway, a);
+      const prob = poissonProb(adjXGHome, h) * poissonProb(adjXGAway, a);
       all.push({ h, a, prob });
-
-      const fits =
-        (outcome === "home" && h > a) ||
-        (outcome === "away" && a > h) ||
-        (outcome === "draw" && h === a);
-
-      if (fits && prob > bestProb) { bestProb = prob; predHome = h; predAway = a; }
+      if      (h > a) pHome += prob;
+      else if (a > h) pAway += prob;
     }
   }
 
-  const alternatives = all
+  // Determine outcome from Poisson probabilities with a draw band.
+  // When neither side is more than 6 percentage points ahead in win probability
+  // the match is too close to call and is predicted as a draw — matching the
+  // realistic ~25% draw rate in tournament soccer.
+  const DRAW_BAND = 0.06;
+  let outcome;
+  if      (pHome - pAway > DRAW_BAND) outcome = "home";
+  else if (pAway - pHome > DRAW_BAND) outcome = "away";
+  else                                outcome = "draw";
+
+  // Most likely scoreline consistent with the determined outcome
+  let bestProb = -1, predHome = 0, predAway = 0;
+  for (const { h, a, prob } of all) {
+    const fits = (outcome === "home" && h > a) ||
+                 (outcome === "away" && a > h) ||
+                 (outcome === "draw" && h === a);
+    if (fits && prob > bestProb) { bestProb = prob; predHome = h; predAway = a; }
+  }
+
+  const alternatives = [...all]
     .sort((x, y) => y.prob - x.prob)
     .filter(s => !(s.h === predHome && s.a === predAway))
     .slice(0, 3)
@@ -274,8 +323,8 @@ export function predictScore(histHome, histAway, homeWinProb = 0.5) {
   return {
     home: predHome,
     away: predAway,
-    xGHome: +xGHome.toFixed(2),
-    xGAway: +xGAway.toFixed(2),
+    xGHome: +adjXGHome.toFixed(2),
+    xGAway: +adjXGAway.toFixed(2),
     alternatives,
   };
 }
