@@ -7,11 +7,16 @@
  *   3. Round of 32  — 16 matches using predefined bracket structure
  *   4. R16 → QF → SF → Final — single-elimination until champion
  *
- * All predictions are deterministic (best-guess, no randomness).
- * A team with homeWinProb >= 0.5 wins; ties broken by ELO.
+ * All simulation (group stage, knockout, Monte Carlo) uses the same stochastic
+ * Poisson engine so results are internally consistent.
+ *
+ * Exports:
+ *   simulateTournament()         — single full-tournament run (Poisson-sampled)
+ *   simulateMatchMonteCarlo()    — per-match empirical outcome distribution
+ *   runMonteCarlo(n)             — n full-tournament runs → stage probabilities
  */
 
-import { predictMatch, predictScore } from "./Predictions";
+import { getAdjustedGoalRates, predictMatch, predictScore } from "./Predictions";
 import fixtures       from "../data/wc2026_fixtures.json";
 import eloRatings     from "../data/elo_ratings.json";
 import teamForm       from "../data/team_form.json";
@@ -24,7 +29,11 @@ function getHist(team)     { return historicalStats[team]   ?? null; }
 function getElo(team)      { return eloRatings[team]        ?? 1400; }
 
 /** Predict a match and return { homeWin (0-1), awayWin (0-1), score } */
+<<<<<<< HEAD
+function simulateMatch(home, away, fixtureId = null, neutralSite = false) {
+=======
 function simulateMatch(home, away, fixtureId = null, stage = "group") {
+>>>>>>> 675c7132b5ae046a95ddeeb47933a01968e7e8b1
   const pred = predictMatch(
     getElo(home), getElo(away),
     getApiForm(home), getApiForm(away),
@@ -32,24 +41,35 @@ function simulateMatch(home, away, fixtureId = null, stage = "group") {
     getHist(away)?.competitive,
     null,        // h2h — not pre-computed for simulator
     fixtureId,   // Polymarket fixture ID (group stage only)
+    { neutralSite },
   );
   const homeWinProb = pred.homeWin / 100;
   const score = predictScore(
     getHist(home)?.competitive,
     getHist(away)?.competitive,
     homeWinProb,
+<<<<<<< HEAD
+    getElo(home),
+    getElo(away),
+=======
     { stage },
+>>>>>>> 675c7132b5ae046a95ddeeb47933a01968e7e8b1
   );
   return { homeWinProb, awayWinProb: pred.awayWin / 100, score, signals: pred.signals };
 }
 
-/** In a knockout match, winner is whoever has prob ≥ 0.5. Ties broken by ELO. */
+/** Deterministic knockout winner — uses best-guess score, higher ELO breaks ties. */
 function knockoutWinner(home, away) {
+<<<<<<< HEAD
+  const { homeWinProb, score } = simulateMatch(home, away, null, true);
+  const homeWins = homeWinProb > 0.5
+=======
   const { homeWinProb, score } = simulateMatch(home, away, null, "knockout");
   const homeWins = homeWinProb >= 0.5
+>>>>>>> 675c7132b5ae046a95ddeeb47933a01968e7e8b1
     ? true
     : homeWinProb === 0.5
-      ? getElo(home) >= getElo(away)   // dead-tie fallback
+      ? getElo(home) >= getElo(away)
       : false;
   return {
     winner: homeWins ? home : away,
@@ -61,18 +81,107 @@ function knockoutWinner(home, away) {
   };
 }
 
+// ── Stochastic helpers (Monte Carlo) ─────────────────────────────────────────
+
+/**
+ * Sample a Poisson random variable using the Knuth algorithm.
+ * Efficient for small lambda values (< ~30), which is always true for soccer xG.
+ */
+function poissonSample(lambda, rng = Math.random) {
+  const L = Math.exp(-lambda);
+  let k = 0, p = 1;
+  do { k++; p *= rng(); } while (p > L);
+  return k - 1;
+}
+
+function hashSeed(seed) {
+  let h = 2166136261;
+  for (let i = 0; i < seed.length; i++) {
+    h ^= seed.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+function seededRng(seed) {
+  let state = hashSeed(seed) || 1;
+  return () => {
+    state += 0x6D2B79F5;
+    let t = state;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * Play a match stochastically: sample home/away goals from Poisson(xG).
+ * Returns { homeGoals, awayGoals, winner, loser }.
+ * Draws in knockout context are resolved by a penalty shootout coin-flip
+ * weighted by the model's win probability.
+ */
+function stochasticMatch(home, away, knockout = false, fixtureId = null, rng = Math.random) {
+  const pred = predictMatch(
+    getElo(home), getElo(away),
+    getApiForm(home), getApiForm(away),
+    getHist(home)?.competitive,
+    getHist(away)?.competitive,
+    null,
+    fixtureId,
+    { neutralSite: knockout },
+  );
+  const homeWinProb = pred.homeWin / 100;
+
+  const ratesH = getAdjustedGoalRates(getHist(home)?.competitive, getElo(home));
+  const ratesA = getAdjustedGoalRates(getHist(away)?.competitive, getElo(away));
+  const BASE  = 1.35;
+  const atkH  = ratesH.avgGoalsFor;
+  const defH  = ratesH.avgGoalsAgainst;
+  const atkA  = ratesA.avgGoalsFor;
+  const defA  = ratesA.avgGoalsAgainst;
+
+  const bias = (homeWinProb - 0.5) * 0.9;
+  const xGHome = Math.max(0.3, Math.min(4.5, atkH * (defA + BASE) / (2 * BASE) + bias));
+  const xGAway = Math.max(0.3, Math.min(4.5, atkA * (defH + BASE) / (2 * BASE) - bias));
+
+  const homeGoals = poissonSample(xGHome, rng);
+  const awayGoals = poissonSample(xGAway, rng);
+
+  let winner, loser;
+  if (homeGoals > awayGoals) {
+    winner = home; loser = away;
+  } else if (awayGoals > homeGoals) {
+    winner = away; loser = home;
+  } else if (knockout) {
+    // Drawn knockout — simulate penalty shootout using model win probability
+    winner = rng() < homeWinProb ? home : away;
+    loser  = winner === home ? away : home;
+  } else {
+    winner = null; loser = null; // draw in group stage
+  }
+
+  return { homeGoals, awayGoals, winner, loser, home, away };
+}
+
 // ── 1. Group Stage ────────────────────────────────────────────────────────────
 
 const GROUPS = ["A","B","C","D","E","F","G","H","I","J","K","L"];
 
 function simulateGroupStage() {
-  const groupResults = {}; // group → array of { home, away, homeGoals, awayGoals, homeWinProb }
+  const groupResults = {}; // group → array of { home, away, homeGoals, awayGoals }
 
   for (const fixture of fixtures) {
     const { id, group, home, away } = fixture;
-    const { homeWinProb, score } = simulateMatch(home, away, id);
+    const prediction = simulateMatchMonteCarlo(home, away, id);
+    const { score } = prediction;
     if (!groupResults[group]) groupResults[group] = [];
-    groupResults[group].push({ home, away, homeGoals: score.home, awayGoals: score.away, homeWinProb });
+    groupResults[group].push({
+      home,
+      away,
+      homeGoals: score.home,
+      awayGoals: score.away,
+      homeWinProb: prediction.homeWin / 100,
+    });
   }
 
   // Build standings for each group
@@ -225,4 +334,225 @@ export function simulateTournament() {
   const knockout       = simulateKnockout(r32Slots);
 
   return { standings, thirds, r32Slots, ...knockout };
+}
+
+// ── Monte Carlo ───────────────────────────────────────────────────────────────
+
+function stochasticGroupStage() {
+  const groupResults = {};
+
+  for (const fixture of fixtures) {
+    const { id, group, home, away } = fixture;
+    const result = stochasticMatch(home, away, false, id);
+    if (!groupResults[group]) groupResults[group] = [];
+    groupResults[group].push(result);
+  }
+
+  const standings = {};
+  for (const group of GROUPS) {
+    const matches = groupResults[group] || [];
+    const stats   = {};
+
+    for (const m of matches) {
+      for (const t of [m.home, m.away]) {
+        if (!stats[t]) stats[t] = { team: t, pts: 0, gf: 0, ga: 0, gd: 0, w: 0, d: 0, l: 0, played: 0 };
+      }
+    }
+
+    for (const m of matches) {
+      const { home, away, homeGoals, awayGoals } = m;
+      stats[home].played++; stats[away].played++;
+      stats[home].gf += homeGoals; stats[home].ga += awayGoals;
+      stats[away].gf += awayGoals; stats[away].ga += homeGoals;
+      stats[home].gd = stats[home].gf - stats[home].ga;
+      stats[away].gd = stats[away].gf - stats[away].ga;
+
+      if (homeGoals > awayGoals)      { stats[home].pts += 3; stats[home].w++; stats[away].l++; }
+      else if (homeGoals < awayGoals) { stats[away].pts += 3; stats[away].w++; stats[home].l++; }
+      else                            { stats[home].pts += 1; stats[away].pts += 1; stats[home].d++; stats[away].d++; }
+    }
+
+    standings[group] = Object.values(stats).sort((a, b) => {
+      if (b.pts !== a.pts) return b.pts - a.pts;
+      if (b.gd  !== a.gd)  return b.gd  - a.gd;
+      if (b.gf  !== a.gf)  return b.gf  - a.gf;
+      return getElo(b.team) - getElo(a.team);
+    });
+  }
+
+  return standings;
+}
+
+function stochasticKnockout(r32Slots) {
+  const r32Results = r32Slots.map(({ home, away }) => stochasticMatch(home, away, true));
+
+  const r16Pairs = [[0,12],[1,13],[2,14],[3,15],[4,8],[5,9],[6,10],[7,11]];
+  const r16Results = r16Pairs.map(([i, j]) =>
+    stochasticMatch(r32Results[i].winner, r32Results[j].winner, true)
+  );
+
+  const qfPairs = [[0,1],[2,3],[4,5],[6,7]];
+  const qfResults = qfPairs.map(([i, j]) =>
+    stochasticMatch(r16Results[i].winner, r16Results[j].winner, true)
+  );
+
+  const sfResults = [
+    stochasticMatch(qfResults[0].winner, qfResults[1].winner, true),
+    stochasticMatch(qfResults[2].winner, qfResults[3].winner, true),
+  ];
+
+  const finalResult = stochasticMatch(sfResults[0].winner, sfResults[1].winner, true);
+
+  return {
+    r32: r32Results.map(r => r.winner),
+    r16: r16Results.map(r => r.winner),
+    qf:  qfResults.map(r => r.winner),
+    sf:  sfResults.map(r => r.winner),
+    finalist: [sfResults[0].winner, sfResults[1].winner],
+    champion: finalResult.winner,
+  };
+}
+
+/**
+ * Run n Monte Carlo simulations of the full tournament.
+ *
+ * @param {number} n  Number of simulations (default 10 000)
+ * @returns {{
+ *   groupStage:  Record<team, number>,   // % chance of advancing from group
+ *   roundOf32:   Record<team, number>,
+ *   roundOf16:   Record<team, number>,
+ *   quarterFinal:Record<team, number>,
+ *   semiFinal:   Record<team, number>,
+ *   finalist:    Record<team, number>,
+ *   champion:    Record<team, number>,
+ *   simulations: number,
+ * }}
+ */
+/**
+ * Run n stochastic simulations of a single match and return empirical outcome
+ * probabilities + the most common scorelines.
+ *
+ * Unlike predictMatch() which gives a point-estimate, this reflects the full
+ * distribution of outcomes from Poisson goal sampling — including real draw
+ * probabilities (not absorbed into win%).
+ *
+ * @param {string}      home
+ * @param {string}      away
+ * @param {string|null} fixtureId  Polymarket fixture ID, if available
+ * @param {number}      n          Simulations (default 2 000 — fast, ~2ms per card)
+ */
+export function simulateMatchMonteCarlo(home, away, fixtureId = null, n = 2000) {
+  let homeWins = 0, draws = 0, awayWins = 0;
+  const scoreCounts = {};
+  const rng = seededRng(`${fixtureId ?? "friendly"}|${home}|${away}|${n}`);
+
+  for (let i = 0; i < n; i++) {
+    const { homeGoals, awayGoals } = stochasticMatch(home, away, false, fixtureId, rng);
+    const key = `${homeGoals}-${awayGoals}`;
+    scoreCounts[key] = (scoreCounts[key] ?? 0) + 1;
+    if      (homeGoals > awayGoals) homeWins++;
+    else if (awayGoals > homeGoals) awayWins++;
+    else                            draws++;
+  }
+
+  const topScores = Object.entries(scoreCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([score, count]) => ({ score, pct: +((count / n) * 100).toFixed(1) }));
+
+  // Also compute xG averages for display
+  const ratesH = getAdjustedGoalRates(getHist(home)?.competitive, getElo(home));
+  const ratesA = getAdjustedGoalRates(getHist(away)?.competitive, getElo(away));
+  const BASE  = 1.35;
+  const pred = predictMatch(
+    getElo(home), getElo(away),
+    getApiForm(home), getApiForm(away),
+    getHist(home)?.competitive,
+    getHist(away)?.competitive,
+    null,
+    fixtureId,
+    { neutralSite: false },
+  );
+  const bias = (pred.homeWin / 100 - 0.5) * 0.9;
+  const xGHome = +Math.max(0.3, Math.min(4.5,
+    ratesH.avgGoalsFor * (ratesA.avgGoalsAgainst + BASE) / (2 * BASE) + bias
+  )).toFixed(2);
+  const xGAway = +Math.max(0.3, Math.min(4.5,
+    ratesA.avgGoalsFor * (ratesH.avgGoalsAgainst + BASE) / (2 * BASE) - bias
+  )).toFixed(2);
+
+  const [bestScore] = topScores;
+  const [bh, ba]    = bestScore ? bestScore.score.split("-").map(Number) : [1, 1];
+
+  return {
+    homeWin:    +((homeWins / n) * 100).toFixed(1),
+    draw:       +((draws    / n) * 100).toFixed(1),
+    awayWin:    +((awayWins / n) * 100).toFixed(1),
+    score:      { home: bh, away: ba, xGHome, xGAway, alternatives: topScores.slice(1).map(s => s.score.replace("-", "–")) },
+    topScores,
+    simulations: n,
+  };
+}
+
+export function runMonteCarlo(n = 10000) {
+  const counts = {
+    groupStage:   {},
+    roundOf32:    {},
+    roundOf16:    {},
+    quarterFinal: {},
+    semiFinal:    {},
+    finalist:     {},
+    champion:     {},
+  };
+
+  const inc = (stage, team) => {
+    counts[stage][team] = (counts[stage][team] ?? 0) + 1;
+  };
+
+  for (let i = 0; i < n; i++) {
+    const standings = stochasticGroupStage();
+
+    // Collect group qualifiers (top 2 per group + best 8 thirds)
+    const thirds = bestThirdPlace(standings);
+    const top8ThirdTeams = new Set(thirds.map(t => t.team));
+
+    for (const group of GROUPS) {
+      const sorted = standings[group];
+      inc("groupStage", sorted[0].team);
+      inc("groupStage", sorted[1].team);
+      if (top8ThirdTeams.has(sorted[2].team)) {
+        inc("groupStage", sorted[2].team);
+      }
+    }
+
+    const r32Slots = buildR32Slots(standings, thirds);
+    const ko = stochasticKnockout(r32Slots);
+
+    ko.r32.forEach(t      => inc("roundOf32",    t));
+    ko.r16.forEach(t      => inc("roundOf16",    t));
+    ko.qf.forEach(t       => inc("quarterFinal", t));
+    ko.sf.forEach(t       => inc("semiFinal",    t));
+    ko.finalist.forEach(t => inc("finalist",     t));
+    inc("champion", ko.champion);
+  }
+
+  // Convert raw counts to percentages
+  const toPercent = (obj) => {
+    const result = {};
+    for (const [team, count] of Object.entries(obj)) {
+      result[team] = +((count / n) * 100).toFixed(1);
+    }
+    return result;
+  };
+
+  return {
+    groupStage:   toPercent(counts.groupStage),
+    roundOf32:    toPercent(counts.roundOf32),
+    roundOf16:    toPercent(counts.roundOf16),
+    quarterFinal: toPercent(counts.quarterFinal),
+    semiFinal:    toPercent(counts.semiFinal),
+    finalist:     toPercent(counts.finalist),
+    champion:     toPercent(counts.champion),
+    simulations:  n,
+  };
 }

@@ -11,6 +11,7 @@ import { useMemo }            from "react";
 import { simulateTournament } from "../utils/TournamentSimulator";
 import { useTeamModal }       from "../context/TeamModalContext";
 import { getFlagClass } from '../utils/flags';
+import monteCarlo      from "../data/monte_carlo_10000.json";
 
 // ── Group Standings Table ─────────────────────────────────────────────────────
 
@@ -246,6 +247,132 @@ function ChampionCard({ team }) {
   );
 }
 
+function OddsBar({ value, color = "#c8f000" }) {
+  return (
+    <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+      <div
+        className="h-full rounded-full"
+        style={{ width: `${Math.min(100, value)}%`, background: color }}
+      />
+    </div>
+  );
+}
+
+function OddsTeam({ team, value, rank }) {
+  const { openTeam } = useTeamModal();
+
+  return (
+    <button
+      onClick={() => openTeam(team)}
+      className="rounded-xl p-3 text-left transition-transform duration-150 hover:-translate-y-0.5"
+      style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
+    >
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-xs font-black w-5" style={{ color: "rgba(255,255,255,0.25)" }}>#{rank}</span>
+        <span className={getFlagClass(team) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
+        <span className="text-xs font-bold text-white truncate flex-1">{team}</span>
+        <span className="text-xs font-black tabular-nums" style={{ color: "#fbbf24" }}>{value}%</span>
+      </div>
+      <OddsBar value={value} color="#fbbf24" />
+    </button>
+  );
+}
+
+function MonteCarloSection() {
+  const { openTeam } = useTeamModal();
+  const championOdds = Object.entries(monteCarlo.champion)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8);
+
+  const deepRunOdds = Object.keys(monteCarlo.groupStage)
+    .map(team => ({
+      team,
+      r16: monteCarlo.roundOf16[team] ?? 0,
+      qf: monteCarlo.quarterFinal[team] ?? 0,
+      sf: monteCarlo.semiFinal[team] ?? 0,
+      final: monteCarlo.finalist[team] ?? 0,
+      champion: monteCarlo.champion[team] ?? 0,
+    }))
+    .sort((a, b) => b.champion - a.champion || b.final - a.final || b.sf - a.sf)
+    .slice(0, 16);
+
+  return (
+    <section className="mb-10">
+      <div className="flex items-end justify-between gap-4 mb-4">
+        <div>
+          <h3
+            className="text-white"
+            style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.4rem", letterSpacing: "0.06em" }}
+          >
+            10,000 Simulation Odds
+          </h3>
+          <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.3)" }}>
+            Advancement probabilities from full-tournament Monte Carlo runs
+          </p>
+        </div>
+        <span
+          className="text-xs font-black px-2 py-1 rounded-md shrink-0"
+          style={{ background: "rgba(251,191,36,0.12)", color: "#fbbf24", letterSpacing: "0.06em" }}
+        >
+          {monteCarlo.simulations.toLocaleString()} SIMS
+        </span>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-2 mb-4">
+        {championOdds.map(([team, value], i) => (
+          <OddsTeam key={team} team={team} value={value} rank={i + 1} />
+        ))}
+      </div>
+
+      <div
+        className="rounded-xl overflow-x-auto"
+        style={{ border: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.03)" }}
+      >
+        <div
+          className="grid items-center px-3 py-2 text-xs font-bold uppercase tracking-widest"
+          style={{
+            gridTemplateColumns: "minmax(150px,1fr) repeat(5,64px)",
+            color: "rgba(255,255,255,0.3)",
+            background: "rgba(255,255,255,0.04)",
+            borderBottom: "1px solid rgba(255,255,255,0.06)",
+            fontSize: "0.58rem",
+          }}
+        >
+          <span>Team</span>
+          <span className="text-right">R16</span>
+          <span className="text-right">QF</span>
+          <span className="text-right">SF</span>
+          <span className="text-right">Final</span>
+          <span className="text-right">Win</span>
+        </div>
+
+        {deepRunOdds.map((row, i) => (
+          <button
+            key={row.team}
+            onClick={() => openTeam(row.team)}
+            className="grid items-center w-full px-3 py-2 text-xs transition-colors hover:bg-white/5"
+            style={{
+              gridTemplateColumns: "minmax(150px,1fr) repeat(5,64px)",
+              borderBottom: i < deepRunOdds.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none",
+            }}
+          >
+            <span className="flex items-center gap-2 min-w-0">
+              <span className="font-black w-5" style={{ color: "rgba(255,255,255,0.25)" }}>{i + 1}</span>
+              <span className={getFlagClass(row.team) ?? ''} style={{fontSize:'1rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
+              <span className="font-semibold text-white truncate">{row.team}</span>
+            </span>
+            <span className="text-right tabular-nums" style={{ color: "rgba(255,255,255,0.45)" }}>{row.r16}%</span>
+            <span className="text-right tabular-nums" style={{ color: "rgba(255,255,255,0.55)" }}>{row.qf}%</span>
+            <span className="text-right tabular-nums" style={{ color: "#c8f000" }}>{row.sf}%</span>
+            <span className="text-right tabular-nums" style={{ color: "#a5b4fc" }}>{row.final}%</span>
+            <span className="text-right tabular-nums font-black" style={{ color: "#fbbf24" }}>{row.champion}%</span>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 const GROUPS = ["A","B","C","D","E","F","G","H","I","J","K","L"];
@@ -274,9 +401,11 @@ export default function Bracket() {
           </span>
         </div>
         <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>
-          Full tournament simulated using ELO ratings + historical form — read only, no user input
+          Full tournament forecast using ELO ratings, historical form, market odds, and Monte Carlo runs
         </p>
       </div>
+
+      <MonteCarloSection />
 
       {/* ── Group Standings ── */}
       <section className="mb-10">
@@ -348,8 +477,11 @@ export default function Bracket() {
           className="text-white mb-4"
           style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.4rem", letterSpacing: "0.06em" }}
         >
-          Knockout Bracket
+          Most Likely Knockout Path
         </h3>
+        <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.3)" }}>
+          Single-path bracket uses the favorite in each matchup; odds above show the fuller simulation distribution
+        </p>
 
         <div className="overflow-x-auto pb-6">
           <div className="flex items-start gap-0" style={{ minWidth: 1240 }}>
