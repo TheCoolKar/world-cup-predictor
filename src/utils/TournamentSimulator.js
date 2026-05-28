@@ -29,7 +29,11 @@ function getHist(team)     { return historicalStats[team]   ?? null; }
 function getElo(team)      { return eloRatings[team]        ?? 1400; }
 
 /** Predict a match and return { homeWin (0-1), awayWin (0-1), score } */
+<<<<<<< HEAD
 function simulateMatch(home, away, fixtureId = null, neutralSite = false) {
+=======
+function simulateMatch(home, away, fixtureId = null, stage = "group") {
+>>>>>>> 675c7132b5ae046a95ddeeb47933a01968e7e8b1
   const pred = predictMatch(
     getElo(home), getElo(away),
     getApiForm(home), getApiForm(away),
@@ -44,16 +48,25 @@ function simulateMatch(home, away, fixtureId = null, neutralSite = false) {
     getHist(home)?.competitive,
     getHist(away)?.competitive,
     homeWinProb,
+<<<<<<< HEAD
     getElo(home),
     getElo(away),
+=======
+    { stage },
+>>>>>>> 675c7132b5ae046a95ddeeb47933a01968e7e8b1
   );
   return { homeWinProb, awayWinProb: pred.awayWin / 100, score, signals: pred.signals };
 }
 
 /** Deterministic knockout winner — uses best-guess score, higher ELO breaks ties. */
 function knockoutWinner(home, away) {
+<<<<<<< HEAD
   const { homeWinProb, score } = simulateMatch(home, away, null, true);
   const homeWins = homeWinProb > 0.5
+=======
+  const { homeWinProb, score } = simulateMatch(home, away, null, "knockout");
+  const homeWins = homeWinProb >= 0.5
+>>>>>>> 675c7132b5ae046a95ddeeb47933a01968e7e8b1
     ? true
     : homeWinProb === 0.5
       ? getElo(home) >= getElo(away)
