@@ -38,7 +38,7 @@ function simulateMatch(home, away, fixtureId = null, stage = "group") {
     getHist(away)?.competitive,
     null,        // h2h — not pre-computed for simulator
     fixtureId,   // Polymarket fixture ID (group stage only)
-    { neutralSite },
+    { neutralSite, homeTeam: home, awayTeam: away },
   );
   const homeWinProb = pred.homeWin / 100;
   const score = predictScore(
@@ -47,7 +47,7 @@ function simulateMatch(home, away, fixtureId = null, stage = "group") {
     homeWinProb,
     { stage, eloHome: getElo(home), eloAway: getElo(away) },
   );
-  return { homeWinProb, awayWinProb: pred.awayWin / 100, score, signals: pred.signals };
+  return { homeWinProb, awayWinProb: pred.awayWin / 100, score };
 }
 
 /** Deterministic knockout winner — uses best-guess score, higher ELO breaks ties. */
