@@ -85,23 +85,26 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
         setSent(true);
 
       } else if (mode === "signup") {
+        if (password.length < 8) {
+          setError("Password must be at least 8 characters.");
+          setLoading(false);
+          return;
+        }
+
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { display_name: name } },
+          options: {
+            data: {
+              display_name: name,
+              username: username.toLowerCase(),
+            },
+          },
         });
         if (error) throw error;
 
-        // Create profile row with unique username
-        if (data.user) {
-          const { error: profileError } = await supabase.from("profiles").insert({
-            id:         data.user.id,
-            username:   username.toLowerCase(),
-            avatar_url: null,
-          });
-          if (profileError) throw profileError;
-          onAuth(data.user);
-        }
+        // Profile row is created automatically by the database trigger.
+        if (data.user) onAuth(data.user);
 
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -109,7 +112,12 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
         if (data.user) onAuth(data.user);
       }
     } catch (err) {
-      setError(err.message);
+      // Surface username race-condition constraint violation as a friendly message
+      if (err.message?.toLowerCase().includes("unique") || err.code === "23505") {
+        setError("Username already taken — please choose another.");
+      } else {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }

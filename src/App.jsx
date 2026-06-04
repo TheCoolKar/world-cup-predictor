@@ -8,6 +8,9 @@ import Profile       from "./pages/Profile";
 import Dashboard     from "./pages/Dashboard";
 import Rules         from "./pages/Rules";
 import Admin         from "./pages/Admin";
+import Leaderboard   from "./pages/Leaderboard";
+import Leagues       from "./pages/Leagues";
+import InviteRedirect from "./pages/InviteRedirect";
 import AuthModal     from "./components/AuthModal";
 import DisclaimerModal, { hasAcceptedDisclaimer } from "./components/DisclaimerModal";
 import SignInGate from "./components/SignInGate";
@@ -40,6 +43,8 @@ const IconChevronRight = () => <svg width="14" height="14" viewBox="0 0 24 24" f
 const IconUser         = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>;
 const IconBarChart     = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>;
 const IconShield       = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>;
+const IconLeaderboard  = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="14" width="5" height="7"/><rect x="9" y="9" width="5" height="12"/><rect x="16" y="4" width="5" height="17"/></svg>;
+const IconLeagues      = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>;
 
 // ── Countdown ─────────────────────────────────────────────────────────────────
 
@@ -119,7 +124,13 @@ function CountdownBanner() {
 // ── App ───────────────────────────────────────────────────────────────────────
 
 export default function App() {
-  const [activeTab,   setActiveTab]   = useState("groups"); // "groups"|"bracket"|"mine"|"profile"|"dashboard"
+  // Detect /invite/<token> on load
+  const inviteToken = (() => {
+    const m = window.location.pathname.match(/^\/invite\/([a-z0-9]{8})$/i);
+    return m ? m[1] : null;
+  })();
+
+  const [activeTab,   setActiveTab]   = useState(inviteToken ? "invite" : "groups"); // "groups"|"bracket"|"mine"|"profile"|"dashboard"|"leaderboard"|"leagues"|"invite"
   const [showRules,   setShowRules]   = useState(false);
   const [showAdmin,   setShowAdmin]   = useState(false);
   const [showAuth,    setShowAuth]    = useState(false);
@@ -266,8 +277,10 @@ export default function App() {
 
         <div className="shrink-0" style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "12px 0" }} />
 
-        <SideNavItem label="My Brackets" icon={<IconEdit />}   active={activeTab === "mine"} onClick={() => navigate("mine")} accent="#ef4444" />
-        <SideNavItem label="Teams"       icon={<IconShield />} active={activeTab === "teams"} onClick={() => navigate("teams")} accent="#c8f000" />
+        <SideNavItem label="My Brackets"  icon={<IconEdit />}        active={activeTab === "mine"}        onClick={() => navigate("mine")}        accent="#ef4444" />
+        <SideNavItem label="Teams"        icon={<IconShield />}      active={activeTab === "teams"}       onClick={() => navigate("teams")}       accent="#c8f000" />
+        <SideNavItem label="Leaderboard"  icon={<IconLeaderboard />} active={activeTab === "leaderboard"} onClick={() => navigate("leaderboard")} accent="#f59e0b" />
+        <SideNavItem label="Leagues"      icon={<IconLeagues />}     active={activeTab === "leagues"}     onClick={() => navigate("leagues")}     accent="#c8f000" />
 
         <div className="shrink-0" style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "12px 0" }} />
 
@@ -515,9 +528,12 @@ export default function App() {
                     />
                   : <MyBrackets onOpen={(id) => setActiveBracketId(id)} />
               )}
-              {activeTab === "teams"     && <Teams />}
-              {activeTab === "dashboard" && <Dashboard onNavigate={navigate} />}
-              {activeTab === "profile"   && <Profile   onNavigate={navigate} />}
+              {activeTab === "teams"       && <Teams />}
+              {activeTab === "leaderboard" && <Leaderboard />}
+              {activeTab === "leagues"     && <Leagues onNavigate={navigate} />}
+              {activeTab === "invite"      && <InviteRedirect token={inviteToken} onNavigate={navigate} onSignUp={() => { setAuthMode("signup"); setShowAuth(true); }} />}
+              {activeTab === "dashboard"   && <Dashboard onNavigate={navigate} />}
+              {activeTab === "profile"     && <Profile   onNavigate={navigate} />}
             </main>
 
             {/* Footer */}

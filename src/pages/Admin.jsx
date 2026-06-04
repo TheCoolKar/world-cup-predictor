@@ -1,14 +1,32 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
+import { useAuth } from "../hooks/useAuth";
 
 const TOTAL_MATCHES = 48;
 
 export default function Admin({ onClose }) {
+  const { profile } = useAuth();
   const [rows,    setRows]    = useState([]);
   const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState(null);
   const [sort,    setSort]    = useState("submitted_at");
   const [asc,     setAsc]     = useState(false);
+
+  if (!profile?.is_admin) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        style={{ background: "rgba(10,2,26,0.95)", backdropFilter: "blur(8px)" }}>
+        <div className="text-center">
+          <p className="text-white font-bold text-lg mb-2">Access Denied</p>
+          <p className="text-sm mb-4" style={{ color: "rgba(255,255,255,0.4)" }}>Admin access only.</p>
+          <button onClick={onClose} className="px-4 py-2 rounded-lg text-sm font-semibold"
+            style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)" }}>
+            Close
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     supabase

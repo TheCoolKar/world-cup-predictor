@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useAuth }  from "../hooks/useAuth";
 import { supabase } from "../lib/supabase";
 import { getPicks, getBracket } from "../utils/storage";
+import FriendsPanel from "../components/FriendsPanel";
 
 const inputStyle = {
   width: "100%",
@@ -367,6 +368,8 @@ export default function Profile() {
           Sign Out
         </button>
       </section>
+
+      <FriendsPanel />
 
     </div>
   );
