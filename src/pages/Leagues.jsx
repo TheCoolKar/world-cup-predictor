@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import { generateJoinCode, getLeagueLeaderboard } from "../utils/social";
@@ -300,6 +300,186 @@ function LeagueRankings({ leagueId }) {
   );
 }
 
+// ── League Chat ───────────────────────────────────────────────────────────────
+
+function LeagueChat({ leagueId }) {
+  const { user, profile } = useAuth();
+  const [messages, setMessages]   = useState([]);
+  const [loading,  setLoading]    = useState(true);
+  const [text,     setText]       = useState("");
+  const [sending,  setSending]    = useState(false);
+  const bottomRef = useRef(null);
+
+  // Load history + poll for new messages every 3s
+  useEffect(() => {
+    let lastTs = null;
+
+    async function fetchMessages(initial = false) {
+      const query = supabase
+        .from("league_messages")
+        .select("id, content, created_at, user_id, profiles(username, avatar_url)")
+        .eq("league_id", leagueId)
+        .order("created_at", { ascending: true });
+
+      if (!initial && lastTs) {
+        query.gt("created_at", lastTs);
+      } else {
+        query.limit(50);
+      }
+
+      const { data } = await query;
+      if (!data?.length) {
+        if (initial) setLoading(false);
+        return;
+      }
+
+      lastTs = data[data.length - 1].created_at;
+
+      if (initial) {
+        setMessages(data);
+        setLoading(false);
+      } else {
+        setMessages(prev => {
+          const existingIds = new Set(prev.map(m => m.id));
+          const incoming = data.filter(m => !existingIds.has(m.id));
+          return incoming.length ? [...prev, ...incoming] : prev;
+        });
+      }
+    }
+
+    fetchMessages(true);
+    const interval = setInterval(() => fetchMessages(false), 3000);
+    return () => clearInterval(interval);
+  }, [leagueId]);
+
+  // Auto-scroll to bottom on new messages
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  async function send() {
+    const content = text.trim();
+    if (!content || !user || sending) return;
+    setSending(true);
+    setText("");
+    const { data } = await supabase
+      .from("league_messages")
+      .insert({ league_id: leagueId, user_id: user.id, content })
+      .select("id, content, created_at, user_id")
+      .single();
+    if (data) {
+      // Optimistically add own message — don't wait for realtime
+      setMessages(prev => [...prev, { ...data, profiles: { username: profile?.username, avatar_url: profile?.avatar_url } }]);
+    }
+    setSending(false);
+  }
+
+  function formatTime(ts) {
+    const d = new Date(ts);
+    const now = new Date();
+    const isToday = d.toDateString() === now.toDateString();
+    return isToday
+      ? d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })
+      : d.toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  }
+
+  if (loading) return (
+    <div className="flex items-center justify-center h-48" style={{ color: "rgba(255,255,255,0.3)" }}>
+      <div className="w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin mr-2" />
+      <span className="text-sm">Loading chat…</span>
+    </div>
+  );
+
+  return (
+    <div className="flex flex-col rounded-2xl overflow-hidden"
+      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", height: 420 }}>
+
+      {/* Message list */}
+      <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-3">
+        {messages.length === 0 && (
+          <div className="flex-1 flex items-center justify-center">
+            <p className="text-sm text-center" style={{ color: "rgba(255,255,255,0.25)" }}>
+              No messages yet — be the first to say something!
+            </p>
+          </div>
+        )}
+        {messages.map((msg, i) => {
+          const isMe = msg.user_id === user?.id;
+          const username = msg.profiles?.username ?? "Unknown";
+          const avatar = msg.profiles?.avatar_url;
+          const showAvatar = !isMe && (i === 0 || messages[i - 1].user_id !== msg.user_id);
+
+          return (
+            <div key={msg.id} className={`flex items-end gap-2 ${isMe ? "flex-row-reverse" : ""}`}>
+              {/* Avatar — other users only, collapsed for consecutive messages */}
+              {!isMe && (
+                <div style={{ width: 28, flexShrink: 0 }}>
+                  {showAvatar && (
+                    avatar
+                      ? <img src={avatar} alt={username} className="rounded-full object-cover" style={{ width: 28, height: 28 }} />
+                      : <div className="rounded-full flex items-center justify-center font-bold text-xs"
+                          style={{ width: 28, height: 28, background: "rgba(200,240,0,0.15)", color: "#c8f000" }}>
+                          {username[0].toUpperCase()}
+                        </div>
+                  )}
+                </div>
+              )}
+
+              <div className={`flex flex-col ${isMe ? "items-end" : "items-start"} max-w-[72%]`}>
+                {showAvatar && !isMe && (
+                  <p className="text-xs font-bold mb-1" style={{ color: "rgba(255,255,255,0.45)" }}>{username}</p>
+                )}
+                <div className="px-3 py-2 rounded-2xl text-sm leading-relaxed"
+                  style={{
+                    background: isMe ? "rgba(200,240,0,0.15)" : "rgba(255,255,255,0.07)",
+                    color: isMe ? "#c8f000" : "rgba(255,255,255,0.85)",
+                    borderBottomRightRadius: isMe ? 4 : undefined,
+                    borderBottomLeftRadius:  !isMe ? 4 : undefined,
+                  }}>
+                  {msg.content}
+                </div>
+                <p className="text-xs mt-0.5 px-1" style={{ color: "rgba(255,255,255,0.2)" }}>
+                  {formatTime(msg.created_at)}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+        <div ref={bottomRef} />
+      </div>
+
+      {/* Divider */}
+      <div style={{ height: 1, background: "rgba(255,255,255,0.07)", flexShrink: 0 }} />
+
+      {/* Input */}
+      <div className="flex items-center gap-2 px-3 py-3 shrink-0">
+        <input
+          value={text}
+          onChange={e => setText(e.target.value)}
+          onKeyDown={e => e.key === "Enter" && !e.shiftKey && send()}
+          placeholder="Send a message…"
+          maxLength={500}
+          className="flex-1 px-3 py-2 rounded-xl text-sm outline-none"
+          style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)", color: "white" }}
+        />
+        <button
+          onClick={send}
+          disabled={!text.trim() || sending}
+          className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all active:scale-95"
+          style={{
+            background: text.trim() ? "linear-gradient(135deg,#c8f000,#84cc16)" : "rgba(255,255,255,0.07)",
+            opacity: sending ? 0.5 : 1,
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={text.trim() ? "#1a0533" : "rgba(255,255,255,0.3)"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ── League Detail View ────────────────────────────────────────────────────────
 
 function LeagueDetail({ league, mySubmissionId, onBack, onEnterBracket, onNavigate }) {
@@ -378,7 +558,7 @@ function LeagueDetail({ league, mySubmissionId, onBack, onEnterBracket, onNaviga
 
 // ── Main Leagues Page ─────────────────────────────────────────────────────────
 
-export default function Leagues({ onNavigate }) {
+export default function Leagues({ onNavigate, initialLeagueCtx = null }) {
   const { user } = useAuth();
   const [myLeagues, setMyLeagues] = useState([]);
   const [publicLeagues, setPublicLeagues] = useState([]);
@@ -387,7 +567,10 @@ export default function Leagues({ onNavigate }) {
   const [showCreate, setShowCreate] = useState(false);
   const [showJoin, setShowJoin] = useState(false);
   const [bracketLeague, setBracketLeague] = useState(null);
-  const [selectedLeague, setSelectedLeague] = useState(null); // { league, submission_id }
+  // If navigated from Home with a specific league, pre-select it
+  const [selectedLeague, setSelectedLeague] = useState(
+    initialLeagueCtx ? { id: initialLeagueCtx.leagueId, name: initialLeagueCtx.leagueName } : null
+  );
   const [joinCode, setJoinCode] = useState("");
   const [joinError, setJoinError] = useState(null);
   const [joinLoading, setJoinLoading] = useState(false);

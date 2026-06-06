@@ -796,7 +796,7 @@ export default function MyBracket({ bracketData, onBack }) {
           )}
         </div>
         <p className="text-sm mb-4" style={{color:"rgba(255,255,255,0.35)"}}>
-          Your predictions - Predict group stages right and win $1000!
+          Your predictions
         </p>
         <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-3">

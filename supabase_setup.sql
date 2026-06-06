@@ -320,3 +320,31 @@ create policy "Anyone can read results"
 create policy "Admins can manage results"
   on public.match_results for all
   using (exists (select 1 from public.profiles where id = auth.uid() and is_admin = true));
+
+-- ── League chat ───────────────────────────────────────────────────────────────
+
+create table if not exists public.league_messages (
+  id         uuid primary key default gen_random_uuid(),
+  league_id  uuid not null references public.leagues(id) on delete cascade,
+  user_id    uuid not null references auth.users(id) on delete cascade,
+  content    text not null check (char_length(content) > 0 and char_length(content) <= 500),
+  created_at timestamptz not null default now()
+);
+
+alter table public.league_messages enable row level security;
+
+drop policy if exists "League members can read chat"   on public.league_messages;
+drop policy if exists "League members can send chat"   on public.league_messages;
+drop policy if exists "Users can delete own messages"  on public.league_messages;
+
+create policy "League members can read chat"
+  on public.league_messages for select
+  using (public.current_user_in_league(league_id));
+
+create policy "League members can send chat"
+  on public.league_messages for insert
+  with check (auth.uid() = user_id and public.current_user_in_league(league_id));
+
+create policy "Users can delete own messages"
+  on public.league_messages for delete
+  using (auth.uid() = user_id);

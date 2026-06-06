@@ -6,6 +6,7 @@ import MyBrackets    from "./pages/MyBrackets";
 import { getBracketById } from "./utils/storage";
 import Profile       from "./pages/Profile";
 import Dashboard     from "./pages/Dashboard";
+import Home          from "./pages/Home";
 import Rules         from "./pages/Rules";
 import Admin         from "./pages/Admin";
 import Leaderboard   from "./pages/Leaderboard";
@@ -130,8 +131,9 @@ export default function App() {
     return m ? m[1] : null;
   })();
 
-  const [activeTab,   setActiveTab]   = useState(inviteToken ? "invite" : "groups"); // "groups"|"bracket"|"mine"|"profile"|"dashboard"|"leaderboard"|"leagues"|"invite"
+  const [activeTab,   setActiveTab]   = useState(inviteToken ? "invite" : "home"); // "home"|"groups"|"bracket"|"mine"|"leaderboard"|"leagues"|"invite"|"profile"|"dashboard"
   const [leagueContext, setLeagueContext] = useState(null); // { id, name } when navigating to leaderboard from a league
+  const [leagueNavCtx, setLeagueNavCtx] = useState(null); // { leagueId, leagueName } when navigating to leagues from home
   const [showRules,   setShowRules]   = useState(false);
   const [showAdmin,   setShowAdmin]   = useState(false);
   const [showAuth,    setShowAuth]    = useState(false);
@@ -152,7 +154,9 @@ export default function App() {
     setActiveTab(tab);
     setSidebarOpen(false);
     if (tab !== "mine") setActiveBracketId(null);
-    if (tab === "leaderboard") setLeagueContext(ctx); // ctx = { id, name } or null
+    if (tab === "leaderboard") setLeagueContext(ctx);
+    if (tab === "leagues") setLeagueNavCtx(ctx); // ctx = { leagueId, leagueName } from home card click
+    else setLeagueNavCtx(null);
   }
 
   // ── Nav item ─────────────────────────────────────────────────────────────────
@@ -252,55 +256,34 @@ export default function App() {
       {/* ── Nav ── */}
       <nav className="flex-1 overflow-y-auto flex flex-col" style={{ padding: collapsed ? "12px 8px" : "12px" }}>
 
-        {/* Section label — hidden when collapsed */}
-        {!collapsed && (
-          <p className="px-3 pt-3 pb-1.5 shrink-0" style={{ fontSize: "0.58rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", color: "rgba(200,240,0,0.38)" }}>
-            AI Predictions
-          </p>
-        )}
         {collapsed && <div style={{ height: 16 }} />}
 
-        <SideNavItem
-          label="Group Stage"
-          icon={<IconGrid />}
-          active={activeTab === "groups"}
-          onClick={() => navigate("groups")}
-          accent="#c8f000"
-          locked={!user}
-        />
-        <SideNavItem
-          label="Simulated Bracket"
-          icon={<IconBracket />}
-          active={activeTab === "bracket"}
-          onClick={() => navigate("bracket")}
-          accent="#c8f000"
-          locked={!user}
-        />
+        {/* Primary nav */}
+        <SideNavItem label="Home"        icon={<IconBarChart />}    active={activeTab === "home"}        onClick={() => navigate("home")}        accent="#c8f000" />
+        <SideNavItem label="My Bracket"  icon={<IconEdit />}        active={activeTab === "mine"}        onClick={() => navigate("mine")}        accent="#ef4444" />
+        <SideNavItem label="Leagues"     icon={<IconLeagues />}     active={activeTab === "leagues"}     onClick={() => navigate("leagues")}     accent="#c8f000" />
+        <SideNavItem label="Leaderboard" icon={<IconLeaderboard />} active={activeTab === "leaderboard"} onClick={() => navigate("leaderboard")} accent="#f59e0b" />
 
         <div className="shrink-0" style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "12px 0" }} />
 
-        <SideNavItem label="My Brackets"  icon={<IconEdit />}        active={activeTab === "mine"}        onClick={() => navigate("mine")}        accent="#ef4444" />
-        <SideNavItem label="Teams"        icon={<IconShield />}      active={activeTab === "teams"}       onClick={() => navigate("teams")}       accent="#c8f000" />
-        <SideNavItem label="Leaderboard"  icon={<IconLeaderboard />} active={activeTab === "leaderboard"} onClick={() => navigate("leaderboard")} accent="#f59e0b" />
-        <SideNavItem label="Leagues"      icon={<IconLeagues />}     active={activeTab === "leagues"}     onClick={() => navigate("leagues")}     accent="#c8f000" />
+        {/* AI Predictions — secondary */}
+        {!collapsed && (
+          <p className="px-3 pb-1.5 shrink-0" style={{ fontSize: "0.58rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", color: "rgba(255,255,255,0.2)" }}>
+            AI Predictions
+          </p>
+        )}
+        <SideNavItem label="Group Stage"       icon={<IconGrid />}    active={activeTab === "groups"}  onClick={() => navigate("groups")}  accent="#c8f000" muted locked={!user} />
+        <SideNavItem label="Simulated Bracket" icon={<IconBracket />} active={activeTab === "bracket"} onClick={() => navigate("bracket")} accent="#c8f000" muted locked={!user} />
 
         <div className="shrink-0" style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "12px 0" }} />
 
         <SideNavItem label="Rules" icon={<IconTrophy />} active={false} onClick={() => { setShowRules(true); setSidebarOpen(false); }} accent="#f59e0b" muted />
 
-        {/* Account section — only when signed in */}
+        {/* Account section */}
         {user && (
           <>
             <div className="shrink-0" style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "12px 0" }} />
-
-            {!collapsed && (
-              <p className="px-3 pb-1.5 shrink-0" style={{ fontSize: "0.58rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", color: "rgba(200,240,0,0.38)" }}>
-                Account
-              </p>
-            )}
-
-            <SideNavItem label="Dashboard" icon={<IconBarChart />} active={activeTab === "dashboard"} onClick={() => navigate("dashboard")} accent="#c8f000" />
-            <SideNavItem label="Profile"   icon={<IconUser />}     active={activeTab === "profile"}   onClick={() => navigate("profile")}   accent="#c8f000" />
+            <SideNavItem label="Profile" icon={<IconUser />} active={activeTab === "profile"} onClick={() => navigate("profile")} accent="#c8f000" />
             {profile?.is_admin && (
               <SideNavItem label="Admin" icon={<IconShield />} active={false} onClick={() => { setShowAdmin(true); setSidebarOpen(false); }} accent="#ef4444" />
             )}
@@ -450,8 +433,8 @@ export default function App() {
         <div className="flex flex-col flex-1 min-w-0">
           <div className="flex flex-col flex-1 min-w-0">
 
-            {/* Hero — only on AI Predictions tabs for signed-in users */}
-            {(activeTab === "groups" || activeTab === "bracket") && user && (
+            {/* Hero — on Home, Group Stage, and Bracket tabs */}
+            {(activeTab === "home" || activeTab === "groups" || activeTab === "bracket") && user && (
               <header className="relative overflow-hidden shrink-0" style={{ minHeight: 320 }}>
                 <img src={banner} alt="FIFA World Cup 2026" className="absolute inset-0 w-full h-full object-cover object-center" />
                 <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,rgba(15,4,40,0.9) 0%,rgba(15,4,40,0.65) 55%,rgba(15,4,40,0.15) 100%)" }} />
@@ -509,6 +492,13 @@ export default function App() {
 
             {/* Page content */}
             <main className="flex-1" style={{ background: "#1a0533" }}>
+              {activeTab === "home" && (
+                <Home
+                  onNavigate={navigate}
+                  onSignIn={() => { setAuthMode("login");  setShowAuth(true); }}
+                  onSignUp={() => { setAuthMode("signup"); setShowAuth(true); }}
+                />
+              )}
               {activeTab === "groups"  && (user
                 ? <GroupStage />
                 : <SignInGate
@@ -535,7 +525,7 @@ export default function App() {
               )}
               {activeTab === "teams"       && <Teams />}
               {activeTab === "leaderboard" && <Leaderboard initialLeague={leagueContext} />}
-              {activeTab === "leagues"     && <Leagues onNavigate={navigate} />}
+              {activeTab === "leagues"     && <Leagues onNavigate={navigate} initialLeagueCtx={leagueNavCtx} />}
               {activeTab === "invite"      && <InviteRedirect token={inviteToken} onNavigate={navigate} onSignUp={() => { setAuthMode("signup"); setShowAuth(true); }} />}
               {activeTab === "dashboard"   && <Dashboard onNavigate={navigate} />}
               {activeTab === "profile"     && <Profile   onNavigate={navigate} />}

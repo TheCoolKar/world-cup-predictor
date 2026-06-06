@@ -5,7 +5,8 @@ const LEGACY_BRACKET_KEY        = "wc2026_bracket";
 const LEGACY_BRACKET_SCORES_KEY = "wc2026_bracket_scores";
 
 // ── Multi-bracket storage ─────────────────────────────────────────────────────
-const BRACKETS_KEY = "wc2026_brackets";
+const BRACKETS_KEY        = "wc2026_brackets";
+const MIGRATION_DONE_KEY  = "wc2026_migrated";
 
 function readBrackets() {
   try { return JSON.parse(localStorage.getItem(BRACKETS_KEY)) || []; }
@@ -18,13 +19,14 @@ function writeBrackets(list) {
 
 export function getAllBrackets() {
   const list = readBrackets();
-  // One-time migration: if old single-bracket data exists and no list yet, import it
-  if (list.length === 0) {
+  // One-time migration: only runs if not yet done and list is empty
+  if (list.length === 0 && !localStorage.getItem(MIGRATION_DONE_KEY)) {
     try {
       const oldPicks  = JSON.parse(localStorage.getItem(LEGACY_PICKS_KEY)  ?? "{}");
       const oldScores = JSON.parse(localStorage.getItem(LEGACY_SCORES_KEY) ?? "{}");
       const oldBw     = JSON.parse(localStorage.getItem(LEGACY_BRACKET_KEY) ?? "null");
       const oldBs     = JSON.parse(localStorage.getItem(LEGACY_BRACKET_SCORES_KEY) ?? "{}");
+      localStorage.setItem(MIGRATION_DONE_KEY, "1");
       if (Object.keys(oldPicks).length > 0) {
         const migrated = {
           id:            "bracket_migrated",

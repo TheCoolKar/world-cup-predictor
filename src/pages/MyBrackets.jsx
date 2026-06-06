@@ -115,7 +115,7 @@ export default function MyBrackets({ onOpen }) {
             <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: "rgba(255,255,255,0.3)" }}>
               Prediction Mode
             </p>
-            <div className="flex gap-2 mb-4">
+            <div className="flex gap-2 mb-3">
               {[{ id: "winner", label: "Winner Only", desc: "Pick H / X / A" }, { id: "score", label: "Predict Score", desc: "Enter exact goals" }].map(opt => (
                 <button key={opt.id} onClick={() => setNewMode(opt.id)}
                   className="flex-1 py-2.5 px-3 rounded-xl text-xs font-bold transition-all text-left"
@@ -131,6 +131,15 @@ export default function MyBrackets({ onOpen }) {
                 </button>
               ))}
             </div>
+            {newMode === "score" && (
+              <div className="mb-4 px-3 py-2.5 rounded-xl flex items-start gap-2"
+                style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.25)" }}>
+                <span style={{ fontSize: "0.9rem", lineHeight: 1, marginTop: 1 }}>⚠️</span>
+                <p className="text-xs leading-relaxed" style={{ color: "#f59e0b" }}>
+                  <span className="font-bold">Score mode brackets cannot be entered into leagues.</span> Official leagues only accept Winner Only brackets (H / D / A picks).
+                </p>
+              </div>
+            )}
             <div className="flex gap-2">
               <button onClick={handleCreate}
                 className="flex-1 py-2.5 rounded-xl font-black text-sm transition-all active:scale-95"
