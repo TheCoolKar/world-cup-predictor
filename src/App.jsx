@@ -131,6 +131,7 @@ export default function App() {
   })();
 
   const [activeTab,   setActiveTab]   = useState(inviteToken ? "invite" : "groups"); // "groups"|"bracket"|"mine"|"profile"|"dashboard"|"leaderboard"|"leagues"|"invite"
+  const [leagueContext, setLeagueContext] = useState(null); // { id, name } when navigating to leaderboard from a league
   const [showRules,   setShowRules]   = useState(false);
   const [showAdmin,   setShowAdmin]   = useState(false);
   const [showAuth,    setShowAuth]    = useState(false);
@@ -140,17 +141,18 @@ export default function App() {
   const [activeBracketId, setActiveBracketId] = useState(null);
   const [disclaimerDone, setDisclaimerDone]   = useState(() => hasAcceptedDisclaimer());
 
-  const { user, loading: authLoading, signOut } = useAuth();
+  const { user, profile, loading: authLoading, signOut } = useAuth();
   const displayName = user
     ? (user.user_metadata?.display_name || user.email?.split("@")[0] || "You")
     : null;
 
   const sidebarW = collapsed ? SIDEBAR_WC : SIDEBAR_W;
 
-  function navigate(tab) {
+  function navigate(tab, ctx = null) {
     setActiveTab(tab);
     setSidebarOpen(false);
     if (tab !== "mine") setActiveBracketId(null);
+    if (tab === "leaderboard") setLeagueContext(ctx); // ctx = { id, name } or null
   }
 
   // ── Nav item ─────────────────────────────────────────────────────────────────
@@ -299,6 +301,9 @@ export default function App() {
 
             <SideNavItem label="Dashboard" icon={<IconBarChart />} active={activeTab === "dashboard"} onClick={() => navigate("dashboard")} accent="#c8f000" />
             <SideNavItem label="Profile"   icon={<IconUser />}     active={activeTab === "profile"}   onClick={() => navigate("profile")}   accent="#c8f000" />
+            {profile?.is_admin && (
+              <SideNavItem label="Admin" icon={<IconShield />} active={false} onClick={() => { setShowAdmin(true); setSidebarOpen(false); }} accent="#ef4444" />
+            )}
           </>
         )}
       </nav>
@@ -529,7 +534,7 @@ export default function App() {
                   : <MyBrackets onOpen={(id) => setActiveBracketId(id)} />
               )}
               {activeTab === "teams"       && <Teams />}
-              {activeTab === "leaderboard" && <Leaderboard />}
+              {activeTab === "leaderboard" && <Leaderboard initialLeague={leagueContext} />}
               {activeTab === "leagues"     && <Leagues onNavigate={navigate} />}
               {activeTab === "invite"      && <InviteRedirect token={inviteToken} onNavigate={navigate} onSignUp={() => { setAuthMode("signup"); setShowAuth(true); }} />}
               {activeTab === "dashboard"   && <Dashboard onNavigate={navigate} />}

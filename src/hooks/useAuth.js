@@ -10,7 +10,7 @@ export function useAuth() {
     if (!userId) { setProfile(null); return; }
     const { data } = await supabase
       .from("profiles")
-      .select("username, avatar_url")
+      .select("username, avatar_url, is_admin")
       .eq("id", userId)
       .single();
     setProfile(data ?? null);

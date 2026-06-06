@@ -1,32 +1,186 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
+import fixtures from "../data/wc2026_fixtures.json";
 
 const TOTAL_MATCHES = 48;
 
-export default function Admin({ onClose }) {
-  const { profile } = useAuth();
+// ── Results Tab ───────────────────────────────────────────────────────────────
+
+function ResultsTab() {
+  const [results, setResults]   = useState({});   // { matchId: { home_score, away_score, result, source } }
+  const [scores,  setScores]    = useState({});   // { matchId: { home: "", away: "" } }
+  const [saving,  setSaving]    = useState({});   // { matchId: true }
+  const [saved,   setSaved]     = useState({});   // { matchId: true }
+  const [loadErr, setLoadErr]   = useState(null);
+
+  // Group stage only (48 matches: A1–L6)
+  const groupFixtures = fixtures.filter(f => /^[A-L]\d$/.test(f.id));
+
+  // Load existing results
+  useEffect(() => {
+    supabase
+      .from("match_results")
+      .select("match_id, home_score, away_score, result, source")
+      .then(({ data, error }) => {
+        if (error) { setLoadErr(error.message); return; }
+        const map = {};
+        const scoreMap = {};
+        for (const r of data ?? []) {
+          map[r.match_id] = r;
+          scoreMap[r.match_id] = { home: String(r.home_score ?? ""), away: String(r.away_score ?? "") };
+        }
+        setResults(map);
+        setScores(scoreMap);
+      });
+  }, []);
+
+  function handleScore(matchId, side, value) {
+    setScores(prev => ({
+      ...prev,
+      [matchId]: { ...(prev[matchId] ?? { home: "", away: "" }), [side]: value },
+    }));
+    setSaved(prev => ({ ...prev, [matchId]: false }));
+  }
+
+  async function saveResult(matchId) {
+    const s = scores[matchId] ?? {};
+    const h = parseInt(s.home, 10);
+    const a = parseInt(s.away, 10);
+    if (isNaN(h) || isNaN(a)) return;
+
+    let result;
+    if (h > a)      result = "home";
+    else if (a > h) result = "away";
+    else            result = "draw";
+
+    setSaving(prev => ({ ...prev, [matchId]: true }));
+
+    const { error } = await supabase.from("match_results").upsert({
+      match_id:   matchId,
+      home_score: h,
+      away_score: a,
+      result,
+      source:     "manual",
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "match_id" });
+
+    setSaving(prev => ({ ...prev, [matchId]: false }));
+    if (!error) {
+      setResults(prev => ({ ...prev, [matchId]: { match_id: matchId, home_score: h, away_score: a, result, source: "manual" } }));
+      setSaved(prev => ({ ...prev, [matchId]: true }));
+    }
+  }
+
+  // Group by group letter
+  const groups = ["A","B","C","D","E","F","G","H","I","J","K","L"];
+
+  return (
+    <div className="p-4 space-y-6">
+      {loadErr && (
+        <div className="p-3 rounded-lg text-sm" style={{ background: "rgba(239,68,68,0.1)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.2)" }}>
+          Failed to load results: {loadErr}
+        </div>
+      )}
+
+      <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
+        Enter scores to compute H/D/A result. Save overwrites any API-fetched value.
+      </p>
+
+      {groups.map(g => {
+        const gFixtures = groupFixtures.filter(f => f.group === g);
+        if (!gFixtures.length) return null;
+        return (
+          <div key={g}>
+            <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: "#c8f000" }}>
+              Group {g}
+            </p>
+            <div className="space-y-2">
+              {gFixtures.map(f => {
+                const existing = results[f.id];
+                const s = scores[f.id] ?? { home: "", away: "" };
+                const isSaving = saving[f.id];
+                const isSaved  = saved[f.id];
+                return (
+                  <div key={f.id}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl"
+                    style={{
+                      background: existing ? "rgba(200,240,0,0.04)" : "rgba(255,255,255,0.03)",
+                      border: `1px solid ${existing ? "rgba(200,240,0,0.12)" : "rgba(255,255,255,0.06)"}`,
+                    }}
+                  >
+                    {/* Match ID */}
+                    <span className="text-xs font-bold w-6 shrink-0" style={{ color: "rgba(255,255,255,0.3)" }}>{f.id}</span>
+
+                    {/* Teams */}
+                    <span className="flex-1 text-sm font-semibold" style={{ color: "rgba(255,255,255,0.8)" }}>
+                      {f.home} <span style={{ color: "rgba(255,255,255,0.3)" }}>vs</span> {f.away}
+                    </span>
+
+                    {/* Score inputs */}
+                    <input
+                      type="number" min="0" max="20" value={s.home}
+                      onChange={e => handleScore(f.id, "home", e.target.value)}
+                      placeholder="—"
+                      className="w-10 text-center text-sm font-bold rounded-lg px-1 py-1.5 outline-none"
+                      style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff" }}
+                    />
+                    <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.75rem" }}>:</span>
+                    <input
+                      type="number" min="0" max="20" value={s.away}
+                      onChange={e => handleScore(f.id, "away", e.target.value)}
+                      placeholder="—"
+                      className="w-10 text-center text-sm font-bold rounded-lg px-1 py-1.5 outline-none"
+                      style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff" }}
+                    />
+
+                    {/* Result badge */}
+                    {existing && (
+                      <span
+                        className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
+                        style={{
+                          background: existing.source === "api" ? "rgba(59,130,246,0.12)" : "rgba(200,240,0,0.1)",
+                          color:      existing.source === "api" ? "#60a5fa" : "#c8f000",
+                          border:     `1px solid ${existing.source === "api" ? "rgba(59,130,246,0.2)" : "rgba(200,240,0,0.2)"}`,
+                        }}
+                      >
+                        {existing.result.toUpperCase()} · {existing.source}
+                      </span>
+                    )}
+
+                    {/* Save button */}
+                    <button
+                      onClick={() => saveResult(f.id)}
+                      disabled={isSaving || (s.home === "" || s.away === "")}
+                      className="text-xs font-bold px-3 py-1.5 rounded-lg shrink-0 transition-opacity"
+                      style={{
+                        background: isSaved ? "rgba(200,240,0,0.15)" : "rgba(200,240,0,0.08)",
+                        color:      isSaved ? "#c8f000" : "rgba(200,240,0,0.6)",
+                        border:     "1px solid rgba(200,240,0,0.15)",
+                        opacity:    (s.home === "" || s.away === "") ? 0.4 : 1,
+                      }}
+                    >
+                      {isSaving ? "…" : isSaved ? "✓ Saved" : "Save"}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ── Submissions Tab ───────────────────────────────────────────────────────────
+
+function SubmissionsTab() {
   const [rows,    setRows]    = useState([]);
   const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState(null);
   const [sort,    setSort]    = useState("submitted_at");
   const [asc,     setAsc]     = useState(false);
-
-  if (!profile?.is_admin) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        style={{ background: "rgba(10,2,26,0.95)", backdropFilter: "blur(8px)" }}>
-        <div className="text-center">
-          <p className="text-white font-bold text-lg mb-2">Access Denied</p>
-          <p className="text-sm mb-4" style={{ color: "rgba(255,255,255,0.4)" }}>Admin access only.</p>
-          <button onClick={onClose} className="px-4 py-2 rounded-lg text-sm font-semibold"
-            style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)" }}>
-            Close
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   useEffect(() => {
     supabase
@@ -55,6 +209,109 @@ export default function Admin({ onClose }) {
     </th>
   );
 
+  if (loading) return (
+    <div className="flex items-center justify-center h-40">
+      <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Loading submissions…</p>
+    </div>
+  );
+  if (error) return (
+    <div className="flex items-center justify-center h-40">
+      <p className="text-sm" style={{ color: "#ef4444" }}>{error}</p>
+    </div>
+  );
+  if (!rows.length) return (
+    <div className="flex flex-col items-center justify-center h-40 gap-2">
+      <span className="text-3xl">📭</span>
+      <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>No submissions yet.</p>
+    </div>
+  );
+
+  return (
+    <table className="w-full text-sm">
+      <thead style={{ background: "rgba(255,255,255,0.03)", position: "sticky", top: 0 }}>
+        <tr>
+          {th("Name", "display_name")}
+          {th("Email", "email")}
+          {th("Group Picks", "group_picks_count")}
+          <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider"
+            style={{ color: "rgba(255,255,255,0.4)" }}>Complete?</th>
+          {th("Submitted", "submitted_at")}
+          {th("Last Update", "updated_at")}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, i) => {
+          const complete = row.group_picks_count >= TOTAL_MATCHES;
+          return (
+            <tr key={row.id}
+              style={{ borderTop: "1px solid rgba(255,255,255,0.05)", background: i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.015)" }}>
+              <td className="px-4 py-3 font-semibold" style={{ color: "rgba(255,255,255,0.85)" }}>
+                {row.display_name || "—"}
+              </td>
+              <td className="px-4 py-3" style={{ color: "rgba(255,255,255,0.5)" }}>
+                {row.email}
+              </td>
+              <td className="px-4 py-3">
+                <span className="font-black" style={{ color: complete ? "#c8f000" : "#f59e0b" }}>
+                  {row.group_picks_count}
+                </span>
+                <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.7rem" }}>
+                  /{TOTAL_MATCHES}
+                </span>
+              </td>
+              <td className="px-4 py-3">
+                <span
+                  className="text-xs font-bold px-2 py-0.5 rounded-full"
+                  style={{
+                    background: complete ? "rgba(200,240,0,0.1)" : "rgba(245,158,11,0.1)",
+                    color: complete ? "#c8f000" : "#f59e0b",
+                    border: `1px solid ${complete ? "rgba(200,240,0,0.2)" : "rgba(245,158,11,0.2)"}`,
+                  }}
+                >
+                  {complete ? "✓ Full" : "Partial"}
+                </span>
+              </td>
+              <td className="px-4 py-3 text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
+                {new Date(row.submitted_at).toLocaleString()}
+              </td>
+              <td className="px-4 py-3 text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
+                {new Date(row.updated_at).toLocaleString()}
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+}
+
+// ── Main Admin component ──────────────────────────────────────────────────────
+
+export default function Admin({ onClose }) {
+  const { profile } = useAuth();
+  const [tab, setTab] = useState("submissions");
+
+  if (!profile?.is_admin) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        style={{ background: "rgba(10,2,26,0.95)", backdropFilter: "blur(8px)" }}>
+        <div className="text-center">
+          <p className="text-white font-bold text-lg mb-2">Access Denied</p>
+          <p className="text-sm mb-4" style={{ color: "rgba(255,255,255,0.4)" }}>Admin access only.</p>
+          <button onClick={onClose} className="px-4 py-2 rounded-lg text-sm font-semibold"
+            style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)" }}>
+            Close
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const TABS = [
+    { id: "submissions", label: "Submissions" },
+    { id: "results",     label: "Match Results" },
+  ];
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -79,103 +336,44 @@ export default function Admin({ onClose }) {
               className="text-white leading-none"
               style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.8rem", letterSpacing: "0.04em" }}
             >
-              Bracket Submissions
+              Admin Panel
             </h2>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="text-right">
-              <p className="text-2xl font-black" style={{ color: "#c8f000", fontFamily: "'Bebas Neue', sans-serif" }}>
-                {rows.length}
-              </p>
-              <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>entries</p>
-            </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
+            style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.4)" }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.14)"; e.currentTarget.style.color = "#fff"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.07)"; e.currentTarget.style.color = "rgba(255,255,255,0.4)"; }}
+          >✕</button>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex shrink-0 px-6 pt-3 gap-2" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+          {TABS.map(t => (
             <button
-              onClick={onClose}
-              className="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
-              style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.4)" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.14)"; e.currentTarget.style.color = "#fff"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.07)"; e.currentTarget.style.color = "rgba(255,255,255,0.4)"; }}
-            >✕</button>
-          </div>
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className="px-4 pb-3 text-sm font-bold transition-colors"
+              style={{
+                color:       tab === t.id ? "#c8f000" : "rgba(255,255,255,0.35)",
+                borderBottom: tab === t.id ? "2px solid #c8f000" : "2px solid transparent",
+              }}
+            >
+              {t.label}
+            </button>
+          ))}
         </div>
 
         {/* Body */}
         <div className="overflow-y-auto flex-1">
-          {loading ? (
-            <div className="flex items-center justify-center h-40">
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Loading submissions…</p>
-            </div>
-          ) : error ? (
-            <div className="flex items-center justify-center h-40">
-              <p className="text-sm" style={{ color: "#ef4444" }}>{error}</p>
-            </div>
-          ) : rows.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-40 gap-2">
-              <span className="text-3xl">📭</span>
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>No submissions yet.</p>
-            </div>
-          ) : (
-            <table className="w-full text-sm">
-              <thead style={{ background: "rgba(255,255,255,0.03)", position: "sticky", top: 0 }}>
-                <tr>
-                  {th("Name", "display_name")}
-                  {th("Email", "email")}
-                  {th("Group Picks", "group_picks_count")}
-                  <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider"
-                    style={{ color: "rgba(255,255,255,0.4)" }}>Complete?</th>
-                  {th("Submitted", "submitted_at")}
-                  {th("Last Update", "updated_at")}
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row, i) => {
-                  const complete = row.group_picks_count >= TOTAL_MATCHES;
-                  return (
-                    <tr key={row.id}
-                      style={{ borderTop: "1px solid rgba(255,255,255,0.05)", background: i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.015)" }}>
-                      <td className="px-4 py-3 font-semibold" style={{ color: "rgba(255,255,255,0.85)" }}>
-                        {row.display_name || "—"}
-                      </td>
-                      <td className="px-4 py-3" style={{ color: "rgba(255,255,255,0.5)" }}>
-                        {row.email}
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="font-black" style={{ color: complete ? "#c8f000" : "#f59e0b" }}>
-                          {row.group_picks_count}
-                        </span>
-                        <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.7rem" }}>
-                          /{TOTAL_MATCHES}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span
-                          className="text-xs font-bold px-2 py-0.5 rounded-full"
-                          style={{
-                            background: complete ? "rgba(200,240,0,0.1)" : "rgba(245,158,11,0.1)",
-                            color: complete ? "#c8f000" : "#f59e0b",
-                            border: `1px solid ${complete ? "rgba(200,240,0,0.2)" : "rgba(245,158,11,0.2)"}`,
-                          }}
-                        >
-                          {complete ? "✓ Full" : "Partial"}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
-                        {new Date(row.submitted_at).toLocaleString()}
-                      </td>
-                      <td className="px-4 py-3 text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
-                        {new Date(row.updated_at).toLocaleString()}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
+          {tab === "submissions" && <SubmissionsTab />}
+          {tab === "results"     && <ResultsTab />}
         </div>
 
         {/* Footer */}
         <div className="px-6 py-3 shrink-0 text-xs" style={{ borderTop: "1px solid rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.2)" }}>
-          To export all data or view full bracket picks, use the Supabase dashboard with the service-role key.
+          To auto-fetch results from API-Football, run: <span style={{ color: "rgba(200,240,0,0.4)", fontFamily: "monospace" }}>npm run fetch-results</span>
         </div>
       </div>
     </div>

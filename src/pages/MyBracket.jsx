@@ -14,7 +14,7 @@
  *   All picks persist to localStorage across refreshes.
  */
 
-import { useState, useMemo }  from "react";
+import { useState, useMemo, useEffect, useRef }  from "react";
 import fixtures                from "../data/wc2026_fixtures.json";
 import eloRatings              from "../data/elo_ratings.json";
 import { upsertBracket } from "../utils/storage";
@@ -491,6 +491,10 @@ function ModeToggle({ mode, onChange }) {
   );
 }
 
+// ── Lock date: World Cup kick-off ─────────────────────────────────────────────
+const WC_KICKOFF = new Date("2026-06-11T19:00:00-05:00");
+const isTournamentStarted = () => new Date() >= WC_KICKOFF;
+
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function MyBracket({ bracketData, onBack }) {
@@ -505,11 +509,7 @@ export default function MyBracket({ bracketData, onBack }) {
   });
   const [bScores,setBScores]= useState(()=> bracketData?.bracketScores ?? {});
 
-  // Persist the whole bracket object whenever anything changes
-  function save(newPicks, newScores, newBw, newBScores) {
-    if (!bracketData) return;
-    upsertBracket({ ...bracketData, picks: newPicks, scores: newScores, bracket: newBw, bracketScores: newBScores });
-  }
+  const isLocked = isTournamentStarted();
 
   const { user, loading: authLoading, signOut } = useAuth();
   const [showAuth,      setShowAuth]      = useState(false);
@@ -518,12 +518,41 @@ export default function MyBracket({ bracketData, onBack }) {
   const [submitting,   setSubmitting]   = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // null | "success" | "error"
   const [submitError,  setSubmitError]  = useState(null);
+  const autoSaveRef = useRef(null);
 
   // Show welcome prompt if not logged in and hasn't skipped yet
   const showWelcome = !authLoading && !user && !skippedAuth;
 
+  // Auto-save to Supabase (debounced 1.5s) whenever picks change and user is logged in
+  useEffect(() => {
+    if (!user || isLocked) return;
+    clearTimeout(autoSaveRef.current);
+    autoSaveRef.current = setTimeout(async () => {
+      await supabase.from("submissions").upsert({
+        user_id:           user.id,
+        email:             user.email,
+        display_name:      user.user_metadata?.display_name ?? "",
+        mode,
+        picks,
+        scores,
+        bracket:           bw,
+        bracket_scores:    bScores,
+        group_picks_count: Object.keys(picks).length,
+        updated_at:        new Date().toISOString(),
+      }, { onConflict: "user_id" });
+    }, 1500);
+    return () => clearTimeout(autoSaveRef.current);
+  }, [picks, scores, bw, bScores, user]);
+
+  // Persist the whole bracket object to localStorage whenever anything changes
+  function save(newPicks, newScores, newBw, newBScores) {
+    if (!bracketData || isLocked) return;
+    upsertBracket({ ...bracketData, picks: newPicks, scores: newScores, bracket: newBw, bracketScores: newBScores });
+  }
+
   async function handleSubmit() {
     if (!user) { setShowAuth(true); return; }
+    if (isLocked) return;
     setSubmitting(true);
     setSubmitStatus(null);
     try {
@@ -531,6 +560,7 @@ export default function MyBracket({ bracketData, onBack }) {
         user_id:           user.id,
         email:             user.email,
         display_name:      user.user_metadata?.display_name ?? "",
+        mode,
         picks,
         scores,
         bracket:           bw,
@@ -569,6 +599,7 @@ export default function MyBracket({ bracketData, onBack }) {
   // ── Handlers ────────────────────────────────────────────────────────────────
 
   function handleGroupPick(matchId, pick) {
+    if (isLocked) return;
     const newPicks = {...picks, [matchId]: pick};
     const fresh = emptyWinners();
     setPicks(newPicks);
@@ -578,33 +609,39 @@ export default function MyBracket({ bracketData, onBack }) {
   }
 
   function handleGroupScore(matchId, h, a) {
+    if (isLocked) return;
     const newScores = {...scores, [matchId]:{home:h,away:a}};
     setScores(newScores);
     save(picks, newScores, bw, bScores);
   }
 
   function handleBracketPick(round, matchIdx, team) {
+    if (isLocked) return;
     const next=applyPick(bw,round,matchIdx,team,false);
     setBw(next); save(picks, scores, next, bScores);
   }
 
   function handleBracketForcePick(round, matchIdx, team) {
+    if (isLocked) return;
     const next=applyPick(bw,round,matchIdx,team,true);
     setBw(next); save(picks, scores, next, bScores);
   }
 
   function handleBracketScore(scoreKey, h, a) {
+    if (isLocked) return;
     const newBs = {...bScores, [scoreKey]:{home:h,away:a}};
     setBScores(newBs);
     save(picks, scores, bw, newBs);
   }
 
   function handle3PPick(team) {
+    if (isLocked) return;
     const next={...bw,"3P":[team===bw["3P"][0]?null:team]};
     setBw(next); save(picks, scores, next, bScores);
   }
 
   function handle3PScore(h, a) {
+    if (isLocked) return;
     const key="3P_0";
     const newBs = {...bScores, [key]:{home:h,away:a}};
     setBScores(newBs);
@@ -618,12 +655,14 @@ export default function MyBracket({ bracketData, onBack }) {
   }
 
   function handle3PForcePick(team) {
+    if (isLocked) return;
     if (bw["3P"][0] === team) return;
     const next={...bw,"3P":[team]};
     setBw(next); save(picks, scores, next, bScores);
   }
 
   function handleResetAll() {
+    if (isLocked) return;
     const fresh = emptyWinners();
     setPicks({}); setScores({}); setBw(fresh); setBScores({});
     save({}, {}, fresh, {});
@@ -651,9 +690,23 @@ export default function MyBracket({ bracketData, onBack }) {
             {bracketData?.name ?? "Bracket"}
           </span>
           <span className="ml-auto text-xs px-2 py-0.5 rounded-full font-semibold"
-            style={{background:"rgba(200,240,0,0.1)",color:"#c8f000",border:"1px solid rgba(200,240,0,0.2)"}}>
-            Auto-saved
+            style={{background: isLocked ? "rgba(239,68,68,0.12)" : "rgba(200,240,0,0.1)", color: isLocked ? "#ef4444" : "#c8f000", border: isLocked ? "1px solid rgba(239,68,68,0.25)" : "1px solid rgba(200,240,0,0.2)"}}>
+            {isLocked ? "🔒 Locked" : "Auto-saved"}
           </span>
+        </div>
+      )}
+
+      {/* ── Tournament locked banner ── */}
+      {isLocked && (
+        <div className="flex items-center gap-3 mb-6 px-4 py-3 rounded-xl"
+          style={{background:"rgba(239,68,68,0.07)",border:"1px solid rgba(239,68,68,0.2)"}}>
+          <span className="text-xl">🔒</span>
+          <div>
+            <p className="font-bold text-sm" style={{color:"#ef4444"}}>Bracket Locked</p>
+            <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.4)"}}>
+              The World Cup has started — picks are now read-only. Your submitted bracket is saved to your account.
+            </p>
+          </div>
         </div>
       )}
 
@@ -823,7 +876,14 @@ export default function MyBracket({ bracketData, onBack }) {
         }}>
 
         <div className="flex-1 min-w-0">
-          {submitStatus === "success" ? (
+          {isLocked ? (
+            <>
+              <p className="font-bold text-sm" style={{color:"#ef4444"}}>🔒 Bracket Locked</p>
+              <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.4)"}}>
+                The World Cup has started. Your picks are saved to your account and can be viewed in leagues.
+              </p>
+            </>
+          ) : submitStatus === "success" ? (
             <>
               <p className="font-bold text-sm" style={{color:"#c8f000"}}>🎉 Bracket submitted!</p>
               <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.4)"}}>
@@ -847,37 +907,39 @@ export default function MyBracket({ bracketData, onBack }) {
           )}
         </div>
 
-        <button
-          onClick={handleSubmit}
-          disabled={submitting || !allPicked}
-          className="shrink-0 px-6 py-3 rounded-xl font-black text-sm transition-all duration-150 active:scale-95"
-          style={{
-            background: !allPicked
-              ? "rgba(255,255,255,0.06)"
-              : submitting
-              ? "rgba(220,38,38,0.4)"
+        {!isLocked && (
+          <button
+            onClick={handleSubmit}
+            disabled={submitting || !allPicked}
+            className="shrink-0 px-6 py-3 rounded-xl font-black text-sm transition-all duration-150 active:scale-95"
+            style={{
+              background: !allPicked
+                ? "rgba(255,255,255,0.06)"
+                : submitting
+                ? "rgba(220,38,38,0.4)"
+                : submitStatus === "success"
+                ? "linear-gradient(135deg,#c8f000,#84cc16)"
+                : "linear-gradient(135deg,#dc2626,#b91c1c)",
+              color: !allPicked
+                ? "rgba(255,255,255,0.25)"
+                : submitStatus === "success"
+                ? "#1a0533"
+                : "white",
+              cursor: !allPicked ? "not-allowed" : "pointer",
+              boxShadow: allPicked && submitStatus !== "success"
+                ? "0 0 24px rgba(220,38,38,0.4)"
+                : "none",
+            }}
+          >
+            {submitting
+              ? "Saving…"
               : submitStatus === "success"
-              ? "linear-gradient(135deg,#c8f000,#84cc16)"
-              : "linear-gradient(135deg,#dc2626,#b91c1c)",
-            color: !allPicked
-              ? "rgba(255,255,255,0.25)"
-              : submitStatus === "success"
-              ? "#1a0533"
-              : "white",
-            cursor: !allPicked ? "not-allowed" : "pointer",
-            boxShadow: allPicked && submitStatus !== "success"
-              ? "0 0 24px rgba(220,38,38,0.4)"
-              : "none",
-          }}
-        >
-          {submitting
-            ? "Saving…"
-            : submitStatus === "success"
-            ? "✓ Saved"
-            : user
-            ? "Submit My Bracket"
-            : "Sign In & Submit"}
-        </button>
+              ? "✓ Saved"
+              : user
+              ? "Submit My Bracket"
+              : "Sign In & Submit"}
+          </button>
+        )}
       </div>
 
       {/* ══ KNOCKOUT BRACKET ════════════════════════════════════════════════ */}

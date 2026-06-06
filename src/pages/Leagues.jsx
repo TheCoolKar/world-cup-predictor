@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
-import { generateJoinCode } from "../utils/social";
+import { generateJoinCode, getLeagueLeaderboard } from "../utils/social";
+import { getFlagClass } from "../utils/flags";
+
+// ── Shared helpers ────────────────────────────────────────────────────────────
+
+const inputStyle = {
+  width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.12)",
+  borderRadius: 8, padding: "10px 14px", color: "white", fontSize: "0.875rem", outline: "none",
+};
 
 function Modal({ title, onClose, children }) {
   return (
@@ -18,10 +26,357 @@ function Modal({ title, onClose, children }) {
   );
 }
 
-const inputStyle = {
-  width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.12)",
-  borderRadius: 8, padding: "10px 14px", color: "white", fontSize: "0.875rem", outline: "none",
-};
+function Avatar({ url, username, size = 30 }) {
+  if (url) return <img src={url} alt={username} className="rounded-full object-cover shrink-0" style={{ width: size, height: size }} />;
+  return (
+    <div className="rounded-full flex items-center justify-center shrink-0 font-bold"
+      style={{ width: size, height: size, background: "rgba(200,240,0,0.15)", color: "#c8f000", fontSize: size * 0.38 }}>
+      {username?.[0]?.toUpperCase() ?? "?"}
+    </div>
+  );
+}
+
+function RankBadge({ rank }) {
+  const colors = { 1: "#FFD700", 2: "#C0C0C0", 3: "#CD7F32" };
+  return (
+    <span className="font-black tabular-nums shrink-0" style={{ color: colors[rank] ?? "rgba(255,255,255,0.25)", fontFamily: "'Bebas Neue',sans-serif", fontSize: "1.1rem", minWidth: 24, display: "inline-block", textAlign: "center" }}>
+      {rank}
+    </span>
+  );
+}
+
+function TeamFlag({ name }) {
+  if (!name) return null;
+  const cls = getFlagClass(name);
+  return (
+    <span className="inline-flex items-center gap-1 text-xs font-semibold" style={{ color: "rgba(255,255,255,0.85)" }}>
+      {cls && <span className={cls} style={{ fontSize: "0.85rem" }} />}
+      {name}
+    </span>
+  );
+}
+
+// ── Bracket Picker Modal ──────────────────────────────────────────────────────
+
+function BracketPickerModal({ leagueId, leagueName, onClose, onNavigate }) {
+  const { user } = useAuth();
+  const [submission, setSubmission] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState(null);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("submissions")
+      .select("id, mode, group_picks_count, updated_at")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data }) => { setSubmission(data); setLoading(false); });
+  }, [user]);
+
+  async function handleSelect() {
+    if (!submission) return;
+    setSaving(true);
+    setSaveError(null);
+    const { error } = await supabase
+      .from("league_members")
+      .update({ submission_id: submission.id })
+      .eq("league_id", leagueId)
+      .eq("user_id", user.id);
+    setSaving(false);
+    if (error) { setSaveError(error.message); return; }
+    setSaved(true);
+  }
+
+  if (loading) return (
+    <Modal title="Enter Your Bracket" onClose={onClose}>
+      <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>Loading…</p>
+    </Modal>
+  );
+
+  if (saved) return (
+    <Modal title="You're In!" onClose={onClose}>
+      <div className="text-center py-4">
+        <div className="text-5xl mb-4">🏆</div>
+        <p className="font-bold text-white mb-1">Bracket entered for</p>
+        <p className="font-black mb-4" style={{ color: "#c8f000", fontSize: "1.1rem" }}>{leagueName}</p>
+        <p className="text-xs mb-6" style={{ color: "rgba(255,255,255,0.4)" }}>
+          {submission.group_picks_count} picks entered · good luck!
+        </p>
+        <button onClick={onClose} className="w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95"
+          style={{ background: "linear-gradient(135deg,#c8f000,#84cc16)", color: "#1a0533" }}>Done</button>
+      </div>
+    </Modal>
+  );
+
+  return (
+    <Modal title="Enter Your Bracket" onClose={onClose}>
+      <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.45)" }}>
+        Select a bracket to compete with in <span style={{ color: "white", fontWeight: 600 }}>{leagueName}</span>.
+        You can only enter one bracket per league.
+      </p>
+      {/* League rules callout */}
+      <div className="flex items-start gap-2.5 px-3 py-2.5 rounded-lg mb-5"
+        style={{ background: "rgba(200,240,0,0.06)", border: "1px solid rgba(200,240,0,0.15)" }}>
+        <span className="text-sm mt-0.5">ℹ️</span>
+        <p className="text-xs" style={{ color: "rgba(255,255,255,0.55)" }}>
+          Leagues use <span style={{ color: "#c8f000", fontWeight: 700 }}>Winner Only</span> mode. Only brackets made in Winner Only mode can be entered. Score-mode brackets are not eligible.
+        </p>
+      </div>
+
+      {!submission ? (
+        <div className="text-center">
+          <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.45)" }}>
+            You haven't made any picks yet. Complete a Winner Only bracket first.
+          </p>
+          <button onClick={() => { onClose(); onNavigate("groups"); }}
+            className="w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95"
+            style={{ background: "linear-gradient(135deg,#c8f000,#84cc16)", color: "#1a0533" }}>
+            Make My Picks
+          </button>
+        </div>
+      ) : submission.mode === "score" ? (
+        <div>
+          <div className="rounded-xl px-4 py-3 mb-4"
+            style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)" }}>
+            <div className="flex items-center gap-2 mb-0.5">
+              <span className="text-base">🚫</span>
+              <p className="font-bold text-sm" style={{ color: "#ef4444" }}>Score Mode — Not Eligible</p>
+            </div>
+            <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
+              Your current bracket is in Score Mode. Leagues only accept Winner Only brackets.
+            </p>
+          </div>
+          <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)" }}>
+            Go to <strong style={{ color: "white" }}>My Brackets</strong>, create a new bracket in <strong style={{ color: "#c8f000" }}>Winner Only</strong> mode, make your picks, then come back to enter it.
+          </p>
+          <button onClick={() => { onClose(); onNavigate("mine"); }}
+            className="w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95"
+            style={{ background: "linear-gradient(135deg,#c8f000,#84cc16)", color: "#1a0533" }}>
+            Go to My Brackets
+          </button>
+        </div>
+      ) : (
+        <div>
+          <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>My Brackets</p>
+          <div className="rounded-xl px-4 py-3 mb-5"
+            style={{ background: "rgba(200,240,0,0.07)", border: "1px solid rgba(200,240,0,0.25)" }}>
+            <div className="flex items-center justify-between mb-0.5">
+              <div className="flex items-center gap-2">
+                <span className="text-base">📋</span>
+                <p className="font-bold text-sm" style={{ color: "white" }}>My Bracket</p>
+              </div>
+              <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
+                style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000" }}>
+                Winner Only ✓
+              </span>
+            </div>
+            <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
+              {submission.group_picks_count} group picks · Last updated {new Date(submission.updated_at).toLocaleDateString()}
+            </p>
+          </div>
+          {saveError && <p className="text-xs px-3 py-2 rounded-lg mb-3" style={{ background: "rgba(239,68,68,0.1)", color: "#ef4444" }}>{saveError}</p>}
+          <button onClick={handleSelect} disabled={saving}
+            className="w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95"
+            style={{ background: saving ? "rgba(200,240,0,0.3)" : "linear-gradient(135deg,#c8f000,#84cc16)", color: "#1a0533" }}>
+            {saving ? "Entering…" : "Enter This Bracket"}
+          </button>
+        </div>
+      )}
+    </Modal>
+  );
+}
+
+// ── League Rankings Tab ───────────────────────────────────────────────────────
+
+function LeagueRankings({ leagueId }) {
+  const { user } = useAuth();
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    getLeagueLeaderboard(leagueId)
+      .then(data => { setRows(data); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, [leagueId]);
+
+  if (loading) return (
+    <div className="flex items-center justify-center py-12">
+      <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Loading rankings…</p>
+    </div>
+  );
+
+  if (rows.length === 0) return (
+    <div className="flex flex-col items-center justify-center py-12 gap-2">
+      <span className="text-3xl">📭</span>
+      <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>No members have entered a bracket yet.</p>
+    </div>
+  );
+
+  return (
+    <div className="flex flex-col gap-3 py-4">
+      {rows.map((row, i) => {
+        const isMe = user && row.userId === user.id;
+        const rank = i + 1;
+        return (
+          <div key={row.userId} className="rounded-xl px-4 py-4"
+            style={{
+              background: isMe ? "rgba(200,240,0,0.05)" : "rgba(255,255,255,0.03)",
+              border: isMe ? "1px solid rgba(200,240,0,0.2)" : "1px solid rgba(255,255,255,0.07)",
+            }}>
+
+            {/* Top row: rank + avatar + name + stats */}
+            <div className="flex items-center gap-3">
+              <RankBadge rank={rank} />
+              <Avatar url={row.avatarUrl} username={row.username} size={32} />
+              <div className="flex-1 min-w-0">
+                <span className="font-bold text-sm" style={{ color: isMe ? "#c8f000" : "rgba(255,255,255,0.9)" }}>
+                  {row.username}
+                  {isMe && <span className="ml-1 text-xs" style={{ color: "rgba(200,240,0,0.55)" }}>(you)</span>}
+                </span>
+              </div>
+
+              {/* Stat chips */}
+              <div className="flex items-center gap-2 shrink-0">
+                <div className="text-center px-2.5 py-1.5 rounded-lg" style={{ background: "rgba(200,240,0,0.08)", minWidth: 52 }}>
+                  <p className="text-xs font-black tabular-nums" style={{ color: "#c8f000" }}>
+                    {row.points ?? "—"}
+                  </p>
+                  <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.6rem" }}>PTS</p>
+                </div>
+                <div className="text-center px-2.5 py-1.5 rounded-lg hidden sm:block" style={{ background: "rgba(34,197,94,0.07)", minWidth: 52 }}>
+                  <p className="text-xs font-black tabular-nums" style={{ color: "#22c55e" }}>
+                    {row.correct ?? "—"}
+                  </p>
+                  <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.6rem" }}>CORRECT</p>
+                </div>
+                <div className="text-center px-2.5 py-1.5 rounded-lg hidden sm:block" style={{ background: "rgba(239,68,68,0.07)", minWidth: 52 }}>
+                  <p className="text-xs font-black tabular-nums" style={{ color: "#ef4444" }}>
+                    {row.incorrect ?? "—"}
+                  </p>
+                  <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.6rem" }}>WRONG</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom row: bracket picks */}
+            <div className="mt-2.5 pl-10">
+              {row.hasBracket ? (
+                <div className="flex flex-wrap gap-x-4 gap-y-1">
+                  {row.champion && (
+                    <div className="flex items-center gap-1">
+                      <span style={{ fontSize: "0.8rem" }}>🏆</span>
+                      <TeamFlag name={row.champion} />
+                    </div>
+                  )}
+                  {row.finalist && row.finalist !== row.champion && (
+                    <div className="flex items-center gap-1">
+                      <span style={{ fontSize: "0.8rem" }}>🥈</span>
+                      <TeamFlag name={row.finalist} />
+                    </div>
+                  )}
+                  {(row.semis ?? []).filter(t => t && t !== row.champion && t !== row.finalist).map(team => (
+                    <div key={team} className="flex items-center gap-1">
+                      <span className="text-xs font-bold" style={{ color: "rgba(255,255,255,0.3)" }}>SF</span>
+                      <TeamFlag name={team} />
+                    </div>
+                  ))}
+                  {!row.champion && !row.finalist && (
+                    <span className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>Group picks only — no knockout picks yet</span>
+                  )}
+                </div>
+              ) : (
+                <p className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>No bracket entered yet</p>
+              )}
+            </div>
+
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ── League Detail View ────────────────────────────────────────────────────────
+
+function LeagueDetail({ league, mySubmissionId, onBack, onEnterBracket, onNavigate }) {
+  const { user } = useAuth();
+  const [tab, setTab] = useState("rankings");
+
+  return (
+    <div>
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-6">
+        <button onClick={onBack}
+          className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg transition-all"
+          style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.09)" }}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6" /></svg>
+          Leagues
+        </button>
+        <div>
+          <div className="flex items-center gap-2">
+            <h2 style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "1.5rem", color: "white", letterSpacing: "0.04em", lineHeight: 1 }}>
+              {league.name}
+            </h2>
+            {league.is_public && (
+              <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000" }}>Public</span>
+            )}
+          </div>
+          {league.description && <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>{league.description}</p>}
+        </div>
+      </div>
+
+      {/* No bracket warning */}
+      {!mySubmissionId && (
+        <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl mb-5"
+          style={{ background: "rgba(249,115,22,0.08)", border: "1px solid rgba(249,115,22,0.2)" }}>
+          <p className="text-sm" style={{ color: "#f97316" }}>You haven't entered a bracket in this league yet.</p>
+          <button onClick={onEnterBracket}
+            className="px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 transition-all active:scale-95"
+            style={{ background: "rgba(249,115,22,0.15)", color: "#f97316", border: "1px solid rgba(249,115,22,0.3)" }}>
+            Enter Bracket
+          </button>
+        </div>
+      )}
+
+      {/* Tabs */}
+      <div className="flex gap-2 mb-5">
+        {[{ id: "rankings", label: "Rankings" }, { id: "info", label: "League Info" }].map(t => (
+          <button key={t.id} onClick={() => setTab(t.id)}
+            className="px-4 py-1.5 rounded-full text-xs font-bold transition-all"
+            style={{
+              background: tab === t.id ? "#c8f000" : "rgba(255,255,255,0.06)",
+              color: tab === t.id ? "#1a0533" : "rgba(255,255,255,0.5)",
+              border: tab === t.id ? "none" : "1px solid rgba(255,255,255,0.1)",
+            }}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {tab === "rankings" && <LeagueRankings leagueId={league.id} />}
+
+      {tab === "info" && (
+        <div className="flex flex-col gap-3">
+          <div className="rounded-xl px-5 py-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>Join Code</p>
+            <p className="font-black text-2xl tracking-[0.2em]" style={{ color: "#c8f000", fontFamily: "'Bebas Neue',sans-serif" }}>{league.join_code}</p>
+            <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.3)" }}>Share this code so others can join</p>
+          </div>
+          <div className="rounded-xl px-5 py-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.3)" }}>Visibility</p>
+            <p className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.8)" }}>{league.is_public ? "Public — visible to all" : "Private — invite only"}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Main Leagues Page ─────────────────────────────────────────────────────────
 
 export default function Leagues({ onNavigate }) {
   const { user } = useAuth();
@@ -31,6 +386,8 @@ export default function Leagues({ onNavigate }) {
   const [loadingPublic, setLoadingPublic] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [showJoin, setShowJoin] = useState(false);
+  const [bracketLeague, setBracketLeague] = useState(null);
+  const [selectedLeague, setSelectedLeague] = useState(null); // { league, submission_id }
   const [joinCode, setJoinCode] = useState("");
   const [joinError, setJoinError] = useState(null);
   const [joinLoading, setJoinLoading] = useState(false);
@@ -45,10 +402,10 @@ export default function Leagues({ onNavigate }) {
     setLoadingMine(true);
     supabase
       .from("league_members")
-      .select("league_id, leagues(id, name, description, join_code, is_public, creator_id)")
+      .select("league_id, submission_id, leagues(id, name, description, join_code, is_public, creator_id)")
       .eq("user_id", user.id)
       .then(({ data }) => {
-        setMyLeagues((data ?? []).map(r => r.leagues).filter(Boolean));
+        setMyLeagues((data ?? []).map(r => ({ ...r.leagues, submission_id: r.submission_id })).filter(Boolean));
         setLoadingMine(false);
       });
   }
@@ -57,7 +414,7 @@ export default function Leagues({ onNavigate }) {
     setLoadingPublic(true);
     supabase
       .from("leagues")
-      .select("id, name, description, join_code, creator_id, profiles(username)")
+      .select("id, name, description, join_code, creator_id")
       .eq("is_public", true)
       .order("created_at", { ascending: false })
       .limit(50)
@@ -72,22 +429,21 @@ export default function Leagues({ onNavigate }) {
     setCreateLoading(true);
     setCreateError(null);
     const code = generateJoinCode();
-    const { error } = await supabase.from("leagues").insert({
+    await supabase.from("leagues").insert({
       name: createName.trim(),
       description: createDesc.trim() || null,
       creator_id: user.id,
       join_code: code,
       is_public: createPublic,
     }).select("id").single().then(async ({ data, error }) => {
-      if (error) return { error };
+      if (error) { setCreateError(error.message); setCreateLoading(false); return; }
       await supabase.from("league_members").insert({ league_id: data.id, user_id: user.id });
-      return { error: null };
+      setCreateLoading(false);
+      setShowCreate(false);
+      setCreateName(""); setCreateDesc(""); setCreatePublic(false);
+      loadMyLeagues(); loadPublicLeagues();
+      setBracketLeague({ id: data.id, name: createName.trim() });
     });
-    setCreateLoading(false);
-    if (error) { setCreateError(error.message); return; }
-    setShowCreate(false);
-    setCreateName(""); setCreateDesc(""); setCreatePublic(false);
-    loadMyLeagues(); loadPublicLeagues();
   }
 
   async function handleJoin(e) {
@@ -103,15 +459,47 @@ export default function Leagues({ onNavigate }) {
     if (error) { setJoinError(error.message); return; }
     setShowJoin(false); setJoinCode("");
     loadMyLeagues();
+    setBracketLeague({ id: league.id, name: league.name });
   }
 
-  async function handleJoinPublic(leagueId) {
-    await supabase.from("league_members").insert({ league_id: leagueId, user_id: user.id });
+  async function handleJoinPublic(league) {
+    await supabase.from("league_members").insert({ league_id: league.id, user_id: user.id });
     loadMyLeagues();
+    setBracketLeague({ id: league.id, name: league.name });
   }
 
   const myLeagueIds = new Set(myLeagues.map(l => l.id));
 
+  // ── League detail drill-down ──────────────────────────────────────────────
+  if (selectedLeague) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-8">
+        <LeagueDetail
+          league={selectedLeague}
+          mySubmissionId={selectedLeague.submission_id}
+          onBack={() => { setSelectedLeague(null); loadMyLeagues(); }}
+          onEnterBracket={() => setBracketLeague({ id: selectedLeague.id, name: selectedLeague.name })}
+          onNavigate={onNavigate}
+        />
+        {bracketLeague && (
+          <BracketPickerModal
+            leagueId={bracketLeague.id}
+            leagueName={bracketLeague.name}
+            onClose={() => {
+              setBracketLeague(null);
+              loadMyLeagues();
+              // Refresh submission_id on selectedLeague
+              supabase.from("league_members").select("submission_id").eq("league_id", selectedLeague.id).eq("user_id", user.id).maybeSingle()
+                .then(({ data }) => setSelectedLeague(l => ({ ...l, submission_id: data?.submission_id ?? null })));
+            }}
+            onNavigate={onNavigate}
+          />
+        )}
+      </div>
+    );
+  }
+
+  // ── League list ───────────────────────────────────────────────────────────
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
       <div className="mb-6">
@@ -120,7 +508,6 @@ export default function Leagues({ onNavigate }) {
         <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.35)" }}>Compete with friends in private or public leagues</p>
       </div>
 
-      {/* Action buttons */}
       {user && (
         <div className="flex gap-3 mb-8">
           <button onClick={() => setShowCreate(true)}
@@ -146,22 +533,24 @@ export default function Leagues({ onNavigate }) {
         ) : (
           <div className="flex flex-col gap-3">
             {myLeagues.map(league => (
-              <div key={league.id} className="rounded-xl px-5 py-4 flex items-center justify-between gap-4"
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <p className="font-bold" style={{ color: "white" }}>{league.name}</p>
-                    {league.is_public && <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000" }}>Public</span>}
+              <button key={league.id} onClick={() => setSelectedLeague(league)}
+                className="w-full text-left rounded-xl px-5 py-4 transition-all"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", cursor: "pointer" }}
+                onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.07)"}
+                onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.04)"}>
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="font-bold" style={{ color: "white" }}>{league.name}</p>
+                      {league.is_public && <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000" }}>Public</span>}
+                      {!league.submission_id && <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(249,115,22,0.12)", color: "#f97316" }}>No bracket</span>}
+                    </div>
+                    {league.description && <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>{league.description}</p>}
+                    <p className="text-xs mt-1 font-mono" style={{ color: "rgba(255,255,255,0.2)" }}>Code: {league.join_code}</p>
                   </div>
-                  {league.description && <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>{league.description}</p>}
-                  <p className="text-xs mt-1 font-mono" style={{ color: "rgba(255,255,255,0.25)" }}>Code: {league.join_code}</p>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
                 </div>
-                <button onClick={() => onNavigate("leaderboard")}
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 transition-all"
-                  style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", border: "1px solid rgba(200,240,0,0.2)" }}>
-                  View Rankings
-                </button>
-              </div>
+              </button>
             ))}
           </div>
         )}
@@ -184,13 +573,12 @@ export default function Leagues({ onNavigate }) {
                   <div>
                     <p className="font-semibold" style={{ color: "rgba(255,255,255,0.85)" }}>{league.name}</p>
                     {league.description && <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>{league.description}</p>}
-                    <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.25)" }}>by {league.profiles?.username ?? "—"}</p>
                   </div>
                   {user && (
                     alreadyIn ? (
                       <span className="text-xs font-semibold px-3 py-1.5 rounded-lg" style={{ color: "rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.04)" }}>Joined</span>
                     ) : (
-                      <button onClick={() => handleJoinPublic(league.id)}
+                      <button onClick={() => handleJoinPublic(league)}
                         className="px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 transition-all active:scale-95"
                         style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", border: "1px solid rgba(200,240,0,0.2)" }}>
                         Join
@@ -252,6 +640,16 @@ export default function Leagues({ onNavigate }) {
             </button>
           </form>
         </Modal>
+      )}
+
+      {/* Bracket Picker Modal */}
+      {bracketLeague && (
+        <BracketPickerModal
+          leagueId={bracketLeague.id}
+          leagueName={bracketLeague.name}
+          onClose={() => { setBracketLeague(null); loadMyLeagues(); loadPublicLeagues(); }}
+          onNavigate={onNavigate}
+        />
       )}
     </div>
   );

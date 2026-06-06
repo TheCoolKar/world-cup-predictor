@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "fetch-odds": "python3 scripts/fetch_polymarket_odds.py",
     "train-model": "python3 scripts/train_model.py",
-    "scrape-ea-fc": "python3 scripts/scrape_ea_fc_ratings.py"
+    "scrape-ea-fc": "python3 scripts/scrape_ea_fc_ratings.py",
+    "fetch-results": "node scripts/fetchResults.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.1",

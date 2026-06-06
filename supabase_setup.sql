@@ -32,6 +32,7 @@ create table if not exists public.submissions (
   user_id          uuid references auth.users(id) on delete cascade,
   email            text,
   display_name     text,
+  mode             text not null default 'winner', -- 'winner' | 'score'
   picks            jsonb not null default '{}',
   scores           jsonb not null default '{}',
   bracket          jsonb not null default '{}',
@@ -41,13 +42,17 @@ create table if not exists public.submissions (
   updated_at       timestamptz not null default now()
 );
 
+alter table public.submissions
+  add column if not exists mode text not null default 'winner';
+
 create unique index if not exists submissions_user_id_idx on public.submissions(user_id);
 
 alter table public.submissions enable row level security;
 
-drop policy if exists "Users can insert their own submission" on public.submissions;
-drop policy if exists "Users can update their own submission" on public.submissions;
-drop policy if exists "Users can read their own submission"   on public.submissions;
+drop policy if exists "Users can insert their own submission"        on public.submissions;
+drop policy if exists "Users can update their own submission"        on public.submissions;
+drop policy if exists "Users can read their own submission"          on public.submissions;
+drop policy if exists "League members can read co-member submissions" on public.submissions;
 
 create policy "Users can insert their own submission"
   on public.submissions for insert with check (auth.uid() = user_id);
@@ -57,6 +62,17 @@ create policy "Users can update their own submission"
 
 create policy "Users can read their own submission"
   on public.submissions for select using (auth.uid() = user_id);
+
+create policy "League members can read co-member submissions"
+  on public.submissions for select
+  using (
+    exists (
+      select 1 from public.league_members lm1
+      join public.league_members lm2 on lm1.league_id = lm2.league_id
+      where lm1.user_id = auth.uid()
+        and lm2.submission_id = public.submissions.id
+    )
+  );
 
 -- ── Admin role ───────────────────────────────────────────────────────────────
 
@@ -210,26 +226,46 @@ alter table public.leagues enable row level security;
 -- Created before leagues RLS policies because those policies reference this table.
 
 create table if not exists public.league_members (
-  id        uuid primary key default gen_random_uuid(),
-  league_id uuid not null references public.leagues(id) on delete cascade,
-  user_id   uuid not null references auth.users(id) on delete cascade,
-  joined_at timestamptz not null default now(),
+  id            uuid primary key default gen_random_uuid(),
+  league_id     uuid not null references public.leagues(id) on delete cascade,
+  user_id       uuid not null references auth.users(id) on delete cascade,
+  submission_id uuid references public.submissions(id) on delete set null,
+  joined_at     timestamptz not null default now(),
   unique (league_id, user_id)
 );
 
+alter table public.league_members
+  add column if not exists submission_id uuid references public.submissions(id) on delete set null;
+
 alter table public.league_members enable row level security;
+
+-- Security-definer function breaks the RLS recursion:
+-- it runs as the DB owner (bypasses RLS) to check if the current user
+-- is a member of a given league, which we then use in the policy below.
+create or replace function public.current_user_in_league(p_league_id uuid)
+returns boolean as $$
+  select exists (
+    select 1 from public.league_members
+    where league_id = p_league_id and user_id = auth.uid()
+  );
+$$ language sql security definer stable;
 
 drop policy if exists "Members can view league membership"  on public.league_members;
 drop policy if exists "Users can join leagues"              on public.league_members;
+drop policy if exists "Users can update own membership"     on public.league_members;
 drop policy if exists "Users can leave leagues"             on public.league_members;
 
 create policy "Members can view league membership"
   on public.league_members for select
-  using (auth.uid() = user_id);
+  using (auth.uid() = user_id or public.current_user_in_league(league_id));
 
 create policy "Users can join leagues"
   on public.league_members for insert
   with check (auth.uid() = user_id);
+
+create policy "Users can update own membership"
+  on public.league_members for update
+  using (auth.uid() = user_id);
 
 create policy "Users can leave leagues"
   on public.league_members for delete
@@ -249,7 +285,8 @@ create policy "Public leagues visible to all"
 create policy "Members can view their leagues"
   on public.leagues for select
   using (
-    exists (select 1 from public.league_members where league_id = id and user_id = auth.uid())
+    creator_id = auth.uid()
+    or exists (select 1 from public.league_members where league_id = id and user_id = auth.uid())
   );
 
 create policy "Authenticated users can create"
@@ -259,3 +296,27 @@ create policy "Authenticated users can create"
 create policy "Creator can update/delete league"
   on public.leagues for all
   using (auth.uid() = creator_id);
+
+-- ── Match results ─────────────────────────────────────────────────────────────
+
+create table if not exists public.match_results (
+  match_id   text primary key,          -- app fixture id: "A1", "B3", etc.
+  home_score int,
+  away_score int,
+  result     text,                       -- 'home' | 'away' | 'draw'
+  source     text not null default 'manual', -- 'api' | 'manual'
+  entered_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.match_results enable row level security;
+
+drop policy if exists "Anyone can read results"   on public.match_results;
+drop policy if exists "Admins can manage results" on public.match_results;
+
+create policy "Anyone can read results"
+  on public.match_results for select using (true);
+
+create policy "Admins can manage results"
+  on public.match_results for all
+  using (exists (select 1 from public.profiles where id = auth.uid() and is_admin = true));

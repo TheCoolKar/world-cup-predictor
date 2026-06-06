@@ -3,8 +3,11 @@
  * Shows group pick progress, bracket advancement picks, champion selection.
  */
 
+import { useEffect, useState }  from "react";
 import { getPicks, getBracket } from "../utils/storage";
 import { useAuth }              from "../hooks/useAuth";
+import { supabase }             from "../lib/supabase";
+import { calculateGroupScores, buildResultsMap } from "../utils/scoring";
 import fixtures                 from "../data/wc2026_fixtures.json";
 import modelWeights             from "../data/model_weights.json";
 import polymarketOdds           from "../data/polymarket_odds.json";
@@ -212,6 +215,17 @@ export default function Dashboard({ onNavigate }) {
   const picks   = getPicks();
   const bracket = getBracket();
 
+  // ── live scoring ───────────────────────────────────────────────────────────
+  const [myScore, setMyScore] = useState(null);
+
+  useEffect(() => {
+    supabase.from("match_results").select("*").then(({ data }) => {
+      if (!data || !data.length) return;
+      const resultsMap = buildResultsMap(data);
+      setMyScore(calculateGroupScores(picks, resultsMap));
+    });
+  }, []);
+
   // ── group stage stats ──────────────────────────────────────────────────────
   const totalGroupMatches = fixtures.filter(f => f.group).length; // 72
   const pickedGroupCount  = Object.keys(picks).length;
@@ -246,6 +260,44 @@ export default function Dashboard({ onNavigate }) {
           My Dashboard
         </h2>
       </div>
+
+      {/* ── My Score ── */}
+      {myScore && (
+        <section
+          className="rounded-2xl p-5 mb-6 flex items-center gap-6"
+          style={{ background: "linear-gradient(135deg, rgba(200,240,0,0.07), rgba(200,240,0,0.03))", border: "1px solid rgba(200,240,0,0.15)" }}
+        >
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0"
+            style={{ background: "rgba(200,240,0,0.1)", border: "1px solid rgba(200,240,0,0.2)" }}>
+            🎯
+          </div>
+          <div className="flex-1">
+            <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: "#c8f000" }}>
+              My Score · Group Stage
+            </p>
+            <div className="flex items-center gap-4 flex-wrap">
+              <div className="text-center">
+                <p className="font-black text-2xl leading-none" style={{ fontFamily: "'Bebas Neue', sans-serif", color: "#c8f000" }}>
+                  {myScore.points}
+                </p>
+                <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>pts</p>
+              </div>
+              <div className="text-center">
+                <p className="font-black text-2xl leading-none" style={{ fontFamily: "'Bebas Neue', sans-serif", color: "#22c55e" }}>
+                  {myScore.correct}
+                </p>
+                <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>correct</p>
+              </div>
+              <div className="text-center">
+                <p className="font-black text-2xl leading-none" style={{ fontFamily: "'Bebas Neue', sans-serif", color: "#ef4444" }}>
+                  {myScore.incorrect}
+                </p>
+                <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>wrong</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── Summary stats ── */}
       <div className="grid grid-cols-3 gap-3 mb-8">
