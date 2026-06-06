@@ -286,7 +286,7 @@ export default function App() {
 
         <div className="shrink-0" style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "12px 0" }} />
 
-        <SideNavItem label="Rules & Prize" icon={<IconTrophy />} active={false} onClick={() => { setShowRules(true); setSidebarOpen(false); }} accent="#f59e0b" muted />
+        <SideNavItem label="Rules" icon={<IconTrophy />} active={false} onClick={() => { setShowRules(true); setSidebarOpen(false); }} accent="#f59e0b" muted />
 
         {/* Account section — only when signed in */}
         {user && (
@@ -480,7 +480,7 @@ export default function App() {
 
                     <div className="mt-1">
                       <button
-                        onClick={() => navigate("mine")}
+                        onClick={() => navigate("leagues")}
                         className="group inline-flex items-center gap-3 rounded-2xl px-6 py-4 font-black transition-all duration-200 active:scale-95"
                         style={{ background: "linear-gradient(135deg,#dc2626,#b91c1c)", boxShadow: "0 0 32px rgba(220,38,38,0.55),0 4px 16px rgba(0,0,0,0.4)", border: "1px solid rgba(255,100,100,0.3)", animation: "ctaPulse 2.5s ease-in-out infinite" }}
                         onMouseEnter={e => { e.currentTarget.style.background = "linear-gradient(135deg,#ef4444,#dc2626)"; e.currentTarget.style.boxShadow = "0 0 48px rgba(239,68,68,0.7)"; e.currentTarget.style.animation = "none"; }}
@@ -488,14 +488,14 @@ export default function App() {
                       >
                         <span style={{ fontSize: "1.6rem", lineHeight: 1 }}>🏆</span>
                         <div className="text-left">
-                          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.5rem", letterSpacing: "0.06em", color: "white", lineHeight: 1 }}>WIN $1,000</div>
-                          <div className="text-xs font-semibold mt-0.5" style={{ color: "rgba(255,255,255,0.75)", letterSpacing: "0.04em" }}>Predict the group stage correctly →</div>
+                          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.5rem", letterSpacing: "0.06em", color: "white", lineHeight: 1 }}>JOIN A LEAGUE</div>
+                          <div className="text-xs font-semibold mt-0.5" style={{ color: "rgba(255,255,255,0.75)", letterSpacing: "0.04em" }}>Compete with friends & climb the rankings →</div>
                         </div>
                         <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" style={{ color: "rgba(255,255,255,0.7)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                         </svg>
                       </button>
-                      <p className="text-xs mt-2" style={{ color: "rgba(255,255,255,0.25)" }}>Make your picks · Submit your bracket · Compete for the prize</p>
+                      <p className="text-xs mt-2" style={{ color: "rgba(255,255,255,0.25)" }}>Make your picks · Submit your bracket · Compete with friends</p>
                       <button onClick={() => setShowRules(true)} className="text-xs mt-1 underline underline-offset-2 transition-colors" style={{ color: "rgba(200,240,0,0.45)" }} onMouseEnter={e => e.currentTarget.style.color = "#c8f000"} onMouseLeave={e => e.currentTarget.style.color = "rgba(200,240,0,0.45)"}>
                         View Rules & Prize Details →
                       </button>
@@ -545,7 +545,7 @@ export default function App() {
             <footer className="text-center py-5 text-xs shrink-0" style={{ color: "rgba(255,255,255,0.2)", borderTop: "1px solid rgba(255,255,255,0.06)", background: "#120326" }}>
               FIFA World Cup 2026 Predictor · ELO ratings + recent form · June 11 – July 19, 2026
               <span className="mx-2" style={{ color: "rgba(255,255,255,0.1)" }}>·</span>
-              <button onClick={() => setShowRules(true)} className="underline underline-offset-2 transition-colors" style={{ color: "rgba(200,240,0,0.35)" }} onMouseEnter={e => e.currentTarget.style.color = "#c8f000"} onMouseLeave={e => e.currentTarget.style.color = "rgba(200,240,0,0.35)"}>Rules & Prize</button>
+              <button onClick={() => setShowRules(true)} className="underline underline-offset-2 transition-colors" style={{ color: "rgba(200,240,0,0.35)" }} onMouseEnter={e => e.currentTarget.style.color = "#c8f000"} onMouseLeave={e => e.currentTarget.style.color = "rgba(200,240,0,0.35)"}>Rules</button>
               <span className="mx-2" style={{ color: "rgba(255,255,255,0.1)" }}>·</span>
               <button onClick={() => setDisclaimerDone(false)} className="underline underline-offset-2 transition-colors" style={{ color: "rgba(255,255,255,0.2)" }} onMouseEnter={e => e.currentTarget.style.color = "rgba(255,255,255,0.5)"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.2)"}>Terms & Disclaimer</button>
               <span className="mx-2" style={{ color: "rgba(255,255,255,0.1)" }}>·</span>
