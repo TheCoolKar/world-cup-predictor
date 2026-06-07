@@ -482,9 +482,10 @@ function LeagueChat({ leagueId }) {
 
 // ── League Detail View ────────────────────────────────────────────────────────
 
-function LeagueDetail({ league, mySubmissionId, onBack, onEnterBracket, onNavigate }) {
+function LeagueDetail({ league, mySubmissionId, onBack, onEnterBracket, onNavigate, onDelete, deleting }) {
   const { user } = useAuth();
   const [tab, setTab] = useState("rankings");
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   return (
     <div>
@@ -550,6 +551,37 @@ function LeagueDetail({ league, mySubmissionId, onBack, onEnterBracket, onNaviga
             <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.3)" }}>Visibility</p>
             <p className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.8)" }}>{league.is_public ? "Public — visible to all" : "Private — invite only"}</p>
           </div>
+
+          {user?.id === league.creator_id && (
+            <div className="mt-2">
+              {!confirmDelete ? (
+                <button
+                  onClick={() => setConfirmDelete(true)}
+                  className="w-full py-2.5 rounded-xl text-sm font-bold transition-all"
+                  style={{ background: "rgba(239,68,68,0.07)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.2)" }}>
+                  Delete League
+                </button>
+              ) : (
+                <div className="rounded-xl px-4 py-3" style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)" }}>
+                  <p className="text-sm font-semibold mb-3" style={{ color: "#ef4444" }}>
+                    Delete <strong>{league.name}</strong>? This cannot be undone. All members will be removed.
+                  </p>
+                  <div className="flex gap-2">
+                    <button onClick={onDelete} disabled={deleting}
+                      className="flex-1 py-2 rounded-lg text-sm font-black transition-all active:scale-95"
+                      style={{ background: deleting ? "rgba(239,68,68,0.3)" : "#ef4444", color: "white" }}>
+                      {deleting ? "Deleting…" : "Yes, Delete"}
+                    </button>
+                    <button onClick={() => setConfirmDelete(false)}
+                      className="flex-1 py-2 rounded-lg text-sm font-bold"
+                      style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.6)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -571,6 +603,7 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null }) {
   const [selectedLeague, setSelectedLeague] = useState(
     initialLeagueCtx ? { id: initialLeagueCtx.leagueId, name: initialLeagueCtx.leagueName } : null
   );
+  const [deletingLeague, setDeletingLeague] = useState(false);
   const [joinCode, setJoinCode] = useState("");
   const [joinError, setJoinError] = useState(null);
   const [joinLoading, setJoinLoading] = useState(false);
@@ -653,6 +686,15 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null }) {
 
   const myLeagueIds = new Set(myLeagues.map(l => l.id));
 
+  async function handleDeleteLeague() {
+    setDeletingLeague(true);
+    await supabase.from("leagues").delete().eq("id", selectedLeague.id);
+    setDeletingLeague(false);
+    setSelectedLeague(null);
+    loadMyLeagues();
+    loadPublicLeagues();
+  }
+
   // ── League detail drill-down ──────────────────────────────────────────────
   if (selectedLeague) {
     return (
@@ -663,6 +705,8 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null }) {
           onBack={() => { setSelectedLeague(null); loadMyLeagues(); }}
           onEnterBracket={() => setBracketLeague({ id: selectedLeague.id, name: selectedLeague.name })}
           onNavigate={onNavigate}
+          onDelete={handleDeleteLeague}
+          deleting={deletingLeague}
         />
         {bracketLeague && (
           <BracketPickerModal
