@@ -27,7 +27,7 @@ import { getFlagClass } from '../utils/flags';
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 const GROUPS        = ["A","B","C","D","E","F","G","H","I","J","K","L"];
-const GROUP_MATCHES = fixtures;
+const GROUP_MATCHES = fixtures.filter(m => m.group);
 const ROUNDS        = ["R32","R16","QF","SF","F"];
 const ROUND_LABELS  = {
   R32:"Round of 32", R16:"Round of 16",
@@ -629,7 +629,10 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
   const [submitting,   setSubmitting]   = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // null | "success" | "error"
   const [submitError,  setSubmitError]  = useState(null);
+  const [isSubmitted,  setIsSubmitted]  = useState(false);
+  const [saveIndicator,setSaveIndicator]= useState(null); // null | "saving" | "saved"
   const autoSaveRef = useRef(null);
+  const saveIndicatorRef = useRef(null);
   const leagueLinkedRef = useRef(false);
   const restoredRef = useRef(false);
 
@@ -641,10 +644,12 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
     if (!user || restoredRef.current || readOnly) return;
     restoredRef.current = true;
     if (Object.keys(picks).length > 0) return;
-    supabase.from("submissions").select("picks,scores,bracket,bracket_scores")
+    supabase.from("submissions").select("picks,scores,bracket,bracket_scores,is_submitted")
       .eq("user_id", user.id).maybeSingle()
       .then(({ data }) => {
-        if (!data || Object.keys(data.picks ?? {}).length === 0) return;
+        if (!data) return;
+        setIsSubmitted(data.is_submitted ?? false);
+        if (Object.keys(data.picks ?? {}).length === 0) return;
         setPicks(data.picks);
         setScores(data.scores ?? {});
         setBw({ ...emptyWinners(), ...(data.bracket ?? {}) });
@@ -658,11 +663,12 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
 
   // Auto-save to Supabase (debounced 1.5s) whenever picks change and user is logged in
   useEffect(() => {
-    if (!user || isLocked || readOnly) return;
+    if (!user || isLocked || readOnly || isSubmitted) return;
     clearTimeout(autoSaveRef.current);
+    setSaveIndicator("saving");
     autoSaveRef.current = setTimeout(async () => {
       const hasData = Object.keys(picks).length > 0 || Object.values(bw).some(arr => Array.isArray(arr) && arr.some(Boolean));
-      if (!hasData) return;
+      if (!hasData) { setSaveIndicator(null); return; }
       await supabase.from("submissions").upsert({
         user_id:           user.id,
         email:             user.email,
@@ -675,6 +681,10 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
         group_picks_count: Object.keys(picks).length,
         updated_at:        new Date().toISOString(),
       }, { onConflict: "user_id" });
+
+      setSaveIndicator("saved");
+      clearTimeout(saveIndicatorRef.current);
+      saveIndicatorRef.current = setTimeout(() => setSaveIndicator(null), 2500);
 
       // Once per session: link this submission to any leagues that are missing it
       if (!leagueLinkedRef.current) {
@@ -695,11 +705,11 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
       }
     }, 1500);
     return () => clearTimeout(autoSaveRef.current);
-  }, [picks, scores, bw, bScores, user]);
+  }, [picks, scores, bw, bScores, user, isSubmitted]);
 
   // Persist the whole bracket object to localStorage whenever anything changes
   function save(newPicks, newScores, newBw, newBScores) {
-    if (!bracketData || isLocked || readOnly) return;
+    if (!bracketData || isLocked || readOnly || isSubmitted) return;
     upsertBracket({ ...bracketData, picks: newPicks, scores: newScores, bracket: newBw, bracketScores: newBScores });
   }
 
@@ -721,9 +731,11 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
         bracket:           bw,
         bracket_scores:    bScores,
         group_picks_count: Object.keys(picks).length,
+        is_submitted:      true,
         updated_at:        new Date().toISOString(),
       }, { onConflict: "user_id" });
       if (error) throw error;
+      setIsSubmitted(true);
       setSubmitStatus("success");
     } catch (err) {
       setSubmitError(err.message);
@@ -731,6 +743,17 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
     } finally {
       setSubmitting(false);
     }
+  }
+
+  async function handleWithdraw() {
+    if (!user || isLocked) return;
+    try {
+      const { error } = await supabase.from("submissions")
+        .update({ is_submitted: false }).eq("user_id", user.id);
+      if (error) throw error;
+      setIsSubmitted(false);
+      setSubmitStatus(null);
+    } catch { /* ignore */ }
   }
 
   const { byGroup, thirds, r32Slots } = useMemo(()=>{
@@ -754,7 +777,7 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
   // ── Handlers ────────────────────────────────────────────────────────────────
 
   function handleGroupPick(matchId, pick) {
-    if (isLocked || readOnly) return;
+    if (isLocked || readOnly || isSubmitted) return;
     const newPicks = {...picks, [matchId]: pick};
     const fresh = emptyWinners();
     setPicks(newPicks);
@@ -764,39 +787,39 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
   }
 
   function handleGroupScore(matchId, h, a) {
-    if (isLocked || readOnly) return;
+    if (isLocked || readOnly || isSubmitted) return;
     const newScores = {...scores, [matchId]:{home:h,away:a}};
     setScores(newScores);
     save(picks, newScores, bw, bScores);
   }
 
   function handleBracketPick(round, matchIdx, team) {
-    if (isLocked || readOnly) return;
+    if (isLocked || readOnly || isSubmitted) return;
     const next=applyPick(bw,round,matchIdx,team,false);
     setBw(next); save(picks, scores, next, bScores);
   }
 
   function handleBracketForcePick(round, matchIdx, team) {
-    if (isLocked || readOnly) return;
+    if (isLocked || readOnly || isSubmitted) return;
     const next=applyPick(bw,round,matchIdx,team,true);
     setBw(next); save(picks, scores, next, bScores);
   }
 
   function handleBracketScore(scoreKey, h, a) {
-    if (isLocked || readOnly) return;
+    if (isLocked || readOnly || isSubmitted) return;
     const newBs = {...bScores, [scoreKey]:{home:h,away:a}};
     setBScores(newBs);
     save(picks, scores, bw, newBs);
   }
 
   function handle3PPick(team) {
-    if (isLocked || readOnly) return;
+    if (isLocked || readOnly || isSubmitted) return;
     const next={...bw,"3P":[team===bw["3P"][0]?null:team]};
     setBw(next); save(picks, scores, next, bScores);
   }
 
   function handle3PScore(h, a) {
-    if (isLocked || readOnly) return;
+    if (isLocked || readOnly || isSubmitted) return;
     const key="3P_0";
     const newBs = {...bScores, [key]:{home:h,away:a}};
     setBScores(newBs);
@@ -849,10 +872,30 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
               style={{background:"rgba(99,102,241,0.12)",color:"#a5b4fc",border:"1px solid rgba(99,102,241,0.25)"}}>
               View Only
             </span>
+          ) : isLocked ? (
+            <span className="ml-auto text-xs px-2 py-0.5 rounded-full font-semibold"
+              style={{background:"rgba(239,68,68,0.12)",color:"#ef4444",border:"1px solid rgba(239,68,68,0.25)"}}>
+              🔒 Locked
+            </span>
+          ) : isSubmitted ? (
+            <span className="ml-auto text-xs px-2 py-0.5 rounded-full font-semibold"
+              style={{background:"rgba(34,197,94,0.12)",color:"#22c55e",border:"1px solid rgba(34,197,94,0.25)"}}>
+              ✓ Submitted
+            </span>
+          ) : saveIndicator === "saving" ? (
+            <span className="ml-auto text-xs px-2 py-0.5 rounded-full font-semibold"
+              style={{background:"rgba(255,255,255,0.06)",color:"rgba(255,255,255,0.35)",border:"1px solid rgba(255,255,255,0.1)"}}>
+              Saving…
+            </span>
+          ) : saveIndicator === "saved" ? (
+            <span className="ml-auto text-xs px-2 py-0.5 rounded-full font-semibold"
+              style={{background:"rgba(200,240,0,0.1)",color:"#c8f000",border:"1px solid rgba(200,240,0,0.2)"}}>
+              ✓ Saved
+            </span>
           ) : (
             <span className="ml-auto text-xs px-2 py-0.5 rounded-full font-semibold"
-              style={{background: isLocked ? "rgba(239,68,68,0.12)" : "rgba(200,240,0,0.1)", color: isLocked ? "#ef4444" : "#c8f000", border: isLocked ? "1px solid rgba(239,68,68,0.25)" : "1px solid rgba(200,240,0,0.2)"}}>
-              {isLocked ? "🔒 Locked" : "Auto-saved"}
+              style={{background:"rgba(255,255,255,0.05)",color:"rgba(255,255,255,0.3)",border:"1px solid rgba(255,255,255,0.08)"}}>
+              Draft
             </span>
           )}
         </div>
@@ -1047,11 +1090,11 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
                 The World Cup has started. Your picks are saved to your account and can be viewed in leagues.
               </p>
             </>
-          ) : submitStatus === "success" ? (
+          ) : isSubmitted ? (
             <>
-              <p className="font-bold text-sm" style={{color:"#c8f000"}}>🎉 Bracket submitted!</p>
+              <p className="font-bold text-sm" style={{color:"#22c55e"}}>✓ Bracket Submitted</p>
               <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.4)"}}>
-                Your picks are saved. You can update them any time before the tournament starts.
+                Your official entry is locked in. Click "Edit Bracket" to make changes before the tournament starts.
               </p>
             </>
           ) : (
@@ -1072,37 +1115,37 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
         </div>
 
         {!isLocked && (
-          <button
-            onClick={handleSubmit}
-            disabled={submitting || !allPicked}
-            className="shrink-0 px-6 py-3 rounded-xl font-black text-sm transition-all duration-150 active:scale-95"
-            style={{
-              background: !allPicked
-                ? "rgba(255,255,255,0.06)"
-                : submitting
-                ? "rgba(220,38,38,0.4)"
-                : submitStatus === "success"
-                ? "linear-gradient(135deg,#c8f000,#84cc16)"
-                : "linear-gradient(135deg,#dc2626,#b91c1c)",
-              color: !allPicked
-                ? "rgba(255,255,255,0.25)"
-                : submitStatus === "success"
-                ? "#1a0533"
-                : "white",
-              cursor: !allPicked ? "not-allowed" : "pointer",
-              boxShadow: allPicked && submitStatus !== "success"
-                ? "0 0 24px rgba(220,38,38,0.4)"
-                : "none",
-            }}
-          >
-            {submitting
-              ? "Saving…"
-              : submitStatus === "success"
-              ? "✓ Saved"
-              : user
-              ? "Submit My Bracket"
-              : "Sign In & Submit"}
-          </button>
+          isSubmitted ? (
+            <button
+              onClick={handleWithdraw}
+              className="shrink-0 px-5 py-3 rounded-xl font-black text-sm transition-all duration-150 active:scale-95"
+              style={{
+                background: "rgba(255,255,255,0.07)",
+                color: "rgba(255,255,255,0.7)",
+                border: "1px solid rgba(255,255,255,0.12)",
+              }}
+            >
+              Edit Bracket
+            </button>
+          ) : (
+            <button
+              onClick={handleSubmit}
+              disabled={submitting || !allPicked}
+              className="shrink-0 px-6 py-3 rounded-xl font-black text-sm transition-all duration-150 active:scale-95"
+              style={{
+                background: !allPicked
+                  ? "rgba(255,255,255,0.06)"
+                  : submitting
+                  ? "rgba(220,38,38,0.4)"
+                  : "linear-gradient(135deg,#dc2626,#b91c1c)",
+                color: !allPicked ? "rgba(255,255,255,0.25)" : "white",
+                cursor: !allPicked ? "not-allowed" : "pointer",
+                boxShadow: allPicked ? "0 0 24px rgba(220,38,38,0.4)" : "none",
+              }}
+            >
+              {submitting ? "Submitting…" : user ? "Submit My Bracket" : "Sign In & Submit"}
+            </button>
+          )
         )}
       </div>}
 

@@ -45,6 +45,9 @@ create table if not exists public.submissions (
 alter table public.submissions
   add column if not exists mode text not null default 'winner';
 
+alter table public.submissions
+  add column if not exists is_submitted boolean not null default false;
+
 create unique index if not exists submissions_user_id_idx on public.submissions(user_id);
 
 alter table public.submissions enable row level security;
