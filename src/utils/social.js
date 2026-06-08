@@ -83,6 +83,7 @@ export async function getLeagueLeaderboard(leagueId) {
       hasBracket: !!m.submission_id,
       champion:  bw?.F?.[0] ?? null,
       finalist:  bw?.F?.[1] ?? null,
+      third:     bw?.["3P"]?.[0] ?? null,
       semis:     (bw?.SF ?? []).filter(Boolean),
       points:    scoring.points,
       correct:   scoring.correct,

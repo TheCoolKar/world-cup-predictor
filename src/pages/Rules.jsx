@@ -8,7 +8,7 @@ export default function Rules({ onClose }) {
     {
       num: "2",
       title: "Submission Rules",
-      body: "Predictions must be submitted before the scheduled kickoff time of each match. Once a match has started, predictions for that match cannot be changed.",
+      body: "Predictions must be submitted before the tournament begins",
     },
     {
       num: "3",
@@ -92,7 +92,7 @@ export default function Rules({ onClose }) {
           <div className="mt-4 px-4 py-3 rounded-xl" style={{ background: "rgba(200,240,0,0.06)", border: "1px solid rgba(200,240,0,0.12)" }}>
             <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: "#c8f000" }}>Simple Version</p>
             <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.6)" }}>
-              1 point for every correctly predicted match result (win, loss, or draw). Predictions must be submitted before kickoff. The participant with the most points at the end of the tournament wins. In knockout matches, predictions are based on the team that advances to the next round.
+              1 point for every correctly predicted match result (win, loss, or draw). Predictions must be submitted before tournament begins.
             </p>
           </div>
         </div>

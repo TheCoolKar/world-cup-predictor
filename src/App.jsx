@@ -18,6 +18,8 @@ import SignInGate from "./components/SignInGate";
 import TeamModal     from "./pages/TeamModal";
 import Teams         from "./pages/Teams";
 import { useAuth }   from "./hooks/useAuth";
+import { supabase }  from "./lib/supabase";
+import { getFlagClass } from "./utils/flags";
 import banner        from "./assets/worldcupbanner.webp";
 import trophy        from "./assets/worldcuppng.webp";
 import wclogo        from "./assets/worldcuplogo.webp";
@@ -122,6 +124,103 @@ function CountdownBanner() {
   );
 }
 
+// ── User Profile Modal ────────────────────────────────────────────────────────
+
+function UserProfileModal({ userId, username, avatarUrl, onClose, onViewBracket }) {
+  const [profile, setProfile]     = useState(null);
+  const [submission, setSubmission] = useState(null);
+  const [loading, setLoading]     = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      supabase.from("profiles").select("username, avatar_url").eq("id", userId).maybeSingle(),
+      supabase.from("submissions").select("group_picks_count, bracket").eq("user_id", userId).maybeSingle(),
+    ]).then(([{ data: p }, { data: s }]) => {
+      setProfile(p);
+      setSubmission(s);
+      setLoading(false);
+    });
+  }, [userId]);
+
+  const displayName = profile?.username ?? username;
+  const displayAvatar = profile?.avatar_url ?? avatarUrl;
+  const champion = submission?.bracket?.F?.[0] ?? null;
+  const flagCls = champion ? getFlagClass(champion) : null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col" style={{ background: "rgba(10,2,26,0.97)", backdropFilter: "blur(12px)" }}>
+      {/* Header */}
+      <div className="flex items-center gap-3 px-5 py-4 shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+        <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "1.1rem", color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em" }}>Profile</span>
+        <button onClick={onClose}
+          className="ml-auto w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold transition-all"
+          style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.5)" }}
+          onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.15)"; e.currentTarget.style.color = "white"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.07)"; e.currentTarget.style.color = "rgba(255,255,255,0.5)"; }}>
+          ✕
+        </button>
+      </div>
+
+      {/* Body */}
+      <div className="flex-1 flex items-center justify-center p-6">
+        {loading ? (
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Loading…</p>
+        ) : (
+          <div className="w-full max-w-sm rounded-2xl p-8 flex flex-col items-center gap-5"
+            style={{ background: "linear-gradient(160deg,#1f0645,#160336)", border: "1px solid rgba(255,255,255,0.1)" }}>
+
+            {/* Avatar */}
+            {displayAvatar
+              ? <img src={displayAvatar} alt={displayName} className="rounded-full object-cover" style={{ width: 80, height: 80 }} />
+              : <div className="rounded-full flex items-center justify-center font-black"
+                  style={{ width: 80, height: 80, background: "rgba(200,240,0,0.15)", color: "#c8f000", fontSize: "2rem" }}>
+                  {displayName?.[0]?.toUpperCase() ?? "?"}
+                </div>
+            }
+
+            {/* Username */}
+            <div className="text-center">
+              <h2 style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "2rem", color: "white", letterSpacing: "0.06em", lineHeight: 1 }}>
+                {displayName}
+              </h2>
+            </div>
+
+            {/* Stats */}
+            {submission ? (
+              <div className="flex flex-col items-center gap-3 w-full">
+                <div className="flex items-center gap-2 px-3 py-2 rounded-xl"
+                  style={{ background: "rgba(200,240,0,0.07)", border: "1px solid rgba(200,240,0,0.15)" }}>
+                  <span className="text-xs font-black tabular-nums" style={{ color: "#c8f000" }}>{submission.group_picks_count}</span>
+                  <span className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>group picks</span>
+                </div>
+                {champion && (
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-xl"
+                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                    <span style={{ fontSize: "1rem" }}>🏆</span>
+                    {flagCls && <span className={flagCls} style={{ fontSize: "1rem" }} />}
+                    <span className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.85)" }}>{champion}</span>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>No picks yet</p>
+            )}
+
+            {/* View Bracket button */}
+            {submission && (
+              <button onClick={onViewBracket}
+                className="w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95 mt-1"
+                style={{ background: "linear-gradient(135deg,#c8f000,#84cc16)", color: "#1a0533" }}>
+                View Bracket
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── App ───────────────────────────────────────────────────────────────────────
 
 export default function App() {
@@ -141,6 +240,25 @@ export default function App() {
   const [sidebarOpen,     setSidebarOpen]     = useState(false);
   const [collapsed,       setCollapsed]       = useState(false);
   const [activeBracketId, setActiveBracketId] = useState(null);
+  const [viewingBracket, setViewingBracket] = useState(null); // { userId, username, avatarUrl, bracketData }
+  const [viewingProfile, setViewingProfile] = useState(null); // { userId, username, avatarUrl }
+
+  function handleViewProfile(userId, username, avatarUrl) {
+    setViewingProfile({ userId, username, avatarUrl });
+  }
+
+  async function handleViewBracket(userId, username, avatarUrl) {
+    const { data } = await supabase
+      .from("submissions")
+      .select("picks, scores, bracket, bracket_scores, mode")
+      .eq("user_id", userId)
+      .maybeSingle();
+    setViewingProfile(null);
+    setViewingBracket({
+      userId, username, avatarUrl,
+      bracketData: data ? { picks: data.picks ?? {}, scores: data.scores ?? {}, bracket: data.bracket, bracketScores: data.bracket_scores ?? {}, mode: data.mode ?? "winner" } : null,
+    });
+  }
   const [disclaimerDone, setDisclaimerDone]   = useState(() => hasAcceptedDisclaimer());
 
   const { user, profile, loading: authLoading, signOut } = useAuth();
@@ -524,11 +642,56 @@ export default function App() {
                   : <MyBrackets onOpen={(id) => setActiveBracketId(id)} />
               )}
               {activeTab === "teams"       && <Teams />}
-              {activeTab === "leaderboard" && <Leaderboard initialLeague={leagueContext} />}
-              {activeTab === "leagues"     && <Leagues onNavigate={navigate} initialLeagueCtx={leagueNavCtx} />}
+              {activeTab === "leaderboard" && <Leaderboard initialLeague={leagueContext} onViewProfile={handleViewProfile} />}
+              {activeTab === "leagues"     && <Leagues onNavigate={navigate} initialLeagueCtx={leagueNavCtx} onViewProfile={handleViewProfile} />}
               {activeTab === "invite"      && <InviteRedirect token={inviteToken} onNavigate={navigate} onSignUp={() => { setAuthMode("signup"); setShowAuth(true); }} />}
               {activeTab === "dashboard"   && <Dashboard onNavigate={navigate} />}
               {activeTab === "profile"     && <Profile   onNavigate={navigate} />}
+              {viewingProfile && (
+                <UserProfileModal
+                  userId={viewingProfile.userId}
+                  username={viewingProfile.username}
+                  avatarUrl={viewingProfile.avatarUrl}
+                  onClose={() => setViewingProfile(null)}
+                  onViewBracket={() => handleViewBracket(viewingProfile.userId, viewingProfile.username, viewingProfile.avatarUrl)}
+                />
+              )}
+              {viewingBracket && (
+                <div className="fixed inset-0 z-50 flex flex-col" style={{ background: "rgba(10,2,26,0.97)", backdropFilter: "blur(12px)" }}>
+                  {/* Modal header */}
+                  <div className="flex items-center gap-3 px-5 py-4 shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                    {viewingBracket.avatarUrl
+                      ? <img src={viewingBracket.avatarUrl} alt={viewingBracket.username} className="rounded-full object-cover shrink-0" style={{ width: 32, height: 32 }} />
+                      : <div className="rounded-full flex items-center justify-center shrink-0 font-bold text-sm" style={{ width: 32, height: 32, background: "rgba(200,240,0,0.15)", color: "#c8f000" }}>{viewingBracket.username?.[0]?.toUpperCase() ?? "?"}</div>
+                    }
+                    <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "1.4rem", color: "white", letterSpacing: "0.05em" }}>
+                      {viewingBracket.username}'s Bracket
+                    </span>
+                    <button onClick={() => setViewingBracket(null)}
+                      className="ml-auto w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold transition-all"
+                      style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.5)" }}
+                      onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.15)"; e.currentTarget.style.color = "white"; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.07)"; e.currentTarget.style.color = "rgba(255,255,255,0.5)"; }}>
+                      ✕
+                    </button>
+                  </div>
+                  {/* Scrollable bracket content */}
+                  <div className="flex-1 overflow-y-auto">
+                    {viewingBracket.bracketData
+                      ? <MyBracket
+                          bracketData={viewingBracket.bracketData}
+                          readOnly={true}
+                          viewingUser={{ username: viewingBracket.username, avatarUrl: viewingBracket.avatarUrl }}
+                        />
+                      : <div className="flex flex-col items-center justify-center py-20 gap-2">
+                          <span className="text-3xl">📭</span>
+                          <p className="text-white font-bold">No bracket submitted yet</p>
+                          <p className="text-sm" style={{ color: "rgba(255,255,255,0.35)" }}>{viewingBracket.username} hasn't made any picks yet.</p>
+                        </div>
+                    }
+                  </div>
+                </div>
+              )}
             </main>
 
             {/* Footer */}

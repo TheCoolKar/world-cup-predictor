@@ -58,7 +58,7 @@ function TeamFlag({ name }) {
 
 // ── League Rankings Tab ───────────────────────────────────────────────────────
 
-function LeagueRankings({ leagueId }) {
+function LeagueRankings({ leagueId, onViewProfile }) {
   const { user } = useAuth();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -90,10 +90,15 @@ function LeagueRankings({ leagueId }) {
         const rank = i + 1;
         return (
           <div key={row.userId} className="rounded-xl px-4 py-4"
+            onClick={() => onViewProfile?.(row.userId, row.username, row.avatarUrl)}
             style={{
               background: isMe ? "rgba(200,240,0,0.05)" : "rgba(255,255,255,0.03)",
               border: isMe ? "1px solid rgba(200,240,0,0.2)" : "1px solid rgba(255,255,255,0.07)",
-            }}>
+              cursor: onViewProfile ? "pointer" : "default",
+            }}
+            onMouseEnter={e => { if (onViewProfile) e.currentTarget.style.background = isMe ? "rgba(200,240,0,0.08)" : "rgba(255,255,255,0.06)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = isMe ? "rgba(200,240,0,0.05)" : "rgba(255,255,255,0.03)"; }}
+          >
 
             {/* Top row: rank + avatar + name + stats */}
             <div className="flex items-center gap-3">
@@ -135,7 +140,7 @@ function LeagueRankings({ leagueId }) {
                 <div className="flex flex-wrap gap-x-4 gap-y-1">
                   {row.champion && (
                     <div className="flex items-center gap-1">
-                      <span style={{ fontSize: "0.8rem" }}>🏆</span>
+                      <span style={{ fontSize: "0.8rem" }}>🥇</span>
                       <TeamFlag name={row.champion} />
                     </div>
                   )}
@@ -147,10 +152,16 @@ function LeagueRankings({ leagueId }) {
                   )}
                   {(row.semis ?? []).filter(t => t && t !== row.champion && t !== row.finalist).map(team => (
                     <div key={team} className="flex items-center gap-1">
-                      <span className="text-xs font-bold" style={{ color: "rgba(255,255,255,0.3)" }}>SF</span>
+                      <span style={{ fontSize: "0.8rem" }}>🥈</span>
                       <TeamFlag name={team} />
                     </div>
                   ))}
+                  {row.third && row.third !== row.champion && row.third !== row.finalist && (
+                    <div className="flex items-center gap-1">
+                      <span style={{ fontSize: "0.8rem" }}>🥉</span>
+                      <TeamFlag name={row.third} />
+                    </div>
+                  )}
                   {!row.champion && !row.finalist && (
                     <span className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>Group picks only — no knockout picks yet</span>
                   )}
@@ -349,7 +360,7 @@ function LeagueChat({ leagueId }) {
 
 // ── League Detail View ────────────────────────────────────────────────────────
 
-function LeagueDetail({ league, mySubmissionId, onBack, onNavigate, onDelete, deleting }) {
+function LeagueDetail({ league, mySubmissionId, onBack, onNavigate, onDelete, deleting, onViewProfile }) {
   const { user } = useAuth();
   const [tab, setTab] = useState("rankings");
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -377,18 +388,6 @@ function LeagueDetail({ league, mySubmissionId, onBack, onNavigate, onDelete, de
         </div>
       </div>
 
-      {/* No bracket warning */}
-      {!mySubmissionId && (
-        <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl mb-5"
-          style={{ background: "rgba(249,115,22,0.08)", border: "1px solid rgba(249,115,22,0.2)" }}>
-          <p className="text-sm" style={{ color: "#f97316" }}>Submit your bracket first to appear on the leaderboard.</p>
-          <button onClick={() => onNavigate("mine")}
-            className="px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 transition-all active:scale-95"
-            style={{ background: "rgba(249,115,22,0.15)", color: "#f97316", border: "1px solid rgba(249,115,22,0.3)" }}>
-            Go to Bracket
-          </button>
-        </div>
-      )}
 
       {/* Tabs */}
       <div className="flex gap-2 mb-5">
@@ -405,7 +404,7 @@ function LeagueDetail({ league, mySubmissionId, onBack, onNavigate, onDelete, de
         ))}
       </div>
 
-      {tab === "rankings" && <LeagueRankings leagueId={league.id} />}
+      {tab === "rankings" && <LeagueRankings leagueId={league.id} onViewProfile={onViewProfile} />}
 
       {tab === "info" && (
         <div className="flex flex-col gap-3">
@@ -457,7 +456,7 @@ function LeagueDetail({ league, mySubmissionId, onBack, onNavigate, onDelete, de
 
 // ── Main Leagues Page ─────────────────────────────────────────────────────────
 
-export default function Leagues({ onNavigate, initialLeagueCtx = null }) {
+export default function Leagues({ onNavigate, initialLeagueCtx = null, onViewProfile }) {
   const { user } = useAuth();
   const [myLeagues, setMyLeagues] = useState([]);
   const [publicLeagues, setPublicLeagues] = useState([]);
@@ -597,6 +596,7 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null }) {
           onNavigate={onNavigate}
           onDelete={handleDeleteLeague}
           deleting={deletingLeague}
+          onViewProfile={onViewProfile}
         />
       </div>
     );

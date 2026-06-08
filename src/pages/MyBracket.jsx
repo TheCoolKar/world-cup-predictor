@@ -497,7 +497,7 @@ const isTournamentStarted = () => new Date() >= WC_KICKOFF;
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 
-export default function MyBracket({ bracketData, onBack }) {
+export default function MyBracket({ bracketData, onBack, readOnly = false, viewingUser = null }) {
   const [view,      setView]      = useState("groups");
   const mode = bracketData?.mode ?? "winner";
   const [openGroup, setOpenGroup] = useState("A");
@@ -521,11 +521,11 @@ export default function MyBracket({ bracketData, onBack }) {
   const autoSaveRef = useRef(null);
 
   // Show welcome prompt if not logged in and hasn't skipped yet
-  const showWelcome = !authLoading && !user && !skippedAuth;
+  const showWelcome = !readOnly && !authLoading && !user && !skippedAuth;
 
   // Auto-save to Supabase (debounced 1.5s) whenever picks change and user is logged in
   useEffect(() => {
-    if (!user || isLocked) return;
+    if (!user || isLocked || readOnly) return;
     clearTimeout(autoSaveRef.current);
     autoSaveRef.current = setTimeout(async () => {
       await supabase.from("submissions").upsert({
@@ -546,7 +546,7 @@ export default function MyBracket({ bracketData, onBack }) {
 
   // Persist the whole bracket object to localStorage whenever anything changes
   function save(newPicks, newScores, newBw, newBScores) {
-    if (!bracketData || isLocked) return;
+    if (!bracketData || isLocked || readOnly) return;
     upsertBracket({ ...bracketData, picks: newPicks, scores: newScores, bracket: newBw, bracketScores: newBScores });
   }
 
@@ -599,7 +599,7 @@ export default function MyBracket({ bracketData, onBack }) {
   // ── Handlers ────────────────────────────────────────────────────────────────
 
   function handleGroupPick(matchId, pick) {
-    if (isLocked) return;
+    if (isLocked || readOnly) return;
     const newPicks = {...picks, [matchId]: pick};
     const fresh = emptyWinners();
     setPicks(newPicks);
@@ -609,39 +609,39 @@ export default function MyBracket({ bracketData, onBack }) {
   }
 
   function handleGroupScore(matchId, h, a) {
-    if (isLocked) return;
+    if (isLocked || readOnly) return;
     const newScores = {...scores, [matchId]:{home:h,away:a}};
     setScores(newScores);
     save(picks, newScores, bw, bScores);
   }
 
   function handleBracketPick(round, matchIdx, team) {
-    if (isLocked) return;
+    if (isLocked || readOnly) return;
     const next=applyPick(bw,round,matchIdx,team,false);
     setBw(next); save(picks, scores, next, bScores);
   }
 
   function handleBracketForcePick(round, matchIdx, team) {
-    if (isLocked) return;
+    if (isLocked || readOnly) return;
     const next=applyPick(bw,round,matchIdx,team,true);
     setBw(next); save(picks, scores, next, bScores);
   }
 
   function handleBracketScore(scoreKey, h, a) {
-    if (isLocked) return;
+    if (isLocked || readOnly) return;
     const newBs = {...bScores, [scoreKey]:{home:h,away:a}};
     setBScores(newBs);
     save(picks, scores, bw, newBs);
   }
 
   function handle3PPick(team) {
-    if (isLocked) return;
+    if (isLocked || readOnly) return;
     const next={...bw,"3P":[team===bw["3P"][0]?null:team]};
     setBw(next); save(picks, scores, next, bScores);
   }
 
   function handle3PScore(h, a) {
-    if (isLocked) return;
+    if (isLocked || readOnly) return;
     const key="3P_0";
     const newBs = {...bScores, [key]:{home:h,away:a}};
     setBScores(newBs);
@@ -683,16 +683,23 @@ export default function MyBracket({ bracketData, onBack }) {
             onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,0.1)";e.currentTarget.style.color="white";}}
             onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.06)";e.currentTarget.style.color="rgba(255,255,255,0.5)";}}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-            My Brackets
+            Back
           </button>
           <span className="text-sm font-black text-white truncate"
             style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"1.3rem",letterSpacing:"0.05em"}}>
-            {bracketData?.name ?? "Bracket"}
+            {readOnly ? `${viewingUser?.username ?? "User"}'s Bracket` : (bracketData?.name ?? "Bracket")}
           </span>
-          <span className="ml-auto text-xs px-2 py-0.5 rounded-full font-semibold"
-            style={{background: isLocked ? "rgba(239,68,68,0.12)" : "rgba(200,240,0,0.1)", color: isLocked ? "#ef4444" : "#c8f000", border: isLocked ? "1px solid rgba(239,68,68,0.25)" : "1px solid rgba(200,240,0,0.2)"}}>
-            {isLocked ? "🔒 Locked" : "Auto-saved"}
-          </span>
+          {readOnly ? (
+            <span className="ml-auto text-xs px-2 py-0.5 rounded-full font-semibold"
+              style={{background:"rgba(99,102,241,0.12)",color:"#a5b4fc",border:"1px solid rgba(99,102,241,0.25)"}}>
+              View Only
+            </span>
+          ) : (
+            <span className="ml-auto text-xs px-2 py-0.5 rounded-full font-semibold"
+              style={{background: isLocked ? "rgba(239,68,68,0.12)" : "rgba(200,240,0,0.1)", color: isLocked ? "#ef4444" : "#c8f000", border: isLocked ? "1px solid rgba(239,68,68,0.25)" : "1px solid rgba(200,240,0,0.2)"}}>
+              {isLocked ? "🔒 Locked" : "Auto-saved"}
+            </span>
+          )}
         </div>
       )}
 
@@ -774,6 +781,7 @@ export default function MyBracket({ bracketData, onBack }) {
       )}
 
       {/* Header */}
+      {!readOnly && (
       <div className="mb-6" style={{maxWidth:860}}>
         <div className="flex items-start justify-between gap-4 flex-wrap mb-1">
           <h2 className="text-white"
@@ -819,6 +827,7 @@ export default function MyBracket({ bracketData, onBack }) {
           </button>
         </div>
       </div>
+      )}
 
       {/* View switcher */}
       <div className="flex gap-1 mb-5 p-1 rounded-xl"
@@ -835,7 +844,7 @@ export default function MyBracket({ bracketData, onBack }) {
       {/* ══ GROUP STAGE ══════════════════════════════════════════════════════ */}
       {view==="groups"&&(
         <div>
-          {allPicked&&(
+          {allPicked && !readOnly &&(
             <div className="flex items-center gap-3 mb-5 px-4 py-3 rounded-xl"
               style={{background:"rgba(200,240,0,0.06)",border:"1px solid rgba(200,240,0,0.2)"}}>
               <span className="text-lg">✅</span>
@@ -867,7 +876,7 @@ export default function MyBracket({ bracketData, onBack }) {
       )}
 
       {/* ══ SUBMIT BAR ══════════════════════════════════════════════════════ */}
-      <div className="mt-8 mb-2 flex items-center gap-4 flex-wrap p-5 rounded-2xl"
+      {!readOnly && <div className="mt-8 mb-2 flex items-center gap-4 flex-wrap p-5 rounded-2xl"
         style={{
           background: allPicked
             ? "linear-gradient(135deg, rgba(220,38,38,0.12), rgba(185,28,28,0.08))"
@@ -940,12 +949,12 @@ export default function MyBracket({ bracketData, onBack }) {
               : "Sign In & Submit"}
           </button>
         )}
-      </div>
+      </div>}
 
       {/* ══ KNOCKOUT BRACKET ════════════════════════════════════════════════ */}
       {view==="knockout"&&(
         <div>
-          {!allPicked&&(
+          {!allPicked && !readOnly &&(
             <div className="flex items-center gap-3 mb-5 px-4 py-3 rounded-xl"
               style={{background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.2)"}}>
               <span className="text-lg">⚠️</span>
@@ -961,6 +970,7 @@ export default function MyBracket({ bracketData, onBack }) {
           )}
 
           {/* Bracket pick progress */}
+          {!readOnly && (
           <div className="flex items-center gap-3 mb-6">
             <div className="h-1.5 rounded-full overflow-hidden"
               style={{background:"rgba(255,255,255,0.08)",width:160}}>
@@ -972,6 +982,7 @@ export default function MyBracket({ bracketData, onBack }) {
               {bracketPicks}/{maxBracket} bracket picks
             </span>
           </div>
+          )}
 
           {/* Scrollable bracket */}
           <div className="overflow-x-auto pb-4" style={{WebkitOverflowScrolling:"touch"}}>

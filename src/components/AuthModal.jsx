@@ -95,6 +95,7 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
           email,
           password,
           options: {
+            emailRedirectTo: import.meta.env.VITE_APP_URL ?? window.location.origin,
             data: {
               display_name: name,
               username: username.toLowerCase(),
@@ -103,8 +104,11 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
         });
         if (error) throw error;
 
-        // Profile row is created automatically by the database trigger.
-        if (data.user) onAuth(data.user);
+        if (data.session) {
+          onAuth(data.user);
+        } else {
+          setSent(true);
+        }
 
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -189,8 +193,10 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
             <div className="text-4xl mb-3">📬</div>
             <p className="font-bold text-white mb-1">Check your email</p>
             <p className="text-xs" style={{ color: "rgba(255,255,255,0.45)" }}>
-              We sent a magic link to <strong style={{ color: "#c8f000" }}>{email}</strong>.<br />
-              Click it to sign in and your bracket will be saved automatically.
+              {mode === "signup"
+                ? <>We sent a verification link to <strong style={{ color: "#c8f000" }}>{email}</strong>.<br />Click it to confirm your account and you'll be signed in automatically.</>
+                : <>We sent a magic link to <strong style={{ color: "#c8f000" }}>{email}</strong>.<br />Click it to sign in and your bracket will be saved automatically.</>
+              }
             </p>
           </div>
         ) : (

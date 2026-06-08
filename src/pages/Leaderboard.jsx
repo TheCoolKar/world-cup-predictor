@@ -66,13 +66,19 @@ function BracketSummary({ champion, finalist, semis }) {
 }
 
 // League leaderboard row — shows bracket inline
-function LeagueRow({ row, rank, isMe }) {
+function LeagueRow({ row, rank, isMe, onViewProfile }) {
   return (
-    <div style={{
-      borderTop: "1px solid rgba(255,255,255,0.05)",
-      background: isMe ? "rgba(200,240,0,0.04)" : "transparent",
-      padding: "14px 20px",
-    }}>
+    <div
+      onClick={() => onViewProfile?.(row.userId, row.username, row.avatarUrl)}
+      style={{
+        borderTop: "1px solid rgba(255,255,255,0.05)",
+        background: isMe ? "rgba(200,240,0,0.04)" : "transparent",
+        padding: "14px 20px",
+        cursor: onViewProfile ? "pointer" : "default",
+      }}
+      onMouseEnter={e => { if (onViewProfile) e.currentTarget.style.background = isMe ? "rgba(200,240,0,0.07)" : "rgba(255,255,255,0.04)"; }}
+      onMouseLeave={e => { e.currentTarget.style.background = isMe ? "rgba(200,240,0,0.04)" : "transparent"; }}
+    >
       <div className="flex items-center gap-3">
         <RankBadge rank={rank} />
         <Avatar url={row.avatarUrl} username={row.username} size={28} />
@@ -101,7 +107,7 @@ function LeagueRow({ row, rank, isMe }) {
   );
 }
 
-export default function Leaderboard({ initialLeague = null }) {
+export default function Leaderboard({ initialLeague = null, onViewProfile }) {
   const { user } = useAuth();
   const [tab, setTab] = useState(initialLeague ? initialLeague.id : "global");
   const [myLeagues, setMyLeagues] = useState(initialLeague ? [initialLeague] : []);
@@ -202,7 +208,7 @@ export default function Leaderboard({ initialLeague = null }) {
         ) : isLeagueTab ? (
           // League view: bracket cards
           rows.map((row, i) => (
-            <LeagueRow key={row.userId} row={row} rank={i + 1} isMe={user && row.userId === user.id} />
+            <LeagueRow key={row.userId} row={row} rank={i + 1} isMe={user && row.userId === user.id} onViewProfile={onViewProfile} />
           ))
         ) : (
           // Global view: compact table
@@ -220,10 +226,16 @@ export default function Leaderboard({ initialLeague = null }) {
                 const rank = page * PAGE_SIZE + i + 1;
                 const isMe = user && row.userId === user.id;
                 return (
-                  <tr key={row.userId} style={{
-                    borderTop: "1px solid rgba(255,255,255,0.05)",
-                    background: isMe ? "rgba(200,240,0,0.04)" : i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.015)",
-                  }}>
+                  <tr key={row.userId}
+                    onClick={() => onViewProfile?.(row.userId, row.username, row.avatarUrl)}
+                    style={{
+                      borderTop: "1px solid rgba(255,255,255,0.05)",
+                      background: isMe ? "rgba(200,240,0,0.04)" : i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.015)",
+                      cursor: onViewProfile ? "pointer" : "default",
+                    }}
+                    onMouseEnter={e => { if (onViewProfile) e.currentTarget.style.background = "rgba(255,255,255,0.05)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = isMe ? "rgba(200,240,0,0.04)" : i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.015)"; }}
+                  >
                     <td className="px-4 py-3"><RankBadge rank={rank} /></td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2.5">
