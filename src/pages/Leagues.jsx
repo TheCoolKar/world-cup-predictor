@@ -490,6 +490,13 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null }) {
     setMyLeagues(leagues);
     setLoadingMine(false);
 
+    // Sync submission_id onto selectedLeague if navigated from Home
+    setSelectedLeague(sel => {
+      if (!sel) return sel;
+      const match = leagues.find(l => l.id === sel.id);
+      return match ? { ...sel, submission_id: match.submission_id ?? sel.submission_id } : sel;
+    });
+
     // Auto-link submission_id for any leagues missing it
     const missing = leagues.filter(l => !l.submission_id);
     if (missing.length > 0) {
@@ -499,6 +506,7 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null }) {
           supabase.from("league_members").update({ submission_id: sub.id }).eq("league_id", l.id).eq("user_id", user.id)
         ));
         setMyLeagues(prev => prev.map(l => missing.find(m => m.id === l.id) ? { ...l, submission_id: sub.id } : l));
+        setSelectedLeague(sel => sel && missing.find(m => m.id === sel.id) ? { ...sel, submission_id: sub.id } : sel);
       }
     }
   }
