@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
-import { getLeagueLeaderboard } from "../utils/social";
+import { getLeagueLeaderboard, getMatchResults } from "../utils/social";
+import { calculateGroupScores } from "../utils/scoring";
 import { getFlagClass } from "../utils/flags";
 
 
@@ -101,6 +102,22 @@ function LeagueRow({ row, rank, isMe, onViewProfile }) {
             : <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.25)" }}>Hasn't entered a bracket yet</p>
           }
         </div>
+
+        {/* Stat chips */}
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="text-center px-2.5 py-1.5 rounded-lg" style={{ background: "rgba(200,240,0,0.08)", minWidth: 52 }}>
+            <p className="text-xs font-black tabular-nums" style={{ color: "#c8f000" }}>{row.points ?? "—"}</p>
+            <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.6rem" }}>PTS</p>
+          </div>
+          <div className="text-center px-2.5 py-1.5 rounded-lg hidden sm:block" style={{ background: "rgba(34,197,94,0.07)", minWidth: 52 }}>
+            <p className="text-xs font-black tabular-nums" style={{ color: "#22c55e" }}>{row.correct ?? "—"}</p>
+            <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.6rem" }}>CORRECT</p>
+          </div>
+          <div className="text-center px-2.5 py-1.5 rounded-lg hidden sm:block" style={{ background: "rgba(239,68,68,0.07)", minWidth: 52 }}>
+            <p className="text-xs font-black tabular-nums" style={{ color: "#ef4444" }}>{row.incorrect ?? "—"}</p>
+            <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.6rem" }}>WRONG</p>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -137,11 +154,15 @@ export default function Leaderboard({ initialLeague = null, onViewProfile }) {
     if (tab === "global") {
       Promise.all([
         supabase.from("profiles").select("id, username, avatar_url"),
-        supabase.from("submissions").select("user_id, group_picks_count, updated_at, bracket"),
-      ]).then(([{ data: profiles }, { data: submissions }]) => {
+        supabase.from("submissions").select("user_id, group_picks_count, updated_at, bracket, picks"),
+        getMatchResults(),
+      ]).then(([{ data: profiles }, { data: submissions }, resultsMap]) => {
         const subMap = Object.fromEntries((submissions ?? []).map(s => [s.user_id, s]));
         const merged = (profiles ?? []).map(p => {
           const sub = subMap[p.id];
+          const scoring = sub?.picks
+            ? calculateGroupScores(sub.picks, resultsMap)
+            : { points: null, correct: null, incorrect: null };
           return {
             userId:    p.id,
             username:  p.username ?? "—",
@@ -153,8 +174,14 @@ export default function Leaderboard({ initialLeague = null, onViewProfile }) {
             finalist:  sub?.bracket?.F?.[1] ?? null,
             third:     sub?.bracket?.["3P"]?.[0] ?? null,
             semis:     (sub?.bracket?.SF ?? []).filter(Boolean),
+            points:    scoring.points,
+            correct:   scoring.correct,
+            incorrect: scoring.incorrect,
           };
-        }).sort((a, b) => b.pickCount - a.pickCount);
+        }).sort((a, b) => {
+          if (b.points !== a.points) return (b.points ?? -1) - (a.points ?? -1);
+          return b.pickCount - a.pickCount;
+        });
         setRows(merged);
         setTotal(merged.length);
         setLoading(false);
