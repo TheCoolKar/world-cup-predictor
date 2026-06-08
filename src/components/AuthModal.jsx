@@ -237,7 +237,7 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
             {mode === "signup" && (
               <div>
                 <label className="block text-xs font-semibold mb-1.5" style={{ color: "rgba(255,255,255,0.5)" }}>Display Name</label>
-                <input type="text" required placeholder="e.g. Karim Assaad" value={name}
+                <input type="text" required placeholder="e.g. Alexander" value={name}
                   onChange={e => setName(e.target.value)} style={inputStyle}
                   onFocus={e => e.target.style.borderColor = "rgba(200,240,0,0.4)"}
                   onBlur={e  => e.target.style.borderColor = "rgba(255,255,255,0.12)"} />
@@ -250,7 +250,7 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
                 <label className="block text-xs font-semibold mb-1.5" style={{ color: "rgba(255,255,255,0.5)" }}>
                   Username <span style={{ color: "rgba(255,255,255,0.25)", fontWeight: 400 }}>(unique, public)</span>
                 </label>
-                <input type="text" required placeholder="e.g. karim_wc26" value={username}
+                <input type="text" required placeholder="e.g. alex_wc" value={username}
                   onChange={e => setUsername(e.target.value.replace(/\s/g, ""))}
                   maxLength={20}
                   style={{ ...inputStyle, borderColor: usernameBorderColor }}

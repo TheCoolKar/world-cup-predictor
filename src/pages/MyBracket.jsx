@@ -631,15 +631,38 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
   const [submitError,  setSubmitError]  = useState(null);
   const autoSaveRef = useRef(null);
   const leagueLinkedRef = useRef(false);
+  const restoredRef = useRef(false);
 
   // Show welcome prompt if not logged in and hasn't skipped yet
   const showWelcome = !readOnly && !authLoading && !user && !skippedAuth;
+
+  // On first login: if localStorage is empty, restore picks from Supabase
+  useEffect(() => {
+    if (!user || restoredRef.current || readOnly) return;
+    restoredRef.current = true;
+    if (Object.keys(picks).length > 0) return;
+    supabase.from("submissions").select("picks,scores,bracket,bracket_scores")
+      .eq("user_id", user.id).maybeSingle()
+      .then(({ data }) => {
+        if (!data || Object.keys(data.picks ?? {}).length === 0) return;
+        setPicks(data.picks);
+        setScores(data.scores ?? {});
+        setBw({ ...emptyWinners(), ...(data.bracket ?? {}) });
+        setBScores(data.bracket_scores ?? {});
+        if (bracketData) {
+          upsertBracket({ ...bracketData, picks: data.picks, scores: data.scores ?? {},
+            bracket: data.bracket ?? null, bracketScores: data.bracket_scores ?? {} });
+        }
+      });
+  }, [user]);
 
   // Auto-save to Supabase (debounced 1.5s) whenever picks change and user is logged in
   useEffect(() => {
     if (!user || isLocked || readOnly) return;
     clearTimeout(autoSaveRef.current);
     autoSaveRef.current = setTimeout(async () => {
+      const hasData = Object.keys(picks).length > 0 || Object.values(bw).some(arr => Array.isArray(arr) && arr.some(Boolean));
+      if (!hasData) return;
       await supabase.from("submissions").upsert({
         user_id:           user.id,
         email:             user.email,
@@ -683,6 +706,8 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
   async function handleSubmit() {
     if (!user) { setShowAuth(true); return; }
     if (isLocked) return;
+    const hasData = Object.keys(picks).length > 0 || Object.values(bw).some(arr => Array.isArray(arr) && arr.some(Boolean));
+    if (!hasData) return;
     setSubmitting(true);
     setSubmitStatus(null);
     try {
