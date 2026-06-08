@@ -519,6 +519,7 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
   const [submitStatus, setSubmitStatus] = useState(null); // null | "success" | "error"
   const [submitError,  setSubmitError]  = useState(null);
   const autoSaveRef = useRef(null);
+  const leagueLinkedRef = useRef(false);
 
   // Show welcome prompt if not logged in and hasn't skipped yet
   const showWelcome = !readOnly && !authLoading && !user && !skippedAuth;
@@ -540,6 +541,24 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
         group_picks_count: Object.keys(picks).length,
         updated_at:        new Date().toISOString(),
       }, { onConflict: "user_id" });
+
+      // Once per session: link this submission to any leagues that are missing it
+      if (!leagueLinkedRef.current) {
+        leagueLinkedRef.current = true;
+        const { data: sub } = await supabase.from("submissions").select("id").eq("user_id", user.id).maybeSingle();
+        if (sub) {
+          const { data: unlinked } = await supabase
+            .from("league_members")
+            .select("league_id")
+            .eq("user_id", user.id)
+            .is("submission_id", null);
+          if (unlinked?.length) {
+            await Promise.all(unlinked.map(m =>
+              supabase.from("league_members").update({ submission_id: sub.id }).eq("league_id", m.league_id).eq("user_id", user.id)
+            ));
+          }
+        }
+      }
     }, 1500);
     return () => clearTimeout(autoSaveRef.current);
   }, [picks, scores, bw, bScores, user]);
