@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { getFlagClass } from '../utils/flags';
 import eloRatings from "../data/elo_ratings.json";
 import fixtures   from "../data/wc2026_fixtures.json";
@@ -54,7 +54,7 @@ export default function Teams() {
       team.rank <= 8  ? { label: "Elite",  color: "#fbbf24" } :
       team.rank <= 16 ? { label: "Strong", color: "#c8f000" } :
       team.rank <= 28 ? { label: "Mid",    color: "#60a5fa" } :
-                        { label: "Lower",  color: "rgba(255,255,255,0.3)" };
+                        { label: "Lower",  color: "rgba(255,255,255,0.6)" };
 
     return (
       <button
@@ -102,7 +102,7 @@ export default function Teams() {
         {/* Group badge */}
         <div className="shrink-0 flex flex-col items-center gap-0.5">
           <span className="text-xs font-black px-1.5 py-0.5 rounded"
-            style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.3)", fontSize: "0.6rem", letterSpacing: "0.06em" }}>
+            style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.6)", fontSize: "0.6rem", letterSpacing: "0.06em" }}>
             GRP {team.group}
           </span>
         </div>
@@ -125,7 +125,7 @@ export default function Teams() {
           style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2rem", letterSpacing: "0.08em" }}>
           Teams
         </h2>
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>
+        <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
           {ALL_TEAMS.length} nations · Click any team to view stats, lineup &amp; AI summary
         </p>
       </div>
@@ -135,7 +135,7 @@ export default function Teams() {
         {/* Search */}
         <div className="relative flex-1" style={{ minWidth: 180 }}>
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5"
-            style={{ color: "rgba(255,255,255,0.25)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            style={{ color: "rgba(255,255,255,0.55)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35" strokeLinecap="round"/>
           </svg>
           <input
@@ -172,7 +172,7 @@ export default function Teams() {
       {view === "elo" ? (
         <div className="flex flex-col gap-1.5">
           {filtered.length === 0 ? (
-            <p className="text-sm py-8 text-center" style={{ color: "rgba(255,255,255,0.25)" }}>
+            <p className="text-sm py-8 text-center" style={{ color: "rgba(255,255,255,0.55)" }}>
               No teams found for "{search}"
             </p>
           ) : (

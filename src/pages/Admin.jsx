@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+﻿import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import fixtures from "../data/wc2026_fixtures.json";
@@ -83,7 +83,7 @@ function ResultsTab() {
         </div>
       )}
 
-      <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
+      <p className="text-xs" style={{ color: "rgba(255,255,255,0.65)" }}>
         Enter scores to compute H/D/A result. Save overwrites any API-fetched value.
       </p>
 
@@ -110,11 +110,11 @@ function ResultsTab() {
                     }}
                   >
                     {/* Match ID */}
-                    <span className="text-xs font-bold w-6 shrink-0" style={{ color: "rgba(255,255,255,0.3)" }}>{f.id}</span>
+                    <span className="text-xs font-bold w-6 shrink-0" style={{ color: "rgba(255,255,255,0.6)" }}>{f.id}</span>
 
                     {/* Teams */}
                     <span className="flex-1 text-sm font-semibold" style={{ color: "rgba(255,255,255,0.8)" }}>
-                      {f.home} <span style={{ color: "rgba(255,255,255,0.3)" }}>vs</span> {f.away}
+                      {f.home} <span style={{ color: "rgba(255,255,255,0.6)" }}>vs</span> {f.away}
                     </span>
 
                     {/* Score inputs */}
@@ -125,7 +125,7 @@ function ResultsTab() {
                       className="w-10 text-center text-sm font-bold rounded-lg px-1 py-1.5 outline-none"
                       style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff" }}
                     />
-                    <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.75rem" }}>:</span>
+                    <span style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.75rem" }}>:</span>
                     <input
                       type="number" min="0" max="20" value={s.away}
                       onChange={e => handleScore(f.id, "away", e.target.value)}
@@ -211,7 +211,7 @@ function SubmissionsTab() {
 
   if (loading) return (
     <div className="flex items-center justify-center h-40">
-      <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Loading submissions…</p>
+      <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>Loading submissions…</p>
     </div>
   );
   if (error) return (
@@ -222,7 +222,7 @@ function SubmissionsTab() {
   if (!rows.length) return (
     <div className="flex flex-col items-center justify-center h-40 gap-2">
       <span className="text-3xl">📭</span>
-      <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>No submissions yet.</p>
+      <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>No submissions yet.</p>
     </div>
   );
 
@@ -234,7 +234,7 @@ function SubmissionsTab() {
           {th("Email", "email")}
           {th("Group Picks", "group_picks_count")}
           <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider"
-            style={{ color: "rgba(255,255,255,0.4)" }}>Complete?</th>
+            style={{ color: "rgba(255,255,255,0.7)" }}>Complete?</th>
           {th("Submitted", "submitted_at")}
           {th("Last Update", "updated_at")}
         </tr>
@@ -255,7 +255,7 @@ function SubmissionsTab() {
                 <span className="font-black" style={{ color: complete ? "#c8f000" : "#f59e0b" }}>
                   {row.group_picks_count}
                 </span>
-                <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.7rem" }}>
+                <span style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.7rem" }}>
                   /{TOTAL_MATCHES}
                 </span>
               </td>
@@ -271,10 +271,10 @@ function SubmissionsTab() {
                   {complete ? "✓ Full" : "Partial"}
                 </span>
               </td>
-              <td className="px-4 py-3 text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
+              <td className="px-4 py-3 text-xs" style={{ color: "rgba(255,255,255,0.7)" }}>
                 {new Date(row.submitted_at).toLocaleString()}
               </td>
-              <td className="px-4 py-3 text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
+              <td className="px-4 py-3 text-xs" style={{ color: "rgba(255,255,255,0.7)" }}>
                 {new Date(row.updated_at).toLocaleString()}
               </td>
             </tr>
@@ -297,7 +297,7 @@ export default function Admin({ onClose }) {
         style={{ background: "rgba(10,2,26,0.95)", backdropFilter: "blur(8px)" }}>
         <div className="text-center">
           <p className="text-white font-bold text-lg mb-2">Access Denied</p>
-          <p className="text-sm mb-4" style={{ color: "rgba(255,255,255,0.4)" }}>Admin access only.</p>
+          <p className="text-sm mb-4" style={{ color: "rgba(255,255,255,0.7)" }}>Admin access only.</p>
           <button onClick={onClose} className="px-4 py-2 rounded-lg text-sm font-semibold"
             style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)" }}>
             Close
@@ -342,7 +342,7 @@ export default function Admin({ onClose }) {
           <button
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
-            style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.4)" }}
+            style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.7)" }}
             onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.14)"; e.currentTarget.style.color = "#fff"; }}
             onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.07)"; e.currentTarget.style.color = "rgba(255,255,255,0.4)"; }}
           >✕</button>

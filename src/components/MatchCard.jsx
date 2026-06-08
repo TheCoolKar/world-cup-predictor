@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+﻿import { useState, useMemo } from "react";
 import { predictMatch }      from "../utils/Predictions";
 import { simulateMatchMonteCarlo } from "../utils/TournamentSimulator";
 import eloRatings        from "../data/elo_ratings.json";
@@ -130,13 +130,13 @@ export default function MatchCard({ match }) {
               style={{ background: "#1a0a2e", border: "1px solid rgba(255,255,255,0.12)", minWidth: 210, boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}
               onClick={e => e.stopPropagation()}
             >
-              <p className="font-black uppercase tracking-wider mb-0.5" style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.6rem" }}>
+              <p className="font-black uppercase tracking-wider mb-0.5" style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.6rem" }}>
                 Prediction Breakdown
               </p>
 
               {/* Model row */}
               <div className="flex items-center justify-between gap-3">
-                <span style={{ color: "rgba(255,255,255,0.45)" }}>
+                <span style={{ color: "rgba(255,255,255,0.7)" }}>
                   {prediction.model?.includes("trained") ? "🧠 Trained model" : "🧮 Seed model"}
                 </span>
                 <span className="font-bold tabular-nums" style={{ color: "#c8f000" }}>
@@ -147,7 +147,7 @@ export default function MatchCard({ match }) {
               {/* Market row */}
               {prediction.usedMarket && (
                 <div className="flex items-center justify-between gap-3">
-                  <span style={{ color: "rgba(255,255,255,0.45)" }}>📈 Polymarket odds</span>
+                  <span style={{ color: "rgba(255,255,255,0.7)" }}>📈 Polymarket odds</span>
                   <span className="font-bold tabular-nums" style={{ color: "#a5b4fc" }}>
                     {prediction.marketOdds?.home}%
                   </span>
@@ -185,7 +185,7 @@ export default function MatchCard({ match }) {
 
               <button
                 className="text-xs mt-1 self-end"
-                style={{ color: "rgba(255,255,255,0.25)" }}
+                style={{ color: "rgba(255,255,255,0.55)" }}
                 onClick={() => setShowBreakdown(false)}
               >
                 close ✕
@@ -193,7 +193,7 @@ export default function MatchCard({ match }) {
             </div>
           )}
         </div>
-          <span className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>{formattedDate}</span>
+          <span className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>{formattedDate}</span>
         </div>
 
       {/* Teams */}
@@ -295,10 +295,10 @@ export default function MatchCard({ match }) {
             border:     h2hHovered ? "1px solid rgba(200,240,0,0.2)" : "1px solid rgba(255,255,255,0.06)",
           }}
         >
-          <span className="text-xs font-bold" style={{ color: "rgba(255,255,255,0.25)" }}>H2H</span>
+          <span className="text-xs font-bold" style={{ color: "rgba(255,255,255,0.55)" }}>H2H</span>
           <div className="flex items-center gap-1.5 text-xs font-semibold">
             <span style={{ color: "#c8f000" }}>{h2h.allTime.homeTeamWins}W</span>
-            <span style={{ color: "rgba(255,255,255,0.25)" }}>{h2h.allTime.draws}D</span>
+            <span style={{ color: "rgba(255,255,255,0.55)" }}>{h2h.allTime.draws}D</span>
             <span style={{ color: "#ef4444" }}>{h2h.allTime.awayTeamWins}L</span>
           </div>
           <div className="flex items-center gap-1.5">
@@ -339,9 +339,9 @@ export default function MatchCard({ match }) {
           />
         </div>
         <div className="flex justify-between mt-1.5">
-          <span className="text-xs tabular-nums" style={{ color: "rgba(255,255,255,0.25)" }}>{homePct}%</span>
+          <span className="text-xs tabular-nums" style={{ color: "rgba(255,255,255,0.55)" }}>{homePct}%</span>
           <span className="text-xs tabular-nums" style={{ color: "#f59e0b", opacity: 0.7 }}>{drawPct}% draw</span>
-          <span className="text-xs tabular-nums" style={{ color: "rgba(255,255,255,0.25)" }}>{awayPct}%</span>
+          <span className="text-xs tabular-nums" style={{ color: "rgba(255,255,255,0.55)" }}>{awayPct}%</span>
         </div>
       </div>
 

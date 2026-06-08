@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Bracket.jsx — read-only AI-predicted bracket
  *
  * Simulates the full WC 2026 tournament using ELO + form data and displays:
@@ -40,7 +40,7 @@ function GroupTable({ group, rows, thirds }) {
           </div>
           <span className="text-xs font-bold text-white">Group {group}</span>
         </div>
-        <div className="flex gap-3 text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
+        <div className="flex gap-3 text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>
           <span className="w-4 text-center">P</span>
           <span className="w-4 text-center">W</span>
           <span className="w-4 text-center">D</span>
@@ -68,7 +68,7 @@ function GroupTable({ group, rows, thirds }) {
             }}
           >
             <div className="flex items-center gap-2 flex-1 min-w-0">
-              <span className="text-xs w-3 shrink-0" style={{ color: "rgba(255,255,255,0.25)" }}>{i + 1}</span>
+              <span className="text-xs w-3 shrink-0" style={{ color: "rgba(255,255,255,0.55)" }}>{i + 1}</span>
               <span className={getFlagClass(t.team) ?? ''} style={{fontSize:'1rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
               <span
                 className="text-xs font-semibold truncate cursor-pointer hover:underline"
@@ -268,7 +268,7 @@ function OddsTeam({ team, value, rank }) {
       style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
     >
       <div className="flex items-center gap-2 mb-2">
-        <span className="text-xs font-black w-5" style={{ color: "rgba(255,255,255,0.25)" }}>#{rank}</span>
+        <span className="text-xs font-black w-5" style={{ color: "rgba(255,255,255,0.55)" }}>#{rank}</span>
         <span className={getFlagClass(team) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
         <span className="text-xs font-bold text-white truncate flex-1">{team}</span>
         <span className="text-xs font-black tabular-nums" style={{ color: "#fbbf24" }}>{value}%</span>
@@ -306,7 +306,7 @@ function MonteCarloSection() {
           >
             10,000 Simulation Odds
           </h3>
-          <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.3)" }}>
+          <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.6)" }}>
             Advancement probabilities from full-tournament Monte Carlo runs
           </p>
         </div>
@@ -332,7 +332,7 @@ function MonteCarloSection() {
           className="grid items-center px-3 py-2 text-xs font-bold uppercase tracking-widest"
           style={{
             gridTemplateColumns: "minmax(150px,1fr) repeat(5,64px)",
-            color: "rgba(255,255,255,0.3)",
+            color: "rgba(255,255,255,0.6)",
             background: "rgba(255,255,255,0.04)",
             borderBottom: "1px solid rgba(255,255,255,0.06)",
             fontSize: "0.58rem",
@@ -357,11 +357,11 @@ function MonteCarloSection() {
             }}
           >
             <span className="flex items-center gap-2 min-w-0">
-              <span className="font-black w-5" style={{ color: "rgba(255,255,255,0.25)" }}>{i + 1}</span>
+              <span className="font-black w-5" style={{ color: "rgba(255,255,255,0.55)" }}>{i + 1}</span>
               <span className={getFlagClass(row.team) ?? ''} style={{fontSize:'1rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
               <span className="font-semibold text-white truncate">{row.team}</span>
             </span>
-            <span className="text-right tabular-nums" style={{ color: "rgba(255,255,255,0.45)" }}>{row.r16}%</span>
+            <span className="text-right tabular-nums" style={{ color: "rgba(255,255,255,0.7)" }}>{row.r16}%</span>
             <span className="text-right tabular-nums" style={{ color: "rgba(255,255,255,0.55)" }}>{row.qf}%</span>
             <span className="text-right tabular-nums" style={{ color: "#c8f000" }}>{row.sf}%</span>
             <span className="text-right tabular-nums" style={{ color: "#a5b4fc" }}>{row.final}%</span>
@@ -400,7 +400,7 @@ export default function Bracket() {
             AI
           </span>
         </div>
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>
+        <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
           Full tournament forecast using ELO ratings, historical form, market odds, and Monte Carlo runs
         </p>
       </div>
@@ -423,7 +423,7 @@ export default function Bracket() {
           ].map(({ color, bg, label }) => (
             <div key={label} className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-sm" style={{ background: bg, border: `1px solid ${color}` }} />
-              <span className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>{label}</span>
+              <span className="text-xs" style={{ color: "rgba(255,255,255,0.7)" }}>{label}</span>
             </div>
           ))}
         </div>
@@ -443,7 +443,7 @@ export default function Bracket() {
         >
           Best 3rd-Place Teams
         </h3>
-        <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.3)" }}>
+        <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.6)" }}>
           Top 8 of the 12 third-placed teams advance · ranked by points → goal difference → goals scored
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
@@ -461,11 +461,11 @@ export default function Bracket() {
               >
                 {t.team}
               </span>
-              <div className="flex gap-2 text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
+              <div className="flex gap-2 text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>
                 <span>{t.pts}pts</span>
                 <span>{t.gd >= 0 ? "+" : ""}{t.gd}</span>
               </div>
-              <span style={{ color: "rgba(255,255,255,0.25)", fontSize: "0.6rem" }}>Grp {t.group}</span>
+              <span style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.6rem" }}>Grp {t.group}</span>
             </div>
           ))}
         </div>
@@ -479,7 +479,7 @@ export default function Bracket() {
         >
           Most Likely Knockout Path
         </h3>
-        <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.3)" }}>
+        <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.6)" }}>
           Single-path bracket uses the favorite in each matchup; odds above show the fuller simulation distribution
         </p>
 

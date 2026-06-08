@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import fixtures from "../data/wc2026_fixtures.json";
 import PredictCard from "../components/PredictCard";
 import { getPicks, clearPicks } from "../utils/storage";
@@ -73,7 +73,7 @@ export default function Predict({ submittedGroups, setSubmittedGroups, onNavigat
         <h2 className="text-white mb-1" style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2rem", letterSpacing: "0.08em" }}>
           Make Your Picks
         </h2>
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>
+        <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
           Predict every group stage match. Picks save automatically. Submit each group to see its standings table.
         </p>
       </div>
@@ -102,7 +102,7 @@ export default function Predict({ submittedGroups, setSubmittedGroups, onNavigat
           ].map(({ label, value, color }) => (
             <div key={label} className="rounded-xl p-3 text-center" style={{ background: "rgba(255,255,255,0.04)" }}>
               <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.8rem", lineHeight: 1, color }}>{value}</div>
-              <div className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>{label}</div>
+              <div className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.65)" }}>{label}</div>
             </div>
           ))}
         </div>
@@ -177,7 +177,7 @@ export default function Predict({ submittedGroups, setSubmittedGroups, onNavigat
                         </span>
                       )}
                     </div>
-                    <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.35)" }}>{teams.join(" · ")}</p>
+                    <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.65)" }}>{teams.join(" · ")}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
@@ -233,7 +233,7 @@ export default function Predict({ submittedGroups, setSubmittedGroups, onNavigat
                   </table>
                   <div className="px-3 py-2 flex items-center gap-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
                     <div className="w-2.5 h-2.5 rounded-sm" style={{ background: "#22c55e" }} />
-                    <span className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>Advances to Round of 32</span>
+                    <span className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Advances to Round of 32</span>
                   </div>
                 </div>
               )}
@@ -280,7 +280,7 @@ export default function Predict({ submittedGroups, setSubmittedGroups, onNavigat
           <p className="text-white font-bold mb-1" style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.5rem", letterSpacing: "0.05em" }}>
             All {TOTAL} matches predicted
           </p>
-          <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.4)" }}>
+          <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.7)" }}>
             {homeWins} home wins · {draws} draws · {awayWins} away wins
           </p>
           <div className="flex flex-col sm:flex-row gap-3">

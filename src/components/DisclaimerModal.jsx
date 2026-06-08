@@ -1,4 +1,4 @@
-/**
+﻿/**
  * DisclaimerModal.jsx
  *
  * Full-screen disclaimer shown on every fresh session.
@@ -94,7 +94,7 @@ export default function DisclaimerModal({ onAccept }) {
         >
           Access Denied
         </p>
-        <p className="text-sm max-w-sm mb-6" style={{ color: "rgba(255,255,255,0.45)" }}>
+        <p className="text-sm max-w-sm mb-6" style={{ color: "rgba(255,255,255,0.7)" }}>
           You must agree to the Terms of Use to access this site. Please close this tab or review the terms below.
         </p>
         <button
@@ -141,7 +141,7 @@ export default function DisclaimerModal({ onAccept }) {
             >
               Important Disclaimer &amp; Terms of Use
             </p>
-            <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
+            <p className="text-xs" style={{ color: "rgba(255,255,255,0.7)" }}>
               Please read carefully before accessing the FIFA World Cup 2026 Predictor.
               You must agree to these terms to continue.
             </p>
@@ -277,7 +277,7 @@ export default function DisclaimerModal({ onAccept }) {
             <button
               onClick={() => setDeclined(true)}
               className="px-4 py-3 rounded-xl text-xs font-semibold transition-all"
-              style={{ color: "rgba(255,255,255,0.25)", border: "1px solid rgba(255,255,255,0.08)" }}
+              style={{ color: "rgba(255,255,255,0.55)", border: "1px solid rgba(255,255,255,0.08)" }}
               onMouseEnter={e => { e.currentTarget.style.color = "#ef4444"; e.currentTarget.style.borderColor = "rgba(239,68,68,0.3)"; }}
               onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.25)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
             >

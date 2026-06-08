@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import GroupStage    from "./pages/GroupStage";
 import Bracket       from "./pages/Bracket";
 import MyBracket     from "./pages/MyBracket";
@@ -45,6 +45,7 @@ const IconChevronLeft  = () => <svg width="14" height="14" viewBox="0 0 24 24" f
 const IconChevronRight = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>;
 const IconUser         = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>;
 const IconBarChart     = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>;
+const IconHome         = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>;
 const IconShield       = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>;
 const IconLeaderboard  = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="14" width="5" height="7"/><rect x="9" y="9" width="5" height="12"/><rect x="16" y="4" width="5" height="17"/></svg>;
 const IconLeagues      = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>;
@@ -112,7 +113,7 @@ function CountdownBanner() {
                   style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(1.2rem, 3vw, 1.6rem)", letterSpacing: "0.04em" }}>
                   {label === "days" ? days : pad(value)}
                 </p>
-                <p style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.5)", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginTop: 2 }}>
+                <p style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.75)", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginTop: 2 }}>
                   {label}
                 </p>
               </div>
@@ -151,10 +152,10 @@ function UserProfileModal({ userId, username, avatarUrl, onClose, onViewBracket 
     <div className="fixed inset-0 z-50 flex flex-col" style={{ background: "rgba(10,2,26,0.97)", backdropFilter: "blur(12px)" }}>
       {/* Header */}
       <div className="flex items-center gap-3 px-5 py-4 shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-        <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "1.1rem", color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em" }}>Profile</span>
+        <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "1.1rem", color: "rgba(255,255,255,0.7)", letterSpacing: "0.08em" }}>Profile</span>
         <button onClick={onClose}
           className="ml-auto w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold transition-all"
-          style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.5)" }}
+          style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.75)" }}
           onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.15)"; e.currentTarget.style.color = "white"; }}
           onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.07)"; e.currentTarget.style.color = "rgba(255,255,255,0.5)"; }}>
           ✕
@@ -164,7 +165,7 @@ function UserProfileModal({ userId, username, avatarUrl, onClose, onViewBracket 
       {/* Body */}
       <div className="flex-1 flex items-center justify-center p-6">
         {loading ? (
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Loading…</p>
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>Loading…</p>
         ) : (
           <div className="w-full max-w-sm rounded-2xl p-8 flex flex-col items-center gap-5"
             style={{ background: "linear-gradient(160deg,#1f0645,#160336)", border: "1px solid rgba(255,255,255,0.1)" }}>
@@ -191,7 +192,7 @@ function UserProfileModal({ userId, username, avatarUrl, onClose, onViewBracket 
                 <div className="flex items-center gap-2 px-3 py-2 rounded-xl"
                   style={{ background: "rgba(200,240,0,0.07)", border: "1px solid rgba(200,240,0,0.15)" }}>
                   <span className="text-xs font-black tabular-nums" style={{ color: "#c8f000" }}>{submission.group_picks_count}</span>
-                  <span className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>group picks</span>
+                  <span className="text-xs" style={{ color: "rgba(255,255,255,0.7)" }}>group picks</span>
                 </div>
                 {champion && (
                   <div className="flex items-center gap-2 px-3 py-2 rounded-xl"
@@ -203,7 +204,7 @@ function UserProfileModal({ userId, username, avatarUrl, onClose, onViewBracket 
                 )}
               </div>
             ) : (
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>No picks yet</p>
+              <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>No picks yet</p>
             )}
 
             {/* View Bracket button */}
@@ -291,23 +292,23 @@ export default function App() {
           padding:     collapsed ? "10px 0" : "10px 12px",
           justifyContent: collapsed ? "center" : "flex-start",
           background:  active ? `rgba(${rgb},0.1)` : "transparent",
-          color:       active ? accent : muted ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.5)",
+          color:       active ? accent : "rgba(255,255,255,0.75)",
           fontSize:    "0.8rem",
           fontWeight:  600,
           borderLeft:  collapsed ? "none" : `2px solid ${active ? accent : "transparent"}`,
           outline:     active && collapsed ? `1px solid rgba(${rgb},0.35)` : "none",
         }}
         onMouseEnter={e => { if (!active) { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "rgba(255,255,255,0.8)"; } }}
-        onMouseLeave={e => { if (!active) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = muted ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.5)"; } }}
+        onMouseLeave={e => { if (!active) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(255,255,255,0.75)"; } }}
       >
-        <span style={{ color: active ? accent : "rgba(255,255,255,0.3)", flexShrink: 0 }}>
+        <span style={{ color: active ? accent : "rgba(255,255,255,0.75)", flexShrink: 0 }}>
           {icon}
         </span>
         {!collapsed && (
           <span className="flex-1 flex items-center justify-between min-w-0">
             <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{label}</span>
             {locked && (
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "rgba(255,255,255,0.2)", flexShrink: 0, marginLeft: 4 }}>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "rgba(255,255,255,0.75)", flexShrink: 0, marginLeft: 4 }}>
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
               </svg>
@@ -336,7 +337,7 @@ export default function App() {
             <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", color: "white", letterSpacing: "0.06em", lineHeight: 1 }}>
               FIFA WC 2026
             </p>
-            <p style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.28)", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", marginTop: 3 }}>
+            <p style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.6)", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", marginTop: 3 }}>
               Match Predictor
             </p>
           </div>
@@ -349,7 +350,7 @@ export default function App() {
           style={{
             width: 28, height: 28,
             background: "rgba(255,255,255,0.06)",
-            color: "rgba(255,255,255,0.35)",
+            color: "rgba(255,255,255,0.65)",
             border: "1px solid rgba(255,255,255,0.08)",
             marginLeft: collapsed ? "auto" : 0,
             marginRight: collapsed ? "auto" : 0,
@@ -365,7 +366,7 @@ export default function App() {
         {!collapsed && (
           <button
             className="md:hidden flex items-center justify-center w-6 h-6 rounded-full shrink-0"
-            style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.4)", fontSize: "0.7rem" }}
+            style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.7)", fontSize: "0.7rem" }}
             onClick={() => setSidebarOpen(false)}
           >✕</button>
         )}
@@ -377,7 +378,7 @@ export default function App() {
         {collapsed && <div style={{ height: 16 }} />}
 
         {/* Primary nav */}
-        <SideNavItem label="Home"        icon={<IconBarChart />}    active={activeTab === "home"}        onClick={() => navigate("home")}        accent="#c8f000" />
+        <SideNavItem label="Home"        icon={<IconHome />}        active={activeTab === "home"}        onClick={() => navigate("home")}        accent="#c8f000" />
         <SideNavItem label="My Bracket"  icon={<IconEdit />}        active={activeTab === "mine"}        onClick={() => navigate("mine")}        accent="#ef4444" />
         <SideNavItem label="Leagues"     icon={<IconLeagues />}     active={activeTab === "leagues"}     onClick={() => navigate("leagues")}     accent="#c8f000" />
         <SideNavItem label="Leaderboard" icon={<IconLeaderboard />} active={activeTab === "leaderboard"} onClick={() => navigate("leaderboard")} accent="#f59e0b" />
@@ -386,16 +387,21 @@ export default function App() {
 
         {/* AI Predictions — secondary */}
         {!collapsed && (
-          <p className="px-3 pb-1.5 shrink-0" style={{ fontSize: "0.58rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", color: "rgba(255,255,255,0.2)" }}>
-            AI Predictions
-          </p>
+          <div className="px-3 pb-1.5 shrink-0 flex items-center gap-2">
+            <p style={{ fontSize: "0.58rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", color: "rgba(255,255,255,0.75)" }}>
+              AI Predictions
+            </p>
+            <span style={{ fontSize: "0.5rem", fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase", background: "rgba(34,197,94,0.15)", color: "#22c55e", border: "1px solid rgba(34,197,94,0.35)", borderRadius: 4, padding: "1px 5px" }}>
+              New
+            </span>
+          </div>
         )}
         <SideNavItem label="Group Stage"       icon={<IconGrid />}    active={activeTab === "groups"}  onClick={() => navigate("groups")}  accent="#c8f000" muted locked={!user} />
         <SideNavItem label="Simulated Bracket" icon={<IconBracket />} active={activeTab === "bracket"} onClick={() => navigate("bracket")} accent="#c8f000" muted locked={!user} />
 
         <div className="shrink-0" style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "12px 0" }} />
 
-        <SideNavItem label="Rules" icon={<IconTrophy />} active={false} onClick={() => { setShowRules(true); setSidebarOpen(false); }} accent="#f59e0b" muted />
+        <SideNavItem label="Rules" icon={<IconTrophy />} active={false} onClick={() => { setShowRules(true); setSidebarOpen(false); }} accent="#f59e0b" />
 
         {/* Account section */}
         {user && (
@@ -450,7 +456,7 @@ export default function App() {
                 <button
                   onClick={signOut}
                   className="text-xs transition-colors"
-                  style={{ color: "rgba(255,255,255,0.3)" }}
+                  style={{ color: "rgba(255,255,255,0.6)" }}
                   onMouseEnter={e => e.currentTarget.style.color = "#ef4444"}
                   onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.3)"}
                 >
@@ -570,7 +576,7 @@ export default function App() {
                     </div>
 
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-xs uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.3)" }}>Hosted by</span>
+                      <span className="text-xs uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.6)" }}>Hosted by</span>
                       {HOST_NATIONS.map(n => (
                         <div key={n.name} className="flex items-center gap-1.5 rounded-full px-3 py-1" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)" }}>
                           <span className="text-sm leading-none">{n.flag}</span>
@@ -581,7 +587,7 @@ export default function App() {
 
                     <div className="mt-1">
                       <button
-                        onClick={() => navigate("leagues")}
+                        onClick={() => { navigate("mine"); }}
                         className="group inline-flex items-center gap-3 rounded-2xl px-6 py-4 font-black transition-all duration-200 active:scale-95"
                         style={{ background: "linear-gradient(135deg,#dc2626,#b91c1c)", boxShadow: "0 0 32px rgba(220,38,38,0.55),0 4px 16px rgba(0,0,0,0.4)", border: "1px solid rgba(255,100,100,0.3)", animation: "ctaPulse 2.5s ease-in-out infinite" }}
                         onMouseEnter={e => { e.currentTarget.style.background = "linear-gradient(135deg,#ef4444,#dc2626)"; e.currentTarget.style.boxShadow = "0 0 48px rgba(239,68,68,0.7)"; e.currentTarget.style.animation = "none"; }}
@@ -589,14 +595,14 @@ export default function App() {
                       >
                         <span style={{ fontSize: "1.6rem", lineHeight: 1 }}>🏆</span>
                         <div className="text-left">
-                          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.5rem", letterSpacing: "0.06em", color: "white", lineHeight: 1 }}>JOIN A LEAGUE</div>
-                          <div className="text-xs font-semibold mt-0.5" style={{ color: "rgba(255,255,255,0.75)", letterSpacing: "0.04em" }}>Compete with friends & climb the rankings →</div>
+                          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.5rem", letterSpacing: "0.06em", color: "white", lineHeight: 1 }}>START PREDICTING</div>
+                          <div className="text-xs font-semibold mt-0.5" style={{ color: "rgba(255,255,255,0.75)", letterSpacing: "0.04em" }}>Make your bracket · Compete with friends →</div>
                         </div>
                         <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" style={{ color: "rgba(255,255,255,0.7)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                         </svg>
                       </button>
-                      <p className="text-xs mt-2" style={{ color: "rgba(255,255,255,0.25)" }}>Make your picks · Submit your bracket · Compete with friends</p>
+                      <p className="text-xs mt-2" style={{ color: "rgba(255,255,255,0.55)" }}>Make your picks · Submit your bracket · Compete with friends</p>
                       <button onClick={() => setShowRules(true)} className="text-xs mt-1 underline underline-offset-2 transition-colors" style={{ color: "rgba(200,240,0,0.45)" }} onMouseEnter={e => e.currentTarget.style.color = "#c8f000"} onMouseLeave={e => e.currentTarget.style.color = "rgba(200,240,0,0.45)"}>
                         View Rules & Prize Details →
                       </button>
@@ -638,6 +644,7 @@ export default function App() {
                   ? <MyBracket
                       bracketData={getBracketById(activeBracketId)}
                       onBack={() => setActiveBracketId(null)}
+                      onNavigate={navigate}
                     />
                   : <MyBrackets onOpen={(id) => setActiveBracketId(id)} />
               )}
@@ -669,7 +676,7 @@ export default function App() {
                     </span>
                     <button onClick={() => setViewingBracket(null)}
                       className="ml-auto w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold transition-all"
-                      style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.5)" }}
+                      style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.75)" }}
                       onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.15)"; e.currentTarget.style.color = "white"; }}
                       onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.07)"; e.currentTarget.style.color = "rgba(255,255,255,0.5)"; }}>
                       ✕
@@ -686,7 +693,7 @@ export default function App() {
                       : <div className="flex flex-col items-center justify-center py-20 gap-2">
                           <span className="text-3xl">📭</span>
                           <p className="text-white font-bold">No bracket submitted yet</p>
-                          <p className="text-sm" style={{ color: "rgba(255,255,255,0.35)" }}>{viewingBracket.username} hasn't made any picks yet.</p>
+                          <p className="text-sm" style={{ color: "rgba(255,255,255,0.65)" }}>{viewingBracket.username} hasn't made any picks yet.</p>
                         </div>
                     }
                   </div>
@@ -695,12 +702,12 @@ export default function App() {
             </main>
 
             {/* Footer */}
-            <footer className="text-center py-5 text-xs shrink-0" style={{ color: "rgba(255,255,255,0.2)", borderTop: "1px solid rgba(255,255,255,0.06)", background: "#120326" }}>
+            <footer className="text-center py-5 text-xs shrink-0" style={{ color: "rgba(255,255,255,0.75)", borderTop: "1px solid rgba(255,255,255,0.06)", background: "#120326" }}>
               FIFA World Cup 2026 Predictor · ELO ratings + recent form · June 11 – July 19, 2026
               <span className="mx-2" style={{ color: "rgba(255,255,255,0.1)" }}>·</span>
               <button onClick={() => setShowRules(true)} className="underline underline-offset-2 transition-colors" style={{ color: "rgba(200,240,0,0.35)" }} onMouseEnter={e => e.currentTarget.style.color = "#c8f000"} onMouseLeave={e => e.currentTarget.style.color = "rgba(200,240,0,0.35)"}>Rules</button>
               <span className="mx-2" style={{ color: "rgba(255,255,255,0.1)" }}>·</span>
-              <button onClick={() => setDisclaimerDone(false)} className="underline underline-offset-2 transition-colors" style={{ color: "rgba(255,255,255,0.2)" }} onMouseEnter={e => e.currentTarget.style.color = "rgba(255,255,255,0.5)"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.2)"}>Terms & Disclaimer</button>
+              <button onClick={() => setDisclaimerDone(false)} className="underline underline-offset-2 transition-colors" style={{ color: "rgba(255,255,255,0.75)" }} onMouseEnter={e => e.currentTarget.style.color = "rgba(255,255,255,0.5)"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.2)"}>Terms & Disclaimer</button>
               <span className="mx-2" style={{ color: "rgba(255,255,255,0.1)" }}>·</span>
               <button onClick={() => setShowAdmin(true)} className="transition-colors" style={{ color: "rgba(255,255,255,0.1)" }} onMouseEnter={e => e.currentTarget.style.color = "rgba(255,255,255,0.4)"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.1)"}>admin</button>
             </footer>

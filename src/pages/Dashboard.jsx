@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Dashboard.jsx — user's prediction overview
  * Shows group pick progress, bracket advancement picks, champion selection.
  */
@@ -50,7 +50,7 @@ function StatCard({ label, value, sub, accent = "#c8f000" }) {
         {label}
       </span>
       {sub && (
-        <span className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.25)" }}>
+        <span className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.55)" }}>
           {sub}
         </span>
       )}
@@ -87,7 +87,7 @@ function SectionHeader({ title, badge }) {
     <div className="flex items-center gap-3 mb-4">
       <h3 className="font-black text-white" style={{ fontSize: "1rem" }}>{title}</h3>
       {badge && (
-        <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.35)" }}>
+        <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.65)" }}>
           {badge}
         </span>
       )}
@@ -102,8 +102,8 @@ function StatusRow({ icon, label, value, accent = "#c8f000", sub }) {
     <div className="flex items-start gap-3 py-2.5" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
       <span style={{ fontSize: "1rem", lineHeight: 1, marginTop: 1 }}>{icon}</span>
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.45)" }}>{label}</p>
-        {sub && <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.25)" }}>{sub}</p>}
+        <p className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.7)" }}>{label}</p>
+        {sub && <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.55)" }}>{sub}</p>}
       </div>
       <span className="text-xs font-black shrink-0" style={{ color: accent }}>{value}</span>
     </div>
@@ -182,7 +182,7 @@ function ModelStatus() {
             >
               {cmd}
             </code>
-            <span className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>{desc}</span>
+            <span className="text-xs" style={{ color: "rgba(255,255,255,0.55)" }}>{desc}</span>
           </div>
         ))}
       </div>
@@ -205,7 +205,7 @@ export default function Dashboard({ onNavigate }) {
         >
           Sign In to View Your Dashboard
         </h2>
-        <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.4)" }}>
+        <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.7)" }}>
           Your picks are saved locally. Sign in to track your predictions and compete on the leaderboard.
         </p>
       </div>
@@ -280,19 +280,19 @@ export default function Dashboard({ onNavigate }) {
                 <p className="font-black text-2xl leading-none" style={{ fontFamily: "'Bebas Neue', sans-serif", color: "#c8f000" }}>
                   {myScore.points}
                 </p>
-                <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>pts</p>
+                <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.65)" }}>pts</p>
               </div>
               <div className="text-center">
                 <p className="font-black text-2xl leading-none" style={{ fontFamily: "'Bebas Neue', sans-serif", color: "#22c55e" }}>
                   {myScore.correct}
                 </p>
-                <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>correct</p>
+                <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.65)" }}>correct</p>
               </div>
               <div className="text-center">
                 <p className="font-black text-2xl leading-none" style={{ fontFamily: "'Bebas Neue', sans-serif", color: "#ef4444" }}>
                   {myScore.incorrect}
                 </p>
-                <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>wrong</p>
+                <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.65)" }}>wrong</p>
               </div>
             </div>
           </div>
@@ -339,7 +339,7 @@ export default function Dashboard({ onNavigate }) {
               {champion}
             </p>
             {thirdPlace && (
-              <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.3)" }}>
+              <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.6)" }}>
                 🥉 3rd place pick: <span style={{ color: "rgba(255,255,255,0.55)" }}>{thirdPlace}</span>
               </p>
             )}
@@ -356,7 +356,7 @@ export default function Dashboard({ onNavigate }) {
 
         {!bracket || bracketRounds === 0 ? (
           <div className="text-center py-6">
-            <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>No bracket picks yet.</p>
+            <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>No bracket picks yet.</p>
             {onNavigate && (
               <button
                 onClick={() => onNavigate("mine")}
@@ -377,10 +377,10 @@ export default function Dashboard({ onNavigate }) {
               return (
                 <div key={round}>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>
+                    <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.7)" }}>
                       {label}
                     </span>
-                    <span className="text-xs font-bold" style={{ color: "rgba(255,255,255,0.25)" }}>
+                    <span className="text-xs font-bold" style={{ color: "rgba(255,255,255,0.55)" }}>
                       {picks_in_round.length}/{slots}
                     </span>
                   </div>
@@ -399,7 +399,7 @@ export default function Dashboard({ onNavigate }) {
             {bracket?.["3P"]?.[0] && (
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>
+                  <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.7)" }}>
                     3rd Place
                   </span>
                 </div>
@@ -422,7 +422,7 @@ export default function Dashboard({ onNavigate }) {
 
         {pickedGroupCount === 0 ? (
           <div className="text-center py-6">
-            <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>No group stage picks yet.</p>
+            <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>No group stage picks yet.</p>
             {onNavigate && (
               <button
                 onClick={() => onNavigate("groups")}
@@ -473,8 +473,8 @@ export default function Dashboard({ onNavigate }) {
         <div className="flex flex-col gap-4">
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.45)" }}>Group Stage</span>
-              <span className="text-xs font-bold" style={{ color: "rgba(255,255,255,0.3)" }}>
+              <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.7)" }}>Group Stage</span>
+              <span className="text-xs font-bold" style={{ color: "rgba(255,255,255,0.6)" }}>
                 {percent(pickedGroupCount, totalGroupMatches)}%
               </span>
             </div>
@@ -482,8 +482,8 @@ export default function Dashboard({ onNavigate }) {
           </div>
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.45)" }}>Bracket</span>
-              <span className="text-xs font-bold" style={{ color: "rgba(255,255,255,0.3)" }}>
+              <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.7)" }}>Bracket</span>
+              <span className="text-xs font-bold" style={{ color: "rgba(255,255,255,0.6)" }}>
                 {percent(bracketRounds, 32)}%
               </span>
             </div>

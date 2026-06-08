@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import { getLeagueLeaderboard, getMatchResults } from "../utils/social";
@@ -53,14 +53,14 @@ function LeagueRow({ row, rank, isMe, onViewProfile }) {
               {row.hasBracket ? `${row.pickCount} picks` : "No bracket entered"}
             </span>
             {row.updatedAt && row.hasBracket && (
-              <span className="text-xs hidden sm:inline" style={{ color: "rgba(255,255,255,0.25)" }}>
+              <span className="text-xs hidden sm:inline" style={{ color: "rgba(255,255,255,0.55)" }}>
                 · {new Date(row.updatedAt).toLocaleDateString()}
               </span>
             )}
           </div>
           {row.hasBracket
             ? <BracketPicksSummary champion={row.champion} finalist={row.finalist} third={row.third} semis={row.semis ?? []} />
-            : <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.25)" }}>Hasn't entered a bracket yet</p>
+            : <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.55)" }}>Hasn't entered a bracket yet</p>
           }
         </div>
 
@@ -68,15 +68,15 @@ function LeagueRow({ row, rank, isMe, onViewProfile }) {
         <div className="flex items-center gap-2 shrink-0">
           <div className="text-center px-2.5 py-1.5 rounded-lg" style={{ background: "rgba(200,240,0,0.08)", minWidth: 52 }}>
             <p className="text-xs font-black tabular-nums" style={{ color: "#c8f000" }}>{row.points ?? "—"}</p>
-            <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.6rem" }}>PTS</p>
+            <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.6rem" }}>PTS</p>
           </div>
           <div className="text-center px-2.5 py-1.5 rounded-lg hidden sm:block" style={{ background: "rgba(34,197,94,0.07)", minWidth: 52 }}>
             <p className="text-xs font-black tabular-nums" style={{ color: "#22c55e" }}>{row.correct ?? "—"}</p>
-            <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.6rem" }}>CORRECT</p>
+            <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.6rem" }}>CORRECT</p>
           </div>
           <div className="text-center px-2.5 py-1.5 rounded-lg hidden sm:block" style={{ background: "rgba(239,68,68,0.07)", minWidth: 52 }}>
             <p className="text-xs font-black tabular-nums" style={{ color: "#ef4444" }}>{row.incorrect ?? "—"}</p>
-            <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.6rem" }}>WRONG</p>
+            <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.6rem" }}>WRONG</p>
           </div>
         </div>
       </div>
@@ -164,7 +164,7 @@ export default function Leaderboard({ initialLeague = null, onViewProfile }) {
         <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2.2rem", color: "white", letterSpacing: "0.04em", lineHeight: 1 }}>
           {isLeagueTab ? currentLeagueName : "Leaderboard"}
         </h1>
-        <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.35)" }}>
+        <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.65)" }}>
           {isLeagueTab ? "Each player's entered bracket picks" : "Everyone signed up — ranked by picks submitted"}
         </p>
       </div>
@@ -188,12 +188,12 @@ export default function Leaderboard({ initialLeague = null, onViewProfile }) {
       <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
         {loading ? (
           <div className="flex items-center justify-center h-40">
-            <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Loading…</p>
+            <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>Loading…</p>
           </div>
         ) : rows.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-40 gap-2">
             <span className="text-3xl">📭</span>
-            <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>No submissions yet.</p>
+            <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>No submissions yet.</p>
           </div>
         ) : (
           // Both global and league: card rows

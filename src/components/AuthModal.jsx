@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 import { supabase } from "../lib/supabase";
 
 const OAUTH_PROVIDERS = [
@@ -145,11 +145,11 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
     "rgba(255,255,255,0.12)";
 
   const usernameHint =
-    usernameState === "checking"  ? { text: "Checking…",   color: "rgba(255,255,255,0.3)" } :
+    usernameState === "checking"  ? { text: "Checking…",   color: "rgba(255,255,255,0.6)" } :
     usernameState === "available" ? { text: "✓ Available", color: "#c8f000" } :
     usernameState === "taken"     ? { text: "✗ Already taken", color: "#ef4444" } :
     username && !usernameValid(username)
-      ? { text: "3–20 chars, letters/numbers/underscore only", color: "rgba(255,255,255,0.3)" }
+      ? { text: "3–20 chars, letters/numbers/underscore only", color: "rgba(255,255,255,0.6)" }
       : null;
 
   return (
@@ -170,7 +170,7 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
         <button
           onClick={onClose}
           className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-full transition-colors"
-          style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.4)", fontSize: "0.75rem" }}
+          style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.7)", fontSize: "0.75rem" }}
           onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.14)"; e.currentTarget.style.color = "#fff"; }}
           onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.07)"; e.currentTarget.style.color = "rgba(255,255,255,0.4)"; }}
         >✕</button>
@@ -181,9 +181,9 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
           </p>
           <h3 className="text-white leading-none"
             style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.8rem", letterSpacing: "0.04em" }}>
-            {mode === "magic" ? "Magic Link Login" : mode === "signup" ? "Join the Challenge" : "Save Your Bracket"}
+            {mode === "magic" ? "Magic Link Login" : mode === "signup" ? "Join the Prediction" : "Save Your Bracket"}
           </h3>
-          <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.35)" }}>
+          <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.65)" }}>
             Your picks are saved locally. Sign in to lock in your official submission.
           </p>
         </div>
@@ -192,7 +192,7 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
           <div className="text-center py-4">
             <div className="text-4xl mb-3">📬</div>
             <p className="font-bold text-white mb-1">Check your email</p>
-            <p className="text-xs" style={{ color: "rgba(255,255,255,0.45)" }}>
+            <p className="text-xs" style={{ color: "rgba(255,255,255,0.7)" }}>
               {mode === "signup"
                 ? <>We sent a verification link to <strong style={{ color: "#c8f000" }}>{email}</strong>.<br />Click it to confirm your account and you'll be signed in automatically.</>
                 : <>We sent a magic link to <strong style={{ color: "#c8f000" }}>{email}</strong>.<br />Click it to sign in and your bracket will be saved automatically.</>
@@ -219,7 +219,7 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
                     onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
                   >
                     {isLoading
-                      ? <span className="w-4 h-4 rounded-full border-2 animate-spin" style={{ borderColor: "rgba(255,255,255,0.3)", borderTopColor: "transparent" }} />
+                      ? <span className="w-4 h-4 rounded-full border-2 animate-spin" style={{ borderColor: "rgba(255,255,255,0.6)", borderTopColor: "transparent" }} />
                       : p.icon}
                     <span>{isLoading ? `Connecting…` : `Continue with ${p.label}`}</span>
                   </button>
@@ -248,7 +248,7 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
             {mode === "signup" && (
               <div>
                 <label className="block text-xs font-semibold mb-1.5" style={{ color: "rgba(255,255,255,0.5)" }}>
-                  Username <span style={{ color: "rgba(255,255,255,0.25)", fontWeight: 400 }}>(unique, public)</span>
+                  Username <span style={{ color: "rgba(255,255,255,0.55)", fontWeight: 400 }}>(unique, public)</span>
                 </label>
                 <input type="text" required placeholder="e.g. alex_wc" value={username}
                   onChange={e => setUsername(e.target.value.replace(/\s/g, ""))}
@@ -306,13 +306,13 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
             {mode === "login" && (
               <>
                 <button onClick={() => { setMode("signup"); setError(null); }}
-                  className="text-xs transition-colors" style={{ color: "rgba(255,255,255,0.35)" }}
+                  className="text-xs transition-colors" style={{ color: "rgba(255,255,255,0.65)" }}
                   onMouseEnter={e => e.currentTarget.style.color = "#c8f000"}
                   onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.35)"}>
                   No account? Sign up →
                 </button>
                 <button onClick={() => { setMode("magic"); setError(null); }}
-                  className="text-xs transition-colors" style={{ color: "rgba(255,255,255,0.25)" }}
+                  className="text-xs transition-colors" style={{ color: "rgba(255,255,255,0.55)" }}
                   onMouseEnter={e => e.currentTarget.style.color = "rgba(255,255,255,0.6)"}
                   onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.25)"}>
                   Or use a magic link (no password)
@@ -321,7 +321,7 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
             )}
             {mode === "signup" && (
               <button onClick={() => { setMode("login"); setError(null); }}
-                className="text-xs transition-colors" style={{ color: "rgba(255,255,255,0.35)" }}
+                className="text-xs transition-colors" style={{ color: "rgba(255,255,255,0.65)" }}
                 onMouseEnter={e => e.currentTarget.style.color = "#c8f000"}
                 onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.35)"}>
                 Already have an account? Sign in →
@@ -329,7 +329,7 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
             )}
             {mode === "magic" && (
               <button onClick={() => { setMode("login"); setError(null); }}
-                className="text-xs transition-colors" style={{ color: "rgba(255,255,255,0.35)" }}
+                className="text-xs transition-colors" style={{ color: "rgba(255,255,255,0.65)" }}
                 onMouseEnter={e => e.currentTarget.style.color = "#c8f000"}
                 onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.35)"}>
                 ← Use email + password instead

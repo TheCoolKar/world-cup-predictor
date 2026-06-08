@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import fixtures from "../data/wc2026_fixtures.json";
 import MatchCard from "../components/MatchCard";
 import { useTeamModal } from "../context/TeamModalContext";
@@ -22,7 +22,7 @@ export default function GroupStage() {
         >
           Group Stage
         </h2>
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>
+        <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
           Click a group to view match predictions · June 11 – June 27, 2026
         </p>
       </div>
@@ -72,7 +72,7 @@ export default function GroupStage() {
                   </div>
                   <div className="text-left">
                     <p className="text-sm font-bold text-white leading-none">Group {group}</p>
-                    <p className="text-xs mt-1 leading-tight" style={{ color: "rgba(255,255,255,0.35)" }}>
+                    <p className="text-xs mt-1 leading-tight" style={{ color: "rgba(255,255,255,0.65)" }}>
                       {teams.map((t, i) => (
                         <span key={t}>
                           {i > 0 && <span style={{ color: "rgba(255,255,255,0.2)" }}> · </span>}
@@ -88,7 +88,7 @@ export default function GroupStage() {
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
-                  <span className="text-xs hidden sm:block" style={{ color: "rgba(255,255,255,0.25)" }}>
+                  <span className="text-xs hidden sm:block" style={{ color: "rgba(255,255,255,0.55)" }}>
                     {matches.length} matches
                   </span>
                   <svg

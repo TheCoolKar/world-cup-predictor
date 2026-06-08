@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import { generateInviteToken } from "../utils/social";
@@ -101,7 +101,7 @@ export default function FriendsPanel() {
   ]);
 
   const sectionLabel = (text) => (
-    <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>{text}</p>
+    <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.6)" }}>{text}</p>
   );
 
   return (
@@ -118,7 +118,7 @@ export default function FriendsPanel() {
           onChange={e => setSearchQuery(e.target.value)}
           style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 8, padding: "10px 14px", color: "white", fontSize: "0.875rem", outline: "none" }}
         />
-        {searching && <p className="text-xs mt-2" style={{ color: "rgba(255,255,255,0.3)" }}>Searching…</p>}
+        {searching && <p className="text-xs mt-2" style={{ color: "rgba(255,255,255,0.6)" }}>Searching…</p>}
         {searchResults.length > 0 && (
           <div className="mt-2 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.08)" }}>
             {searchResults.map((p, i) => {
@@ -131,7 +131,7 @@ export default function FriendsPanel() {
                     <span className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.85)" }}>{p.username}</span>
                   </div>
                   {alreadyFriend ? (
-                    <span className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>Already connected</span>
+                    <span className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Already connected</span>
                   ) : (
                     <button onClick={() => sendRequest(p.id)}
                       className="px-3 py-1 rounded-lg text-xs font-bold transition-all active:scale-95"
@@ -165,7 +165,7 @@ export default function FriendsPanel() {
             Generate Invite Link
           </button>
         )}
-        <p className="text-xs mt-1.5" style={{ color: "rgba(255,255,255,0.25)" }}>Link expires in 7 days. Anyone who opens it will be added as your friend.</p>
+        <p className="text-xs mt-1.5" style={{ color: "rgba(255,255,255,0.55)" }}>Link expires in 7 days. Anyone who opens it will be added as your friend.</p>
       </div>
 
       {/* Incoming requests */}
@@ -188,7 +188,7 @@ export default function FriendsPanel() {
                   </button>
                   <button onClick={() => respond(req.id, "declined")}
                     className="px-3 py-1 rounded-lg text-xs font-bold transition-all"
-                    style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.4)" }}>
+                    style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.7)" }}>
                     Decline
                   </button>
                 </div>
@@ -209,11 +209,11 @@ export default function FriendsPanel() {
                 <div className="flex items-center gap-2.5">
                   <Avatar url={req.profile?.avatar_url} username={req.profile?.username} />
                   <span className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.6)" }}>{req.profile?.username}</span>
-                  <span className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>Pending…</span>
+                  <span className="text-xs" style={{ color: "rgba(255,255,255,0.55)" }}>Pending…</span>
                 </div>
                 <button onClick={() => removeFriend(req.id)}
                   className="px-3 py-1 rounded-lg text-xs font-bold transition-all"
-                  style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.35)" }}>
+                  style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.65)" }}>
                   Cancel
                 </button>
               </div>
@@ -226,7 +226,7 @@ export default function FriendsPanel() {
       <div>
         {sectionLabel(`Friends (${friends.length})`)}
         {friends.length === 0 ? (
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>No friends yet. Search above or share an invite link.</p>
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>No friends yet. Search above or share an invite link.</p>
         ) : (
           <div className="flex flex-col gap-2">
             {friends.map(f => (

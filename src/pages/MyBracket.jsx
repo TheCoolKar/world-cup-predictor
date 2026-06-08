@@ -1,4 +1,4 @@
-/**
+﻿/**
  * MyBracket.jsx — full user-driven tournament predictor
  *
  * Phase 1 — Group Stage
@@ -308,7 +308,7 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode })
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
           <ScorePicker value={hVal} onChange={v=>{onScoreChange(match.id,v,aVal);onPickChange(match.id,scoreToResult(v,aVal));}} />
-          <span className="font-black text-sm" style={{color:"rgba(255,255,255,0.25)"}}>–</span>
+          <span className="font-black text-sm" style={{color:"rgba(255,255,255,0.55)"}}>–</span>
           <ScorePicker value={aVal} onChange={v=>{onScoreChange(match.id,hVal,v);onPickChange(match.id,scoreToResult(hVal,v));}} />
         </div>
         <div className="flex items-center gap-1 flex-1 min-w-0">
@@ -364,7 +364,7 @@ function MiniStandings({ standings, thirds }) {
         const q=i<2, t3=i===2&&thirdTeams.has(t.team);
         return (
           <div key={t.team} className="flex items-center gap-2 px-3 py-1">
-            <span className="text-xs w-3 shrink-0" style={{color:"rgba(255,255,255,0.25)"}}>{i+1}</span>
+            <span className="text-xs w-3 shrink-0" style={{color:"rgba(255,255,255,0.55)"}}>{i+1}</span>
             <span className={getFlagClass(t.team) ?? ''} style={{fontSize:'1rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
             <span className="text-xs flex-1 font-semibold truncate"
               style={{color:q?"#c8f000":t3?"#f59e0b":"rgba(255,255,255,0.35)",cursor:"pointer"}}
@@ -377,7 +377,7 @@ function MiniStandings({ standings, thirds }) {
                 {q?"Q":"3rd"}
               </span>
             )}
-            <div className="flex gap-2 shrink-0 text-xs" style={{color:"rgba(255,255,255,0.3)"}}>
+            <div className="flex gap-2 shrink-0 text-xs" style={{color:"rgba(255,255,255,0.6)"}}>
               <span>{t.w}W</span><span>{t.d}D</span><span>{t.l}L</span>
               <span className="font-black" style={{color:q?"#c8f000":t3?"#f59e0b":"rgba(255,255,255,0.25)",minWidth:16,textAlign:"right"}}>
                 {t.pts}
@@ -438,7 +438,7 @@ function GroupCard({ group, picks, scores, onPick, onScore, standings, thirds, m
           </span>
           <svg
             className="w-3.5 h-3.5 transition-transform duration-200"
-            style={{color:"rgba(255,255,255,0.3)",transform:isOpen?"rotate(180deg)":"rotate(0deg)"}}
+            style={{color:"rgba(255,255,255,0.6)",transform:isOpen?"rotate(180deg)":"rotate(0deg)"}}
             fill="none" stroke="currentColor" viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/>
@@ -580,7 +580,7 @@ function BracketMatch({ home, away, winner, onPick, onForcePick, onScore, score,
 function ModeToggle({ mode, onChange }) {
   return (
     <div className="flex items-center gap-3 mb-5 flex-wrap">
-      <span className="text-xs font-semibold uppercase tracking-widest" style={{color:"rgba(255,255,255,0.35)"}}>
+      <span className="text-xs font-semibold uppercase tracking-widest" style={{color:"rgba(255,255,255,0.65)"}}>
         Prediction mode:
       </span>
       <div className="flex rounded-lg p-0.5 gap-0.5"
@@ -608,7 +608,7 @@ const isTournamentStarted = () => new Date() >= WC_KICKOFF;
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 
-export default function MyBracket({ bracketData, onBack, readOnly = false, viewingUser = null }) {
+export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = false, viewingUser = null }) {
   const [view,      setView]      = useState("groups");
   const mode = bracketData?.mode ?? "winner";
   const [openGroup, setOpenGroup] = useState("A");
@@ -629,8 +629,9 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
   const [submitting,   setSubmitting]   = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // null | "success" | "error"
   const [submitError,  setSubmitError]  = useState(null);
-  const [isSubmitted,  setIsSubmitted]  = useState(false);
-  const [saveIndicator,setSaveIndicator]= useState(null); // null | "saving" | "saved"
+  const [isSubmitted,       setIsSubmitted]       = useState(false);
+  const [showConfirmation,  setShowConfirmation]  = useState(false);
+  const [saveIndicator,     setSaveIndicator]     = useState(null); // null | "saving" | "saved"
   const autoSaveRef = useRef(null);
   const saveIndicatorRef = useRef(null);
   const leagueLinkedRef = useRef(false);
@@ -735,8 +736,14 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
         updated_at:        new Date().toISOString(),
       }, { onConflict: "user_id" });
       if (error) throw error;
-      setIsSubmitted(true);
-      setSubmitStatus("success");
+      const hasKnockoutPicks = Object.values(bw).some(arr => Array.isArray(arr) && arr.some(Boolean));
+      if (hasKnockoutPicks) {
+        setIsSubmitted(true);
+        setShowConfirmation(true);
+      } else {
+        setSubmitStatus("success");
+        setView("knockout");
+      }
     } catch (err) {
       setSubmitError(err.message);
       setSubmitStatus("error");
@@ -850,6 +857,7 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
   const SLOT_H=80, BRACKET_H=16*SLOT_H;
 
   return (
+    <>
     <div className="px-4 py-10" style={{maxWidth:"100vw"}}>
 
       {/* ── Back bar + bracket name ── */}
@@ -884,7 +892,7 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
             </span>
           ) : saveIndicator === "saving" ? (
             <span className="ml-auto text-xs px-2 py-0.5 rounded-full font-semibold"
-              style={{background:"rgba(255,255,255,0.06)",color:"rgba(255,255,255,0.35)",border:"1px solid rgba(255,255,255,0.1)"}}>
+              style={{background:"rgba(255,255,255,0.06)",color:"rgba(255,255,255,0.65)",border:"1px solid rgba(255,255,255,0.1)"}}>
               Saving…
             </span>
           ) : saveIndicator === "saved" ? (
@@ -894,7 +902,7 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
             </span>
           ) : (
             <span className="ml-auto text-xs px-2 py-0.5 rounded-full font-semibold"
-              style={{background:"rgba(255,255,255,0.05)",color:"rgba(255,255,255,0.3)",border:"1px solid rgba(255,255,255,0.08)"}}>
+              style={{background:"rgba(255,255,255,0.05)",color:"rgba(255,255,255,0.6)",border:"1px solid rgba(255,255,255,0.08)"}}>
               Draft
             </span>
           )}
@@ -908,7 +916,7 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
           <span className="text-xl">🔒</span>
           <div>
             <p className="font-bold text-sm" style={{color:"#ef4444"}}>Bracket Locked</p>
-            <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.4)"}}>
+            <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.7)"}}>
               The World Cup has started — picks are now read-only. Your submitted bracket is saved to your account.
             </p>
           </div>
@@ -929,14 +937,14 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
             <div className="text-5xl mb-4">🏆</div>
 
             <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{color:"#ef4444"}}>
-              $1,000 Challenge
+              World Cup 2026
             </p>
             <h3 className="text-white mb-2 leading-none"
               style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"2rem",letterSpacing:"0.04em"}}>
               Make My Bracket
             </h3>
-            <p className="text-sm mb-6" style={{color:"rgba(255,255,255,0.45)"}}>
-              Sign in to save your predictions and enter the $1,000 group stage challenge.
+            <p className="text-sm mb-6" style={{color:"rgba(255,255,255,0.7)"}}>
+              Sign in to save your predictions and compete with friends.
               Your picks are always saved locally even if you skip.
             </p>
 
@@ -956,7 +964,7 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
               <button
                 onClick={() => setSkippedAuth(true)}
                 className="text-xs mt-1 transition-colors"
-                style={{color:"rgba(255,255,255,0.25)"}}
+                style={{color:"rgba(255,255,255,0.55)"}}
                 onMouseEnter={e=>e.currentTarget.style.color="rgba(255,255,255,0.5)"}
                 onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.25)"}>
                 Skip for now — I'll sign in before submitting
@@ -993,7 +1001,7 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
                 ✓ {user.user_metadata?.display_name || user.email}
               </span>
               <button onClick={signOut}
-                style={{color:"rgba(255,255,255,0.3)"}}
+                style={{color:"rgba(255,255,255,0.6)"}}
                 onMouseEnter={e=>e.currentTarget.style.color="rgba(255,255,255,0.6)"}
                 onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.3)"}>
                 Sign out
@@ -1001,7 +1009,7 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
             </div>
           )}
         </div>
-        <p className="text-sm mb-4" style={{color:"rgba(255,255,255,0.35)"}}>
+        <p className="text-sm mb-4" style={{color:"rgba(255,255,255,0.65)"}}>
           Your predictions
         </p>
         <div className="flex items-center gap-4 flex-wrap">
@@ -1018,7 +1026,7 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
           </div>
           <button onClick={handleResetAll}
             className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors"
-            style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.12)",color:"rgba(255,255,255,0.45)"}}
+            style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.12)",color:"rgba(255,255,255,0.7)"}}
             onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,0.1)";e.currentTarget.style.color="rgba(255,255,255,0.7)";}}
             onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.06)";e.currentTarget.style.color="rgba(255,255,255,0.45)";}}>
             ↺ Reset all
@@ -1048,7 +1056,7 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
               <span className="text-lg">✅</span>
               <div>
                 <p className="text-sm font-bold" style={{color:"#c8f000"}}>All group picks complete!</p>
-                <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.45)"}}>
+                <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.7)"}}>
                   Switch to <strong>Knockout Bracket</strong> to pick your champion.
                 </p>
               </div>
@@ -1086,14 +1094,14 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
           {isLocked ? (
             <>
               <p className="font-bold text-sm" style={{color:"#ef4444"}}>🔒 Bracket Locked</p>
-              <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.4)"}}>
+              <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.7)"}}>
                 The World Cup has started. Your picks are saved to your account and can be viewed in leagues.
               </p>
             </>
           ) : isSubmitted ? (
             <>
               <p className="font-bold text-sm" style={{color:"#22c55e"}}>✓ Bracket Submitted</p>
-              <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.4)"}}>
+              <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.7)"}}>
                 Your official entry is locked in. Click "Edit Bracket" to make changes before the tournament starts.
               </p>
             </>
@@ -1102,9 +1110,9 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
               <p className="font-bold text-sm text-white">
                 {allPicked ? "Ready to submit! 🏆" : `${totalMatches - pickedCount} picks remaining`}
               </p>
-              <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.35)"}}>
+              <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.65)"}}>
                 {allPicked
-                  ? "All group stage picks complete — lock in your bracket to enter the $1,000 challenge."
+                  ? "All group stage picks complete — lock in your bracket and compete with friends."
                   : "Complete all 48 group stage matches to submit your official entry."}
               </p>
               {submitStatus === "error" && (
@@ -1206,7 +1214,7 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
                         const label=getMatchLabel(round,i);
                         return (
                           <div key={i} style={{flex:slotFlex,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:2}}>
-                            <span style={{fontSize:"0.55rem",fontWeight:700,letterSpacing:"0.04em",color:"rgba(255,255,255,0.25)",textTransform:"uppercase",textAlign:"center",lineHeight:1}}>
+                            <span style={{fontSize:"0.55rem",fontWeight:700,letterSpacing:"0.04em",color:"rgba(255,255,255,0.55)",textTransform:"uppercase",textAlign:"center",lineHeight:1}}>
                               {label}
                             </span>
                             <BracketMatch
@@ -1238,7 +1246,7 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
                       <p style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"1.2rem",letterSpacing:"0.04em",color:"#c8f000",lineHeight:1.1}}>
                         {champion}
                       </p>
-                      <p className="text-xs mt-1.5 font-semibold" style={{color:"rgba(255,255,255,0.3)"}}>Your Champion</p>
+                      <p className="text-xs mt-1.5 font-semibold" style={{color:"rgba(255,255,255,0.6)"}}>Your Champion</p>
                     </>
                   ):(
                     <>
@@ -1281,7 +1289,7 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
                           <p className="font-black leading-none" style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"1rem",letterSpacing:"0.04em",color:"#94a3b8"}}>
                             {bw["3P"][0]}
                           </p>
-                          <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.25)"}}>3rd Place 🥉</p>
+                          <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.55)"}}>3rd Place 🥉</p>
                         </div>
                       </div>
                     )}
@@ -1308,7 +1316,7 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
             ).map(label=>(
               <div key={label} className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full" style={{background:"rgba(200,240,0,0.5)"}}/>
-                <span className="text-xs" style={{color:"rgba(255,255,255,0.3)"}}>{label}</span>
+                <span className="text-xs" style={{color:"rgba(255,255,255,0.6)"}}>{label}</span>
               </div>
             ))}
           </div>
@@ -1316,5 +1324,52 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
         </div>
       )}
     </div>
+
+      {/* ══ SUBMISSION CONFIRMATION OVERLAY ════════════════════════════════ */}
+      {showConfirmation && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: "rgba(10,2,26,0.95)", backdropFilter: "blur(12px)" }}>
+          <div className="w-full max-w-sm rounded-2xl p-10 text-center"
+            style={{
+              background: "linear-gradient(160deg, #1f0645 0%, #160336 100%)",
+              border: "1px solid rgba(200,240,0,0.2)",
+              boxShadow: "0 24px 80px rgba(0,0,0,0.7)",
+            }}>
+            <div className="text-6xl mb-4">🏆</div>
+            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "#c8f000" }}>
+              Official Entry
+            </p>
+            <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2.2rem", color: "white", letterSpacing: "0.04em", lineHeight: 1 }}>
+              Bracket Submitted!
+            </h2>
+            <p className="text-sm mt-3 mb-6" style={{ color: "rgba(255,255,255,0.7)" }}>
+              Your picks are locked in. Good luck!
+            </p>
+            {champion && (
+              <div className="mb-6 px-4 py-3 rounded-xl" style={{ background: "rgba(200,240,0,0.06)", border: "1px solid rgba(200,240,0,0.15)" }}>
+                <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.65)" }}>Your Champion</p>
+                <p className="font-black text-lg" style={{ color: "#c8f000", fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}>
+                  {champion}
+                </p>
+              </div>
+            )}
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => { setShowConfirmation(false); onNavigate ? onNavigate("leaderboard") : onBack?.(); }}
+                className="w-full py-3 rounded-xl font-black text-sm"
+                style={{ background: "linear-gradient(135deg,#c8f000,#84cc16)", color: "#1a0533" }}>
+                View Leaderboard
+              </button>
+              <button
+                onClick={() => { setShowConfirmation(false); handleWithdraw(); }}
+                className="w-full py-3 rounded-xl font-black text-sm"
+                style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.6)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                Edit Bracket
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

@@ -1,4 +1,4 @@
-export default function Rules({ onClose }) {
+﻿export default function Rules({ onClose }) {
   const sections = [
     {
       num: "1",
@@ -56,7 +56,7 @@ export default function Rules({ onClose }) {
           <button
             onClick={onClose}
             className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full transition-colors"
-            style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.4)" }}
+            style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.7)" }}
             onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.14)"; e.currentTarget.style.color = "#fff"; }}
             onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.07)"; e.currentTarget.style.color = "rgba(255,255,255,0.4)"; }}
             aria-label="Close"
@@ -64,7 +64,7 @@ export default function Rules({ onClose }) {
             ✕
           </button>
 
-          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>
+          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.6)" }}>
             Official Rules
           </p>
 

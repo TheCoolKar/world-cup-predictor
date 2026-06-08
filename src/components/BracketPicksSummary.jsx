@@ -1,4 +1,4 @@
-import { getFlagClass } from "../utils/flags";
+﻿import { getFlagClass } from "../utils/flags";
 
 function TeamFlag({ name }) {
   if (!name) return null;
@@ -15,7 +15,7 @@ export default function BracketPicksSummary({ champion, finalist, third, semis =
   const hasKnockout = champion || finalist;
 
   if (!hasKnockout) {
-    return <span className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>Group picks only — no knockout picks yet</span>;
+    return <span className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Group picks only — no knockout picks yet</span>;
   }
 
   return (

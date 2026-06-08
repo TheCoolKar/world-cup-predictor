@@ -1,4 +1,4 @@
-import { setPick } from "../utils/storage";
+﻿import { setPick } from "../utils/storage";
 import { getFlagClass } from "../utils/flags";
 
 function FlagEmoji({ country }) {
@@ -52,7 +52,7 @@ export default function PredictCard({ match, pick, onPick }) {
           {isPicked && (
             <span className="text-xs font-bold" style={{ color: "#c8f000" }}>✓</span>
           )}
-          <span className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>{formattedDate}</span>
+          <span className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>{formattedDate}</span>
         </div>
       </div>
 
@@ -94,7 +94,7 @@ export default function PredictCard({ match, pick, onPick }) {
               style={
                 isActive
                   ? { ...s.active, boxShadow: `0 0 10px ${s.glow}44` }
-                  : { background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.4)", border: "1px solid rgba(255,255,255,0.08)" }
+                  : { background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.08)" }
               }
             >
               {label}

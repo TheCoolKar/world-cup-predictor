@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import { getLeagueLeaderboard } from "../utils/social";
@@ -21,7 +21,7 @@ function LeagueCard({ league, onNavigate }) {
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="min-w-0">
           <p className="font-black text-white truncate" style={{ fontSize: "0.95rem" }}>{league.name}</p>
-          <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
+          <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.65)" }}>
             {league.memberCount} member{league.memberCount !== 1 ? "s" : ""}
           </p>
         </div>
@@ -29,7 +29,7 @@ function LeagueCard({ league, onNavigate }) {
           <p className="font-black tabular-nums" style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "1.6rem", color: rankColor, lineHeight: 1 }}>
             #{league.rank}
           </p>
-          <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>rank</p>
+          <p className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>rank</p>
         </div>
       </div>
       <div className="flex items-center gap-4">
@@ -37,13 +37,13 @@ function LeagueCard({ league, onNavigate }) {
           <p className="font-black text-white tabular-nums" style={{ fontSize: "1.1rem", fontFamily: "'Bebas Neue',sans-serif" }}>
             {league.points ?? "—"}
           </p>
-          <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>pts</p>
+          <p className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>pts</p>
         </div>
         <div className="text-center">
           <p className="font-black tabular-nums" style={{ fontSize: "1.1rem", fontFamily: "'Bebas Neue',sans-serif", color: "#22c55e" }}>
             {league.correct ?? "—"}
           </p>
-          <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>correct</p>
+          <p className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>correct</p>
         </div>
         {league.champion && (
           <div className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-lg"
@@ -99,7 +99,7 @@ function MyLeagues({ userId, onNavigate }) {
   }, [userId]);
 
   if (loading) return (
-    <div className="flex items-center gap-2 py-4" style={{ color: "rgba(255,255,255,0.3)" }}>
+    <div className="flex items-center gap-2 py-4" style={{ color: "rgba(255,255,255,0.6)" }}>
       <div className="w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
       <span className="text-sm">Loading your leagues…</span>
     </div>
@@ -108,7 +108,7 @@ function MyLeagues({ userId, onNavigate }) {
   if (!leagues.length) return (
     <div className="text-center py-8 rounded-2xl" style={{ border: "1px dashed rgba(255,255,255,0.1)" }}>
       <p className="text-sm font-semibold mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>You haven't joined any leagues yet</p>
-      <p className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>Create one or join with a code to compete with friends</p>
+      <p className="text-xs" style={{ color: "rgba(255,255,255,0.55)" }}>Create one or join with a code to compete with friends</p>
     </div>
   );
 
@@ -138,7 +138,7 @@ function LiveScores() {
 
   if (!results.length) return (
     <div className="text-center py-6 rounded-2xl" style={{ border: "1px dashed rgba(255,255,255,0.08)" }}>
-      <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Tournament kicks off June 11 · Scores will appear here</p>
+      <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>Tournament kicks off June 11 · Scores will appear here</p>
     </div>
   );
 
@@ -150,9 +150,9 @@ function LiveScores() {
         return (
           <div key={r.match_id} className="flex items-center gap-3 px-4 py-3 rounded-xl"
             style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <span className="text-xs font-bold w-5 shrink-0" style={{ color: "rgba(255,255,255,0.25)" }}>{r.match_id}</span>
+            <span className="text-xs font-bold w-5 shrink-0" style={{ color: "rgba(255,255,255,0.55)" }}>{r.match_id}</span>
             <span className="flex-1 text-sm font-semibold truncate" style={{ color: "rgba(255,255,255,0.75)" }}>
-              {fix.home} <span style={{ color: "rgba(255,255,255,0.3)" }}>vs</span> {fix.away}
+              {fix.home} <span style={{ color: "rgba(255,255,255,0.6)" }}>vs</span> {fix.away}
             </span>
             <span className="font-black tabular-nums text-sm" style={{ color: "#c8f000" }}>
               {r.home_score}–{r.away_score}
@@ -204,7 +204,7 @@ export default function Home({ onNavigate, onSignIn, onSignUp }) {
           <button
             onClick={() => onNavigate("leagues")}
             className="w-full mt-3 py-2.5 rounded-xl text-sm font-bold transition-all"
-            style={{ background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.45)", border: "1px solid rgba(255,255,255,0.08)" }}
+            style={{ background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.08)" }}
             onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "white"; }}
             onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.color = "rgba(255,255,255,0.45)"; }}
           >
@@ -217,7 +217,7 @@ export default function Home({ onNavigate, onSignIn, onSignUp }) {
       {!user && (
         <section className="text-center py-8 rounded-2xl" style={{ border: "1px dashed rgba(200,240,0,0.15)" }}>
           <p className="text-sm font-semibold mb-1" style={{ color: "rgba(255,255,255,0.6)" }}>Sign in to join a league and track your picks</p>
-          <p className="text-xs mb-5" style={{ color: "rgba(255,255,255,0.25)" }}>Compete with friends · Track your score · See live rankings</p>
+          <p className="text-xs mb-5" style={{ color: "rgba(255,255,255,0.55)" }}>Compete with friends · Track your score · See live rankings</p>
           <div className="flex gap-2 justify-center">
             <button onClick={onSignIn}
               className="px-5 py-2 rounded-xl text-sm font-black transition-all active:scale-95"

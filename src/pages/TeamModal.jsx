@@ -1,4 +1,4 @@
-import { useTeamModal } from "../context/TeamModalContext";
+﻿import { useTeamModal } from "../context/TeamModalContext";
 import { getFlagClass } from '../utils/flags';
 import eloRatings from "../data/elo_ratings.json";
 import teamForm   from "../data/team_form.json";
@@ -34,7 +34,7 @@ function StatRow({ label, value, accent }) {
   return (
     <div className="flex items-center justify-between py-2"
       style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-      <span className="text-xs" style={{ color: "rgba(255,255,255,0.45)" }}>{label}</span>
+      <span className="text-xs" style={{ color: "rgba(255,255,255,0.7)" }}>{label}</span>
       <span className="text-xs font-black" style={{ color: accent ?? "white" }}>{value}</span>
     </div>
   );
@@ -97,7 +97,7 @@ export default function TeamModal() {
           style={{ background: "linear-gradient(160deg,#1f0645,#1a0533)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
           <button onClick={closeTeam}
             className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full transition-colors"
-            style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.4)", fontSize: "0.75rem" }}
+            style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.7)", fontSize: "0.75rem" }}
             onMouseEnter={e => { e.currentTarget.style.background="rgba(255,255,255,0.14)"; e.currentTarget.style.color="#fff"; }}
             onMouseLeave={e => { e.currentTarget.style.background="rgba(255,255,255,0.07)"; e.currentTarget.style.color="rgba(255,255,255,0.4)"; }}>
             ✕
@@ -113,7 +113,7 @@ export default function TeamModal() {
                 style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "2rem", letterSpacing: "0.04em" }}>
                 {team}
               </h2>
-              <p className="text-xs mt-1 font-semibold" style={{ color: "rgba(255,255,255,0.35)" }}>
+              <p className="text-xs mt-1 font-semibold" style={{ color: "rgba(255,255,255,0.65)" }}>
                 ELO Rank #{rank} · {elo} pts
               </p>
             </div>
@@ -124,12 +124,12 @@ export default function TeamModal() {
 
           {/* ── ELO ── */}
           <section>
-            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>ELO Rating</p>
+            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.6)" }}>ELO Rating</p>
             <div className="flex items-center gap-3 mb-2">
               <span className="font-black" style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "2rem", color: "#c8f000", lineHeight: 1 }}>
                 {elo}
               </span>
-              <span className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.35)" }}>
+              <span className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.65)" }}>
                 #{rank} of {ELO_ENTRIES.length} teams
               </span>
             </div>
@@ -145,7 +145,7 @@ export default function TeamModal() {
 
           {/* ── Recent Form ── */}
           <section>
-            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>Recent Form</p>
+            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.6)" }}>Recent Form</p>
             {form.played > 0 ? (
               <>
                 <div className="flex gap-2 mb-3">
@@ -164,20 +164,20 @@ export default function TeamModal() {
                     <div key={s.label} className="rounded-xl p-3 text-center"
                       style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
                       <p className="font-black text-lg leading-none" style={{ fontFamily: "'Bebas Neue',sans-serif", color: s.accent ?? "white" }}>{s.value}</p>
-                      <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.3)" }}>{s.label}</p>
+                      <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.6)" }}>{s.label}</p>
                     </div>
                   ))}
                 </div>
               </>
             ) : (
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>No recent form data available.</p>
+              <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>No recent form data available.</p>
             )}
           </section>
 
           {/* ── Historical WC ── */}
           {hist && (
             <section>
-              <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>World Cup History</p>
+              <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.6)" }}>World Cup History</p>
               <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
                 <StatRow label="Appearances"  value={hist.appearances === 0 ? "Debut 🎉" : hist.appearances} />
                 <StatRow label="Best finish"  value={hist.best} accent={hist.titles > 0 ? "#c8f000" : "white"} />
@@ -185,7 +185,7 @@ export default function TeamModal() {
                 <StatRow label="Total goals"  value={hist.goals} />
                 {hist.years.length > 0 && (
                   <div className="pt-2 mt-1">
-                    <p className="text-xs mb-2" style={{ color: "rgba(255,255,255,0.3)" }}>Previous appearances</p>
+                    <p className="text-xs mb-2" style={{ color: "rgba(255,255,255,0.6)" }}>Previous appearances</p>
                     <div className="flex flex-wrap gap-1.5">
                       {hist.years.map(y => (
                         <span key={y} className="text-xs px-2 py-0.5 rounded-full font-semibold"
@@ -203,7 +203,7 @@ export default function TeamModal() {
           {/* ── Predicted Lineup ── */}
           {lineup?.players?.length > 0 && (
             <section>
-              <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.3)" }}>Predicted Lineup</p>
+              <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.6)" }}>Predicted Lineup</p>
               <p className="text-xs mb-3" style={{ color: "rgba(255,255,255,0.2)" }}>
                 {lineup.formation} · {lineup.coach}
               </p>
@@ -218,7 +218,7 @@ export default function TeamModal() {
                           {pos}
                         </span>
                         <span className="text-sm font-semibold flex-1 text-white">{p.name}</span>
-                        <span className="text-xs shrink-0" style={{ color: "rgba(255,255,255,0.3)" }}>{p.club}</span>
+                        <span className="text-xs shrink-0" style={{ color: "rgba(255,255,255,0.6)" }}>{p.club}</span>
                         <span className="text-xs shrink-0 w-6 text-right" style={{ color: "rgba(255,255,255,0.2)" }}>{p.age}</span>
                       </div>
                     ))}

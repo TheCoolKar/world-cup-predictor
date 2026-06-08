@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+﻿import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
 // Shorten long tournament names for display
@@ -41,7 +41,7 @@ function StatBox({ label, value, accent }) {
       >
         {value}
       </span>
-      <span className="text-xs uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.3)" }}>
+      <span className="text-xs uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.6)" }}>
         {label}
       </span>
     </div>
@@ -100,7 +100,7 @@ export default function H2HModal({ h2h, home, away, onClose }) {
               className="text-white leading-tight"
               style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.5rem", letterSpacing: "0.06em" }}
             >
-              {home} <span style={{ color: "rgba(255,255,255,0.25)" }}>vs</span> {away}
+              {home} <span style={{ color: "rgba(255,255,255,0.55)" }}>vs</span> {away}
             </h2>
           </div>
           <button
@@ -120,7 +120,7 @@ export default function H2HModal({ h2h, home, away, onClose }) {
 
           {/* All-time summary */}
           <div>
-            <p className="text-xs uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>
+            <p className="text-xs uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.6)" }}>
               All Time · {all.played} meetings
             </p>
             <div className="grid grid-cols-5 gap-2 items-center">
@@ -136,10 +136,10 @@ export default function H2HModal({ h2h, home, away, onClose }) {
             </div>
             {/* Goals */}
             <div className="flex justify-between mt-2 px-1">
-              <span className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
+              <span className="text-xs" style={{ color: "rgba(255,255,255,0.55)" }}>
                 {all.homeTeamGoals} goals scored
               </span>
-              <span className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
+              <span className="text-xs" style={{ color: "rgba(255,255,255,0.55)" }}>
                 {all.awayTeamGoals} goals scored
               </span>
             </div>
@@ -148,7 +148,7 @@ export default function H2HModal({ h2h, home, away, onClose }) {
           {/* Since 2010 */}
           {recent.played > 0 && (
             <div>
-              <p className="text-xs uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>
+              <p className="text-xs uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.6)" }}>
                 Since 2010 · {recent.played} meetings
               </p>
               <div className="grid grid-cols-5 gap-2 items-center">
@@ -168,7 +168,7 @@ export default function H2HModal({ h2h, home, away, onClose }) {
           {/* Last meetings */}
           {last5.length > 0 && (
             <div>
-              <p className="text-xs uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>
+              <p className="text-xs uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.6)" }}>
                 Last {last5.length} Meetings
               </p>
               <div className="flex flex-col gap-2">
@@ -230,11 +230,11 @@ export default function H2HModal({ h2h, home, away, onClose }) {
                           </span>
                         </div>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
+                          <span className="text-xs" style={{ color: "rgba(255,255,255,0.55)" }}>
                             {formatDate(m.date)}
                           </span>
                           <span style={{ color: "rgba(255,255,255,0.15)" }}>·</span>
-                          <span className="text-xs truncate" style={{ color: "rgba(255,255,255,0.25)" }}>
+                          <span className="text-xs truncate" style={{ color: "rgba(255,255,255,0.55)" }}>
                             {shortTournament(m.tournament)}
                           </span>
                         </div>
@@ -247,7 +247,7 @@ export default function H2HModal({ h2h, home, away, onClose }) {
           )}
 
           {last5.length === 0 && (
-            <p className="text-sm text-center py-4" style={{ color: "rgba(255,255,255,0.25)" }}>
+            <p className="text-sm text-center py-4" style={{ color: "rgba(255,255,255,0.55)" }}>
               No previous meetings found in dataset.
             </p>
           )}

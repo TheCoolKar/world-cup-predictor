@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 
@@ -55,7 +55,7 @@ export default function InviteRedirect({ token, onNavigate, onSignUp }) {
   if (status === "loading" || (status === "valid" && (authLoading || user))) {
     return (
       <div style={containerStyle}>
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>Processing invite…</p>
+        <p className="text-sm" style={{ color: "rgba(255,255,255,0.7)" }}>Processing invite…</p>
       </div>
     );
   }
@@ -65,7 +65,7 @@ export default function InviteRedirect({ token, onNavigate, onSignUp }) {
       <div style={containerStyle}>
         <div className="text-4xl mb-4">🔗</div>
         <p className="font-bold text-white mb-1">Invalid or Expired Link</p>
-        <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.4)" }}>This invite link has expired or doesn't exist.</p>
+        <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.7)" }}>This invite link has expired or doesn't exist.</p>
         <button onClick={() => onNavigate("groups")}
           className="px-4 py-2 rounded-xl text-sm font-bold"
           style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.7)" }}>
@@ -80,7 +80,7 @@ export default function InviteRedirect({ token, onNavigate, onSignUp }) {
       <div style={containerStyle}>
         <div className="text-4xl mb-4">🤝</div>
         <p className="font-bold text-white mb-1">You're now friends with {creatorName}!</p>
-        <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.4)" }}>Head to the leaderboard to compete.</p>
+        <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.7)" }}>Head to the leaderboard to compete.</p>
         <button onClick={() => onNavigate("leaderboard")}
           className="px-5 py-2.5 rounded-xl text-sm font-black"
           style={{ background: "linear-gradient(135deg,#c8f000,#84cc16)", color: "#1a0533" }}>
@@ -109,7 +109,7 @@ export default function InviteRedirect({ token, onNavigate, onSignUp }) {
     <div style={containerStyle}>
       <div className="text-4xl mb-4">🏆</div>
       <p className="font-bold text-white mb-1">{creatorName} invited you to compete!</p>
-      <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.4)" }}>Sign up to accept the invite and join the leaderboard.</p>
+      <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.7)" }}>Sign up to accept the invite and join the leaderboard.</p>
       <button onClick={onSignUp}
         className="px-5 py-2.5 rounded-xl text-sm font-black"
         style={{ background: "linear-gradient(135deg,#c8f000,#84cc16)", color: "#1a0533" }}>

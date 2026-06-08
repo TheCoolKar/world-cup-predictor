@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import { generateJoinCode, getLeagueLeaderboard } from "../utils/social";
@@ -18,7 +18,7 @@ function Modal({ title, onClose, children }) {
       <div className="relative w-full max-w-md rounded-2xl p-7"
         style={{ background: "linear-gradient(160deg,#1f0645,#160336)", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 24px 80px rgba(0,0,0,0.6)" }}>
         <button onClick={onClose} className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-full text-xs"
-          style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.4)" }}>✕</button>
+          style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.7)" }}>✕</button>
         <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.6rem", color: "white", letterSpacing: "0.04em", marginBottom: 20 }}>{title}</h3>
         {children}
       </div>
@@ -61,14 +61,14 @@ function LeagueRankings({ leagueId, onViewProfile }) {
 
   if (loading) return (
     <div className="flex items-center justify-center py-12">
-      <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Loading rankings…</p>
+      <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>Loading rankings…</p>
     </div>
   );
 
   if (rows.length === 0) return (
     <div className="flex flex-col items-center justify-center py-12 gap-2">
       <span className="text-3xl">📭</span>
-      <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>No members have entered a bracket yet.</p>
+      <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>No members have entered a bracket yet.</p>
     </div>
   );
 
@@ -106,19 +106,19 @@ function LeagueRankings({ leagueId, onViewProfile }) {
                   <p className="text-xs font-black tabular-nums" style={{ color: "#c8f000" }}>
                     {row.points ?? "—"}
                   </p>
-                  <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.6rem" }}>PTS</p>
+                  <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.6rem" }}>PTS</p>
                 </div>
                 <div className="text-center px-2.5 py-1.5 rounded-lg hidden sm:block" style={{ background: "rgba(34,197,94,0.07)", minWidth: 52 }}>
                   <p className="text-xs font-black tabular-nums" style={{ color: "#22c55e" }}>
                     {row.correct ?? "—"}
                   </p>
-                  <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.6rem" }}>CORRECT</p>
+                  <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.6rem" }}>CORRECT</p>
                 </div>
                 <div className="text-center px-2.5 py-1.5 rounded-lg hidden sm:block" style={{ background: "rgba(239,68,68,0.07)", minWidth: 52 }}>
                   <p className="text-xs font-black tabular-nums" style={{ color: "#ef4444" }}>
                     {row.incorrect ?? "—"}
                   </p>
-                  <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.6rem" }}>WRONG</p>
+                  <p className="text-xs leading-none mt-0.5" style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.6rem" }}>WRONG</p>
                 </div>
               </div>
             </div>
@@ -128,7 +128,7 @@ function LeagueRankings({ leagueId, onViewProfile }) {
               {row.hasBracket ? (
                 <BracketPicksSummary champion={row.champion} finalist={row.finalist} third={row.third} semis={row.semis ?? []} />
               ) : (
-                <p className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>No bracket entered yet</p>
+                <p className="text-xs" style={{ color: "rgba(255,255,255,0.55)" }}>No bracket entered yet</p>
               )}
             </div>
 
@@ -223,7 +223,7 @@ function LeagueChat({ leagueId }) {
   }
 
   if (loading) return (
-    <div className="flex items-center justify-center h-48" style={{ color: "rgba(255,255,255,0.3)" }}>
+    <div className="flex items-center justify-center h-48" style={{ color: "rgba(255,255,255,0.6)" }}>
       <div className="w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin mr-2" />
       <span className="text-sm">Loading chat…</span>
     </div>
@@ -237,7 +237,7 @@ function LeagueChat({ leagueId }) {
       <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-3">
         {messages.length === 0 && (
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-sm text-center" style={{ color: "rgba(255,255,255,0.25)" }}>
+            <p className="text-sm text-center" style={{ color: "rgba(255,255,255,0.55)" }}>
               No messages yet — be the first to say something!
             </p>
           </div>
@@ -266,7 +266,7 @@ function LeagueChat({ leagueId }) {
 
               <div className={`flex flex-col ${isMe ? "items-end" : "items-start"} max-w-[72%]`}>
                 {showAvatar && !isMe && (
-                  <p className="text-xs font-bold mb-1" style={{ color: "rgba(255,255,255,0.45)" }}>{username}</p>
+                  <p className="text-xs font-bold mb-1" style={{ color: "rgba(255,255,255,0.7)" }}>{username}</p>
                 )}
                 <div className="px-3 py-2 rounded-2xl text-sm leading-relaxed"
                   style={{
@@ -345,7 +345,7 @@ function LeagueDetail({ league, mySubmissionId, onBack, onNavigate, onDelete, de
               <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000" }}>Public</span>
             )}
           </div>
-          {league.description && <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>{league.description}</p>}
+          {league.description && <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.65)" }}>{league.description}</p>}
         </div>
       </div>
 
@@ -370,12 +370,12 @@ function LeagueDetail({ league, mySubmissionId, onBack, onNavigate, onDelete, de
       {tab === "info" && (
         <div className="flex flex-col gap-3">
           <div className="rounded-xl px-5 py-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>Join Code</p>
+            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.6)" }}>Join Code</p>
             <p className="font-black text-2xl tracking-[0.2em]" style={{ color: "#c8f000", fontFamily: "'Bebas Neue',sans-serif" }}>{league.join_code}</p>
-            <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.3)" }}>Share this code so others can join</p>
+            <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.6)" }}>Share this code so others can join</p>
           </div>
           <div className="rounded-xl px-5 py-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.3)" }}>Visibility</p>
+            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.6)" }}>Visibility</p>
             <p className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.8)" }}>{league.is_public ? "Public — visible to all" : "Private — invite only"}</p>
           </div>
 
@@ -569,7 +569,7 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null, onViewPro
       <div className="mb-6">
         <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "#c8f000" }}>Social</p>
         <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2.2rem", color: "white", letterSpacing: "0.04em", lineHeight: 1 }}>Leagues</h1>
-        <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.35)" }}>Compete with friends in private or public leagues</p>
+        <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.65)" }}>Compete with friends in private or public leagues</p>
       </div>
 
       {user && (
@@ -589,11 +589,11 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null, onViewPro
 
       {/* My Leagues */}
       <section className="mb-10">
-        <h2 className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.4)" }}>My Leagues</h2>
+        <h2 className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.7)" }}>My Leagues</h2>
         {loadingMine ? (
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Loading…</p>
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>Loading…</p>
         ) : myLeagues.length === 0 ? (
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>You haven't joined any leagues yet.</p>
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>You haven't joined any leagues yet.</p>
         ) : (
           <div className="flex flex-col gap-3">
             {myLeagues.map(league => (
@@ -609,7 +609,7 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null, onViewPro
                       {league.is_public && <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000" }}>Public</span>}
                       {!league.submission_id && <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(249,115,22,0.12)", color: "#f97316" }}>No bracket</span>}
                     </div>
-                    {league.description && <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>{league.description}</p>}
+                    {league.description && <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.7)" }}>{league.description}</p>}
                     <p className="text-xs mt-1 font-mono" style={{ color: "rgba(255,255,255,0.2)" }}>Code: {league.join_code}</p>
                   </div>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6" /></svg>
@@ -622,11 +622,11 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null, onViewPro
 
       {/* Public Leagues */}
       <section>
-        <h2 className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.4)" }}>Browse Public Leagues</h2>
+        <h2 className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.7)" }}>Browse Public Leagues</h2>
         {loadingPublic ? (
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Loading…</p>
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>Loading…</p>
         ) : publicLeagues.length === 0 ? (
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>No public leagues yet. Be the first to create one!</p>
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>No public leagues yet. Be the first to create one!</p>
         ) : (
           <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
             {publicLeagues.map((league, i) => {
@@ -636,11 +636,11 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null, onViewPro
                   style={{ borderTop: i > 0 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
                   <div>
                     <p className="font-semibold" style={{ color: "rgba(255,255,255,0.85)" }}>{league.name}</p>
-                    {league.description && <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>{league.description}</p>}
+                    {league.description && <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.65)" }}>{league.description}</p>}
                   </div>
                   {user && (
                     alreadyIn ? (
-                      <span className="text-xs font-semibold px-3 py-1.5 rounded-lg" style={{ color: "rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.04)" }}>Joined</span>
+                      <span className="text-xs font-semibold px-3 py-1.5 rounded-lg" style={{ color: "rgba(255,255,255,0.6)", background: "rgba(255,255,255,0.04)" }}>Joined</span>
                     ) : (
                       <button onClick={() => handleJoinPublic(league)}
                         className="px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 transition-all active:scale-95"

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * SignInGate.jsx
  *
  * Shown instead of AI-prediction content (Group Stage / Bracket) when
@@ -44,10 +44,10 @@ export default function SignInGate({ tab = "groups", onSignIn, onSignUp }) {
       >
         Members Only
       </p>
-      <p className="text-sm text-center mb-1" style={{ color: "rgba(255,255,255,0.4)", maxWidth: 380 }}>
+      <p className="text-sm text-center mb-1" style={{ color: "rgba(255,255,255,0.7)", maxWidth: 380 }}>
         <span style={{ color: "#c8f000", fontWeight: 700 }}>{tabLabel}</span> is available to registered users.
       </p>
-      <p className="text-xs text-center mb-8" style={{ color: "rgba(255,255,255,0.25)", maxWidth: 340 }}>
+      <p className="text-xs text-center mb-8" style={{ color: "rgba(255,255,255,0.55)", maxWidth: 340 }}>
         Create a free account in seconds — no credit card required.
       </p>
 
@@ -95,7 +95,7 @@ export default function SignInGate({ tab = "groups", onSignIn, onSignUp }) {
             <span className="text-xl leading-none shrink-0 mt-0.5">{icon}</span>
             <div>
               <p className="text-xs font-bold mb-0.5" style={{ color: "rgba(255,255,255,0.75)" }}>{title}</p>
-              <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.3)" }}>{desc}</p>
+              <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.6)" }}>{desc}</p>
             </div>
           </div>
         ))}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 import { useAuth }  from "../hooks/useAuth";
 import { supabase } from "../lib/supabase";
 import { getPicks, getBracket } from "../utils/storage";
@@ -24,7 +24,7 @@ function StatPill({ label, value, accent = "#c8f000" }) {
     <div className="flex flex-col items-center px-5 py-3 rounded-xl"
       style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
       <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.6rem", color: accent, lineHeight: 1 }}>{value}</span>
-      <span className="text-xs mt-1 font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.3)" }}>{label}</span>
+      <span className="text-xs mt-1 font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.6)" }}>{label}</span>
     </div>
   );
 }
@@ -78,7 +78,7 @@ export default function Profile() {
           style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2rem", letterSpacing: "0.06em" }}>
           Sign In to View Your Profile
         </h2>
-        <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.4)" }}>
+        <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.7)" }}>
           Your picks are saved locally. Create an account to sync them to the cloud.
         </p>
       </div>
@@ -176,16 +176,16 @@ export default function Profile() {
     "rgba(255,255,255,0.12)";
 
   const usernameHint =
-    usernameState === "checking"  ? { text: "Checking…",      color: "rgba(255,255,255,0.3)" } :
+    usernameState === "checking"  ? { text: "Checking…",      color: "rgba(255,255,255,0.6)" } :
     usernameState === "available" ? { text: "✓ Available",    color: "#c8f000" } :
     usernameState === "taken"     ? { text: "✗ Already taken", color: "#ef4444" } :
     username && !usernameValid(username)
-      ? { text: "3–20 chars, letters/numbers/underscore only", color: "rgba(255,255,255,0.3)" }
+      ? { text: "3–20 chars, letters/numbers/underscore only", color: "rgba(255,255,255,0.6)" }
       : null;
 
-  const canSave = name.trim() &&
-    (usernameState === "unchanged" || usernameState === "available") &&
-    usernameState !== "taken";
+  const usernameOk = usernameState === "unchanged" || usernameState === "available" ||
+    (usernameState === "idle" && username === (profile?.username ?? ""));
+  const canSave = name.trim() && usernameOk && usernameState !== "taken";
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
@@ -237,8 +237,8 @@ export default function Profile() {
           {profile?.username && (
             <p className="text-xs font-semibold mt-0.5" style={{ color: "#c8f000" }}>@{profile.username}</p>
           )}
-          <p className="text-xs mt-0.5 truncate" style={{ color: "rgba(255,255,255,0.4)" }}>{user.email}</p>
-          <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.25)" }}>Member since {joinedDate}</p>
+          <p className="text-xs mt-0.5 truncate" style={{ color: "rgba(255,255,255,0.7)" }}>{user.email}</p>
+          <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.55)" }}>Member since {joinedDate}</p>
         </div>
       </div>
 
@@ -259,7 +259,7 @@ export default function Profile() {
       <section className="rounded-2xl p-6 mb-4"
         style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
         <h4 className="font-black text-white mb-1">Display Name & Username</h4>
-        <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.35)" }}>
+        <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.65)" }}>
           Your display name appears on the leaderboard. Your username is unique and public.
         </p>
         {!profile && (
@@ -284,11 +284,11 @@ export default function Profile() {
 
           <div>
             <label className="block text-xs font-semibold mb-1.5" style={{ color: "rgba(255,255,255,0.5)" }}>
-              Username <span style={{ color: "rgba(255,255,255,0.25)", fontWeight: 400 }}>(unique, public)</span>
+              Username <span style={{ color: "rgba(255,255,255,0.55)", fontWeight: 400 }}>(unique, public)</span>
             </label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold"
-                style={{ color: "rgba(255,255,255,0.3)" }}>@</span>
+                style={{ color: "rgba(255,255,255,0.6)" }}>@</span>
               <input type="text" value={username} onChange={e => setUsername(e.target.value.replace(/\s/g, ""))}
                 placeholder="your_username" maxLength={20} required
                 style={{ ...inputStyle, paddingLeft: 28, borderColor: usernameBorderColor }}
@@ -324,7 +324,7 @@ export default function Profile() {
       <section className="rounded-2xl p-6 mb-4"
         style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
         <h4 className="font-black text-white mb-1">Email Address</h4>
-        <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.35)" }}>
+        <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.65)" }}>
           Your email cannot be changed here.
         </p>
         <div style={{ ...inputStyle, opacity: 0.6, cursor: "not-allowed" }}>{user.email}</div>
@@ -334,7 +334,7 @@ export default function Profile() {
       <section className="rounded-2xl p-6 mb-8"
         style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
         <h4 className="font-black text-white mb-1">Password</h4>
-        <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.35)" }}>
+        <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.65)" }}>
           We'll send a reset link to <strong style={{ color: "rgba(255,255,255,0.6)" }}>{user.email}</strong>.
         </p>
         {resetSent ? (
@@ -359,7 +359,7 @@ export default function Profile() {
       <section className="rounded-2xl p-6"
         style={{ background: "rgba(239,68,68,0.04)", border: "1px solid rgba(239,68,68,0.12)" }}>
         <h4 className="font-black mb-1" style={{ color: "#ef4444" }}>Sign Out</h4>
-        <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.35)" }}>Your local picks will remain on this device.</p>
+        <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.65)" }}>Your local picks will remain on this device.</p>
         <button onClick={signOut}
           className="px-5 py-2.5 rounded-xl font-bold text-sm transition-all active:scale-95"
           style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)", color: "#ef4444" }}

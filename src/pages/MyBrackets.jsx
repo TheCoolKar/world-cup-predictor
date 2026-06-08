@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { getAllBrackets, createBracket, upsertBracket, deleteBracket } from "../utils/storage";
 import fixtures from "../data/wc2026_fixtures.json";
 
@@ -52,7 +52,7 @@ export default function MyBrackets({ onOpen }) {
           style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2rem", letterSpacing: "0.08em" }}>
           My Bracket
         </h2>
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>
+        <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
           Your prediction bracket — saves automatically as you pick
         </p>
       </div>
@@ -66,7 +66,7 @@ export default function MyBrackets({ onOpen }) {
             style={{ background: "linear-gradient(160deg,#1f0645,#160336)", border: "1px solid rgba(255,255,255,0.12)" }}
             onClick={e => e.stopPropagation()}>
             <p className="text-white font-bold mb-1">Delete your bracket?</p>
-            <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.4)" }}>This can't be undone. All your picks will be lost.</p>
+            <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.7)" }}>This can't be undone. All your picks will be lost.</p>
             <div className="flex gap-2 justify-center">
               <button onClick={() => handleDelete(deletingId)}
                 className="px-5 py-2 rounded-xl font-black text-sm"
@@ -89,7 +89,7 @@ export default function MyBrackets({ onOpen }) {
           style={{ border: "1px dashed rgba(255,255,255,0.1)" }}>
           <div className="text-4xl mb-3">🏆</div>
           <p className="text-white font-bold mb-1">No bracket yet</p>
-          <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.35)" }}>
+          <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.65)" }}>
             Create your bracket and start predicting the World Cup
           </p>
           <button onClick={handleCreate}
@@ -130,7 +130,7 @@ export default function MyBrackets({ onOpen }) {
                 <p className="text-sm font-black text-white truncate group-hover:text-[#c8f000] transition-colors">
                   My Bracket
                 </p>
-                <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>
+                <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.6)" }}>
                   {group}/{TOTAL_GROUP_MATCHES} group picks · edited {formatDate(bracket.updatedAt)}
                   {bracket.mode === "score" && (
                     <span className="ml-2 px-1.5 py-0.5 rounded font-semibold" style={{ background: "rgba(99,102,241,0.15)", color: "#a5b4fc", fontSize: "0.6rem" }}>Score mode</span>
@@ -144,7 +144,7 @@ export default function MyBrackets({ onOpen }) {
                   <div className="h-full rounded-full transition-all"
                     style={{ width: `${pct}%`, background: pct === 100 ? "linear-gradient(90deg,#c8f000,#84cc16)" : "linear-gradient(90deg,#60a5fa,#3b82f6)" }} />
                 </div>
-                <p className="text-xs mt-1 text-right tabular-nums" style={{ color: "rgba(255,255,255,0.25)" }}>{pct}%</p>
+                <p className="text-xs mt-1 text-right tabular-nums" style={{ color: "rgba(255,255,255,0.55)" }}>{pct}%</p>
               </div>
 
               <svg className="w-4 h-4 shrink-0 opacity-30 group-hover:opacity-100 transition-opacity"
@@ -157,14 +157,14 @@ export default function MyBrackets({ onOpen }) {
             <div className="flex gap-2 px-5 pb-3">
               <button onClick={() => onOpen(bracket.id)}
                 className="text-xs font-semibold px-3 py-1 rounded-lg transition-all"
-                style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.35)" }}
+                style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.65)" }}
                 onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.color = "white"; }}
                 onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "rgba(255,255,255,0.35)"; }}>
                 Edit Picks
               </button>
               <button onClick={() => setDeletingId(bracket.id)}
                 className="text-xs font-semibold px-3 py-1 rounded-lg transition-all"
-                style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.35)" }}
+                style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.65)" }}
                 onMouseEnter={e => { e.currentTarget.style.background = "rgba(239,68,68,0.15)"; e.currentTarget.style.color = "#ef4444"; }}
                 onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "rgba(255,255,255,0.35)"; }}>
                 Delete
