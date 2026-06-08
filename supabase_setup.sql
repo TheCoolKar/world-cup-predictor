@@ -53,6 +53,7 @@ drop policy if exists "Users can insert their own submission"        on public.s
 drop policy if exists "Users can update their own submission"        on public.submissions;
 drop policy if exists "Users can read their own submission"          on public.submissions;
 drop policy if exists "League members can read co-member submissions" on public.submissions;
+drop policy if exists "Authenticated users can read all submissions"  on public.submissions;
 
 create policy "Users can insert their own submission"
   on public.submissions for insert with check (auth.uid() = user_id);
@@ -60,19 +61,8 @@ create policy "Users can insert their own submission"
 create policy "Users can update their own submission"
   on public.submissions for update using (auth.uid() = user_id);
 
-create policy "Users can read their own submission"
-  on public.submissions for select using (auth.uid() = user_id);
-
-create policy "League members can read co-member submissions"
-  on public.submissions for select
-  using (
-    exists (
-      select 1 from public.league_members lm1
-      join public.league_members lm2 on lm1.league_id = lm2.league_id
-      where lm1.user_id = auth.uid()
-        and lm2.submission_id = public.submissions.id
-    )
-  );
+create policy "Authenticated users can read all submissions"
+  on public.submissions for select using (auth.uid() is not null);
 
 -- ── Admin role ───────────────────────────────────────────────────────────────
 

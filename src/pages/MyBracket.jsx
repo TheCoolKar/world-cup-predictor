@@ -71,23 +71,139 @@ function computeThirds(byGroup) {
   return out;
 }
 
+// ── Official FIFA 2026 bracket structure ──────────────────────────────────────
+
+// Human-readable labels for each R32 slot
+const R32_LABELS = [
+  '2A vs 2B',      // 0  M73
+  '1E vs 3rd',     // 1  M74
+  '1F vs 2C',      // 2  M75
+  '1C vs 2F',      // 3  M76
+  '1I vs 3rd',     // 4  M77
+  '2E vs 2I',      // 5  M78
+  '1A vs 3rd',     // 6  M79
+  '1L vs 3rd',     // 7  M80
+  '1D vs 3rd',     // 8  M81
+  '1G vs 3rd',     // 9  M82
+  '2K vs 2L',      // 10 M83
+  '1H vs 2J',      // 11 M84
+  '1B vs 3rd',     // 12 M85
+  '1J vs 2H',      // 13 M86
+  '1K vs 3rd',     // 14 M87
+  '2D vs 2G',      // 15 M88
+];
+
+// Match number offset per round (FIFA official numbering)
+const ROUND_BASE = { R32: 73, R16: 89, QF: 97, SF: 101, F: 104 };
+
+function getMatchLabel(round, matchIdx) {
+  if (round === 'R32') return R32_LABELS[matchIdx];
+  if (round === 'F')   return 'Final';
+  const [hr, hi, ar, ai] = MATCH_SOURCES[round][matchIdx];
+  return `W${ROUND_BASE[hr] + hi} vs W${ROUND_BASE[ar] + ai}`;
+}
+
+// For each round, which two previous-round matches feed each slot (home, away)?
+const MATCH_SOURCES = {
+  R16: [
+    ['R32',1,'R32',4],  ['R32',0,'R32',2],  ['R32',3,'R32',5],  ['R32',6,'R32',7],
+    ['R32',10,'R32',11],['R32',8,'R32',9],  ['R32',13,'R32',15],['R32',12,'R32',14],
+  ],
+  QF: [
+    ['R16',0,'R16',1], ['R16',4,'R16',5], ['R16',2,'R16',3], ['R16',6,'R16',7],
+  ],
+  SF: [ ['QF',0,'QF',1], ['QF',2,'QF',3] ],
+  F:  [ ['SF',0,'SF',1] ],
+};
+
+// For each round+matchIdx, where does the winner cascade to next?
+const WINNER_DEST = {
+  R32: [['R16',1],['R16',0],['R16',1],['R16',2],['R16',0],['R16',2],['R16',3],['R16',3],
+        ['R16',5],['R16',5],['R16',4],['R16',4],['R16',7],['R16',6],['R16',7],['R16',6]],
+  R16: [['QF',0],['QF',0],['QF',2],['QF',2],['QF',1],['QF',1],['QF',3],['QF',3]],
+  QF:  [['SF',0],['SF',0],['SF',1],['SF',1]],
+  SF:  [['F',0],['F',0]],
+};
+
+// 3rd-place slots: R32 index → set of eligible source groups
+const THIRD_SLOTS = [
+  [1,  new Set(['A','B','C','D','F'])],
+  [4,  new Set(['C','D','F','G','H'])],
+  [6,  new Set(['C','E','F','H','I'])],
+  [7,  new Set(['E','H','I','J','K'])],
+  [8,  new Set(['B','E','F','I','J'])],
+  [9,  new Set(['A','E','H','I','J'])],
+  [12, new Set(['E','F','G','I','J'])],
+  [14, new Set(['D','E','I','J','L'])],
+];
+
 // ── R32 slot builder ──────────────────────────────────────────────────────────
 
 function isGroupComplete(g, picks) {
   return GROUP_MATCHES.filter(m => m.group === g).every(m => picks[m.id] != null);
 }
 
-function buildR32Slots(byGroup, thirds, picks) {
-  const pos=(g,i)=>isGroupComplete(g,picks) ? (byGroup[g]?.[i]?.team??null) : null;
-  const validThirds=thirds.map(t=>isGroupComplete(t.group,picks)?t:{team:null});
-  const t=i=>validThirds[i]?.team??null;
-  const pairs=[["A","B"],["C","D"],["E","F"],["G","H"],["I","J"],["K","L"]];
-  const slots=[];
-  for (const [g1,g2] of pairs) {
-    slots.push({home:pos(g1,0),away:pos(g2,1)});
-    slots.push({home:pos(g2,0),away:pos(g1,1)});
+// Assign 8 qualifying 3rd-place teams to their official bracket slots via backtracking.
+function assign3rdPlace(thirds) {
+  // Sort slots by how many qualifying teams are eligible (most-constrained first)
+  const ordered = [...THIRD_SLOTS]
+    .map(([idx, eligible]) => ({ idx, eligible, count: thirds.filter(t => t.team && eligible.has(t.group)).length }))
+    .sort((a, b) => a.count - b.count);
+
+  const result = {}; // slotIdx → team
+  const used = new Set();
+
+  function bt(i) {
+    if (i === ordered.length) return true;
+    const { idx, eligible } = ordered[i];
+    for (const t of thirds) {
+      if (t.team && !used.has(t.group) && eligible.has(t.group)) {
+        result[idx] = t.team;
+        used.add(t.group);
+        if (bt(i + 1)) return true;
+        delete result[idx];
+        used.delete(t.group);
+      }
+    }
+    return false;
   }
-  slots.push({home:t(0),away:t(7)},{home:t(1),away:t(6)},{home:t(2),away:t(5)},{home:t(3),away:t(4)});
+
+  bt(0);
+  return result; // { slotIdx: team }
+}
+
+function buildR32Slots(byGroup, thirds, picks) {
+  const pos = (g, i) => isGroupComplete(g, picks) ? (byGroup[g]?.[i]?.team ?? null) : null;
+
+  // Official R32 matchups (M73–M88)
+  const slots = [
+    { home: pos('A',1), away: pos('B',1) },  // 0  M73: 2A vs 2B
+    { home: pos('E',0), away: null        },  // 1  M74: 1E vs 3rd(A/B/C/D/F)
+    { home: pos('F',0), away: pos('C',1)  },  // 2  M75: 1F vs 2C
+    { home: pos('C',0), away: pos('F',1)  },  // 3  M76: 1C vs 2F
+    { home: pos('I',0), away: null        },  // 4  M77: 1I vs 3rd(C/D/F/G/H)
+    { home: pos('E',1), away: pos('I',1)  },  // 5  M78: 2E vs 2I
+    { home: pos('A',0), away: null        },  // 6  M79: 1A vs 3rd(C/E/F/H/I)
+    { home: pos('L',0), away: null        },  // 7  M80: 1L vs 3rd(E/H/I/J/K)
+    { home: pos('D',0), away: null        },  // 8  M81: 1D vs 3rd(B/E/F/I/J)
+    { home: pos('G',0), away: null        },  // 9  M82: 1G vs 3rd(A/E/H/I/J)
+    { home: pos('K',1), away: pos('L',1)  },  // 10 M83: 2K vs 2L
+    { home: pos('H',0), away: pos('J',1)  },  // 11 M84: 1H vs 2J
+    { home: pos('B',0), away: null        },  // 12 M85: 1B vs 3rd(E/F/G/I/J)
+    { home: pos('J',0), away: pos('H',1)  },  // 13 M86: 1J vs 2H
+    { home: pos('K',0), away: null        },  // 14 M87: 1K vs 3rd(D/E/I/J/L)
+    { home: pos('D',1), away: pos('G',1)  },  // 15 M88: 2D vs 2G
+  ];
+
+  // Populate 3rd-place slots only once all 12 groups are decided
+  const allComplete = GROUPS.every(g => isGroupComplete(g, picks));
+  if (allComplete) {
+    const assignments = assign3rdPlace(thirds);
+    for (const [idx] of THIRD_SLOTS) {
+      if (assignments[idx]) slots[idx].away = assignments[idx];
+    }
+  }
+
   return slots;
 }
 
@@ -101,10 +217,6 @@ function emptyWinners() {
   };
 }
 
-/**
- * Apply a bracket pick with optional force (score mode bypasses toggle).
- * Always cascades the old winner out of subsequent rounds.
- */
 function applyPick(prev, round, matchIdx, team, force=false) {
   const next={};
   for (const k of ROUNDS) next[k]=[...prev[k]];
@@ -112,19 +224,18 @@ function applyPick(prev, round, matchIdx, team, force=false) {
   const old = next[round][matchIdx];
 
   if (!force && team===old) {
-    // Toggle off
     next[round][matchIdx]=null;
   } else {
-    if (force && old===team) return prev; // no-op
+    if (force && old===team) return prev;
     next[round][matchIdx]=team;
   }
 
-  // Cascade: clear old winner from all later rounds in the main chain
+  // Cascade: clear old winner from all later rounds using official bracket tree
   if (old) {
-    let ri=ROUNDS.indexOf(round)+1, mi=Math.floor(matchIdx/2);
-    while (ri<ROUNDS.length) {
-      const r=ROUNDS[ri];
-      if (next[r][mi]===old) { next[r][mi]=null; mi=Math.floor(mi/2); ri++; } else break;
+    let cur = [round, matchIdx];
+    while (WINNER_DEST[cur[0]]) {
+      const [dr, di] = WINNER_DEST[cur[0]][cur[1]];
+      if (next[dr]?.[di] === old) { next[dr][di] = null; cur = [dr, di]; } else break;
     }
   }
   return next;
@@ -132,8 +243,8 @@ function applyPick(prev, round, matchIdx, team, force=false) {
 
 function getTeams(round, matchIdx, winners, r32Slots) {
   if (round==="R32") { const s=r32Slots[matchIdx]??{}; return{home:s.home??null,away:s.away??null}; }
-  const prev=ROUNDS[ROUNDS.indexOf(round)-1];
-  return{home:winners[prev]?.[matchIdx*2]??null,away:winners[prev]?.[matchIdx*2+1]??null};
+  const [hr,hi,ar,ai] = MATCH_SOURCES[round][matchIdx];
+  return { home: winners[hr]?.[hi]??null, away: winners[ar]?.[ai]??null };
 }
 
 function getSFLoser(sfIdx, bw, r32Slots) {
@@ -1024,8 +1135,12 @@ export default function MyBracket({ bracketData, onBack, readOnly = false, viewi
                         const winner=bw[round][i];
                         const scoreKey=`${round}_${i}`;
                         const score=bScores[scoreKey]??null;
+                        const label=getMatchLabel(round,i);
                         return (
-                          <div key={i} style={{flex:slotFlex,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                          <div key={i} style={{flex:slotFlex,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:2}}>
+                            <span style={{fontSize:"0.55rem",fontWeight:700,letterSpacing:"0.04em",color:"rgba(255,255,255,0.25)",textTransform:"uppercase",textAlign:"center",lineHeight:1}}>
+                              {label}
+                            </span>
                             <BracketMatch
                               home={home} away={away} winner={winner}
                               onPick={team=>handleBracketPick(round,i,team)}
