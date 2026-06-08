@@ -3,7 +3,7 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import { getLeagueLeaderboard, getMatchResults } from "../utils/social";
 import { calculateGroupScores } from "../utils/scoring";
-import { getFlagClass } from "../utils/flags";
+import BracketPicksSummary from "../components/BracketPicksSummary";
 
 
 function Avatar({ url, username, size = 32 }) {
@@ -23,45 +23,6 @@ function RankBadge({ rank }) {
     <span className="font-black tabular-nums" style={{ color, fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", minWidth: 28, display: "inline-block", textAlign: "center" }}>
       {rank}
     </span>
-  );
-}
-
-function TeamFlag({ name }) {
-  if (!name) return null;
-  const cls = getFlagClass(name);
-  return (
-    <span className="inline-flex items-center gap-1 text-xs font-semibold" style={{ color: "rgba(255,255,255,0.85)" }}>
-      {cls && <span className={cls} style={{ fontSize: "0.9rem" }} />}
-      {name}
-    </span>
-  );
-}
-
-function BracketSummary({ champion, finalist, semis }) {
-  if (!champion && !finalist && (!semis || semis.length === 0)) {
-    return <span className="text-xs" style={{ color: "rgba(255,255,255,0.2)" }}>No bracket picks yet</span>;
-  }
-  return (
-    <div className="flex flex-wrap gap-x-5 gap-y-1.5 mt-1.5">
-      {champion && (
-        <div className="flex items-center gap-1.5">
-          <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "#FFD700" }}>🏆</span>
-          <TeamFlag name={champion} />
-        </div>
-      )}
-      {finalist && (
-        <div className="flex items-center gap-1.5">
-          <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "#C0C0C0" }}>🥈</span>
-          <TeamFlag name={finalist} />
-        </div>
-      )}
-      {semis.filter(t => t !== champion && t !== finalist).map(team => (
-        <div key={team} className="flex items-center gap-1.5">
-          <span className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>SF</span>
-          <TeamFlag name={team} />
-        </div>
-      ))}
-    </div>
   );
 }
 
@@ -98,7 +59,7 @@ function LeagueRow({ row, rank, isMe, onViewProfile }) {
             )}
           </div>
           {row.hasBracket
-            ? <BracketSummary champion={row.champion} finalist={row.finalist} semis={row.semis ?? []} />
+            ? <BracketPicksSummary champion={row.champion} finalist={row.finalist} third={row.third} semis={row.semis ?? []} />
             : <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.25)" }}>Hasn't entered a bracket yet</p>
           }
         </div>

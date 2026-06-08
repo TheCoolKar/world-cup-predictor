@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import { generateJoinCode, getLeagueLeaderboard } from "../utils/social";
-import { getFlagClass } from "../utils/flags";
+import BracketPicksSummary from "../components/BracketPicksSummary";
 
 // ── Shared helpers ────────────────────────────────────────────────────────────
 
@@ -41,17 +41,6 @@ function RankBadge({ rank }) {
   return (
     <span className="font-black tabular-nums shrink-0" style={{ color: colors[rank] ?? "rgba(255,255,255,0.25)", fontFamily: "'Bebas Neue',sans-serif", fontSize: "1.1rem", minWidth: 24, display: "inline-block", textAlign: "center" }}>
       {rank}
-    </span>
-  );
-}
-
-function TeamFlag({ name }) {
-  if (!name) return null;
-  const cls = getFlagClass(name);
-  return (
-    <span className="inline-flex items-center gap-1 text-xs font-semibold" style={{ color: "rgba(255,255,255,0.85)" }}>
-      {cls && <span className={cls} style={{ fontSize: "0.85rem" }} />}
-      {name}
     </span>
   );
 }
@@ -137,35 +126,7 @@ function LeagueRankings({ leagueId, onViewProfile }) {
             {/* Bottom row: bracket picks */}
             <div className="mt-2.5 pl-10">
               {row.hasBracket ? (
-                <div className="flex flex-wrap gap-x-4 gap-y-1">
-                  {row.champion && (
-                    <div className="flex items-center gap-1">
-                      <span style={{ fontSize: "0.8rem" }}>🥇</span>
-                      <TeamFlag name={row.champion} />
-                    </div>
-                  )}
-                  {row.finalist && row.finalist !== row.champion && (
-                    <div className="flex items-center gap-1">
-                      <span style={{ fontSize: "0.8rem" }}>🥈</span>
-                      <TeamFlag name={row.finalist} />
-                    </div>
-                  )}
-                  {(row.semis ?? []).filter(t => t && t !== row.champion && t !== row.finalist).map(team => (
-                    <div key={team} className="flex items-center gap-1">
-                      <span style={{ fontSize: "0.8rem" }}>🥈</span>
-                      <TeamFlag name={team} />
-                    </div>
-                  ))}
-                  {row.third && row.third !== row.champion && row.third !== row.finalist && (
-                    <div className="flex items-center gap-1">
-                      <span style={{ fontSize: "0.8rem" }}>🥉</span>
-                      <TeamFlag name={row.third} />
-                    </div>
-                  )}
-                  {!row.champion && !row.finalist && (
-                    <span className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>Group picks only — no knockout picks yet</span>
-                  )}
-                </div>
+                <BracketPicksSummary champion={row.champion} finalist={row.finalist} third={row.third} semis={row.semis ?? []} />
               ) : (
                 <p className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>No bracket entered yet</p>
               )}
