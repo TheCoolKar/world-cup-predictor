@@ -56,139 +56,6 @@ function TeamFlag({ name }) {
   );
 }
 
-// ── Bracket Picker Modal ──────────────────────────────────────────────────────
-
-function BracketPickerModal({ leagueId, leagueName, onClose, onNavigate }) {
-  const { user } = useAuth();
-  const [submission, setSubmission] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [saveError, setSaveError] = useState(null);
-
-  useEffect(() => {
-    if (!user) return;
-    supabase
-      .from("submissions")
-      .select("id, mode, group_picks_count, updated_at")
-      .eq("user_id", user.id)
-      .maybeSingle()
-      .then(({ data }) => { setSubmission(data); setLoading(false); });
-  }, [user]);
-
-  async function handleSelect() {
-    if (!submission) return;
-    setSaving(true);
-    setSaveError(null);
-    const { error } = await supabase
-      .from("league_members")
-      .update({ submission_id: submission.id })
-      .eq("league_id", leagueId)
-      .eq("user_id", user.id);
-    setSaving(false);
-    if (error) { setSaveError(error.message); return; }
-    setSaved(true);
-  }
-
-  if (loading) return (
-    <Modal title="Enter Your Bracket" onClose={onClose}>
-      <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>Loading…</p>
-    </Modal>
-  );
-
-  if (saved) return (
-    <Modal title="You're In!" onClose={onClose}>
-      <div className="text-center py-4">
-        <div className="text-5xl mb-4">🏆</div>
-        <p className="font-bold text-white mb-1">Bracket entered for</p>
-        <p className="font-black mb-4" style={{ color: "#c8f000", fontSize: "1.1rem" }}>{leagueName}</p>
-        <p className="text-xs mb-6" style={{ color: "rgba(255,255,255,0.4)" }}>
-          {submission.group_picks_count} picks entered · good luck!
-        </p>
-        <button onClick={onClose} className="w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95"
-          style={{ background: "linear-gradient(135deg,#c8f000,#84cc16)", color: "#1a0533" }}>Done</button>
-      </div>
-    </Modal>
-  );
-
-  return (
-    <Modal title="Enter Your Bracket" onClose={onClose}>
-      <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.45)" }}>
-        Select a bracket to compete with in <span style={{ color: "white", fontWeight: 600 }}>{leagueName}</span>.
-        You can only enter one bracket per league.
-      </p>
-      {/* League rules callout */}
-      <div className="flex items-start gap-2.5 px-3 py-2.5 rounded-lg mb-5"
-        style={{ background: "rgba(200,240,0,0.06)", border: "1px solid rgba(200,240,0,0.15)" }}>
-        <span className="text-sm mt-0.5">ℹ️</span>
-        <p className="text-xs" style={{ color: "rgba(255,255,255,0.55)" }}>
-          Leagues use <span style={{ color: "#c8f000", fontWeight: 700 }}>Winner Only</span> mode. Only brackets made in Winner Only mode can be entered. Score-mode brackets are not eligible.
-        </p>
-      </div>
-
-      {!submission ? (
-        <div className="text-center">
-          <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.45)" }}>
-            You haven't made any picks yet. Complete a Winner Only bracket first.
-          </p>
-          <button onClick={() => { onClose(); onNavigate("groups"); }}
-            className="w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95"
-            style={{ background: "linear-gradient(135deg,#c8f000,#84cc16)", color: "#1a0533" }}>
-            Make My Picks
-          </button>
-        </div>
-      ) : submission.mode === "score" ? (
-        <div>
-          <div className="rounded-xl px-4 py-3 mb-4"
-            style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)" }}>
-            <div className="flex items-center gap-2 mb-0.5">
-              <span className="text-base">🚫</span>
-              <p className="font-bold text-sm" style={{ color: "#ef4444" }}>Score Mode — Not Eligible</p>
-            </div>
-            <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
-              Your current bracket is in Score Mode. Leagues only accept Winner Only brackets.
-            </p>
-          </div>
-          <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.4)" }}>
-            Go to <strong style={{ color: "white" }}>My Brackets</strong>, create a new bracket in <strong style={{ color: "#c8f000" }}>Winner Only</strong> mode, make your picks, then come back to enter it.
-          </p>
-          <button onClick={() => { onClose(); onNavigate("mine"); }}
-            className="w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95"
-            style={{ background: "linear-gradient(135deg,#c8f000,#84cc16)", color: "#1a0533" }}>
-            Go to My Brackets
-          </button>
-        </div>
-      ) : (
-        <div>
-          <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>My Brackets</p>
-          <div className="rounded-xl px-4 py-3 mb-5"
-            style={{ background: "rgba(200,240,0,0.07)", border: "1px solid rgba(200,240,0,0.25)" }}>
-            <div className="flex items-center justify-between mb-0.5">
-              <div className="flex items-center gap-2">
-                <span className="text-base">📋</span>
-                <p className="font-bold text-sm" style={{ color: "white" }}>My Bracket</p>
-              </div>
-              <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
-                style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000" }}>
-                Winner Only ✓
-              </span>
-            </div>
-            <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
-              {submission.group_picks_count} group picks · Last updated {new Date(submission.updated_at).toLocaleDateString()}
-            </p>
-          </div>
-          {saveError && <p className="text-xs px-3 py-2 rounded-lg mb-3" style={{ background: "rgba(239,68,68,0.1)", color: "#ef4444" }}>{saveError}</p>}
-          <button onClick={handleSelect} disabled={saving}
-            className="w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95"
-            style={{ background: saving ? "rgba(200,240,0,0.3)" : "linear-gradient(135deg,#c8f000,#84cc16)", color: "#1a0533" }}>
-            {saving ? "Entering…" : "Enter This Bracket"}
-          </button>
-        </div>
-      )}
-    </Modal>
-  );
-}
-
 // ── League Rankings Tab ───────────────────────────────────────────────────────
 
 function LeagueRankings({ leagueId }) {
@@ -482,7 +349,7 @@ function LeagueChat({ leagueId }) {
 
 // ── League Detail View ────────────────────────────────────────────────────────
 
-function LeagueDetail({ league, mySubmissionId, onBack, onEnterBracket, onNavigate, onDelete, deleting }) {
+function LeagueDetail({ league, mySubmissionId, onBack, onNavigate, onDelete, deleting }) {
   const { user } = useAuth();
   const [tab, setTab] = useState("rankings");
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -514,11 +381,11 @@ function LeagueDetail({ league, mySubmissionId, onBack, onEnterBracket, onNaviga
       {!mySubmissionId && (
         <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl mb-5"
           style={{ background: "rgba(249,115,22,0.08)", border: "1px solid rgba(249,115,22,0.2)" }}>
-          <p className="text-sm" style={{ color: "#f97316" }}>You haven't entered a bracket in this league yet.</p>
-          <button onClick={onEnterBracket}
+          <p className="text-sm" style={{ color: "#f97316" }}>Submit your bracket first to appear on the leaderboard.</p>
+          <button onClick={() => onNavigate("mine")}
             className="px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 transition-all active:scale-95"
             style={{ background: "rgba(249,115,22,0.15)", color: "#f97316", border: "1px solid rgba(249,115,22,0.3)" }}>
-            Enter Bracket
+            Go to Bracket
           </button>
         </div>
       )}
@@ -598,7 +465,6 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null }) {
   const [loadingPublic, setLoadingPublic] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [showJoin, setShowJoin] = useState(false);
-  const [bracketLeague, setBracketLeague] = useState(null);
   // If navigated from Home with a specific league, pre-select it
   const [selectedLeague, setSelectedLeague] = useState(
     initialLeagueCtx ? { id: initialLeagueCtx.leagueId, name: initialLeagueCtx.leagueName } : null
@@ -613,17 +479,28 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null }) {
   const [createLoading, setCreateLoading] = useState(false);
   const [createError, setCreateError] = useState(null);
 
-  function loadMyLeagues() {
+  async function loadMyLeagues() {
     if (!user) return;
     setLoadingMine(true);
-    supabase
+    const { data } = await supabase
       .from("league_members")
       .select("league_id, submission_id, leagues(id, name, description, join_code, is_public, creator_id)")
-      .eq("user_id", user.id)
-      .then(({ data }) => {
-        setMyLeagues((data ?? []).map(r => ({ ...r.leagues, submission_id: r.submission_id })).filter(Boolean));
-        setLoadingMine(false);
-      });
+      .eq("user_id", user.id);
+    const leagues = (data ?? []).map(r => ({ ...r.leagues, submission_id: r.submission_id })).filter(Boolean);
+    setMyLeagues(leagues);
+    setLoadingMine(false);
+
+    // Auto-link submission_id for any leagues missing it
+    const missing = leagues.filter(l => !l.submission_id);
+    if (missing.length > 0) {
+      const { data: sub } = await supabase.from("submissions").select("id").eq("user_id", user.id).maybeSingle();
+      if (sub) {
+        await Promise.all(missing.map(l =>
+          supabase.from("league_members").update({ submission_id: sub.id }).eq("league_id", l.id).eq("user_id", user.id)
+        ));
+        setMyLeagues(prev => prev.map(l => missing.find(m => m.id === l.id) ? { ...l, submission_id: sub.id } : l));
+      }
+    }
   }
 
   function loadPublicLeagues() {
@@ -654,11 +531,13 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null }) {
     }).select("id").single().then(async ({ data, error }) => {
       if (error) { setCreateError(error.message); setCreateLoading(false); return; }
       await supabase.from("league_members").insert({ league_id: data.id, user_id: user.id });
+      // Auto-link submission if user has one
+      const { data: sub } = await supabase.from("submissions").select("id").eq("user_id", user.id).maybeSingle();
+      if (sub) await supabase.from("league_members").update({ submission_id: sub.id }).eq("league_id", data.id).eq("user_id", user.id);
       setCreateLoading(false);
       setShowCreate(false);
       setCreateName(""); setCreateDesc(""); setCreatePublic(false);
       loadMyLeagues(); loadPublicLeagues();
-      setBracketLeague({ id: data.id, name: createName.trim() });
     });
   }
 
@@ -673,15 +552,19 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null }) {
     setJoinLoading(false);
     if (error?.code === "23505") { setJoinError("You're already in this league."); return; }
     if (error) { setJoinError(error.message); return; }
+    // Auto-link submission if user has one
+    const { data: sub } = await supabase.from("submissions").select("id").eq("user_id", user.id).maybeSingle();
+    if (sub) await supabase.from("league_members").update({ submission_id: sub.id }).eq("league_id", league.id).eq("user_id", user.id);
     setShowJoin(false); setJoinCode("");
     loadMyLeagues();
-    setBracketLeague({ id: league.id, name: league.name });
   }
 
   async function handleJoinPublic(league) {
     await supabase.from("league_members").insert({ league_id: league.id, user_id: user.id });
+    // Auto-link submission if user has one
+    const { data: sub } = await supabase.from("submissions").select("id").eq("user_id", user.id).maybeSingle();
+    if (sub) await supabase.from("league_members").update({ submission_id: sub.id }).eq("league_id", league.id).eq("user_id", user.id);
     loadMyLeagues();
-    setBracketLeague({ id: league.id, name: league.name });
   }
 
   const myLeagueIds = new Set(myLeagues.map(l => l.id));
@@ -703,25 +586,10 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null }) {
           league={selectedLeague}
           mySubmissionId={selectedLeague.submission_id}
           onBack={() => { setSelectedLeague(null); loadMyLeagues(); }}
-          onEnterBracket={() => setBracketLeague({ id: selectedLeague.id, name: selectedLeague.name })}
           onNavigate={onNavigate}
           onDelete={handleDeleteLeague}
           deleting={deletingLeague}
         />
-        {bracketLeague && (
-          <BracketPickerModal
-            leagueId={bracketLeague.id}
-            leagueName={bracketLeague.name}
-            onClose={() => {
-              setBracketLeague(null);
-              loadMyLeagues();
-              // Refresh submission_id on selectedLeague
-              supabase.from("league_members").select("submission_id").eq("league_id", selectedLeague.id).eq("user_id", user.id).maybeSingle()
-                .then(({ data }) => setSelectedLeague(l => ({ ...l, submission_id: data?.submission_id ?? null })));
-            }}
-            onNavigate={onNavigate}
-          />
-        )}
       </div>
     );
   }
@@ -869,15 +737,6 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null }) {
         </Modal>
       )}
 
-      {/* Bracket Picker Modal */}
-      {bracketLeague && (
-        <BracketPickerModal
-          leagueId={bracketLeague.id}
-          leagueName={bracketLeague.name}
-          onClose={() => { setBracketLeague(null); loadMyLeagues(); loadPublicLeagues(); }}
-          onNavigate={onNavigate}
-        />
-      )}
     </div>
   );
 }

@@ -65,6 +65,8 @@ export function deleteBracket(id) {
 }
 
 export function createBracket(name = "My Bracket", mode = "winner") {
+  const existing = getAllBrackets();
+  if (existing.length > 0) return existing[0];
   return {
     id:            "bracket_" + Date.now(),
     name,
