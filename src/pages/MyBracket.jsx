@@ -18,6 +18,7 @@ import { useState, useMemo, useEffect, useRef }  from "react";
 import fixtures                from "../data/wc2026_fixtures.json";
 import eloRatings              from "../data/elo_ratings.json";
 import { upsertBracket } from "../utils/storage";
+import { buildResultsMap } from "../utils/scoring";
 import { supabase } from "../lib/supabase";
 import { useAuth }  from "../hooks/useAuth";
 import AuthModal    from "../components/AuthModal";
@@ -281,7 +282,7 @@ function ScorePicker({ value, onChange }) {
 
 // ── Group stage: match pick row ───────────────────────────────────────────────
 
-function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode }) {
+function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode, result, locked }) {
   const { home, away, matchday } = match;
   const { openTeam } = useTeamModal();
   const hVal = score?.home??0, aVal = score?.away??0;
@@ -289,6 +290,16 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode })
   const homeW = mode==="score" ? (hasScore&&hVal>aVal) : pick==="home";
   const awayW = mode==="score" ? (hasScore&&aVal>hVal) : pick==="away";
   const drawV = mode==="score" ? (hasScore&&hVal===aVal) : pick==="draw";
+  const resultKnown = result?.result != null;
+  const isCorrect = resultKnown && pick === result.result;
+  const isWrong = resultKnown && pick != null && pick !== result.result;
+  const ResultBadge = resultKnown && pick != null ? (
+    <span style={{ width:16, height:16, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center",
+      background: isCorrect ? "rgba(34,197,94,0.2)" : "rgba(239,68,68,0.2)",
+      color: isCorrect ? "#22c55e" : "#ef4444", fontSize:"0.6rem", fontWeight:900, flexShrink:0 }}>
+      {isCorrect ? "✓" : "✗"}
+    </span>
+  ) : null;
 
   const nameColor = (win,draw) =>
     win ? "#c8f000" : draw ? "#f59e0b" : "rgba(255,255,255,0.75)";
@@ -318,6 +329,40 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode })
             onClick={()=>openTeam(away)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{away}</span>
         </div>
         <span style={{color:"rgba(255,255,255,0.18)",fontSize:"0.6rem",flexShrink:0}}>MD{matchday}</span>
+        {ResultBadge}
+      </div>
+    );
+  }
+
+  const pickLabel = pick === "home" ? "H" : pick === "away" ? "A" : pick === "draw" ? "X" : null;
+  const pickColor = pick === "home" ? "#c8f000" : pick === "away" ? "#ef4444" : pick === "draw" ? "#f59e0b" : null;
+
+  if (locked) {
+    return (
+      <div className="flex items-center gap-2 py-1.5 px-3" style={{ opacity: 0.75 }}>
+        <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
+          <span className="text-xs font-semibold truncate text-right"
+            style={{ color: homeW ? "#c8f000" : "rgba(255,255,255,0.6)" }}>{home}</span>
+          <span className={getFlagClass(home) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
+        </div>
+        <div className="flex items-center gap-1 shrink-0">
+          {pickLabel ? (
+            <span className="w-8 h-7 rounded font-black text-xs flex items-center justify-center shrink-0"
+              style={{ background: `${pickColor}22`, color: pickColor, border: `1px solid ${pickColor}55` }}>
+              {pickLabel}
+            </span>
+          ) : (
+            <span className="text-xs" style={{ color: "rgba(255,255,255,0.2)" }}>—</span>
+          )}
+          <span style={{ fontSize: "0.75rem" }}>🔒</span>
+        </div>
+        <div className="flex items-center gap-1.5 flex-1 min-w-0">
+          <span className={getFlagClass(away) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
+          <span className="text-xs font-semibold truncate"
+            style={{ color: awayW ? "#ef4444" : "rgba(255,255,255,0.6)" }}>{away}</span>
+        </div>
+        <span style={{color:"rgba(255,255,255,0.18)",fontSize:"0.6rem",flexShrink:0}}>MD{matchday}</span>
+        {ResultBadge}
       </div>
     );
   }
@@ -349,19 +394,37 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode })
           onClick={()=>openTeam(away)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{away}</span>
       </div>
       <span style={{color:"rgba(255,255,255,0.18)",fontSize:"0.6rem",flexShrink:0}}>MD{matchday}</span>
+      {ResultBadge}
     </div>
   );
 }
 
 // ── Group stage: mini standings ───────────────────────────────────────────────
 
-function MiniStandings({ standings, thirds }) {
+function MiniStandings({ standings, thirds, onReorder, readOnly }) {
   const thirdTeams=new Set(thirds.map(t=>t.team));
   const { openTeam } = useTeamModal();
+
+  // Detect which positions have a tie with the adjacent team
+  function isTied(i, dir) {
+    const a = standings[i], b = standings[i + dir];
+    return b && a.pts === b.pts;
+  }
+
+  function move(i, dir) {
+    if (readOnly) return;
+    const next = [...standings];
+    [next[i], next[i+dir]] = [next[i+dir], next[i]];
+    onReorder(next.map(r => r.team));
+  }
+
   return (
     <div className="pt-2 mt-2" style={{borderTop:"1px solid rgba(255,255,255,0.06)"}}>
       {standings.map((t,i)=>{
         const q=i<2, t3=i===2&&thirdTeams.has(t.team);
+        const tiedAbove = i > 0 && isTied(i, -1);
+        const tiedBelow = i < standings.length-1 && isTied(i, 1);
+        const showArrows = !readOnly && (tiedAbove || tiedBelow);
         return (
           <div key={t.team} className="flex items-center gap-2 px-3 py-1">
             <span className="text-xs w-3 shrink-0" style={{color:"rgba(255,255,255,0.55)"}}>{i+1}</span>
@@ -371,6 +434,24 @@ function MiniStandings({ standings, thirds }) {
               onClick={()=>openTeam(t.team)}>
               {t.team}
             </span>
+            {/* Tie indicator + reorder arrows */}
+            {showArrows && (
+              <div className="flex flex-col gap-0.5 shrink-0">
+                {tiedAbove && (
+                  <button onClick={()=>move(i,-1)}
+                    className="w-4 h-4 rounded flex items-center justify-center transition-colors"
+                    style={{background:"rgba(245,158,11,0.15)",color:"#f59e0b",fontSize:"0.55rem"}}
+                    title="Move up (tied)">▲</button>
+                )}
+                {tiedBelow && (
+                  <button onClick={()=>move(i,1)}
+                    className="w-4 h-4 rounded flex items-center justify-center transition-colors"
+                    style={{background:"rgba(245,158,11,0.15)",color:"#f59e0b",fontSize:"0.55rem"}}
+                    title="Move down (tied)">▼</button>
+                )}
+              </div>
+            )}
+            {(tiedAbove || tiedBelow) && !showArrows && null}
             {(q||t3)&&(
               <span className="text-xs px-1 rounded shrink-0"
                 style={{background:q?"rgba(200,240,0,0.12)":"rgba(245,158,11,0.12)",color:q?"#c8f000":"#f59e0b",fontSize:"0.6rem",fontWeight:700}}>
@@ -392,7 +473,7 @@ function MiniStandings({ standings, thirds }) {
 
 // ── Group card ────────────────────────────────────────────────────────────────
 
-function GroupCard({ group, picks, scores, onPick, onScore, standings, thirds, mode, isOpen, onToggle }) {
+function GroupCard({ group, picks, scores, onPick, onScore, standings, thirds, mode, isOpen, onToggle, matchResults, onReorderStandings, readOnly }) {
   const matches=GROUP_MATCHES.filter(m=>m.group===group);
   const picked=matches.filter(m=>picks[m.id]).length;
   const done=picked===matches.length;
@@ -458,11 +539,12 @@ function GroupCard({ group, picks, scores, onPick, onScore, standings, thirds, m
               </div>
               {dayMatches.map(m=>(
                 <MatchPickRow key={m.id} match={m} pick={picks[m.id]} score={scores[m.id]}
-                  onPickChange={onPick} onScoreChange={onScore} mode={mode} />
+                  onPickChange={onPick} onScoreChange={onScore} mode={mode} result={matchResults?.[m.id] ?? null}
+                  locked={isMatchLocked(m.id)} />
               ))}
             </div>
           ))}
-          <MiniStandings standings={standings} thirds={thirds}/>
+          <MiniStandings standings={standings} thirds={thirds} onReorder={onReorderStandings} readOnly={readOnly} />
         </div>
       )}
     </div>
@@ -471,7 +553,7 @@ function GroupCard({ group, picks, scores, onPick, onScore, standings, thirds, m
 
 // ── Knockout: bracket match card ──────────────────────────────────────────────
 
-function BracketMatch({ home, away, winner, onPick, onForcePick, onScore, score, scoreMode, isFinal }) {
+function BracketMatch({ home, away, winner, onPick, onForcePick, onScore, score, scoreMode, isFinal, locked }) {
   const { openTeam } = useTeamModal();
   const hVal=score?.home??0, aVal=score?.away??0;
   const hasScore=score!=null;
@@ -551,9 +633,9 @@ function BracketMatch({ home, away, winner, onPick, onForcePick, onScore, score,
   function TeamBtn({ team }) {
     const isW=winner===team, isL=winner&&winner!==team, isTbd=!team;
     return (
-      <button onClick={()=>team&&onPick(team)} disabled={isTbd}
+      <button onClick={()=>!locked&&team&&onPick(team)} disabled={isTbd||locked}
         className="w-full flex items-center gap-1.5 px-2.5 py-2 text-left transition-all duration-100 active:scale-95"
-        style={{background:isW?"rgba(200,240,0,0.15)":"transparent",cursor:isTbd?"default":"pointer",opacity:isL?0.3:1}}>
+        style={{background:isW?"rgba(200,240,0,0.15)":"transparent",cursor:(isTbd||locked)?"default":"pointer",opacity:isL?0.3:1}}>
         {!isTbd && <span className={getFlagClass(team) ?? ''} style={{fontSize:'1rem',lineHeight:1,display:'inline-block',flexShrink:0}} />}
         <span className="text-xs font-semibold truncate flex-1 leading-tight"
           style={{color:isW?"#c8f000":isTbd?"rgba(255,255,255,0.18)":"rgba(255,255,255,0.8)"}}>
@@ -564,10 +646,12 @@ function BracketMatch({ home, away, winner, onPick, onForcePick, onScore, score,
     );
   }
   return (
-    <div className="rounded-xl overflow-hidden"
-      style={{width:168,background:winner?"rgba(200,240,0,0.06)":"rgba(255,255,255,0.04)",
+    <div className="rounded-xl overflow-hidden" style={{position:"relative",
+      width:168,background:winner?"rgba(200,240,0,0.06)":"rgba(255,255,255,0.04)",
         border:`1px solid ${isFinal&&winner?"rgba(200,240,0,0.45)":winner?"rgba(200,240,0,0.2)":"rgba(255,255,255,0.09)"}`,
-        boxShadow:isFinal&&winner?"0 0 24px rgba(200,240,0,0.15)":"none"}}>
+        boxShadow:isFinal&&winner?"0 0 24px rgba(200,240,0,0.15)":"none",
+        opacity:locked?0.7:1}}>
+      {locked&&<span style={{position:"absolute",top:3,right:4,fontSize:"0.6rem",zIndex:1,opacity:0.7}}>🔒</span>}
       <TeamBtn team={home}/>
       <div style={{height:1,background:"rgba(255,255,255,0.07)"}}/>
       <TeamBtn team={away}/>
@@ -602,9 +686,58 @@ function ModeToggle({ mode, onChange }) {
   );
 }
 
-// ── Lock date: World Cup kick-off ─────────────────────────────────────────────
-const WC_KICKOFF = new Date("2026-06-11T19:00:00-05:00");
-const isTournamentStarted = () => new Date() >= WC_KICKOFF;
+// ── Per-match locking ─────────────────────────────────────────────────────────
+
+function parseMatchKickoff(dateStr, timeStr) {
+  const clean = timeStr.replace(" ET", "").trim();
+  const [time, meridiem] = clean.split(" ");
+  let [h, m] = time.split(":").map(Number);
+  if (meridiem === "PM" && h !== 12) h += 12;
+  if (meridiem === "AM" && h === 12) h = 0;
+  const [y, mo, d] = dateStr.split("-").map(Number);
+  return new Date(Date.UTC(y, mo - 1, d, h + 4, m)); // EDT = UTC-4
+}
+
+// Knockout schedule: [date, time] per round+idx
+const KO_SCHED = {
+  R32: [
+    ["2026-06-28","3:00 PM ET"],["2026-06-28","7:00 PM ET"],
+    ["2026-06-29","3:00 PM ET"],["2026-06-29","7:00 PM ET"],
+    ["2026-06-30","3:00 PM ET"],["2026-06-30","7:00 PM ET"],
+    ["2026-07-01","3:00 PM ET"],["2026-07-01","7:00 PM ET"],
+    ["2026-07-02","3:00 PM ET"],["2026-07-02","7:00 PM ET"],
+    ["2026-07-03","3:00 PM ET"],["2026-07-03","7:00 PM ET"],
+    ["2026-07-04","3:00 PM ET"],["2026-07-04","7:00 PM ET"],
+    ["2026-07-05","3:00 PM ET"],["2026-07-05","7:00 PM ET"],
+  ],
+  R16: [
+    ["2026-07-06","3:00 PM ET"],["2026-07-06","7:00 PM ET"],
+    ["2026-07-07","3:00 PM ET"],["2026-07-07","7:00 PM ET"],
+    ["2026-07-08","3:00 PM ET"],["2026-07-08","7:00 PM ET"],
+    ["2026-07-09","3:00 PM ET"],["2026-07-09","7:00 PM ET"],
+  ],
+  QF: [
+    ["2026-07-11","3:00 PM ET"],["2026-07-11","7:00 PM ET"],
+    ["2026-07-12","3:00 PM ET"],["2026-07-12","7:00 PM ET"],
+  ],
+  SF: [["2026-07-14","7:00 PM ET"],["2026-07-15","7:00 PM ET"]],
+  F:  [["2026-07-19","7:00 PM ET"]],
+};
+
+function isMatchLocked(matchId) {
+  const m = GROUP_MATCHES.find(f => f.id === matchId);
+  if (!m) return false;
+  return Date.now() >= parseMatchKickoff(m.date, m.time);
+}
+
+function isKoMatchLocked(round, idx) {
+  const entry = KO_SCHED[round]?.[idx];
+  if (!entry) return false;
+  return Date.now() >= parseMatchKickoff(entry[0], entry[1]);
+}
+
+const WC_KICKOFF = parseMatchKickoff("2026-06-11", "3:00 PM ET");
+const isTournamentStarted = () => Date.now() >= WC_KICKOFF;
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 
@@ -632,6 +765,12 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
   const [isSubmitted,       setIsSubmitted]       = useState(false);
   const [showConfirmation,  setShowConfirmation]  = useState(false);
   const [saveIndicator,     setSaveIndicator]     = useState(null); // null | "saving" | "saved"
+  const [tipDismissed, setTipDismissed] = useState(() => !!localStorage.getItem("wc2026_tip_dismissed"));
+  const [matchResults, setMatchResults] = useState({});
+  // groupOrderOverrides: { [group]: [team,team,team,team] } — user-reordered tiebreaks
+  const [groupOrderOverrides, setGroupOrderOverrides] = useState({});
+  // thirdsUserPicks: array of group letters the user chose from the cut-line tied pool
+  const [thirdsUserPicks, setThirdsUserPicks] = useState([]);
   const autoSaveRef = useRef(null);
   const saveIndicatorRef = useRef(null);
   const leagueLinkedRef = useRef(false);
@@ -661,6 +800,12 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         }
       });
   }, [user]);
+
+  // Fetch match results for pick result badges
+  useEffect(() => {
+    supabase.from("match_results").select("*")
+      .then(({ data }) => { if (data) setMatchResults(buildResultsMap(data)); });
+  }, []);
 
   // Auto-save to Supabase (debounced 1.5s) whenever picks change and user is logged in
   useEffect(() => {
@@ -710,7 +855,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
 
   // Persist the whole bracket object to localStorage whenever anything changes
   function save(newPicks, newScores, newBw, newBScores) {
-    if (!bracketData || isLocked || readOnly || isSubmitted) return;
+    if (!bracketData || readOnly || isSubmitted) return;
     upsertBracket({ ...bracketData, picks: newPicks, scores: newScores, bracket: newBw, bracketScores: newBScores });
   }
 
@@ -765,9 +910,31 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
 
   const { byGroup, thirds, r32Slots } = useMemo(()=>{
     const byGroup=computeAllStandings(picks);
-    const thirds=computeThirds(byGroup);
-    return { byGroup, thirds, r32Slots:buildR32Slots(byGroup,thirds,picks) };
-  },[picks]);
+    // Apply any manual group order overrides (user-resolved tiebreaks)
+    for (const [g, order] of Object.entries(groupOrderOverrides)) {
+      if (byGroup[g]) {
+        byGroup[g] = order.map(team => byGroup[g].find(r => r.team === team)).filter(Boolean);
+      }
+    }
+    // Compute thirds from (possibly overridden) standings
+    const autoThirds = computeThirds(byGroup);
+    // Resolve cut-line ties using user picks where provided
+    const allThirdsSorted = GROUPS
+      .map(g => ({ ...byGroup[g]?.[2], group: g }))
+      .filter(t => t.team)
+      .sort((a, b) => (b.pts ?? 0) - (a.pts ?? 0));
+    const cutLinePts = allThirdsSorted[7]?.pts ?? 0;
+    const autoQualified = allThirdsSorted.filter(t => (t.pts ?? 0) > cutLinePts);
+    const tiedAtCut = allThirdsSorted.filter(t => (t.pts ?? 0) === cutLinePts);
+    const spotsLeft = 8 - autoQualified.length;
+    // Pick spotsLeft teams from tiedAtCut: prefer user picks, fallback to auto order
+    const userPicksFromTied = thirdsUserPicks.filter(g => tiedAtCut.some(t => t.group === g));
+    const autoFill = tiedAtCut.filter(t => !userPicksFromTied.includes(t.group)).slice(0, spotsLeft - userPicksFromTied.length);
+    const resolvedTied = [...tiedAtCut.filter(t => userPicksFromTied.includes(t.group)), ...autoFill].slice(0, spotsLeft);
+    const resolvedThirds = [...autoQualified, ...resolvedTied];
+    while (resolvedThirds.length < 8) resolvedThirds.push({ team: null });
+    return { byGroup, thirds: resolvedThirds, r32Slots:buildR32Slots(byGroup,resolvedThirds,picks) };
+  },[picks, groupOrderOverrides, thirdsUserPicks]);
 
   const pickedCount  = Object.keys(picks).length;
   const totalMatches = GROUP_MATCHES.length;
@@ -784,7 +951,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
   // ── Handlers ────────────────────────────────────────────────────────────────
 
   function handleGroupPick(matchId, pick) {
-    if (isLocked || readOnly || isSubmitted) return;
+    if (readOnly || isSubmitted || isMatchLocked(matchId)) return;
     const newPicks = {...picks, [matchId]: pick};
     const fresh = emptyWinners();
     setPicks(newPicks);
@@ -794,39 +961,40 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
   }
 
   function handleGroupScore(matchId, h, a) {
-    if (isLocked || readOnly || isSubmitted) return;
+    if (readOnly || isSubmitted || isMatchLocked(matchId)) return;
     const newScores = {...scores, [matchId]:{home:h,away:a}};
     setScores(newScores);
     save(picks, newScores, bw, bScores);
   }
 
   function handleBracketPick(round, matchIdx, team) {
-    if (isLocked || readOnly || isSubmitted) return;
+    if (readOnly || isSubmitted || isKoMatchLocked(round, matchIdx)) return;
     const next=applyPick(bw,round,matchIdx,team,false);
     setBw(next); save(picks, scores, next, bScores);
   }
 
   function handleBracketForcePick(round, matchIdx, team) {
-    if (isLocked || readOnly || isSubmitted) return;
+    if (readOnly || isSubmitted || isKoMatchLocked(round, matchIdx)) return;
     const next=applyPick(bw,round,matchIdx,team,true);
     setBw(next); save(picks, scores, next, bScores);
   }
 
   function handleBracketScore(scoreKey, h, a) {
-    if (isLocked || readOnly || isSubmitted) return;
+    const [round, idxStr] = scoreKey.split("_");
+    if (readOnly || isSubmitted || isKoMatchLocked(round, Number(idxStr))) return;
     const newBs = {...bScores, [scoreKey]:{home:h,away:a}};
     setBScores(newBs);
     save(picks, scores, bw, newBs);
   }
 
   function handle3PPick(team) {
-    if (isLocked || readOnly || isSubmitted) return;
+    if (readOnly || isSubmitted || isKoMatchLocked("3P", 0)) return;
     const next={...bw,"3P":[team===bw["3P"][0]?null:team]};
     setBw(next); save(picks, scores, next, bScores);
   }
 
   function handle3PScore(h, a) {
-    if (isLocked || readOnly || isSubmitted) return;
+    if (readOnly || isSubmitted || isKoMatchLocked("3P", 0)) return;
     const key="3P_0";
     const newBs = {...bScores, [key]:{home:h,away:a}};
     setBScores(newBs);
@@ -840,7 +1008,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
   }
 
   function handle3PForcePick(team) {
-    if (isLocked) return;
+    if (isKoMatchLocked("3P", 0)) return;
     if (bw["3P"][0] === team) return;
     const next={...bw,"3P":[team]};
     setBw(next); save(picks, scores, next, bScores);
@@ -848,9 +1016,105 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
 
   function handleResetAll() {
     if (isLocked) return;
+    // Preserve picks for locked matches
+    const keptPicks = {};
+    for (const m of GROUP_MATCHES) {
+      if (isMatchLocked(m.id) && picks[m.id] != null) keptPicks[m.id] = picks[m.id];
+    }
+    const keptScores = {};
+    for (const m of GROUP_MATCHES) {
+      if (isMatchLocked(m.id) && scores[m.id] != null) keptScores[m.id] = scores[m.id];
+    }
+    // Preserve locked KO winners
     const fresh = emptyWinners();
-    setPicks({}); setScores({}); setBw(fresh); setBScores({});
-    save({}, {}, fresh, {});
+    const keptBw = { ...fresh };
+    for (const round of ROUNDS) {
+      for (let i = 0; i < ROUND_COUNTS[round]; i++) {
+        if (isKoMatchLocked(round, i) && bw[round][i] != null) keptBw[round][i] = bw[round][i];
+      }
+    }
+    const keptBScores = {};
+    for (const round of ROUNDS) {
+      for (let i = 0; i < ROUND_COUNTS[round]; i++) {
+        const key = `${round}_${i}`;
+        if (isKoMatchLocked(round, i) && bScores[key] != null) keptBScores[key] = bScores[key];
+      }
+    }
+    setPicks(keptPicks); setScores(keptScores); setBw(keptBw); setBScores(keptBScores);
+    save(keptPicks, keptScores, keptBw, keptBScores);
+  }
+
+  function handleRandomPick() {
+    if (readOnly || isSubmitted) return;
+    const rand = arr => arr[Math.floor(Math.random() * arr.length)];
+
+    // 1. Random group picks — preserve locked matches
+    const newPicks = {};
+    for (const m of GROUP_MATCHES) {
+      newPicks[m.id] = isMatchLocked(m.id) && picks[m.id] != null
+        ? picks[m.id]
+        : rand(["home", "away", "draw"]);
+    }
+
+    // 2. Compute standings from those picks
+    const newByGroup = computeAllStandings(newPicks);
+    const newThirds = computeThirds(newByGroup);
+    const newSlots = buildR32Slots(newByGroup, newThirds, newPicks);
+
+    // 3. Walk the bracket — preserve locked KO matches, randomize the rest
+    let newBw = emptyWinners();
+
+    // Seed locked KO winners first so they flow forward
+    for (const round of ROUNDS) {
+      for (let i = 0; i < ROUND_COUNTS[round]; i++) {
+        if (isKoMatchLocked(round, i) && bw[round][i] != null) newBw[round][i] = bw[round][i];
+      }
+    }
+
+    for (let i = 0; i < 16; i++) {
+      if (isKoMatchLocked("R32", i)) continue; // already seeded above
+      const home = newSlots[i].home, away = newSlots[i].away;
+      const candidates = [home, away].filter(Boolean);
+      if (candidates.length > 0) newBw = applyPick(newBw, "R32", i, rand(candidates), true);
+    }
+    for (const round of ["R16", "QF", "SF", "F"]) {
+      const count = ROUND_COUNTS[round];
+      for (let i = 0; i < count; i++) {
+        if (isKoMatchLocked(round, i)) continue;
+        const [hr, hi, ar, ai] = MATCH_SOURCES[round][i];
+        const home = newBw[hr][hi], away = newBw[ar][ai];
+        const candidates = [home, away].filter(Boolean);
+        if (candidates.length > 0) newBw = applyPick(newBw, round, i, rand(candidates), true);
+      }
+    }
+
+    // 4. 3rd place — only randomize if not locked
+    if (!isKoMatchLocked("3P", 0)) {
+      const sfHome0 = newBw["QF"][MATCH_SOURCES["SF"][0][1]];
+      const sfAway0 = newBw["QF"][MATCH_SOURCES["SF"][0][3]];
+      const sf0L = [sfHome0, sfAway0].find(t => t && t !== newBw["SF"][0]) ?? null;
+      const sfHome1 = newBw["QF"][MATCH_SOURCES["SF"][1][1]];
+      const sfAway1 = newBw["QF"][MATCH_SOURCES["SF"][1][3]];
+      const sf1L = [sfHome1, sfAway1].find(t => t && t !== newBw["SF"][1]) ?? null;
+      if (sf0L && sf1L) newBw = { ...newBw, "3P": [rand([sf0L, sf1L])] };
+    }
+
+    // Preserve locked KO scores
+    const keptBScores = {};
+    for (const round of ROUNDS) {
+      for (let i = 0; i < ROUND_COUNTS[round]; i++) {
+        const key = `${round}_${i}`;
+        if (isKoMatchLocked(round, i) && bScores[key] != null) keptBScores[key] = bScores[key];
+      }
+    }
+
+    setPicks(newPicks);
+    setScores({});
+    setBw(newBw);
+    setBScores(keptBScores);
+    setGroupOrderOverrides({});
+    setThirdsUserPicks([]);
+    save(newPicks, {}, newBw, keptBScores);
   }
 
   const champion=bw.F[0];
@@ -994,20 +1258,43 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
             style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"2rem",letterSpacing:"0.08em"}}>
             Make My Bracket
           </h2>
-          {user && (
-            <div className="flex items-center gap-2 text-xs">
-              <span className="px-2 py-1 rounded-full font-semibold"
-                style={{background:"rgba(200,240,0,0.1)",border:"1px solid rgba(200,240,0,0.2)",color:"#c8f000"}}>
-                ✓ {user.user_metadata?.display_name || user.email}
-              </span>
-              <button onClick={signOut}
-                style={{color:"rgba(255,255,255,0.6)"}}
-                onMouseEnter={e=>e.currentTarget.style.color="rgba(255,255,255,0.6)"}
-                onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.3)"}>
-                Sign out
-              </button>
-            </div>
-          )}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleRandomPick}
+              className="flex items-center gap-2 font-black transition-all duration-200 active:scale-95"
+              style={{
+                padding: "8px 16px",
+                borderRadius: 12,
+                background: "linear-gradient(135deg,#ff6b35,#f7c948,#22d3a4,#6366f1)",
+                backgroundSize: "300% 300%",
+                animation: "gradientShift 3s ease infinite",
+                boxShadow: "0 0 16px rgba(99,102,241,0.4), 0 0 32px rgba(34,211,164,0.2)",
+                color: "#fff",
+                fontSize: "0.8rem",
+                letterSpacing: "0.03em",
+                border: "1.5px solid rgba(255,255,255,0.25)",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 24px rgba(99,102,241,0.65), 0 0 48px rgba(34,211,164,0.35)"; e.currentTarget.style.transform = "scale(1.05)"; }}
+              onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 16px rgba(99,102,241,0.4), 0 0 32px rgba(34,211,164,0.2)"; e.currentTarget.style.transform = "scale(1)"; }}
+            >
+              <span style={{ fontSize: "1rem" }}>🎲</span>
+              Random Picker
+            </button>
+            {user && (
+              <div className="flex items-center gap-2 text-xs">
+                <span className="px-2 py-1 rounded-full font-semibold"
+                  style={{background:"rgba(200,240,0,0.1)",border:"1px solid rgba(200,240,0,0.2)",color:"#c8f000"}}>
+                  ✓ {user.user_metadata?.display_name || user.email}
+                </span>
+                <button onClick={signOut}
+                  style={{color:"rgba(255,255,255,0.6)"}}
+                  onMouseEnter={e=>e.currentTarget.style.color="rgba(255,255,255,0.6)"}
+                  onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.3)"}>
+                  Sign out
+                </button>
+              </div>
+            )}
+          </div>
         </div>
         <p className="text-sm mb-4" style={{color:"rgba(255,255,255,0.65)"}}>
           Your predictions
@@ -1047,6 +1334,58 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         ))}
       </div>
 
+      {/* Tip banner — first visit only, group view */}
+      {!readOnly && !isSubmitted && view === "groups" && !tipDismissed && (
+        <div className="flex items-start gap-3 mb-4 px-4 py-3 rounded-xl"
+          style={{ background: "rgba(200,240,0,0.06)", border: "1px solid rgba(200,240,0,0.18)" }}>
+          <span style={{ fontSize: "1.1rem", lineHeight: 1.4 }}>💡</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold mb-0.5" style={{ color: "#c8f000" }}>How this works</p>
+            <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.65)" }}>
+              Pick the winner of every group match (72 total). Your bracket seeds automatically — then pick knockout winners all the way to the Final and hit <strong style={{ color: "rgba(255,255,255,0.85)" }}>Submit</strong> to lock your entry.
+            </p>
+          </div>
+          <button
+            onClick={() => { localStorage.setItem("wc2026_tip_dismissed", "1"); setTipDismissed(true); }}
+            className="shrink-0 text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full transition-colors"
+            style={{ color: "rgba(255,255,255,0.4)", background: "rgba(255,255,255,0.07)" }}
+            onMouseEnter={e => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.background = "rgba(255,255,255,0.15)"; }}
+            onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.4)"; e.currentTarget.style.background = "rgba(255,255,255,0.07)"; }}
+          >✕</button>
+        </div>
+      )}
+
+      {/* Progress nudge bar */}
+      {!readOnly && !isSubmitted && !isLocked && (() => {
+        const bracketPickCount = Object.values(bw).reduce((n, arr) => n + (Array.isArray(arr) ? arr.filter(Boolean).length : 0), 0);
+        const maxBracketPicks = ROUNDS.reduce((n, r) => n + ROUND_COUNTS[r], 0);
+        let stage, accent, label;
+        if (!allPicked) {
+          stage = 1; accent = "#f59e0b";
+          label = `Step 1 of 3 — Pick all ${totalMatches} group matches (${pickedCount} / ${totalMatches} done)`;
+        } else if (bracketPickCount < maxBracketPicks) {
+          stage = 2; accent = "#c8f000";
+          label = `Step 2 of 3 — Pick your knockout bracket`;
+        } else {
+          stage = 3; accent = "#22c55e";
+          label = `Step 3 of 3 — Ready! Hit Submit to lock your bracket 🏆`;
+        }
+        const pct = stage === 1 ? (pickedCount / totalMatches) * 33 : stage === 2 ? 33 + (bracketPickCount / maxBracketPicks) * 34 : 100;
+        return (
+          <div className="mb-4 rounded-xl overflow-hidden" style={{ border: `1px solid ${accent}30` }}>
+            <div className="flex items-center gap-3 px-4 py-2.5" style={{ background: `${accent}0d` }}>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-bold" style={{ color: accent }}>{label}</p>
+              </div>
+              <span className="text-xs font-black tabular-nums shrink-0" style={{ color: accent }}>{Math.round(pct)}%</span>
+            </div>
+            <div className="h-1" style={{ background: "rgba(255,255,255,0.06)" }}>
+              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, background: accent }} />
+            </div>
+          </div>
+        );
+      })()}
+
       {/* ══ GROUP STAGE ══════════════════════════════════════════════════════ */}
       {view==="groups"&&(
         <div>
@@ -1068,6 +1407,124 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
             </div>
           )}
 
+          {/* 3rd-place qualifiers — shown once all groups are complete */}
+          {allPicked && (() => {
+            const allThirdsSorted = GROUPS
+              .map(g => ({ group: g, team: byGroup[g]?.[2]?.team ?? null, pts: byGroup[g]?.[2]?.pts ?? 0 }))
+              .sort((a, b) => b.pts - a.pts);
+            const cutLinePts = allThirdsSorted[7]?.pts ?? 0;
+            const autoQualified = allThirdsSorted.filter(t => t.pts > cutLinePts);
+            const tiedAtCut = allThirdsSorted.filter(t => t.pts === cutLinePts);
+            const belowCut = allThirdsSorted.filter(t => t.pts < cutLinePts);
+            const spotsLeft = 8 - autoQualified.length;
+            const hasTie = tiedAtCut.length > spotsLeft;
+            const userPicksFromTied = thirdsUserPicks.filter(g => tiedAtCut.some(t => t.group === g));
+            const canStillPick = userPicksFromTied.length < spotsLeft;
+
+            const toggleTied = (g) => {
+              if (readOnly || isSubmitted) return;
+              if (userPicksFromTied.includes(g)) {
+                setThirdsUserPicks(prev => prev.filter(x => x !== g));
+              } else if (canStillPick) {
+                setThirdsUserPicks(prev => [...prev, g]);
+              }
+            };
+
+            return (
+              <div className="mb-5 px-4 py-4 rounded-xl" style={{background:"rgba(245,158,11,0.04)",border:"1px solid rgba(245,158,11,0.18)"}}>
+                <p className="text-xs font-black uppercase tracking-widest mb-0.5" style={{color:"#f59e0b"}}>Best 3rd-Place Qualifiers</p>
+                <p className="text-xs mb-3" style={{color:"rgba(255,255,255,0.5)"}}>Top 8 of 12 third-place teams advance to the knockout round</p>
+
+                {/* Auto-qualified (clearly above cut line) */}
+                {autoQualified.length > 0 && (
+                  <div className="mb-3">
+                    <p className="text-xs mb-1.5" style={{color:"rgba(255,255,255,0.3)",fontSize:"0.6rem",textTransform:"uppercase",letterSpacing:"0.08em"}}>Qualified ({autoQualified.length})</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {autoQualified.map(({ group: g, team, pts }) => (
+                        <div key={g} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl"
+                          style={{background:"rgba(200,240,0,0.07)",border:"1px solid rgba(200,240,0,0.2)"}}>
+                          <span className={getFlagClass(team) ?? ''} style={{fontSize:"0.9rem",lineHeight:1}} />
+                          <span className="text-xs font-semibold" style={{color:"rgba(255,255,255,0.85)"}}>{team ?? "TBD"}</span>
+                          <span className="text-xs font-black" style={{color:"#c8f000"}}>{pts}pts</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Tied at cut line — user picks */}
+                {hasTie && (
+                  <div className="mb-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <p className="text-xs font-black" style={{color:"#f59e0b",fontSize:"0.6rem",textTransform:"uppercase",letterSpacing:"0.08em"}}>
+                        Tied at {cutLinePts} pts — pick {spotsLeft - userPicksFromTied.length} more
+                      </p>
+                      <span className="text-xs px-1.5 py-0.5 rounded-full font-black" style={{background:"rgba(245,158,11,0.15)",color:"#f59e0b",fontSize:"0.6rem"}}>
+                        {userPicksFromTied.length}/{spotsLeft}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {tiedAtCut.map(({ group: g, team, pts }) => {
+                        const picked = userPicksFromTied.includes(g);
+                        const disabled = !picked && !canStillPick;
+                        return (
+                          <button key={g}
+                            onClick={() => toggleTied(g)}
+                            disabled={disabled}
+                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl transition-all active:scale-95"
+                            style={{
+                              background: picked ? "rgba(245,158,11,0.2)" : "rgba(255,255,255,0.05)",
+                              border: `1px solid ${picked ? "rgba(245,158,11,0.5)" : "rgba(255,255,255,0.1)"}`,
+                              opacity: disabled ? 0.35 : 1,
+                              cursor: disabled ? "not-allowed" : "pointer",
+                            }}>
+                            <span className={getFlagClass(team) ?? ''} style={{fontSize:"0.9rem",lineHeight:1}} />
+                            <span className="text-xs font-semibold" style={{color:picked?"rgba(255,255,255,0.95)":"rgba(255,255,255,0.6)"}}>{team ?? "TBD"}</span>
+                            <span className="text-xs font-black" style={{color:picked?"#f59e0b":"rgba(255,255,255,0.3)"}}>{pts}pts</span>
+                            {picked && <span style={{color:"#f59e0b",fontSize:"0.65rem",fontWeight:900}}>✓</span>}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Not tied — just show the 8th qualifier normally */}
+                {!hasTie && tiedAtCut.length > 0 && (
+                  <div className="mb-3">
+                    <div className="flex flex-wrap gap-1.5">
+                      {tiedAtCut.slice(0, spotsLeft).map(({ group: g, team, pts }) => (
+                        <div key={g} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl"
+                          style={{background:"rgba(200,240,0,0.07)",border:"1px solid rgba(200,240,0,0.2)"}}>
+                          <span className={getFlagClass(team) ?? ''} style={{fontSize:"0.9rem",lineHeight:1}} />
+                          <span className="text-xs font-semibold" style={{color:"rgba(255,255,255,0.85)"}}>{team ?? "TBD"}</span>
+                          <span className="text-xs font-black" style={{color:"#c8f000"}}>{pts}pts</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Below cut — locked out */}
+                {belowCut.length > 0 && (
+                  <div>
+                    <p className="text-xs mb-1.5" style={{color:"rgba(255,255,255,0.2)",fontSize:"0.6rem",textTransform:"uppercase",letterSpacing:"0.08em"}}>Eliminated</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {belowCut.map(({ group: g, team, pts }) => (
+                        <div key={g} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl"
+                          style={{background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.06)",opacity:0.45}}>
+                          <span className={getFlagClass(team) ?? ''} style={{fontSize:"0.9rem",lineHeight:1}} />
+                          <span className="text-xs font-semibold" style={{color:"rgba(255,255,255,0.5)"}}>{team ?? "TBD"}</span>
+                          <span className="text-xs font-black" style={{color:"rgba(255,255,255,0.25)"}}>{pts}pts</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
           <div className="flex flex-col gap-2">
             {GROUPS.map(g=>(
               <GroupCard key={g} group={g} picks={picks} scores={scores}
@@ -1075,6 +1532,9 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
                 standings={byGroup[g]} thirds={thirds} mode={mode}
                 isOpen={openGroup===g}
                 onToggle={()=>setOpenGroup(prev=>prev===g?null:g)}
+                matchResults={matchResults}
+                readOnly={readOnly || isSubmitted}
+                onReorderStandings={order => setGroupOrderOverrides(prev => ({...prev, [g]: order}))}
               />
             ))}
           </div>
@@ -1225,6 +1685,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
                               score={score}
                               scoreMode={mode==="score"}
                               isFinal={round==="F"}
+                              locked={isKoMatchLocked(round,i)}
                             />
                           </div>
                         );
@@ -1280,6 +1741,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
                       score={bScores["3P_0"]??null}
                       scoreMode={mode==="score"}
                       isFinal={false}
+                      locked={isKoMatchLocked("3P",0)}
                     />
                     {bw["3P"][0]&&(
                       <div className="flex items-center gap-2 px-3 py-2 rounded-xl"
@@ -1370,6 +1832,14 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
           </div>
         </div>
       )}
+
+      <style>{`
+        @keyframes gradientShift {
+          0%   { background-position: 0% 50%; }
+          50%  { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}</style>
     </>
   );
 }

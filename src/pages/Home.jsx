@@ -2,9 +2,10 @@
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import { getLeagueLeaderboard } from "../utils/social";
+import { buildResultsMap, calculateGroupScores } from "../utils/scoring";
 import fixtures from "../data/wc2026_fixtures.json";
+import HowItWorksModal from "../components/HowItWorksModal";
 
-const fixtureMap = Object.fromEntries(fixtures.map(f => [f.id, f]));
 
 // ── League card ───────────────────────────────────────────────────────────────
 
@@ -119,51 +120,6 @@ function MyLeagues({ userId, onNavigate }) {
   );
 }
 
-// ── Live scores ───────────────────────────────────────────────────────────────
-
-function LiveScores() {
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    supabase
-      .from("match_results")
-      .select("*")
-      .order("updated_at", { ascending: false })
-      .limit(8)
-      .then(({ data }) => { setResults(data ?? []); setLoading(false); });
-  }, []);
-
-  if (loading) return null;
-
-  if (!results.length) return (
-    <div className="text-center py-6 rounded-2xl" style={{ border: "1px dashed rgba(255,255,255,0.08)" }}>
-      <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>Tournament kicks off June 11 · Scores will appear here</p>
-    </div>
-  );
-
-  return (
-    <div className="grid gap-2 sm:grid-cols-2">
-      {results.map(r => {
-        const fix = fixtureMap[r.match_id];
-        if (!fix) return null;
-        return (
-          <div key={r.match_id} className="flex items-center gap-3 px-4 py-3 rounded-xl"
-            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <span className="text-xs font-bold w-5 shrink-0" style={{ color: "rgba(255,255,255,0.55)" }}>{r.match_id}</span>
-            <span className="flex-1 text-sm font-semibold truncate" style={{ color: "rgba(255,255,255,0.75)" }}>
-              {fix.home} <span style={{ color: "rgba(255,255,255,0.6)" }}>vs</span> {fix.away}
-            </span>
-            <span className="font-black tabular-nums text-sm" style={{ color: "#c8f000" }}>
-              {r.home_score}–{r.away_score}
-            </span>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
 // ── Section header ────────────────────────────────────────────────────────────
 
 function SectionHeader({ label, action }) {
@@ -177,10 +133,251 @@ function SectionHeader({ label, action }) {
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
-export default function Home({ onNavigate, onSignIn, onSignUp }) {
-  const { user } = useAuth();
+// ── Today's Matches + Countdown ───────────────────────────────────────────────
+
+function parseFixtureDate(dateStr, timeStr) {
+  const clean = timeStr.replace(" ET", "").trim();
+  const [time, meridiem] = clean.split(" ");
+  let [h, m] = time.split(":").map(Number);
+  if (meridiem === "PM" && h !== 12) h += 12;
+  if (meridiem === "AM" && h === 12) h = 0;
+  const [y, mo, d] = dateStr.split("-").map(Number);
+  return new Date(Date.UTC(y, mo - 1, d, h + 4, m)); // EDT = UTC-4
+}
+
+function formatCountdown(ms) {
+  if (ms <= 0) return "NOW";
+  const totalSec = Math.floor(ms / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const min = Math.floor((totalSec % 3600) / 60);
+  const sec = totalSec % 60;
+  if (h > 0) return `${h}:${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+  return `${min}:${String(sec).padStart(2, "0")}`;
+}
+
+function TodaysMatches() {
+  const [now, setNow] = useState(() => new Date());
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const allWithDates = fixtures.map(f => ({ ...f, kickoff: parseFixtureDate(f.date, f.time) }));
+  const todayET = now.toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+  const todayMatches = allWithDates.filter(f => f.date === todayET);
+  const futureMatches = allWithDates.filter(f => f.kickoff > now);
+  const nextMatch = futureMatches.length > 0
+    ? futureMatches.reduce((a, b) => a.kickoff < b.kickoff ? a : b)
+    : null;
+
+  if (!nextMatch && todayMatches.length === 0) return null;
+
+  const msToNext = nextMatch ? nextMatch.kickoff - now : 0;
+  const nextIsToday = nextMatch?.date === todayET;
+
+  function fmtTime(kickoff) {
+    return kickoff.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/New_York" }) + " ET";
+  }
+
+  function isLive(kickoff) {
+    return now >= kickoff && now < new Date(kickoff.getTime() + 120 * 60 * 1000);
+  }
 
   return (
+    <section>
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "#c8f000" }}>
+          {todayMatches.length > 0 ? "Today's Matches" : "Next Match"}
+        </p>
+        {nextMatch && (
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg"
+            style={{ background: "rgba(200,240,0,0.08)", border: "1px solid rgba(200,240,0,0.15)" }}>
+            <span style={{ fontSize: "0.7rem" }}>⏱</span>
+            <span className="text-xs font-black tabular-nums" style={{ color: "#c8f000" }}>
+              {formatCountdown(msToNext)}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {todayMatches.length === 0 && nextMatch && (
+        <div className="text-center py-4 rounded-xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.65)" }}>
+            No matches today · Next up: <strong style={{ color: "rgba(255,255,255,0.85)" }}>{nextMatch.home} vs {nextMatch.away}</strong>
+          </p>
+        </div>
+      )}
+
+      <div className="flex flex-col gap-2">
+        {todayMatches.map(f => {
+          const live = isLive(f.kickoff);
+          const finished = now >= new Date(f.kickoff.getTime() + 120 * 60 * 1000);
+          return (
+            <div key={f.id} className="flex items-center gap-3 px-4 py-3 rounded-xl"
+              style={{ background: "rgba(255,255,255,0.03)", border: `1px solid ${live ? "rgba(34,197,94,0.2)" : "rgba(255,255,255,0.06)"}` }}>
+              <span className="text-xs shrink-0" style={{ color: "rgba(255,255,255,0.3)", minWidth: 32 }}>
+                {f.group ? `Grp ${f.group}` : f.round ?? ""}
+              </span>
+              <span className="flex-1 text-sm font-semibold" style={{ color: "rgba(255,255,255,0.85)" }}>
+                {f.home} <span style={{ color: "rgba(255,255,255,0.4)" }}>vs</span> {f.away}
+              </span>
+              {live ? (
+                <span className="text-xs font-black px-2 py-0.5 rounded-full shrink-0"
+                  style={{ background: "rgba(34,197,94,0.15)", color: "#22c55e" }}>LIVE</span>
+              ) : finished ? (
+                <span className="text-xs shrink-0" style={{ color: "rgba(255,255,255,0.3)" }}>FT</span>
+              ) : (
+                <span className="text-xs font-semibold shrink-0" style={{ color: "rgba(255,255,255,0.55)" }}>{fmtTime(f.kickoff)}</span>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+// ── Personal stats card ───────────────────────────────────────────────────────
+
+function MyStatsCard({ userId, onNavigate }) {
+  const [stats, setStats] = useState(undefined); // undefined = loading, null = no submission
+
+  useEffect(() => {
+    async function load() {
+      const [{ data: sub }, { data: resultsRows }, { data: allSubs }] = await Promise.all([
+        supabase.from("submissions").select("picks, is_submitted").eq("user_id", userId).maybeSingle(),
+        supabase.from("match_results").select("*"),
+        supabase.from("submissions").select("user_id, picks"),
+      ]);
+
+      if (!sub?.is_submitted) { setStats(null); return; }
+
+      const resultsMap = buildResultsMap(resultsRows ?? []);
+      const { points, correct, incorrect } = calculateGroupScores(sub.picks ?? {}, resultsMap);
+
+      // Compute global rank
+      const scored = (allSubs ?? []).map(s => {
+        const { points: p } = calculateGroupScores(s.picks ?? {}, resultsMap);
+        return { userId: s.user_id, points: p ?? 0 };
+      }).sort((a, b) => b.points - a.points);
+      const rank = scored.findIndex(s => s.userId === userId) + 1;
+
+      const totalGraded = (correct ?? 0) + (incorrect ?? 0);
+      const accuracy = totalGraded > 0 ? Math.round((correct / totalGraded) * 100) : null;
+
+      setStats({ points: points ?? 0, correct: correct ?? 0, incorrect: incorrect ?? 0, rank: rank || 1, accuracy, totalPlayers: scored.length });
+    }
+    load().catch(() => setStats(null));
+  }, [userId]);
+
+  if (stats === undefined) return null;
+
+  if (stats === null) return (
+    <div className="rounded-2xl px-5 py-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+      <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: "#c8f000" }}>Your Picks</p>
+      <p className="text-sm mb-3" style={{ color: "rgba(255,255,255,0.6)" }}>You haven't submitted your bracket yet</p>
+      <button onClick={() => onNavigate("mine")}
+        className="px-4 py-2 rounded-xl text-xs font-black transition-all active:scale-95"
+        style={{ background: "linear-gradient(135deg,#dc2626,#b91c1c)", color: "white" }}>
+        🏆 Make My Bracket →
+      </button>
+    </div>
+  );
+
+  return (
+    <div className="rounded-2xl px-5 py-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "#c8f000" }}>Your Picks</p>
+        <button onClick={() => onNavigate("leaderboard")}
+          className="text-xs font-bold transition-colors"
+          style={{ color: "rgba(255,255,255,0.45)" }}
+          onMouseEnter={e => e.currentTarget.style.color = "#c8f000"}
+          onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.45)"}>
+          Leaderboard →
+        </button>
+      </div>
+      <p className="mb-3" style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "1.8rem", color: "white", lineHeight: 1, letterSpacing: "0.04em" }}>
+        #{stats.rank} <span style={{ fontSize: "1rem", color: "rgba(255,255,255,0.4)" }}>globally</span>
+      </p>
+      <div className="flex gap-2">
+        <div className="flex-1 text-center px-2 py-2 rounded-lg" style={{ background: "rgba(200,240,0,0.06)" }}>
+          <p className="text-sm font-black tabular-nums" style={{ color: "#c8f000" }}>{stats.points}</p>
+          <p style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.5)", fontWeight: 700, textTransform: "uppercase" }}>pts</p>
+        </div>
+        <div className="flex-1 text-center px-2 py-2 rounded-lg" style={{ background: "rgba(34,197,94,0.06)" }}>
+          <p className="text-sm font-black tabular-nums" style={{ color: "#22c55e" }}>{stats.correct}</p>
+          <p style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.5)", fontWeight: 700, textTransform: "uppercase" }}>correct</p>
+        </div>
+        <div className="flex-1 text-center px-2 py-2 rounded-lg" style={{ background: "rgba(239,68,68,0.06)" }}>
+          <p className="text-sm font-black tabular-nums" style={{ color: "#ef4444" }}>{stats.incorrect}</p>
+          <p style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.5)", fontWeight: 700, textTransform: "uppercase" }}>wrong</p>
+        </div>
+        <div className="flex-1 text-center px-2 py-2 rounded-lg" style={{ background: "rgba(255,255,255,0.04)" }}>
+          <p className="text-sm font-black tabular-nums" style={{ color: "rgba(255,255,255,0.8)" }}>
+            {stats.accuracy != null ? `${stats.accuracy}%` : "—"}
+          </p>
+          <p style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.5)", fontWeight: 700, textTransform: "uppercase" }}>acc.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HowItWorksTeaser({ onLearnMore }) {
+  const steps = [
+    { icon: "🗂️", label: "Pick Groups", desc: "72 matches" },
+    { icon: "⚡", label: "Build Bracket", desc: "Auto-seeded" },
+    { icon: "🏆", label: "Submit & Compete", desc: "Live rankings" },
+  ];
+  return (
+    <div className="rounded-2xl p-5" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "#c8f000" }}>How It Works</p>
+        <button
+          onClick={onLearnMore}
+          className="text-xs font-bold transition-colors"
+          style={{ color: "rgba(255,255,255,0.55)" }}
+          onMouseEnter={e => e.currentTarget.style.color = "#c8f000"}
+          onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.55)"}
+        >Learn more →</button>
+      </div>
+      <div className="flex items-start gap-2">
+        {steps.map((s, i) => (
+          <div key={i} className="flex-1 flex flex-col items-center text-center">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl mb-2"
+              style={{ background: "rgba(200,240,0,0.08)", border: "1px solid rgba(200,240,0,0.15)" }}>
+              {s.icon}
+            </div>
+            <p className="text-xs font-black text-white leading-tight">{s.label}</p>
+            <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.55)" }}>{s.desc}</p>
+            {i < steps.length - 1 && (
+              <div className="absolute" style={{ display: "none" }} />
+            )}
+          </div>
+        ))}
+      </div>
+      <div className="flex items-center mt-3 gap-1 justify-center">
+        <div className="flex-1 h-px" style={{ background: "rgba(200,240,0,0.15)" }} />
+        <span className="text-xs px-2" style={{ color: "rgba(255,255,255,0.3)" }}>→</span>
+        <div className="flex-1 h-px" style={{ background: "rgba(200,240,0,0.15)" }} />
+      </div>
+    </div>
+  );
+}
+
+export default function Home({ onNavigate, onSignIn, onSignUp }) {
+  const { user } = useAuth();
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
+
+  return (
+    <>
+    {showHowItWorks && (
+      <HowItWorksModal
+        onClose={() => setShowHowItWorks(false)}
+        onGetStarted={() => { setShowHowItWorks(false); onNavigate("mine"); }}
+      />
+    )}
     <div className="max-w-2xl mx-auto px-4 py-8 flex flex-col gap-8">
 
       {/* My Leagues */}
@@ -213,6 +410,19 @@ export default function Home({ onNavigate, onSignIn, onSignUp }) {
         </section>
       )}
 
+      {/* My Picks / Stats */}
+      {user && (
+        <section>
+          <MyStatsCard userId={user.id} onNavigate={onNavigate} />
+        </section>
+      )}
+
+      {/* Today's matches + countdown — always visible */}
+      <TodaysMatches />
+
+      {/* How It Works teaser — always visible */}
+      <HowItWorksTeaser onLearnMore={() => setShowHowItWorks(true)} />
+
       {/* Sign-in prompt */}
       {!user && (
         <section className="text-center py-8 rounded-2xl" style={{ border: "1px dashed rgba(200,240,0,0.15)" }}>
@@ -233,12 +443,8 @@ export default function Home({ onNavigate, onSignIn, onSignUp }) {
         </section>
       )}
 
-      {/* Live Scores */}
-      <section>
-        <SectionHeader label="Match Results" />
-        <LiveScores />
-      </section>
 
     </div>
+    </>
   );
 }
