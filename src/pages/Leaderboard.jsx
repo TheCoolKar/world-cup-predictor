@@ -2,7 +2,7 @@
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import { getLeagueLeaderboard, getMatchResults } from "../utils/social";
-import { calculateGroupScores } from "../utils/scoring";
+import { calculateGroupScores, calculateStreaks } from "../utils/scoring";
 import BracketPicksSummary from "../components/BracketPicksSummary";
 
 
@@ -52,6 +52,13 @@ function LeagueRow({ row, rank, isMe, onViewProfile }) {
               style={{ background: "rgba(200,240,0,0.08)", color: "#c8f000" }}>
               {row.hasBracket ? `${row.pickCount} picks` : "No bracket entered"}
             </span>
+            {row.streak >= 2 && (
+              <span className="text-xs font-black tabular-nums px-2 py-0.5 rounded-full"
+                style={{ background: "rgba(249,115,22,0.12)", color: "#fb923c", border: "1px solid rgba(249,115,22,0.25)" }}
+                title={`${row.streak} correct predictions in a row`}>
+                🔥 {row.streak} streak
+              </span>
+            )}
             {row.updatedAt && row.hasBracket && (
               <span className="text-xs hidden sm:inline" style={{ color: "rgba(255,255,255,0.55)" }}>
                 · {new Date(row.updatedAt).toLocaleDateString()}
@@ -115,15 +122,16 @@ export default function Leaderboard({ initialLeague = null, onViewProfile }) {
     if (tab === "global") {
       Promise.all([
         supabase.from("profiles").select("id, username, avatar_url"),
-        supabase.from("submissions").select("user_id, group_picks_count, updated_at, bracket, picks"),
+        supabase.from("submissions").select("user_id, group_picks_count, updated_at, bracket, picks, confidence"),
         getMatchResults(),
       ]).then(([{ data: profiles }, { data: submissions }, resultsMap]) => {
         const subMap = Object.fromEntries((submissions ?? []).map(s => [s.user_id, s]));
         const merged = (profiles ?? []).map(p => {
           const sub = subMap[p.id];
           const scoring = sub?.picks
-            ? calculateGroupScores(sub.picks, resultsMap)
+            ? calculateGroupScores(sub.picks, resultsMap, sub.confidence ?? {})
             : { points: null, correct: null, incorrect: null };
+          const streaks = sub?.picks ? calculateStreaks(sub.picks, resultsMap) : { current: 0, best: 0 };
           return {
             userId:    p.id,
             username:  p.username ?? "—",
@@ -138,6 +146,7 @@ export default function Leaderboard({ initialLeague = null, onViewProfile }) {
             points:    scoring.points,
             correct:   scoring.correct,
             incorrect: scoring.incorrect,
+            streak:    streaks.current,
           };
         }).sort((a, b) => {
           if (b.points !== a.points) return (b.points ?? -1) - (a.points ?? -1);
@@ -165,7 +174,7 @@ export default function Leaderboard({ initialLeague = null, onViewProfile }) {
           {isLeagueTab ? currentLeagueName : "Leaderboard"}
         </h1>
         <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.65)" }}>
-          {isLeagueTab ? "Each player's entered bracket picks" : "Everyone signed up — ranked by picks submitted"}
+          {isLeagueTab ? "Each player's entered bracket picks" : "Ranked by points — ×2/×3 confidence boosts pay extra when they land, and hot streaks get a 🔥"}
         </p>
       </div>
 
@@ -193,7 +202,7 @@ export default function Leaderboard({ initialLeague = null, onViewProfile }) {
         ) : rows.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-40 gap-2">
             <span className="text-3xl">📭</span>
-            <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>No submissions yet.</p>
+            <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>Nobody's on the board yet — be the first to submit a bracket!</p>
           </div>
         ) : (
           // Both global and league: card rows

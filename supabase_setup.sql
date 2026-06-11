@@ -48,6 +48,10 @@ alter table public.submissions
 alter table public.submissions
   add column if not exists is_submitted boolean not null default false;
 
+-- Per-match confidence multipliers: {"A1": 2, "B3": 3} — see /supabase/migrations/001
+alter table public.submissions
+  add column if not exists confidence jsonb not null default '{}';
+
 create unique index if not exists submissions_user_id_idx on public.submissions(user_id);
 
 alter table public.submissions enable row level security;
@@ -71,6 +75,12 @@ create policy "Authenticated users can read all submissions"
 
 alter table public.profiles
   add column if not exists is_admin boolean not null default false;
+
+-- ── Streak tracking — see /supabase/migrations/001 ───────────────────────────
+
+alter table public.profiles
+  add column if not exists current_streak int not null default 0,
+  add column if not exists best_streak int not null default 0;
 
 -- ── Admin RLS policy on submissions ──────────────────────────────────────────
 

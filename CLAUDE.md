@@ -97,6 +97,15 @@ export function predictMatch(eloHome, eloAway) {
 | Exact score | +5 |
 | Correct group advancement | +1 |
 
+### Confidence multiplier & streaks (live implementation)
+The shipped scoring (`src/utils/scoring.js`) awards 1 point per correct pick,
+multiplied by an optional per-match confidence of ×1/×2/×3 chosen by the user.
+Confidence lives in `submissions.confidence` (jsonb keyed by match id); wrong
+picks always score 0. Correct-prediction streaks are computed client-side from
+picks + results in kickoff order (`calculateStreaks`) and denormalised into
+`profiles.current_streak` / `profiles.best_streak`.
+Schema changes go in `/supabase/migrations/`.
+
 ## Important notes
 - Do not commit API keys — use `.env` files and add to `.gitignore`
 - Supabase keys go in `.env` as `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`

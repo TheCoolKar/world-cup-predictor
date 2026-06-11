@@ -236,13 +236,13 @@ export default function App() {
   async function handleViewBracket(userId, username, avatarUrl) {
     const { data } = await supabase
       .from("submissions")
-      .select("picks, scores, bracket, bracket_scores, mode")
+      .select("picks, scores, bracket, bracket_scores, confidence, mode")
       .eq("user_id", userId)
       .maybeSingle();
     setViewingProfile(null);
     setViewingBracket({
       userId, username, avatarUrl,
-      bracketData: data ? { picks: data.picks ?? {}, scores: data.scores ?? {}, bracket: data.bracket, bracketScores: data.bracket_scores ?? {}, mode: data.mode ?? "winner" } : null,
+      bracketData: data ? { picks: data.picks ?? {}, scores: data.scores ?? {}, bracket: data.bracket, bracketScores: data.bracket_scores ?? {}, confidence: data.confidence ?? {}, mode: data.mode ?? "winner" } : null,
     });
   }
   const [disclaimerDone, setDisclaimerDone]   = useState(() => hasAcceptedDisclaimer());

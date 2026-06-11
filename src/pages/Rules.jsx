@@ -1,36 +1,38 @@
 ﻿export default function Rules({ onClose }) {
   const sections = [
     {
-      num: "1",
       title: "Scoring",
       body: "1 point for each correct match prediction. A prediction is correct if you predict the right outcome: Home Team Win, Draw, or Away Team Win.",
     },
     {
-      num: "2",
+      title: "Confidence Boosts",
+      body: "Every pick starts at ×1 confidence. Tap the ×1 chip next to any pick to boost it to ×2 or ×3 — a correct boosted pick earns 2 or 3 points instead of 1. There's no penalty for a wrong boosted pick (it scores 0 like any miss), but boosts are how the brave climb the leaderboard.",
+    },
+    {
+      title: "Streaks",
+      body: "Predict consecutive matches correctly to build a streak — it shows next to your name on the leaderboard (🔥). Streaks are bragging rights only; they don't affect your points.",
+    },
+    {
       title: "Submission Rules",
       body: "Predictions must be submitted before the tournament begins",
     },
     {
-      num: "3",
       title: "Standings",
       body: "Participants are ranked by total points earned. The participant with the most points at the end of the tournament wins.",
     },
     {
-      num: "4",
       title: "Tiebreaker",
       body: "If two or more participants finish with the same number of points: (1) Most correct knockout-stage predictions. (2) Correct prediction of the tournament champion. (3) Earliest submission time for the final predictions.",
     },
     {
-      num: "5",
       title: "Knockout Matches",
       body: "Predictions are based on the team that advances to the next round. Predictions after regular time, extra time, or penalties all count as correct if the advancing team is correctly selected.",
     },
     {
-      num: "6",
       title: "Fair Play",
       body: "One entry per participant. Any attempt to submit predictions after kickoff will result in those predictions being void.",
     },
-  ];
+  ].map((s, i) => ({ ...s, num: String(i + 1) }));
 
   return (
     <div
@@ -92,7 +94,7 @@
           <div className="mt-4 px-4 py-3 rounded-xl" style={{ background: "rgba(200,240,0,0.06)", border: "1px solid rgba(200,240,0,0.12)" }}>
             <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: "#c8f000" }}>Simple Version</p>
             <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.6)" }}>
-              1 point for every correctly predicted match result (win, loss, or draw). Predictions must be submitted before tournament begins.
+              1 point for every correctly predicted match result (win, loss, or draw) — or 2/3 points if you boosted that pick with a ×2/×3 confidence chip. Wrong picks always score 0. Predictions must be submitted before the tournament begins.
             </p>
           </div>
         </div>

@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { supabase } from "../lib/supabase";
+import { useAuth } from "../hooks/useAuth";
 import { buildResultsMap } from "../utils/scoring";
 import { getFlagClass } from "../utils/flags";
+import PostMatchBreakdown from "../components/PostMatchBreakdown";
 import fixtures from "../data/wc2026_fixtures.json";
 import eloRatings from "../data/elo_ratings.json";
 
@@ -534,10 +536,13 @@ function GroupStandings({ resultsMap }) {
 
 // ── Match row ─────────────────────────────────────────────────────────────────
 
-function MatchRow({ fixture, result, now, r32Slots, bw }) {
+function MatchRow({ fixture, result, now, r32Slots, bw, userPick = null, conf = 1, expanded = false, onToggle }) {
   const kickoff = fixture.kickoff;
   const isLive = now >= kickoff && now < new Date(kickoff.getTime() + 120 * 60 * 1000);
   const isPlayed = !!result;
+  // Post-match breakdown only exists for group fixtures (the model predicts those)
+  const canExpand = isPlayed && !fixture.isKnockout;
+  const pickRight = userPick != null && result?.result != null && userPick === result.result;
 
   let homeTeam, awayTeam, rowLabel, homeTbd, awayTbd;
 
@@ -560,46 +565,86 @@ function MatchRow({ fixture, result, now, r32Slots, bw }) {
   const teamColor = (tbd) => isPlayed ? "rgba(255,255,255,0.55)" : tbd ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.9)";
 
   return (
-    <div className="flex items-center gap-3 px-4 py-3 rounded-xl"
+    <div className="rounded-xl overflow-hidden"
       style={{
         background: isLive ? "rgba(34,197,94,0.04)" : "rgba(255,255,255,0.03)",
-        border: `1px solid ${isLive ? "rgba(34,197,94,0.2)" : "rgba(255,255,255,0.06)"}`,
+        border: `1px solid ${isLive ? "rgba(34,197,94,0.2)" : expanded ? "rgba(200,240,0,0.18)" : "rgba(255,255,255,0.06)"}`,
       }}
     >
-      <span className="text-xs shrink-0 hidden sm:block" style={{ color: "rgba(255,255,255,0.3)", minWidth: 72 }}>
-        {rowLabel}
-      </span>
-
-      {/* Home */}
-      <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
-        <span className="text-sm font-semibold truncate text-right"
-          style={{ color: teamColor(homeTbd), fontStyle: homeTbd ? "italic" : "normal" }}>
-          {homeTeam}
+      <div
+        className={`flex items-center gap-3 px-4 py-3${canExpand ? " cursor-pointer hover:bg-white/[0.03] transition-colors" : ""}`}
+        onClick={canExpand ? onToggle : undefined}
+        title={canExpand ? "Tap for the full breakdown — model vs reality" : undefined}
+      >
+        <span className="text-xs shrink-0 hidden sm:block" style={{ color: "rgba(255,255,255,0.3)", minWidth: 72 }}>
+          {rowLabel}
         </span>
-        {!homeTbd && <span className={getFlagClass(homeTeam) ?? ""} style={{ fontSize: "1.1rem", lineHeight: 1, flexShrink: 0 }} />}
-      </div>
 
-      {/* Score / time */}
-      <div className="shrink-0 text-center" style={{ minWidth: 64 }}>
-        {isPlayed ? (
-          <span className="font-black tabular-nums text-sm" style={{ color: "#c8f000" }}>
-            {result.home_score} – {result.away_score}
+        {/* Home */}
+        <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
+          <span className="text-sm font-semibold truncate text-right"
+            style={{ color: teamColor(homeTbd), fontStyle: homeTbd ? "italic" : "normal" }}>
+            {homeTeam}
           </span>
-        ) : isLive ? (
-          <span className="text-xs font-black px-2 py-0.5 rounded-full" style={{ background: "rgba(34,197,94,0.15)", color: "#22c55e" }}>LIVE</span>
-        ) : (
-          <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.4)" }}>{fmtTime(kickoff)}</span>
+          {!homeTbd && <span className={getFlagClass(homeTeam) ?? ""} style={{ fontSize: "1.1rem", lineHeight: 1, flexShrink: 0 }} />}
+        </div>
+
+        {/* Score / time */}
+        <div className="shrink-0 text-center" style={{ minWidth: 64 }}>
+          {isPlayed ? (
+            <div className="flex flex-col items-center">
+              <span className="font-black tabular-nums text-sm" style={{ color: "#c8f000" }}>
+                {result.home_score} – {result.away_score}
+              </span>
+              {userPick != null && !fixture.isKnockout && (
+                <span style={{ fontSize: "0.55rem", fontWeight: 900, color: pickRight ? "#22c55e" : "#ef4444" }}>
+                  {pickRight ? "✓ your pick" : "✗ your pick"}
+                </span>
+              )}
+            </div>
+          ) : isLive ? (
+            <span className="text-xs font-black px-2 py-0.5 rounded-full" style={{ background: "rgba(34,197,94,0.15)", color: "#22c55e" }}>LIVE</span>
+          ) : (
+            <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.4)" }}>{fmtTime(kickoff)}</span>
+          )}
+        </div>
+
+        {/* Away */}
+        <div className="flex items-center gap-1.5 flex-1 min-w-0">
+          {!awayTbd && <span className={getFlagClass(awayTeam) ?? ""} style={{ fontSize: "1.1rem", lineHeight: 1, flexShrink: 0 }} />}
+          <span className="text-sm font-semibold truncate"
+            style={{ color: teamColor(awayTbd), fontStyle: awayTbd ? "italic" : "normal" }}>
+            {awayTeam}
+          </span>
+        </div>
+
+        {canExpand && (
+          <svg className="w-3.5 h-3.5 shrink-0 transition-transform duration-200"
+            style={{ color: expanded ? "#c8f000" : "rgba(255,255,255,0.25)", transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}
+            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
         )}
       </div>
 
-      {/* Away */}
-      <div className="flex items-center gap-1.5 flex-1 min-w-0">
-        {!awayTbd && <span className={getFlagClass(awayTeam) ?? ""} style={{ fontSize: "1.1rem", lineHeight: 1, flexShrink: 0 }} />}
-        <span className="text-sm font-semibold truncate"
-          style={{ color: teamColor(awayTbd), fontStyle: awayTbd ? "italic" : "normal" }}>
-          {awayTeam}
-        </span>
-      </div>
+      {/* Venue line — group matches only */}
+      {fixture.venue && (
+        <div className="px-4 pb-2 flex items-center gap-1" style={{ marginTop: -4 }}>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "rgba(255,255,255,0.2)", flexShrink: 0 }}>
+            <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          <span style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.28)", fontWeight: 600, letterSpacing: "0.02em" }}>
+            {fixture.venue}{fixture.city ? ` · ${fixture.city}` : ""}
+          </span>
+        </div>
+      )}
+
+      {/* Post-match breakdown — model prediction vs what actually happened */}
+      {canExpand && expanded && (
+        <div className="px-3 pb-3">
+          <PostMatchBreakdown match={fixture} result={result} userPick={userPick} confidence={conf} />
+        </div>
+      )}
     </div>
   );
 }
@@ -607,9 +652,12 @@ function MatchRow({ fixture, result, now, r32Slots, bw }) {
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 export default function Schedule() {
+  const { user } = useAuth();
   const [tab, setTab] = useState("schedule");
   const [resultsMap, setResultsMap] = useState({});
   const [now, setNow] = useState(() => new Date());
+  const [mySub, setMySub] = useState(null); // { picks, confidence } for breakdown cards
+  const [expandedId, setExpandedId] = useState(null);
   const dateRefs = useRef({});
   const scrolledRef = useRef(false);
 
@@ -620,6 +668,15 @@ export default function Schedule() {
     const id = setInterval(() => setNow(new Date()), 30000);
     return () => clearInterval(id);
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (user) {
+      supabase.from("submissions").select("picks, confidence").eq("user_id", user.id).maybeSingle()
+        .then(({ data }) => { if (!cancelled) setMySub(data ?? null); });
+    }
+    return () => { cancelled = true; setMySub(null); };
+  }, [user]);
 
   const liveByGroup = useMemo(() => {
     const map = {};
@@ -674,7 +731,7 @@ export default function Schedule() {
           Schedule & Results
         </h1>
         <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.55)" }}>
-          {tab === "groups" ? "Live standings · Top 2 qualify + 8 best 3rd-place" : tab === "knockouts" ? "R32 → R16 → QF → SF → Final · ET times" : "Group stage matches · ET times"}
+          {tab === "groups" ? "Live standings · Top 2 qualify + 8 best 3rd-place" : tab === "knockouts" ? "R32 → R16 → QF → SF → Final · ET times" : "All matches · ET times · Tap a finished match to see how the model (and you) did"}
         </p>
       </div>
 
@@ -716,7 +773,11 @@ export default function Schedule() {
                 </div>
                 <div className="flex flex-col gap-1.5">
                   {dayFixtures.map(f => (
-                    <MatchRow key={f.id} fixture={f} result={resultsMap[f.id] ?? null} now={now} r32Slots={liveR32Slots} bw={liveBw} />
+                    <MatchRow key={f.id} fixture={f} result={resultsMap[f.id] ?? null} now={now} r32Slots={liveR32Slots} bw={liveBw}
+                      userPick={mySub?.picks?.[f.id] ?? null}
+                      conf={mySub?.confidence?.[f.id] ?? 1}
+                      expanded={expandedId === f.id}
+                      onToggle={() => setExpandedId(prev => prev === f.id ? null : f.id)} />
                   ))}
                 </div>
               </div>

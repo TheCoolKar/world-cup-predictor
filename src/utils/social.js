@@ -1,5 +1,5 @@
 import { supabase } from "../lib/supabase";
-import { calculateGroupScores, buildResultsMap } from "./scoring";
+import { calculateGroupScores, calculateStreaks, buildResultsMap } from "./scoring";
 
 export function generateJoinCode() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -59,7 +59,7 @@ export async function getLeagueLeaderboard(leagueId) {
   ] = await Promise.all([
     supabase.from("profiles").select("id, username, avatar_url").in("id", userIds),
     submissionIds.length > 0
-      ? supabase.from("submissions").select("id, picks, group_picks_count, updated_at, bracket").in("id", submissionIds)
+      ? supabase.from("submissions").select("id, picks, confidence, group_picks_count, updated_at, bracket").in("id", submissionIds)
       : Promise.resolve({ data: [] }),
     getMatchResults(),
   ]);
@@ -72,8 +72,9 @@ export async function getLeagueLeaderboard(leagueId) {
     const sub = m.submission_id ? subMap[m.submission_id] : null;
     const bw = sub?.bracket ?? {};
     const scoring = sub?.picks
-      ? calculateGroupScores(sub.picks, resultsMap)
+      ? calculateGroupScores(sub.picks, resultsMap, sub.confidence ?? {})
       : { points: null, correct: null, incorrect: null };
+    const streaks = sub?.picks ? calculateStreaks(sub.picks, resultsMap) : { current: 0, best: 0 };
     return {
       userId:    m.user_id,
       username:  profile.username ?? "—",
@@ -88,6 +89,7 @@ export async function getLeagueLeaderboard(leagueId) {
       points:    scoring.points,
       correct:   scoring.correct,
       incorrect: scoring.incorrect,
+      streak:    streaks.current,
     };
   });
 

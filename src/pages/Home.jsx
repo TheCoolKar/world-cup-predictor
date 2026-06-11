@@ -2,7 +2,7 @@
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import { getLeagueLeaderboard } from "../utils/social";
-import { buildResultsMap, calculateGroupScores } from "../utils/scoring";
+import { buildResultsMap, calculateGroupScores, calculateStreaks } from "../utils/scoring";
 import fixtures from "../data/wc2026_fixtures.json";
 import HowItWorksModal from "../components/HowItWorksModal";
 
@@ -246,19 +246,20 @@ function MyStatsCard({ userId, onNavigate }) {
   useEffect(() => {
     async function load() {
       const [{ data: sub }, { data: resultsRows }, { data: allSubs }] = await Promise.all([
-        supabase.from("submissions").select("picks, is_submitted").eq("user_id", userId).maybeSingle(),
+        supabase.from("submissions").select("picks, confidence, is_submitted").eq("user_id", userId).maybeSingle(),
         supabase.from("match_results").select("*"),
-        supabase.from("submissions").select("user_id, picks"),
+        supabase.from("submissions").select("user_id, picks, confidence"),
       ]);
 
       if (!sub?.is_submitted) { setStats(null); return; }
 
       const resultsMap = buildResultsMap(resultsRows ?? []);
-      const { points, correct, incorrect } = calculateGroupScores(sub.picks ?? {}, resultsMap);
+      const { points, correct, incorrect } = calculateGroupScores(sub.picks ?? {}, resultsMap, sub.confidence ?? {});
+      const { current: streak } = calculateStreaks(sub.picks ?? {}, resultsMap);
 
       // Compute global rank
       const scored = (allSubs ?? []).map(s => {
-        const { points: p } = calculateGroupScores(s.picks ?? {}, resultsMap);
+        const { points: p } = calculateGroupScores(s.picks ?? {}, resultsMap, s.confidence ?? {});
         return { userId: s.user_id, points: p ?? 0 };
       }).sort((a, b) => b.points - a.points);
       const rank = scored.findIndex(s => s.userId === userId) + 1;
@@ -266,7 +267,7 @@ function MyStatsCard({ userId, onNavigate }) {
       const totalGraded = (correct ?? 0) + (incorrect ?? 0);
       const accuracy = totalGraded > 0 ? Math.round((correct / totalGraded) * 100) : null;
 
-      setStats({ points: points ?? 0, correct: correct ?? 0, incorrect: incorrect ?? 0, rank: rank || 1, accuracy, totalPlayers: scored.length });
+      setStats({ points: points ?? 0, correct: correct ?? 0, incorrect: incorrect ?? 0, rank: rank || 1, accuracy, streak, totalPlayers: scored.length });
     }
     load().catch(() => setStats(null));
   }, [userId]);
@@ -297,9 +298,18 @@ function MyStatsCard({ userId, onNavigate }) {
           Leaderboard →
         </button>
       </div>
-      <p className="mb-3" style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "1.8rem", color: "white", lineHeight: 1, letterSpacing: "0.04em" }}>
-        #{stats.rank} <span style={{ fontSize: "1rem", color: "rgba(255,255,255,0.4)" }}>globally</span>
-      </p>
+      <div className="flex items-center gap-2 mb-3 flex-wrap">
+        <p style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "1.8rem", color: "white", lineHeight: 1, letterSpacing: "0.04em" }}>
+          #{stats.rank} <span style={{ fontSize: "1rem", color: "rgba(255,255,255,0.4)" }}>globally</span>
+        </p>
+        {stats.streak >= 2 && (
+          <span className="text-xs font-black tabular-nums px-2 py-0.5 rounded-full"
+            style={{ background: "rgba(249,115,22,0.12)", color: "#fb923c", border: "1px solid rgba(249,115,22,0.25)" }}
+            title={`${stats.streak} correct predictions in a row`}>
+            🔥 {stats.streak} game streak
+          </span>
+        )}
+      </div>
       <div className="flex gap-2">
         <div className="flex-1 text-center px-2 py-2 rounded-lg" style={{ background: "rgba(200,240,0,0.06)" }}>
           <p className="text-sm font-black tabular-nums" style={{ color: "#c8f000" }}>{stats.points}</p>

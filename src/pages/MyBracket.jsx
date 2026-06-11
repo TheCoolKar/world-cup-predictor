@@ -18,7 +18,8 @@ import { useState, useMemo, useEffect, useRef }  from "react";
 import fixtures                from "../data/wc2026_fixtures.json";
 import eloRatings              from "../data/elo_ratings.json";
 import { upsertBracket } from "../utils/storage";
-import { buildResultsMap } from "../utils/scoring";
+import { buildResultsMap, normalizeConfidence } from "../utils/scoring";
+import PowerupsModal from "../components/PowerupsModal";
 import { supabase } from "../lib/supabase";
 import { useAuth }  from "../hooks/useAuth";
 import AuthModal    from "../components/AuthModal";
@@ -308,28 +309,42 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode, r
   const teamHover = e => { e.currentTarget.style.textDecorationColor = "currentColor"; };
   const teamLeave = e => { e.currentTarget.style.textDecorationColor = "transparent"; };
 
+  const VenueLine = match.venue ? (
+    <div className="flex items-center gap-1 px-3 pb-1.5" style={{ marginTop: -4 }}>
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "rgba(255,255,255,0.18)", flexShrink: 0 }}>
+        <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+      </svg>
+      <span style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.22)", fontWeight: 600, letterSpacing: "0.02em" }}>
+        {match.venue}{match.city ? ` · ${match.city}` : ""}
+      </span>
+    </div>
+  ) : null;
+
   if (mode==="score") {
     return (
-      <div className="flex items-center gap-1.5 py-2 px-3">
-        <div className="flex items-center gap-1 flex-1 min-w-0 justify-end">
-          <span className="text-xs font-semibold truncate text-right"
-            style={teamNameStyle(nameColor(homeW,drawV))}
-            onClick={()=>openTeam(home)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{home}</span>
-          <span className={getFlagClass(home) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
+      <div>
+        <div className="flex items-center gap-1.5 py-2 px-3">
+          <div className="flex items-center gap-1 flex-1 min-w-0 justify-end">
+            <span className="text-xs font-semibold truncate text-right"
+              style={teamNameStyle(nameColor(homeW,drawV))}
+              onClick={()=>openTeam(home)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{home}</span>
+            <span className={getFlagClass(home) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
+          </div>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <ScorePicker value={hVal} onChange={v=>{onScoreChange(match.id,v,aVal);onPickChange(match.id,scoreToResult(v,aVal));}} />
+            <span className="font-black text-sm" style={{color:"rgba(255,255,255,0.55)"}}>–</span>
+            <ScorePicker value={aVal} onChange={v=>{onScoreChange(match.id,hVal,v);onPickChange(match.id,scoreToResult(hVal,v));}} />
+          </div>
+          <div className="flex items-center gap-1 flex-1 min-w-0">
+            <span className={getFlagClass(away) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
+            <span className="text-xs font-semibold truncate"
+              style={teamNameStyle(nameColor(awayW,drawV))}
+              onClick={()=>openTeam(away)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{away}</span>
+          </div>
+          <span style={{color:"rgba(255,255,255,0.18)",fontSize:"0.6rem",flexShrink:0}}>MD{matchday}</span>
+          {ResultBadge}
         </div>
-        <div className="flex items-center gap-1.5 shrink-0">
-          <ScorePicker value={hVal} onChange={v=>{onScoreChange(match.id,v,aVal);onPickChange(match.id,scoreToResult(v,aVal));}} />
-          <span className="font-black text-sm" style={{color:"rgba(255,255,255,0.55)"}}>–</span>
-          <ScorePicker value={aVal} onChange={v=>{onScoreChange(match.id,hVal,v);onPickChange(match.id,scoreToResult(hVal,v));}} />
-        </div>
-        <div className="flex items-center gap-1 flex-1 min-w-0">
-          <span className={getFlagClass(away) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
-          <span className="text-xs font-semibold truncate"
-            style={teamNameStyle(nameColor(awayW,drawV))}
-            onClick={()=>openTeam(away)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{away}</span>
-        </div>
-        <span style={{color:"rgba(255,255,255,0.18)",fontSize:"0.6rem",flexShrink:0}}>MD{matchday}</span>
-        {ResultBadge}
+        {VenueLine}
       </div>
     );
   }
@@ -339,30 +354,33 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode, r
 
   if (locked) {
     return (
-      <div className="flex items-center gap-2 py-1.5 px-3" style={{ opacity: 0.75 }}>
-        <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
-          <span className="text-xs font-semibold truncate text-right"
-            style={{ color: homeW ? "#c8f000" : "rgba(255,255,255,0.6)" }}>{home}</span>
-          <span className={getFlagClass(home) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
+      <div style={{ opacity: 0.75 }}>
+        <div className="flex items-center gap-2 py-1.5 px-3">
+          <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
+            <span className="text-xs font-semibold truncate text-right"
+              style={{ color: homeW ? "#c8f000" : "rgba(255,255,255,0.6)" }}>{home}</span>
+            <span className={getFlagClass(home) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
+          </div>
+          <div className="flex items-center gap-1 shrink-0">
+            {pickLabel ? (
+              <span className="w-8 h-7 rounded font-black text-xs flex items-center justify-center shrink-0"
+                style={{ background: `${pickColor}22`, color: pickColor, border: `1px solid ${pickColor}55` }}>
+                {pickLabel}
+              </span>
+            ) : (
+              <span className="text-xs" style={{ color: "rgba(255,255,255,0.2)" }}>—</span>
+            )}
+            <span style={{ fontSize: "0.75rem" }}>🔒</span>
+          </div>
+          <div className="flex items-center gap-1.5 flex-1 min-w-0">
+            <span className={getFlagClass(away) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
+            <span className="text-xs font-semibold truncate"
+              style={{ color: awayW ? "#ef4444" : "rgba(255,255,255,0.6)" }}>{away}</span>
+          </div>
+          <span style={{color:"rgba(255,255,255,0.18)",fontSize:"0.6rem",flexShrink:0}}>MD{matchday}</span>
+          {ResultBadge}
         </div>
-        <div className="flex items-center gap-1 shrink-0">
-          {pickLabel ? (
-            <span className="w-8 h-7 rounded font-black text-xs flex items-center justify-center shrink-0"
-              style={{ background: `${pickColor}22`, color: pickColor, border: `1px solid ${pickColor}55` }}>
-              {pickLabel}
-            </span>
-          ) : (
-            <span className="text-xs" style={{ color: "rgba(255,255,255,0.2)" }}>—</span>
-          )}
-          <span style={{ fontSize: "0.75rem" }}>🔒</span>
-        </div>
-        <div className="flex items-center gap-1.5 flex-1 min-w-0">
-          <span className={getFlagClass(away) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
-          <span className="text-xs font-semibold truncate"
-            style={{ color: awayW ? "#ef4444" : "rgba(255,255,255,0.6)" }}>{away}</span>
-        </div>
-        <span style={{color:"rgba(255,255,255,0.18)",fontSize:"0.6rem",flexShrink:0}}>MD{matchday}</span>
-        {ResultBadge}
+        {VenueLine}
       </div>
     );
   }
@@ -375,26 +393,29 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode, r
     </button>
   );
   return (
-    <div className="flex items-center gap-2 py-1.5 px-3">
-      <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
-        <span className="text-xs font-semibold truncate text-right"
-          style={teamNameStyle(homeW?"#c8f000":"rgba(255,255,255,0.75)")}
-          onClick={()=>openTeam(home)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{home}</span>
-        <span className={getFlagClass(home) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
+    <div>
+      <div className="flex items-center gap-2 py-1.5 px-3">
+        <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
+          <span className="text-xs font-semibold truncate text-right"
+            style={teamNameStyle(homeW?"#c8f000":"rgba(255,255,255,0.75)")}
+            onClick={()=>openTeam(home)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{home}</span>
+          <span className={getFlagClass(home) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
+        </div>
+        <div className="flex gap-1 shrink-0">
+          <BTN value="home" label="H" activeColor="#c8f000"  activeText="#1a0533"/>
+          <BTN value="draw" label="X" activeColor="#f59e0b"  activeText="#1a0533"/>
+          <BTN value="away" label="A" activeColor="#ef4444"  activeText="white"  />
+        </div>
+        <div className="flex items-center gap-1.5 flex-1 min-w-0">
+          <span className={getFlagClass(away) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
+          <span className="text-xs font-semibold truncate"
+            style={teamNameStyle(awayW?"#ef4444":"rgba(255,255,255,0.75)")}
+            onClick={()=>openTeam(away)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{away}</span>
+        </div>
+        <span style={{color:"rgba(255,255,255,0.18)",fontSize:"0.6rem",flexShrink:0}}>MD{matchday}</span>
+        {ResultBadge}
       </div>
-      <div className="flex gap-1 shrink-0">
-        <BTN value="home" label="H" activeColor="#c8f000"  activeText="#1a0533"/>
-        <BTN value="draw" label="X" activeColor="#f59e0b"  activeText="#1a0533"/>
-        <BTN value="away" label="A" activeColor="#ef4444"  activeText="white"  />
-      </div>
-      <div className="flex items-center gap-1.5 flex-1 min-w-0">
-        <span className={getFlagClass(away) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
-        <span className="text-xs font-semibold truncate"
-          style={teamNameStyle(awayW?"#ef4444":"rgba(255,255,255,0.75)")}
-          onClick={()=>openTeam(away)} onMouseEnter={teamHover} onMouseLeave={teamLeave}>{away}</span>
-      </div>
-      <span style={{color:"rgba(255,255,255,0.18)",fontSize:"0.6rem",flexShrink:0}}>MD{matchday}</span>
-      {ResultBadge}
+      {VenueLine}
     </div>
   );
 }
@@ -752,6 +773,9 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
     return { ...emptyWinners(), ...(saved ?? {}) };
   });
   const [bScores,setBScores]= useState(()=> bracketData?.bracketScores ?? {});
+  // confidence: { [matchId]: 1 | 2 | 3 } — multiplies points for correct picks
+  const [confidence, setConfidence] = useState(()=> bracketData?.confidence ?? {});
+  const [showPowerups, setShowPowerups] = useState(false);
 
   const isLocked = isTournamentStarted();
 
@@ -784,7 +808,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
     if (!user || restoredRef.current || readOnly) return;
     restoredRef.current = true;
     if (Object.keys(picks).length > 0) return;
-    supabase.from("submissions").select("picks,scores,bracket,bracket_scores,is_submitted")
+    supabase.from("submissions").select("picks,scores,bracket,bracket_scores,confidence,is_submitted")
       .eq("user_id", user.id).maybeSingle()
       .then(({ data }) => {
         if (!data) return;
@@ -794,9 +818,11 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         setScores(data.scores ?? {});
         setBw({ ...emptyWinners(), ...(data.bracket ?? {}) });
         setBScores(data.bracket_scores ?? {});
+        setConfidence(data.confidence ?? {});
         if (bracketData) {
           upsertBracket({ ...bracketData, picks: data.picks, scores: data.scores ?? {},
-            bracket: data.bracket ?? null, bracketScores: data.bracket_scores ?? {} });
+            bracket: data.bracket ?? null, bracketScores: data.bracket_scores ?? {},
+            confidence: data.confidence ?? {} });
         }
       });
   }, [user]);
@@ -824,6 +850,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         scores,
         bracket:           bw,
         bracket_scores:    bScores,
+        confidence,
         group_picks_count: Object.keys(picks).length,
         updated_at:        new Date().toISOString(),
       }, { onConflict: "user_id" });
@@ -851,12 +878,12 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
       }
     }, 1500);
     return () => clearTimeout(autoSaveRef.current);
-  }, [picks, scores, bw, bScores, user, isSubmitted]);
+  }, [picks, scores, bw, bScores, confidence, user, isSubmitted]);
 
   // Persist the whole bracket object to localStorage whenever anything changes
-  function save(newPicks, newScores, newBw, newBScores) {
+  function save(newPicks, newScores, newBw, newBScores, newConfidence = confidence) {
     if (!bracketData || readOnly || isSubmitted) return;
-    upsertBracket({ ...bracketData, picks: newPicks, scores: newScores, bracket: newBw, bracketScores: newBScores });
+    upsertBracket({ ...bracketData, picks: newPicks, scores: newScores, bracket: newBw, bracketScores: newBScores, confidence: newConfidence });
   }
 
   async function handleSubmit() {
@@ -876,6 +903,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         scores,
         bracket:           bw,
         bracket_scores:    bScores,
+        confidence,
         group_picks_count: Object.keys(picks).length,
         is_submitted:      true,
         updated_at:        new Date().toISOString(),
@@ -960,6 +988,13 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
     save(newPicks, scores, fresh, {});
   }
 
+  function handleConfidence(matchId, value) {
+    if (readOnly || isSubmitted || isMatchLocked(matchId)) return;
+    const next = { ...confidence, [matchId]: normalizeConfidence(value) };
+    setConfidence(next);
+    save(picks, scores, bw, bScores, next);
+  }
+
   function handleGroupScore(matchId, h, a) {
     if (readOnly || isSubmitted || isMatchLocked(matchId)) return;
     const newScores = {...scores, [matchId]:{home:h,away:a}};
@@ -1040,8 +1075,12 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         if (isKoMatchLocked(round, i) && bScores[key] != null) keptBScores[key] = bScores[key];
       }
     }
-    setPicks(keptPicks); setScores(keptScores); setBw(keptBw); setBScores(keptBScores);
-    save(keptPicks, keptScores, keptBw, keptBScores);
+    const keptConfidence = {};
+    for (const m of GROUP_MATCHES) {
+      if (isMatchLocked(m.id) && confidence[m.id] != null) keptConfidence[m.id] = confidence[m.id];
+    }
+    setPicks(keptPicks); setScores(keptScores); setBw(keptBw); setBScores(keptBScores); setConfidence(keptConfidence);
+    save(keptPicks, keptScores, keptBw, keptBScores, keptConfidence);
   }
 
   function handleRandomPick() {
@@ -1238,6 +1277,20 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         </div>
       )}
 
+      {/* Powerups modal */}
+      {showPowerups && (
+        <PowerupsModal
+          confidence={confidence}
+          picks={picks}
+          readOnly={readOnly || isSubmitted || isLocked}
+          onChange={newConf => {
+            setConfidence(newConf);
+            save(picks, scores, bw, bScores, newConf);
+          }}
+          onClose={() => setShowPowerups(false)}
+        />
+      )}
+
       {/* Auth modal */}
       {showAuth && (
         <AuthModal
@@ -1261,21 +1314,18 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
           <div className="flex items-center gap-3">
             <button
               onClick={handleRandomPick}
-              className="flex items-center gap-2 font-black transition-all duration-200 active:scale-95"
+              className="flex items-center gap-2 font-semibold transition-all duration-200 active:scale-95"
               style={{
                 padding: "8px 16px",
                 borderRadius: 12,
-                background: "linear-gradient(135deg,#ff6b35,#f7c948,#22d3a4,#6366f1)",
-                backgroundSize: "300% 300%",
-                animation: "gradientShift 3s ease infinite",
-                boxShadow: "0 0 16px rgba(99,102,241,0.4), 0 0 32px rgba(34,211,164,0.2)",
-                color: "#fff",
+                background: "rgba(255,255,255,0.06)",
+                color: "rgba(255,255,255,0.6)",
                 fontSize: "0.8rem",
                 letterSpacing: "0.03em",
-                border: "1.5px solid rgba(255,255,255,0.25)",
+                border: "1px solid rgba(255,255,255,0.12)",
               }}
-              onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 24px rgba(99,102,241,0.65), 0 0 48px rgba(34,211,164,0.35)"; e.currentTarget.style.transform = "scale(1.05)"; }}
-              onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 16px rgba(99,102,241,0.4), 0 0 32px rgba(34,211,164,0.2)"; e.currentTarget.style.transform = "scale(1)"; }}
+              onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.color = "rgba(255,255,255,0.8)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "rgba(255,255,255,0.6)"; }}
             >
               <span style={{ fontSize: "1rem" }}>🎲</span>
               Random Picker
@@ -1318,6 +1368,32 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
             onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.06)";e.currentTarget.style.color="rgba(255,255,255,0.45)";}}>
             ↺ Reset all
           </button>
+          {!readOnly && (() => {
+            const used = Object.values(confidence).filter(v => v > 1).length;
+            return (
+              <button onClick={() => setShowPowerups(true)}
+                className="font-black transition-all duration-200 active:scale-95 flex items-center gap-2"
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: 12,
+                  background: "linear-gradient(135deg,#ff6b35,#f7c948,#22d3a4,#6366f1)",
+                  backgroundSize: "300% 300%",
+                  animation: "gradientShift 3s ease infinite",
+                  boxShadow: "0 0 16px rgba(99,102,241,0.4), 0 0 32px rgba(34,211,164,0.2)",
+                  color: "#fff",
+                  fontSize: "0.8rem",
+                  letterSpacing: "0.03em",
+                  border: "1.5px solid rgba(255,255,255,0.25)",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 24px rgba(99,102,241,0.65), 0 0 48px rgba(34,211,164,0.35)"; e.currentTarget.style.transform = "scale(1.05)"; }}
+                onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 16px rgba(99,102,241,0.4), 0 0 32px rgba(34,211,164,0.2)"; e.currentTarget.style.transform = "scale(1)"; }}
+              >
+                <span style={{ fontSize: "1rem" }}>⚡</span>
+                POWERUPS
+                {used > 0 && <span className="tabular-nums" style={{ opacity: 0.85 }}>({used}/6)</span>}
+              </button>
+            );
+          })()}
         </div>
       </div>
       )}
@@ -1343,6 +1419,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
             <p className="text-xs font-bold mb-0.5" style={{ color: "#c8f000" }}>How this works</p>
             <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.65)" }}>
               Pick the winner of every group match (72 total). Your bracket seeds automatically — then pick knockout winners all the way to the Final and hit <strong style={{ color: "rgba(255,255,255,0.85)" }}>Submit</strong> to lock your entry.
+              Use the <strong style={{ color: "#c8f000" }}>⚡ POWERUPS</strong> button to assign your 3× ×2 and 3× ×3 boosts — correct boosted picks earn double or triple points.
             </p>
           </div>
           <button

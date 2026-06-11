@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect, useRef } from "react";
 import { useAuth }  from "../hooks/useAuth";
 import { supabase } from "../lib/supabase";
-import { getPicks, getBracket } from "../utils/storage";
+import { calculateGroupScores, calculateStreaks, buildResultsMap } from "../utils/scoring";
 import FriendsPanel from "../components/FriendsPanel";
 
 const inputStyle = {
@@ -44,11 +44,45 @@ export default function Profile() {
   const [avatarError,     setAvatarError]     = useState(null);
   const fileInputRef = useRef(null);
   const debounceRef  = useRef(null);
+  const [predStats, setPredStats] = useState(null); // { groupPicks, bracketPicks, champion, points, accuracy, streak, bestStreak }
 
   useEffect(() => {
     if (user) setName(user.user_metadata?.display_name ?? "");
     if (profile) setUsername(profile.username ?? "");
   }, [user, profile]);
+
+  // Load this user's submission + results to compute live prediction stats
+  useEffect(() => {
+    if (!user) return;
+    Promise.all([
+      supabase.from("submissions").select("picks, bracket, confidence").eq("user_id", user.id).maybeSingle(),
+      supabase.from("match_results").select("*"),
+    ]).then(([{ data: sub }, { data: resultsRows }]) => {
+      const picks = sub?.picks ?? {};
+      const bracket = sub?.bracket ?? null;
+      const resultsMap = buildResultsMap(resultsRows ?? []);
+      const { points, correct, incorrect } = calculateGroupScores(picks, resultsMap, sub?.confidence ?? {});
+      const { current: streak, best: bestStreak } = calculateStreaks(picks, resultsMap);
+      const totalGraded = correct + incorrect;
+      setPredStats({
+        groupPicks: Object.keys(picks).length,
+        bracketPicks: bracket
+          ? ["R32","R16","QF","SF","F"].reduce((s, r) => s + (bracket[r]?.filter(Boolean).length ?? 0), 0)
+            + (bracket["3P"]?.[0] ? 1 : 0)
+          : 0,
+        champion: bracket?.F?.[0] ?? null,
+        points,
+        accuracy: totalGraded > 0 ? Math.round((correct / totalGraded) * 100) : null,
+        streak,
+        bestStreak,
+      });
+      // Keep the denormalised streak columns fresh (best-effort, fire-and-forget)
+      supabase.from("profiles")
+        .update({ current_streak: streak, best_streak: bestStreak })
+        .eq("id", user.id)
+        .then(() => {});
+    });
+  }, [user]);
 
   // Live uniqueness check
   useEffect(() => {
@@ -91,14 +125,9 @@ export default function Profile() {
     ? new Date(user.created_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
     : "—";
 
-  const picks        = getPicks();
-  const bracket      = getBracket();
-  const groupPicks   = Object.keys(picks).length;
-  const bracketPicks = bracket
-    ? ["R32","R16","QF","SF","F"].reduce((s, r) => s + (bracket[r]?.filter(Boolean).length ?? 0), 0)
-      + (bracket["3P"]?.[0] ? 1 : 0)
-    : 0;
-  const champion = bracket?.F?.[0] ?? null;
+  const groupPicks   = predStats?.groupPicks ?? 0;
+  const bracketPicks = predStats?.bracketPicks ?? 0;
+  const champion     = predStats?.champion ?? null;
 
   async function handleAvatarChange(e) {
     const file = e.target.files?.[0];
@@ -249,10 +278,23 @@ export default function Profile() {
       )}
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-3 mb-8">
-        <StatPill label="Group picks"   value={`${groupPicks}/48`}  accent="#c8f000" />
+      <div className="grid grid-cols-3 gap-3 mb-3">
+        <StatPill label="Group picks"   value={`${groupPicks}/72`}  accent="#c8f000" />
         <StatPill label="Bracket picks" value={`${bracketPicks}/32`} accent="#c8f000" />
-        <StatPill label="Champion" value={champion ? "✓" : "—"} accent={champion ? "#22c55e" : "rgba(255,255,255,0.2)"} />
+        <StatPill label="Champion" value={champion ?? "—"} accent={champion ? "#22c55e" : "rgba(255,255,255,0.2)"} />
+      </div>
+      <div className="grid grid-cols-3 gap-3 mb-8">
+        <StatPill label="Points" value={predStats?.points ?? 0} accent="#c8f000" />
+        <StatPill
+          label={predStats?.bestStreak ? `Streak · best ${predStats.bestStreak}` : "Streak"}
+          value={predStats?.streak ? `🔥 ${predStats.streak}` : "—"}
+          accent={predStats?.streak ? "#fb923c" : "rgba(255,255,255,0.2)"}
+        />
+        <StatPill
+          label="Accuracy"
+          value={predStats?.accuracy != null ? `${predStats.accuracy}%` : "—"}
+          accent={predStats?.accuracy != null ? "#22c55e" : "rgba(255,255,255,0.2)"}
+        />
       </div>
 
       {/* Edit name + username */}
