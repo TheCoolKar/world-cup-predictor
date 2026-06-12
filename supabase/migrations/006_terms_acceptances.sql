@@ -1,4 +1,4 @@
--- Migration 002: terms & conditions acceptance log
+-- Migration 006: terms & conditions acceptance log
 -- Run this in the Supabase SQL editor (or via supabase db push).
 -- Safe to re-run.
 
