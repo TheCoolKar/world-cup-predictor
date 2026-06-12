@@ -321,7 +321,7 @@ function LeagueChat({ leagueId }) {
 
 // ── League Detail View ────────────────────────────────────────────────────────
 
-function LeagueDetail({ league, mySubmissionId, onBack, onNavigate, onDelete, deleting, onLeave, leaving, onViewProfile }) {
+function LeagueDetail({ league, mySubmissionId, onBack, onNavigate, onDelete, deleting, onLeave, leaving, onTogglePrivacy, togglingPrivacy, onViewProfile }) {
   const { user } = useAuth();
   const [tab, setTab] = useState("rankings");
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -377,7 +377,22 @@ function LeagueDetail({ league, mySubmissionId, onBack, onNavigate, onDelete, de
           </div>
           <div className="rounded-xl px-5 py-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
             <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.6)" }}>Visibility</p>
-            <p className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.8)" }}>{league.is_public ? "Public — visible to all" : "Private — invite only"}</p>
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.8)" }}>{league.is_public ? "Public — visible to all" : "Private — invite only"}</p>
+              {user?.id === league.creator_id && (
+                <div onClick={() => !togglingPrivacy && onTogglePrivacy()}
+                  className="w-10 h-5 rounded-full transition-all relative shrink-0 cursor-pointer"
+                  style={{ background: league.is_public ? "#c8f000" : "rgba(255,255,255,0.15)", opacity: togglingPrivacy ? 0.5 : 1 }}>
+                  <div className="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all shadow"
+                    style={{ left: league.is_public ? "calc(100% - 18px)" : "2px" }} />
+                </div>
+              )}
+            </div>
+            {user?.id === league.creator_id && (
+              <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.6)" }}>
+                Use the switch to make this league {league.is_public ? "private (invite only)" : "public (browsable by anyone)"}
+              </p>
+            )}
           </div>
 
           {user?.id === league.creator_id && (
@@ -463,6 +478,7 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null, onViewPro
   );
   const [deletingLeague, setDeletingLeague] = useState(false);
   const [leavingLeague, setLeavingLeague] = useState(false);
+  const [togglingPrivacy, setTogglingPrivacy] = useState(false);
   const [joinCode, setJoinCode] = useState("");
   const [joinError, setJoinError] = useState(null);
   const [joinLoading, setJoinLoading] = useState(false);
@@ -483,11 +499,13 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null, onViewPro
     setMyLeagues(leagues);
     setLoadingMine(false);
 
-    // Sync submission_id onto selectedLeague if navigated from Home
+    // Sync full league data onto selectedLeague if navigated from Home
+    // (the Home card only passes id + name — without this merge the detail
+    // view has no join_code, is_public or creator_id)
     setSelectedLeague(sel => {
       if (!sel) return sel;
       const match = leagues.find(l => l.id === sel.id);
-      return match ? { ...sel, submission_id: match.submission_id ?? sel.submission_id } : sel;
+      return match ? { ...sel, ...match } : sel;
     });
 
     // Auto-link submission_id for any leagues missing it
@@ -579,6 +597,17 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null, onViewPro
     loadPublicLeagues();
   }
 
+  async function handleTogglePrivacy() {
+    const next = !selectedLeague.is_public;
+    setTogglingPrivacy(true);
+    const { error } = await supabase.from("leagues").update({ is_public: next }).eq("id", selectedLeague.id);
+    setTogglingPrivacy(false);
+    if (error) return;
+    setSelectedLeague(sel => sel ? { ...sel, is_public: next } : sel);
+    setMyLeagues(prev => prev.map(l => l.id === selectedLeague.id ? { ...l, is_public: next } : l));
+    loadPublicLeagues();
+  }
+
   async function handleLeaveLeague() {
     setLeavingLeague(true);
     await supabase.from("league_members").delete().eq("league_id", selectedLeague.id).eq("user_id", user.id);
@@ -600,6 +629,8 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null, onViewPro
           deleting={deletingLeague}
           onLeave={handleLeaveLeague}
           leaving={leavingLeague}
+          onTogglePrivacy={handleTogglePrivacy}
+          togglingPrivacy={togglingPrivacy}
           onViewProfile={onViewProfile}
         />
       </div>

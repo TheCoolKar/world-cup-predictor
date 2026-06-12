@@ -52,60 +52,25 @@ const IconLeaderboard  = () => <svg width="16" height="16" viewBox="0 0 24 24" f
 const IconLeagues      = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>;
 const IconCalendar     = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>;
 
-// ── Countdown ─────────────────────────────────────────────────────────────────
-
-const WC_START = Date.now() + (22 * 3600 + 30 * 60) * 1000;
+// ── Top banner ────────────────────────────────────────────────────────────────
 
 function CountdownBanner() {
-  const pad = n => String(n).padStart(2, "0");
-  const [timeLeft, setTimeLeft] = useState(() => Math.max(0, WC_START - Date.now()));
-  useEffect(() => {
-    const id = setInterval(() => setTimeLeft(Math.max(0, WC_START - Date.now())), 1000);
-    return () => clearInterval(id);
-  }, []);
-  const total   = Math.floor(timeLeft / 1000);
-  const days    = Math.floor(total / 86400);
-  const hours   = Math.floor((total % 86400) / 3600);
-  const minutes = Math.floor((total % 3600) / 60);
-  const seconds = total % 60;
-  const started = timeLeft === 0;
-
   return (
     <div
-      className="w-full flex items-center justify-center gap-6 px-4 py-2 shrink-0"
+      className="w-full flex items-center justify-center gap-4 px-4 py-2 shrink-0"
       style={{ background: "linear-gradient(90deg, #1a3a8f 0%, #1e40af 50%, #1a3a8f 100%)", borderBottom: "1px solid rgba(255,255,255,0.1)" }}
     >
-      <div className="hidden sm:flex items-center gap-3">
-        <img src={wclogo} alt="FIFA World Cup 2026" className="w-8 h-8 object-contain" />
-        <div>
-          <p className="font-black text-white leading-none" style={{ fontSize: "0.75rem", letterSpacing: "0.04em" }}>FIFA World Cup 2026™</p>
-          <p style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.55)", fontWeight: 600, letterSpacing: "0.06em" }}>11 June – 19 July 2026</p>
-        </div>
-      </div>
-      <div className="hidden sm:block w-px h-6" style={{ background: "rgba(255,255,255,0.15)" }} />
-      {started ? (
-        <div className="flex items-center gap-2">
-          <img src={wclogo} alt="" className="w-6 h-6 object-contain" />
-          <p className="font-black text-white tracking-widest text-sm">🔴 LIVE NOW</p>
-        </div>
-      ) : (
-        <div className="flex items-center gap-4">
-          {[{ value: days, label: "days" }, { value: hours, label: "hours" }, { value: minutes, label: "mins" }, { value: seconds, label: "secs" }].map(({ value, label }, i) => (
-            <div key={label} className="flex items-start gap-4">
-              {i > 0 && <span className="font-black text-white opacity-40 mt-0.5" style={{ fontSize: "1.1rem", lineHeight: 1 }}>:</span>}
-              <div className="text-center">
-                <p className="font-black text-white leading-none tabular-nums"
-                  style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(1.2rem, 3vw, 1.6rem)", letterSpacing: "0.04em" }}>
-                  {label === "days" ? days : pad(value)}
-                </p>
-                <p style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.75)", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginTop: 2 }}>
-                  {label}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      <img src={wclogo} alt="FIFA World Cup 2026" className="w-7 h-7 object-contain" />
+      <p className="font-black text-white tracking-widest" style={{ fontSize: "0.85rem", letterSpacing: "0.06em" }}>
+        🏆 THE WORLD CUP IS HERE
+      </p>
+      <span className="hidden sm:inline" style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.45)", fontWeight: 600, letterSpacing: "0.08em" }}>
+        11 JUNE – 19 JULY 2026
+      </span>
+      <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full" style={{ background: "rgba(239,68,68,0.2)", border: "1px solid rgba(239,68,68,0.35)" }}>
+        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+        <span className="text-xs font-black" style={{ color: "#f87171", letterSpacing: "0.05em" }}>LIVE</span>
+      </span>
     </div>
   );
 }
