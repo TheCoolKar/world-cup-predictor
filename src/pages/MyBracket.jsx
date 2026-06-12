@@ -826,12 +826,20 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         setBw({ ...emptyWinners(), ...(data.bracket ?? {}) });
         setBScores(data.bracket_scores ?? {});
         setConfidence(data.confidence ?? {});
-        setThirdsUserPicks(data.tiebreaks?.thirds ?? []);
-        setGroupOrderOverrides(data.tiebreaks?.groupOrders ?? {});
+        // Only adopt cloud tiebreaks when they exist — an empty object must not
+        // wipe the auto-seeded best-thirds defaults (which seed before this fetch returns)
+        const dbThirds = data.tiebreaks?.thirds ?? [];
+        const dbOrders = data.tiebreaks?.groupOrders ?? {};
+        if (dbThirds.length > 0) setThirdsUserPicks(dbThirds);
+        if (Object.keys(dbOrders).length > 0) setGroupOrderOverrides(dbOrders);
         if (bracketData) {
           upsertBracket({ ...bracketData, picks: data.picks, scores: data.scores ?? {},
             bracket: data.bracket ?? null, bracketScores: data.bracket_scores ?? {},
-            confidence: data.confidence ?? {}, tiebreaks: data.tiebreaks ?? {} });
+            confidence: data.confidence ?? {},
+            tiebreaks: {
+              thirds:      dbThirds.length > 0 ? dbThirds : (bracketData.tiebreaks?.thirds ?? []),
+              groupOrders: Object.keys(dbOrders).length > 0 ? dbOrders : (bracketData.tiebreaks?.groupOrders ?? {}),
+            } });
         }
       })
       .then(() => setRestoreDone(true), () => setRestoreDone(true));
@@ -1276,6 +1284,36 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         </div>
       )}
 
+      {/* ── Submitted notice — picks are read-only until "Edit Bracket" ── */}
+      {!readOnly && isSubmitted && (
+        <div className="flex items-center gap-4 mb-6 px-5 py-4 rounded-2xl flex-wrap"
+          style={{background:"rgba(34,197,94,0.07)",border:"1px solid rgba(34,197,94,0.3)"}}>
+          <span style={{fontSize:"1.6rem"}}>✅</span>
+          <div className="flex-1" style={{minWidth:200}}>
+            <p className="font-bold" style={{color:"#22c55e",fontSize:"1rem"}}>Bracket Submitted</p>
+            <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.7)"}}>
+              Your picks are locked in while submitted. Hit "Edit Bracket" to unlock and make changes — games that haven't kicked off yet stay editable.
+            </p>
+          </div>
+          <button
+            onClick={handleWithdraw}
+            className="shrink-0 flex items-center gap-2 rounded-2xl font-black transition-all duration-200 active:scale-95"
+            style={{
+              padding: "16px 32px",
+              fontSize: "1.05rem",
+              letterSpacing: "0.04em",
+              background: "linear-gradient(135deg,#c8f000,#84cc16)",
+              color: "#1a0533",
+              boxShadow: "0 0 24px rgba(200,240,0,0.45), 0 6px 20px rgba(0,0,0,0.4)",
+              animation: "editPulse 2s ease-in-out infinite",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.06)"; e.currentTarget.style.boxShadow = "0 0 36px rgba(200,240,0,0.65), 0 6px 20px rgba(0,0,0,0.4)"; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.boxShadow = "0 0 24px rgba(200,240,0,0.45), 0 6px 20px rgba(0,0,0,0.4)"; }}>
+            ✏️ EDIT BRACKET
+          </button>
+        </div>
+      )}
+
       {/* ── Welcome / sign-in prompt ── */}
       {showWelcome && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -1707,14 +1745,15 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         {isSubmitted ? (
           <button
             onClick={handleWithdraw}
-            className="shrink-0 px-5 py-3 rounded-xl font-black text-sm transition-all duration-150 active:scale-95"
+            className="shrink-0 px-6 py-3.5 rounded-xl font-black transition-all duration-150 active:scale-95"
             style={{
-              background: "rgba(255,255,255,0.07)",
-              color: "rgba(255,255,255,0.7)",
-              border: "1px solid rgba(255,255,255,0.12)",
+              fontSize: "1rem",
+              background: "linear-gradient(135deg,#c8f000,#84cc16)",
+              color: "#1a0533",
+              boxShadow: "0 0 20px rgba(200,240,0,0.35)",
             }}
           >
-            Edit Bracket
+            ✏️ EDIT BRACKET
           </button>
         ) : (
           <button
@@ -1958,6 +1997,10 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
           0%   { background-position: 0% 50%; }
           50%  { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
+        }
+        @keyframes editPulse {
+          0%, 100% { box-shadow: 0 0 24px rgba(200,240,0,0.45), 0 6px 20px rgba(0,0,0,0.4); }
+          50%      { box-shadow: 0 0 44px rgba(200,240,0,0.8),  0 6px 20px rgba(0,0,0,0.4); }
         }
       `}</style>
     </>
