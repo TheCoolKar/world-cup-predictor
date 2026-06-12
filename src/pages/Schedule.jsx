@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
+import { useLiveFeed } from "../hooks/useLiveFeed";
 import { buildResultsMap } from "../utils/scoring";
 import { getFlagClass } from "../utils/flags";
 import PostMatchBreakdown from "../components/PostMatchBreakdown";
+import LiveMatchPanel from "../components/LiveMatchPanel";
 import fixtures from "../data/wc2026_fixtures.json";
 import eloRatings from "../data/elo_ratings.json";
 
@@ -536,12 +538,18 @@ function GroupStandings({ resultsMap }) {
 
 // ── Match row ─────────────────────────────────────────────────────────────────
 
-function MatchRow({ fixture, result, now, r32Slots, bw, userPick = null, conf = 1, expanded = false, onToggle }) {
+function MatchRow({ fixture, result, now, r32Slots, bw, userPick = null, conf = 1, expanded = false, onToggle, live = null, liveEvents = [] }) {
   const kickoff = fixture.kickoff;
-  const isLive = now >= kickoff && now < new Date(kickoff.getTime() + 120 * 60 * 1000);
+  // Real feed status when available, kickoff-window heuristic as fallback
+  const isLive = live
+    ? live.status === "LIVE" || live.status === "HT"
+    : now >= kickoff && now < new Date(kickoff.getTime() + 120 * 60 * 1000);
   const isPlayed = !!result;
-  // Post-match breakdown only exists for group fixtures (the model predicts those)
-  const canExpand = isPlayed && !fixture.isKnockout;
+  // Finished per the live feed but match_results not yet (re)loaded — show the live score
+  const liveFinished = !isPlayed && !isLive && live?.status && live.status !== "NS" && live.home_score != null;
+  const hasEvents = liveEvents.some(e => ["Goal", "Card", "Substitution"].includes(e.type));
+  // Expandable for: finished group matches (model breakdown) or any match with a live event feed
+  const canExpand = (isPlayed && !fixture.isKnockout) || hasEvents;
   const pickRight = userPick != null && result?.result != null && userPick === result.result;
 
   let homeTeam, awayTeam, rowLabel, homeTbd, awayTbd;
@@ -603,7 +611,20 @@ function MatchRow({ fixture, result, now, r32Slots, bw, userPick = null, conf = 
               )}
             </div>
           ) : isLive ? (
-            <span className="text-xs font-black px-2 py-0.5 rounded-full" style={{ background: "rgba(34,197,94,0.15)", color: "#22c55e" }}>LIVE</span>
+            <div className="flex flex-col items-center gap-0.5">
+              {live?.home_score != null && (
+                <span className="font-black tabular-nums text-sm" style={{ color: "#22c55e" }}>
+                  {live.home_score} – {live.away_score}
+                </span>
+              )}
+              <span className="text-xs font-black px-2 py-0.5 rounded-full" style={{ background: "rgba(34,197,94,0.15)", color: "#22c55e" }}>
+                {live?.status === "HT" ? "HT" : live?.minute ? `LIVE ${live.minute}` : "LIVE"}
+              </span>
+            </div>
+          ) : liveFinished ? (
+            <span className="font-black tabular-nums text-sm" style={{ color: "#c8f000" }}>
+              {live.home_score} – {live.away_score}
+            </span>
           ) : (
             <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.4)" }}>{fmtTime(kickoff)}</span>
           )}
@@ -639,10 +660,13 @@ function MatchRow({ fixture, result, now, r32Slots, bw, userPick = null, conf = 
         </div>
       )}
 
-      {/* Post-match breakdown — model prediction vs what actually happened */}
+      {/* Expanded: live event timeline + post-match model breakdown */}
       {canExpand && expanded && (
-        <div className="px-3 pb-3">
-          <PostMatchBreakdown match={fixture} result={result} userPick={userPick} confidence={conf} />
+        <div className="px-3 pb-3 flex flex-col gap-2">
+          {hasEvents && <LiveMatchPanel live={live} events={liveEvents} />}
+          {isPlayed && !fixture.isKnockout && (
+            <PostMatchBreakdown match={fixture} result={result} userPick={userPick} confidence={conf} />
+          )}
         </div>
       )}
     </div>
@@ -653,6 +677,7 @@ function MatchRow({ fixture, result, now, r32Slots, bw, userPick = null, conf = 
 
 export default function Schedule() {
   const { user } = useAuth();
+  const { liveMatches, liveEvents } = useLiveFeed();
   const [tab, setTab] = useState("schedule");
   const [resultsMap, setResultsMap] = useState({});
   const [now, setNow] = useState(() => new Date());
@@ -777,7 +802,9 @@ export default function Schedule() {
                       userPick={mySub?.picks?.[f.id] ?? null}
                       conf={mySub?.confidence?.[f.id] ?? 1}
                       expanded={expandedId === f.id}
-                      onToggle={() => setExpandedId(prev => prev === f.id ? null : f.id)} />
+                      onToggle={() => setExpandedId(prev => prev === f.id ? null : f.id)}
+                      live={liveMatches[f.id] ?? null}
+                      liveEvents={liveEvents[f.id] ?? []} />
                   ))}
                 </div>
               </div>
