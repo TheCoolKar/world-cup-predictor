@@ -793,10 +793,11 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
   const [tipDismissed, setTipDismissed] = useState(() => !!localStorage.getItem("wc2026_tip_dismissed"));
   const [matchResults, setMatchResults] = useState({});
   // groupOrderOverrides: { [group]: [team,team,team,team] } — user-reordered tiebreaks
-  const [groupOrderOverrides, setGroupOrderOverrides] = useState({});
+  const [groupOrderOverrides, setGroupOrderOverrides] = useState(() => bracketData?.tiebreaks?.groupOrders ?? {});
   // thirdsUserPicks: array of group letters the user chose from the cut-line tied pool
-  const [thirdsUserPicks, setThirdsUserPicks] = useState([]);
+  const [thirdsUserPicks, setThirdsUserPicks] = useState(() => bracketData?.tiebreaks?.thirds ?? []);
   const autoSaveRef = useRef(null);
+  const thirdsSeededRef = useRef(false);
   const saveIndicatorRef = useRef(null);
   const leagueLinkedRef = useRef(false);
   const restoredRef = useRef(false);
@@ -811,7 +812,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
   useEffect(() => {
     if (!user || restoredRef.current || readOnly) return;
     restoredRef.current = true;
-    supabase.from("submissions").select("picks,scores,bracket,bracket_scores,confidence,is_submitted,updated_at")
+    supabase.from("submissions").select("picks,scores,bracket,bracket_scores,confidence,tiebreaks,is_submitted,updated_at")
       .eq("user_id", user.id).maybeSingle()
       .then(({ data, error }) => {
         if (error || !data) return;
@@ -825,10 +826,12 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         setBw({ ...emptyWinners(), ...(data.bracket ?? {}) });
         setBScores(data.bracket_scores ?? {});
         setConfidence(data.confidence ?? {});
+        setThirdsUserPicks(data.tiebreaks?.thirds ?? []);
+        setGroupOrderOverrides(data.tiebreaks?.groupOrders ?? {});
         if (bracketData) {
           upsertBracket({ ...bracketData, picks: data.picks, scores: data.scores ?? {},
             bracket: data.bracket ?? null, bracketScores: data.bracket_scores ?? {},
-            confidence: data.confidence ?? {} });
+            confidence: data.confidence ?? {}, tiebreaks: data.tiebreaks ?? {} });
         }
       })
       .then(() => setRestoreDone(true), () => setRestoreDone(true));
@@ -860,6 +863,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         bracket:           bw,
         bracket_scores:    bScores,
         confidence,
+        tiebreaks:         { thirds: thirdsUserPicks, groupOrders: groupOrderOverrides },
         group_picks_count: Object.keys(picks).length,
         updated_at:        new Date().toISOString(),
       }, { onConflict: "user_id" });
@@ -887,13 +891,21 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
       }
     }, 1500);
     return () => clearTimeout(autoSaveRef.current);
-  }, [picks, scores, bw, bScores, confidence, user, isSubmitted, restoreDone]);
+  }, [picks, scores, bw, bScores, confidence, thirdsUserPicks, groupOrderOverrides, user, isSubmitted, restoreDone]);
 
   // Persist the whole bracket object to localStorage whenever anything changes
   function save(newPicks, newScores, newBw, newBScores, newConfidence = confidence) {
     if (!bracketData || readOnly || isSubmitted) return;
-    upsertBracket({ ...bracketData, picks: newPicks, scores: newScores, bracket: newBw, bracketScores: newBScores, confidence: newConfidence });
+    upsertBracket({ ...bracketData, picks: newPicks, scores: newScores, bracket: newBw, bracketScores: newBScores, confidence: newConfidence,
+      tiebreaks: { thirds: thirdsUserPicks, groupOrders: groupOrderOverrides } });
   }
+
+  // Tiebreak choices change outside save()'s call sites — persist them to localStorage themselves
+  useEffect(() => {
+    if (!bracketData || readOnly || isSubmitted) return;
+    upsertBracket({ ...bracketData, picks, scores, bracket: bw, bracketScores: bScores, confidence,
+      tiebreaks: { thirds: thirdsUserPicks, groupOrders: groupOrderOverrides } });
+  }, [thirdsUserPicks, groupOrderOverrides]);
 
   async function handleSubmit() {
     if (!user) { setShowAuth(true); return; }
@@ -912,6 +924,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         bracket:           bw,
         bracket_scores:    bScores,
         confidence,
+        tiebreaks:         { thirds: thirdsUserPicks, groupOrders: groupOrderOverrides },
         group_picks_count: Object.keys(picks).length,
         is_submitted:      true,
         updated_at:        new Date().toISOString(),
@@ -984,6 +997,23 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
   const totalMatches = unlockedMatches.length;
   const pickedCount  = unlockedMatches.filter(m => picks[m.id] != null).length;
   const allPicked    = totalMatches > 0 && pickedCount === totalMatches;
+
+  // Pre-pick the best 3rd-place teams at the cut-line tie by default — users
+  // who don't care about the tiebreak get a complete bracket without doing
+  // anything; anyone else can unpick a team to swap in a different one.
+  useEffect(() => {
+    if (thirdsSeededRef.current || !allPicked || thirdsUserPicks.length > 0) return;
+    const sorted = GROUPS
+      .map(g => ({ group: g, team: byGroup[g]?.[2]?.team ?? null, pts: byGroup[g]?.[2]?.pts ?? 0 }))
+      .sort((a, b) => b.pts - a.pts);
+    const cutLinePts = sorted[7]?.pts ?? 0;
+    const autoQualified = sorted.filter(t => t.pts > cutLinePts);
+    const tiedAtCut = sorted.filter(t => t.pts === cutLinePts);
+    const spotsLeft = 8 - autoQualified.length;
+    if (tiedAtCut.length <= spotsLeft) return; // no tie to resolve
+    thirdsSeededRef.current = true;
+    setThirdsUserPicks(tiedAtCut.slice(0, spotsLeft).map(t => t.group));
+  }, [allPicked, byGroup, thirdsUserPicks]);
 
   // SF losers for 3rd place
   const sf1Loser = getSFLoser(0,bw,r32Slots);
@@ -1097,6 +1127,8 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
       if (isMatchLocked(m.id) && confidence[m.id] != null) keptConfidence[m.id] = confidence[m.id];
     }
     setPicks(keptPicks); setScores(keptScores); setBw(keptBw); setBScores(keptBScores); setConfidence(keptConfidence);
+    // Clear tiebreak choices and let the best-thirds defaults reseed
+    setThirdsUserPicks([]); setGroupOrderOverrides({}); thirdsSeededRef.current = false;
     save(keptPicks, keptScores, keptBw, keptBScores, keptConfidence);
   }
 
@@ -1552,7 +1584,9 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
                   <div className="mb-3">
                     <div className="flex items-center gap-2 mb-2">
                       <p className="text-xs font-black" style={{color:"#f59e0b",fontSize:"0.6rem",textTransform:"uppercase",letterSpacing:"0.08em"}}>
-                        Tied at {cutLinePts} pts — pick {spotsLeft - userPicksFromTied.length} more
+                        {userPicksFromTied.length >= spotsLeft
+                          ? `Tied at ${cutLinePts} pts — best teams picked for you, unpick to swap`
+                          : `Tied at ${cutLinePts} pts — pick ${spotsLeft - userPicksFromTied.length} more`}
                       </p>
                       <span className="text-xs px-1.5 py-0.5 rounded-full font-black" style={{background:"rgba(245,158,11,0.15)",color:"#f59e0b",fontSize:"0.6rem"}}>
                         {userPicksFromTied.length}/{spotsLeft}

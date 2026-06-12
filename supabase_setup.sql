@@ -52,6 +52,10 @@ alter table public.submissions
 alter table public.submissions
   add column if not exists confidence jsonb not null default '{}';
 
+-- Bracket tiebreak choices (thirds picks + group order overrides) — see /supabase/migrations/005
+alter table public.submissions
+  add column if not exists tiebreaks jsonb not null default '{}';
+
 create unique index if not exists submissions_user_id_idx on public.submissions(user_id);
 
 alter table public.submissions enable row level security;
