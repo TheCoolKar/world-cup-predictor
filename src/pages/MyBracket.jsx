@@ -787,6 +787,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
   const [submitStatus, setSubmitStatus] = useState(null); // null | "success" | "error"
   const [submitError,  setSubmitError]  = useState(null);
   const [isSubmitted,       setIsSubmitted]       = useState(false);
+  const [restoreDone,       setRestoreDone]       = useState(false);
   const [showConfirmation,  setShowConfirmation]  = useState(false);
   const [saveIndicator,     setSaveIndicator]     = useState(null); // null | "saving" | "saved"
   const [tipDismissed, setTipDismissed] = useState(() => !!localStorage.getItem("wc2026_tip_dismissed"));
@@ -803,17 +804,22 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
   // Show welcome prompt if not logged in and hasn't skipped yet
   const showWelcome = !readOnly && !authLoading && !user && !skippedAuth;
 
-  // On first login: if localStorage is empty, restore picks from Supabase
+  // On login: reconcile localStorage with Supabase. The cloud copy is the
+  // source of truth unless the local copy is strictly newer (picks made while
+  // logged out that haven't synced yet). Always loads is_submitted — skipping
+  // it used to let stale devices autosave over a submitted bracket.
   useEffect(() => {
     if (!user || restoredRef.current || readOnly) return;
     restoredRef.current = true;
-    if (Object.keys(picks).length > 0) return;
-    supabase.from("submissions").select("picks,scores,bracket,bracket_scores,confidence,is_submitted")
+    supabase.from("submissions").select("picks,scores,bracket,bracket_scores,confidence,is_submitted,updated_at")
       .eq("user_id", user.id).maybeSingle()
-      .then(({ data }) => {
-        if (!data) return;
+      .then(({ data, error }) => {
+        if (error || !data) return;
         setIsSubmitted(data.is_submitted ?? false);
         if (Object.keys(data.picks ?? {}).length === 0) return;
+        const dbUpdated    = data.updated_at ? new Date(data.updated_at).getTime() : 0;
+        const localUpdated = bracketData?.updatedAt ?? 0;
+        if (localUpdated > dbUpdated && Object.keys(picks).length > 0) return;
         setPicks(data.picks);
         setScores(data.scores ?? {});
         setBw({ ...emptyWinners(), ...(data.bracket ?? {}) });
@@ -824,7 +830,8 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
             bracket: data.bracket ?? null, bracketScores: data.bracket_scores ?? {},
             confidence: data.confidence ?? {} });
         }
-      });
+      })
+      .then(() => setRestoreDone(true), () => setRestoreDone(true));
   }, [user]);
 
   // Fetch match results for pick result badges
@@ -833,9 +840,11 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
       .then(({ data }) => { if (data) setMatchResults(buildResultsMap(data)); });
   }, []);
 
-  // Auto-save to Supabase (debounced 1.5s) whenever picks change and user is logged in
+  // Auto-save to Supabase (debounced 1.5s) whenever picks change and user is logged in.
+  // Held until the cloud copy has been reconciled (restoreDone) so a stale
+  // localStorage copy can never clobber the DB on page load.
   useEffect(() => {
-    if (!user || readOnly || isSubmitted) return;
+    if (!user || readOnly || isSubmitted || !restoreDone) return;
     clearTimeout(autoSaveRef.current);
     setSaveIndicator("saving");
     autoSaveRef.current = setTimeout(async () => {
@@ -878,7 +887,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
       }
     }, 1500);
     return () => clearTimeout(autoSaveRef.current);
-  }, [picks, scores, bw, bScores, confidence, user, isSubmitted]);
+  }, [picks, scores, bw, bScores, confidence, user, isSubmitted, restoreDone]);
 
   // Persist the whole bracket object to localStorage whenever anything changes
   function save(newPicks, newScores, newBw, newBScores, newConfidence = confidence) {
