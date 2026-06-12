@@ -39,6 +39,55 @@ function BoostChip({ level, active, disabled, onClick }) {
   );
 }
 
+// Powerups are teased in the UI but not live yet.
+// Flip to false to re-enable the full boost-allocation modal below.
+const COMING_SOON = true;
+
+function ComingSoonModal({ onClose }) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: "rgba(10,2,26,0.92)", backdropFilter: "blur(8px)" }}
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div
+        className="relative w-full max-w-sm rounded-2xl px-8 py-10 text-center"
+        style={{
+          background: "linear-gradient(160deg, #1f0645 0%, #160336 100%)",
+          border: "1px solid rgba(200,240,0,0.15)",
+          boxShadow: "0 0 60px rgba(200,240,0,0.07), 0 24px 80px rgba(0,0,0,0.7)",
+        }}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-full transition-colors"
+          style={{ color: "rgba(255,255,255,0.4)", background: "rgba(255,255,255,0.07)" }}
+          onMouseEnter={e => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.background = "rgba(255,255,255,0.15)"; }}
+          onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.4)"; e.currentTarget.style.background = "rgba(255,255,255,0.07)"; }}
+        >✕</button>
+
+        <div style={{ fontSize: "3rem", lineHeight: 1 }}>⚡</div>
+        <p className="text-xs font-bold uppercase tracking-widest mt-4 mb-1" style={{ color: "rgba(255,255,255,0.45)" }}>
+          Powerups
+        </p>
+        <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2.4rem", color: "#c8f000", lineHeight: 1, letterSpacing: "0.06em" }}>
+          Coming Soon
+        </h2>
+        <p className="text-sm mt-3 leading-relaxed" style={{ color: "rgba(255,255,255,0.6)" }}>
+          Boost your picks to multiply your points. Stay tuned — powerups drop in an upcoming update! 👀
+        </p>
+        <button
+          onClick={onClose}
+          className="mt-6 px-6 py-2.5 rounded-xl text-sm font-black transition-all active:scale-95"
+          style={{ background: "linear-gradient(135deg,#c8f000,#84cc16)", color: "#1a0533" }}
+        >
+          Got it
+        </button>
+      </div>
+    </div>
+  );
+}
+
 /**
  * Modal for allocating the 3× ×2 and 3× ×3 powerup boosts across group matches.
  * confidence: { [matchId]: 1 | 2 | 3 }
@@ -46,6 +95,8 @@ function BoostChip({ level, active, disabled, onClick }) {
  */
 export default function PowerupsModal({ confidence, picks, onChange, onClose, readOnly = false }) {
   const [local, setLocal] = useState(() => ({ ...confidence }));
+
+  if (COMING_SOON) return <ComingSoonModal onClose={onClose} />;
 
   const used2x = Object.values(local).filter(v => v === 2).length;
   const used3x = Object.values(local).filter(v => v === 3).length;

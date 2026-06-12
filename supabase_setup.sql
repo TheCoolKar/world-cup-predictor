@@ -52,6 +52,10 @@ alter table public.submissions
 alter table public.submissions
   add column if not exists confidence jsonb not null default '{}';
 
+-- Bracket tiebreak choices (thirds picks + group order overrides) — see /supabase/migrations/005
+alter table public.submissions
+  add column if not exists tiebreaks jsonb not null default '{}';
+
 create unique index if not exists submissions_user_id_idx on public.submissions(user_id);
 
 alter table public.submissions enable row level security;
@@ -254,6 +258,7 @@ returns boolean as $$
 $$ language sql security definer stable;
 
 drop policy if exists "Members can view league membership"  on public.league_members;
+drop policy if exists "Admins can view all league members"  on public.league_members;
 drop policy if exists "Users can join leagues"              on public.league_members;
 drop policy if exists "Users can update own membership"     on public.league_members;
 drop policy if exists "Users can leave leagues"             on public.league_members;
@@ -261,6 +266,13 @@ drop policy if exists "Users can leave leagues"             on public.league_mem
 create policy "Members can view league membership"
   on public.league_members for select
   using (auth.uid() = user_id or public.current_user_in_league(league_id));
+
+-- Admin panel "Leagues" tab — see /supabase/migrations/003
+create policy "Admins can view all league members"
+  on public.league_members for select
+  using (
+    exists (select 1 from public.profiles where id = auth.uid() and is_admin = true)
+  );
 
 create policy "Users can join leagues"
   on public.league_members for insert
@@ -276,21 +288,19 @@ create policy "Users can leave leagues"
 
 -- ── Leagues RLS policies (after league_members exists) ───────────────────────
 
-drop policy if exists "Public leagues visible to all"     on public.leagues;
-drop policy if exists "Members can view their leagues"    on public.leagues;
-drop policy if exists "Authenticated users can create"    on public.leagues;
-drop policy if exists "Creator can update/delete league"  on public.leagues;
+drop policy if exists "Public leagues visible to all"              on public.leagues;
+drop policy if exists "Members can view their leagues"             on public.leagues;
+drop policy if exists "Authenticated users can create"             on public.leagues;
+drop policy if exists "Creator can update/delete league"           on public.leagues;
+drop policy if exists "Authenticated users can look up any league" on public.leagues;
 
-create policy "Public leagues visible to all"
+-- Any logged-in user can read league rows.
+-- This is required so that join-by-code works for private leagues:
+-- without it, the lookup fails before the user can become a member.
+-- The join_code itself acts as a capability token.
+create policy "Authenticated users can look up any league"
   on public.leagues for select
-  using (is_public = true);
-
-create policy "Members can view their leagues"
-  on public.leagues for select
-  using (
-    creator_id = auth.uid()
-    or exists (select 1 from public.league_members where league_id = id and user_id = auth.uid())
-  );
+  using (auth.uid() is not null);
 
 create policy "Authenticated users can create"
   on public.leagues for insert

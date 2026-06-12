@@ -285,6 +285,141 @@ function SubmissionsTab() {
   );
 }
 
+// ── Leagues Tab ───────────────────────────────────────────────────────────────
+
+function LeaguesTab() {
+  const [leagues,  setLeagues]  = useState([]);
+  const [members,  setMembers]  = useState({});   // { leagueId: [{ user_id, joined_at, profile }] }
+  const [loading,  setLoading]  = useState(true);
+  const [error,    setError]    = useState(null);
+  const [expanded, setExpanded] = useState(null); // leagueId
+
+  useEffect(() => {
+    async function load() {
+      const [leaguesRes, membersRes] = await Promise.all([
+        supabase.from("leagues")
+          .select("id, name, description, join_code, is_public, creator_id, created_at")
+          .order("created_at", { ascending: false }),
+        supabase.from("league_members").select("league_id, user_id, joined_at"),
+      ]);
+      const err = leaguesRes.error ?? membersRes.error;
+      if (err) { setError(err.message); setLoading(false); return; }
+
+      const leagueRows = leaguesRes.data ?? [];
+      const memberRows = membersRes.data ?? [];
+      const userIds = [...new Set([...memberRows.map(m => m.user_id), ...leagueRows.map(l => l.creator_id)])];
+      const { data: profiles } = userIds.length
+        ? await supabase.from("profiles").select("id, username, avatar_url").in("id", userIds)
+        : { data: [] };
+      const profileMap = Object.fromEntries((profiles ?? []).map(p => [p.id, p]));
+
+      const grouped = {};
+      for (const m of memberRows) {
+        (grouped[m.league_id] ??= []).push({ ...m, profile: profileMap[m.user_id] });
+      }
+      setLeagues(leagueRows.map(l => ({ ...l, creator: profileMap[l.creator_id] })));
+      setMembers(grouped);
+      setLoading(false);
+    }
+    load();
+  }, []);
+
+  if (loading) return (
+    <div className="flex items-center justify-center h-40">
+      <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>Loading leagues…</p>
+    </div>
+  );
+  if (error) return (
+    <div className="flex items-center justify-center h-40">
+      <p className="text-sm" style={{ color: "#ef4444" }}>{error}</p>
+    </div>
+  );
+  if (!leagues.length) return (
+    <div className="flex flex-col items-center justify-center h-40 gap-2">
+      <span className="text-3xl">🏟️</span>
+      <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>No leagues created yet.</p>
+    </div>
+  );
+
+  return (
+    <div className="p-4 space-y-2">
+      <p className="text-xs mb-3" style={{ color: "rgba(255,255,255,0.65)" }}>
+        {leagues.length} league{leagues.length !== 1 ? "s" : ""} · click a league to see its members
+      </p>
+      {leagues.map(lg => {
+        const lgMembers = members[lg.id] ?? [];
+        const isOpen = expanded === lg.id;
+        return (
+          <div key={lg.id} className="rounded-xl overflow-hidden"
+            style={{ background: "rgba(255,255,255,0.03)", border: `1px solid ${isOpen ? "rgba(200,240,0,0.2)" : "rgba(255,255,255,0.06)"}` }}>
+
+            {/* League row */}
+            <button onClick={() => setExpanded(isOpen ? null : lg.id)}
+              className="w-full text-left px-4 py-3 flex items-center gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-bold text-sm" style={{ color: "rgba(255,255,255,0.9)" }}>{lg.name}</span>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full"
+                    style={{
+                      background: lg.is_public ? "rgba(200,240,0,0.1)" : "rgba(168,85,247,0.12)",
+                      color:      lg.is_public ? "#c8f000" : "#c084fc",
+                      border:     `1px solid ${lg.is_public ? "rgba(200,240,0,0.2)" : "rgba(168,85,247,0.25)"}`,
+                    }}>
+                    {lg.is_public ? "Public" : "Private"}
+                  </span>
+                </div>
+                <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.5)" }}>
+                  Code: <span className="font-mono" style={{ color: "rgba(255,255,255,0.7)" }}>{lg.join_code}</span>
+                  {" · "}created by {lg.creator?.username ?? "—"}
+                  {" · "}{new Date(lg.created_at).toLocaleDateString()}
+                </p>
+              </div>
+              <span className="text-xs font-bold shrink-0 px-2 py-1 rounded-lg"
+                style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.6)" }}>
+                {lgMembers.length} member{lgMembers.length !== 1 ? "s" : ""}
+              </span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2.5" strokeLinecap="round"
+                style={{ transform: isOpen ? "rotate(180deg)" : "none", transition: "transform 0.15s" }}>
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+
+            {/* Member list */}
+            {isOpen && (
+              <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                {lgMembers.length === 0 ? (
+                  <p className="text-xs px-4 py-3" style={{ color: "rgba(255,255,255,0.6)" }}>No members.</p>
+                ) : lgMembers.map((m, i) => (
+                  <div key={m.user_id} className="flex items-center gap-3 px-4 py-2.5"
+                    style={{ borderTop: i > 0 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
+                    {m.profile?.avatar_url ? (
+                      <img src={m.profile.avatar_url} alt="" className="rounded-full object-cover shrink-0" style={{ width: 26, height: 26 }} />
+                    ) : (
+                      <div className="rounded-full flex items-center justify-center shrink-0 font-bold text-xs"
+                        style={{ width: 26, height: 26, background: "rgba(200,240,0,0.15)", color: "#c8f000" }}>
+                        {m.profile?.username?.[0]?.toUpperCase() ?? "?"}
+                      </div>
+                    )}
+                    <span className="text-sm font-semibold flex-1" style={{ color: "rgba(255,255,255,0.8)" }}>
+                      {m.profile?.username ?? m.user_id}
+                      {m.user_id === lg.creator_id && (
+                        <span className="ml-1.5 text-xs font-bold" style={{ color: "#c8f000" }}>👑 creator</span>
+                      )}
+                    </span>
+                    <span className="text-xs shrink-0" style={{ color: "rgba(255,255,255,0.6)" }}>
+                      joined {new Date(m.joined_at).toLocaleDateString()}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 // ── Terms Log Tab ─────────────────────────────────────────────────────────────
 
 function TermsLogTab() {
@@ -398,6 +533,7 @@ export default function Admin({ onClose }) {
   const TABS = [
     { id: "submissions", label: "Submissions" },
     { id: "results",     label: "Match Results" },
+    { id: "leagues",     label: "Leagues" },
     { id: "terms",       label: "Terms Log" },
   ];
 
@@ -458,6 +594,7 @@ export default function Admin({ onClose }) {
         <div className="overflow-y-auto flex-1">
           {tab === "submissions" && <SubmissionsTab />}
           {tab === "results"     && <ResultsTab />}
+          {tab === "leagues"     && <LeaguesTab />}
           {tab === "terms"       && <TermsLogTab />}
         </div>
 
