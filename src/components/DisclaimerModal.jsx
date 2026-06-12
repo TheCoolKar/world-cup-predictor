@@ -8,8 +8,10 @@
  */
 
 import { useState } from "react";
+import { supabase } from "../lib/supabase";
 
-const STORAGE_KEY = "wc2026-disclaimer-v1";
+const TERMS_VERSION = "v1";
+const STORAGE_KEY   = `wc2026-disclaimer-${TERMS_VERSION}`;
 
 /** Call this from App.jsx to check whether the user has already accepted. */
 export function hasAcceptedDisclaimer() {
@@ -21,6 +23,22 @@ export function hasAcceptedDisclaimer() {
 export function persistAcceptance() {
   try { localStorage.setItem(STORAGE_KEY, "accepted"); }
   catch { /* storage blocked (private browsing, etc.) — degrade gracefully */ }
+}
+
+/**
+ * Record the acceptance in Supabase so admins can audit who agreed and when.
+ * Fire-and-forget: a logging failure must never block entry to the site.
+ */
+async function logAcceptance() {
+  try {
+    const { data } = await supabase.auth.getUser();
+    await supabase.from("terms_acceptances").insert({
+      user_id:    data?.user?.id    ?? null,
+      email:      data?.user?.email ?? null,
+      version:    TERMS_VERSION,
+      user_agent: navigator.userAgent,
+    });
+  } catch { /* logging is best-effort */ }
 }
 
 // ── Disclaimer sections ───────────────────────────────────────────────────────
@@ -77,6 +95,7 @@ export default function DisclaimerModal({ onAccept }) {
   function handleAccept() {
     if (!checked) return;
     persistAcceptance();
+    logAcceptance();
     onAccept();
   }
 

@@ -285,6 +285,94 @@ function SubmissionsTab() {
   );
 }
 
+// ── Terms Log Tab ─────────────────────────────────────────────────────────────
+
+function TermsLogTab() {
+  const [rows,    setRows]    = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error,   setError]   = useState(null);
+
+  useEffect(() => {
+    supabase
+      .from("terms_acceptances")
+      .select("id, user_id, email, version, user_agent, accepted_at")
+      .order("accepted_at", { ascending: false })
+      .limit(500)
+      .then(({ data, error }) => {
+        if (error) setError(error.message);
+        else setRows(data ?? []);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return (
+    <div className="flex items-center justify-center h-40">
+      <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>Loading terms log…</p>
+    </div>
+  );
+  if (error) return (
+    <div className="flex items-center justify-center h-40">
+      <p className="text-sm" style={{ color: "#ef4444" }}>{error}</p>
+    </div>
+  );
+  if (!rows.length) return (
+    <div className="flex flex-col items-center justify-center h-40 gap-2">
+      <span className="text-3xl">📭</span>
+      <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>No acceptances logged yet.</p>
+    </div>
+  );
+
+  return (
+    <div>
+      <p className="px-4 pt-4 text-xs" style={{ color: "rgba(255,255,255,0.65)" }}>
+        {rows.length} acceptance{rows.length === 1 ? "" : "s"} logged (latest 500 shown).
+        Anonymous rows are visitors who accepted before signing in.
+      </p>
+      <table className="w-full text-sm mt-3">
+        <thead style={{ background: "rgba(255,255,255,0.03)", position: "sticky", top: 0 }}>
+          <tr>
+            {["User", "Version", "Accepted At", "Device"].map(label => (
+              <th key={label} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider"
+                style={{ color: "rgba(255,255,255,0.4)", whiteSpace: "nowrap" }}>
+                {label}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, i) => (
+            <tr key={row.id}
+              style={{ borderTop: "1px solid rgba(255,255,255,0.05)", background: i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.015)" }}>
+              <td className="px-4 py-3">
+                {row.email
+                  ? <span className="font-semibold" style={{ color: "rgba(255,255,255,0.85)" }}>{row.email}</span>
+                  : <span className="text-xs font-bold px-2 py-0.5 rounded-full"
+                      style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.45)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                      Anonymous
+                    </span>
+                }
+              </td>
+              <td className="px-4 py-3">
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full"
+                  style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", border: "1px solid rgba(200,240,0,0.2)" }}>
+                  {row.version}
+                </span>
+              </td>
+              <td className="px-4 py-3 text-xs" style={{ color: "rgba(255,255,255,0.7)" }}>
+                {new Date(row.accepted_at).toLocaleString()}
+              </td>
+              <td className="px-4 py-3 text-xs" style={{ color: "rgba(255,255,255,0.45)", maxWidth: 280, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                title={row.user_agent ?? ""}>
+                {row.user_agent ?? "—"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 // ── Main Admin component ──────────────────────────────────────────────────────
 
 export default function Admin({ onClose }) {
@@ -310,6 +398,7 @@ export default function Admin({ onClose }) {
   const TABS = [
     { id: "submissions", label: "Submissions" },
     { id: "results",     label: "Match Results" },
+    { id: "terms",       label: "Terms Log" },
   ];
 
   return (
@@ -369,6 +458,7 @@ export default function Admin({ onClose }) {
         <div className="overflow-y-auto flex-1">
           {tab === "submissions" && <SubmissionsTab />}
           {tab === "results"     && <ResultsTab />}
+          {tab === "terms"       && <TermsLogTab />}
         </div>
 
         {/* Footer */}
