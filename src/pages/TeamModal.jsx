@@ -41,7 +41,7 @@ function StatRow({ label, value, accent }) {
 }
 
 export default function TeamModal() {
-  const { team, closeTeam, openTeam } = useTeamModal();
+  const { team, closeTeam, openTeam, openPlayer } = useTeamModal();
   if (!team) return null;
 
   const elo      = eloRatings[team] ?? "—";
@@ -205,23 +205,39 @@ export default function TeamModal() {
             <section>
               <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.6)" }}>World Cup Squad</p>
               <p className="text-xs mb-3" style={{ color: "rgba(255,255,255,0.2)" }}>
-                {[lineup.coach, `${lineup.players.length} players`].filter(Boolean).join(" · ")}
+                {[lineup.coach, `${lineup.players.length} players`].filter(Boolean).join(" · ")} · tap a player for stats
               </p>
               <div className="flex flex-col gap-1">
                 {posOrder.filter(pos => groupedPlayers[pos]).map(pos => (
                   <div key={pos}>
-                    {groupedPlayers[pos].map(p => (
-                      <div key={p.name} className="flex items-center gap-3 py-1.5 px-3 rounded-lg"
-                        style={{ background: "rgba(255,255,255,0.02)" }}>
-                        <span className="text-xs font-black w-8 shrink-0"
-                          style={{ color: pos === "GK" ? "#f59e0b" : pos.includes("B") ? "#60a5fa" : pos === "ST" ? "#ef4444" : "#c8f000" }}>
-                          {pos}
-                        </span>
-                        <span className="text-sm font-semibold flex-1 text-white">{p.name}</span>
-                        <span className="text-xs shrink-0" style={{ color: "rgba(255,255,255,0.6)" }}>{p.club}</span>
-                        <span className="text-xs shrink-0 w-6 text-right" style={{ color: "rgba(255,255,255,0.2)" }}>{p.age}</span>
-                      </div>
-                    ))}
+                    {groupedPlayers[pos].map(p => {
+                      const clickable = p.id != null;
+                      return (
+                        <button key={p.name}
+                          type="button"
+                          disabled={!clickable}
+                          onClick={() => clickable && openPlayer({ id: p.id, name: p.name, pos, club: p.club, age: p.age })}
+                          title={clickable ? `View ${p.name}'s stats` : undefined}
+                          className="w-full text-left flex items-center gap-3 py-1.5 px-3 rounded-lg transition-colors group"
+                          style={{ background: "rgba(255,255,255,0.02)", cursor: clickable ? "pointer" : "default" }}
+                          onMouseEnter={e => { if (clickable) e.currentTarget.style.background = "rgba(200,240,0,0.07)"; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.02)"; }}>
+                          <span className="text-xs font-black w-8 shrink-0"
+                            style={{ color: pos === "GK" ? "#f59e0b" : pos.includes("B") ? "#60a5fa" : pos === "ST" ? "#ef4444" : "#c8f000" }}>
+                            {pos}
+                          </span>
+                          <span className="text-sm font-semibold flex-1 text-white group-hover:text-[#c8f000] transition-colors">{p.name}</span>
+                          <span className="text-xs shrink-0" style={{ color: "rgba(255,255,255,0.6)" }}>{p.club}</span>
+                          <span className="text-xs shrink-0 w-6 text-right" style={{ color: "rgba(255,255,255,0.2)" }}>{p.age}</span>
+                          {clickable && (
+                            <svg className="w-3 h-3 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                              style={{ color: "#c8f000" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 18l6-6-6-6" />
+                            </svg>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 ))}
               </div>
