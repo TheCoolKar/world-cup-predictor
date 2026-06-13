@@ -38,21 +38,23 @@ const CRON_SECRET = Deno.env.get("CRON_SECRET") ?? "";
 type Fixture = { id: string; group: string; home: string; away: string; date: string };
 
 // Official FIFA 2026 knockout schedule (date-ordered; mirrors KO_SCHEDULE in the app).
+// Official FIFA 2026 knockout dates. ORDER MATTERS: entries are listed by
+// (date, then kickoff time) so mapToFixtures can zip them, in order, with the
+// day's FotMob matches sorted by kickoff. M103 (3rd place, July 18) untracked.
 const KO_SCHEDULE: { id: string; date: string }[] = [
-  { id: "M73", date: "2026-06-28" }, { id: "M74", date: "2026-06-28" },
-  { id: "M75", date: "2026-06-29" }, { id: "M76", date: "2026-06-29" },
-  { id: "M77", date: "2026-06-30" }, { id: "M78", date: "2026-06-30" },
-  { id: "M79", date: "2026-07-01" }, { id: "M80", date: "2026-07-01" },
-  { id: "M81", date: "2026-07-02" }, { id: "M82", date: "2026-07-02" },
-  { id: "M83", date: "2026-07-03" }, { id: "M84", date: "2026-07-03" },
-  { id: "M85", date: "2026-07-04" }, { id: "M86", date: "2026-07-04" },
-  { id: "M87", date: "2026-07-05" }, { id: "M88", date: "2026-07-05" },
-  { id: "M89", date: "2026-07-06" }, { id: "M90", date: "2026-07-06" },
-  { id: "M91", date: "2026-07-07" }, { id: "M92", date: "2026-07-07" },
-  { id: "M93", date: "2026-07-08" }, { id: "M94", date: "2026-07-08" },
-  { id: "M95", date: "2026-07-09" }, { id: "M96", date: "2026-07-09" },
-  { id: "M97", date: "2026-07-11" }, { id: "M98", date: "2026-07-11" },
-  { id: "M99", date: "2026-07-12" }, { id: "M100", date: "2026-07-12" },
+  { id: "M73", date: "2026-06-28" },
+  { id: "M76", date: "2026-06-29" }, { id: "M74", date: "2026-06-29" }, { id: "M75", date: "2026-06-29" },
+  { id: "M78", date: "2026-06-30" }, { id: "M77", date: "2026-06-30" }, { id: "M79", date: "2026-06-30" },
+  { id: "M80", date: "2026-07-01" }, { id: "M82", date: "2026-07-01" }, { id: "M81", date: "2026-07-01" },
+  { id: "M84", date: "2026-07-02" }, { id: "M83", date: "2026-07-02" }, { id: "M85", date: "2026-07-02" },
+  { id: "M88", date: "2026-07-03" }, { id: "M86", date: "2026-07-03" }, { id: "M87", date: "2026-07-03" },
+  { id: "M90", date: "2026-07-04" }, { id: "M89", date: "2026-07-04" },
+  { id: "M91", date: "2026-07-05" }, { id: "M92", date: "2026-07-05" },
+  { id: "M93", date: "2026-07-06" }, { id: "M94", date: "2026-07-06" },
+  { id: "M95", date: "2026-07-07" }, { id: "M96", date: "2026-07-07" },
+  { id: "M97", date: "2026-07-09" },
+  { id: "M98", date: "2026-07-10" },
+  { id: "M99", date: "2026-07-11" }, { id: "M100", date: "2026-07-11" },
   { id: "M101", date: "2026-07-14" }, { id: "M102", date: "2026-07-15" },
   { id: "M104", date: "2026-07-19" },
 ];
