@@ -17,6 +17,7 @@ import AuthModal     from "./components/AuthModal";
 import DisclaimerModal, { hasAcceptedDisclaimer } from "./components/DisclaimerModal";
 import SignInGate from "./components/SignInGate";
 import TeamModal     from "./pages/TeamModal";
+import PlayerModal    from "./components/PlayerModal";
 import Teams         from "./pages/Teams";
 import { useAuth }   from "./hooks/useAuth";
 import { supabase }  from "./lib/supabase";
@@ -722,6 +723,7 @@ export default function App() {
       {showAdmin && <Admin  onClose={() => setShowAdmin(false)} />}
       {showAuth  && <AuthModal initialMode={authMode} onClose={() => setShowAuth(false)} onAuth={() => setShowAuth(false)} />}
       <TeamModal />
+      <PlayerModal />
 
       {/* Disclaimer — blocks site until user accepts */}
       {!disclaimerDone && <DisclaimerModal onAccept={() => setDisclaimerDone(true)} />}

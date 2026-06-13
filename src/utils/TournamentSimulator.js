@@ -45,7 +45,7 @@ function simulateMatch(home, away, fixtureId = null, stage = "group") {
     getHist(home)?.competitive,
     getHist(away)?.competitive,
     homeWinProb,
-    { stage, eloHome: getElo(home), eloAway: getElo(away) },
+    { stage, eloHome: getElo(home), eloAway: getElo(away), homeTeam: home, awayTeam: away },
   );
   return { homeWinProb, awayWinProb: pred.awayWin / 100, score };
 }
@@ -119,8 +119,8 @@ function stochasticMatch(home, away, knockout = false, fixtureId = null, rng = M
   );
   const homeWinProb = pred.homeWin / 100;
 
-  const ratesH = getAdjustedGoalRates(getHist(home)?.competitive, getElo(home));
-  const ratesA = getAdjustedGoalRates(getHist(away)?.competitive, getElo(away));
+  const ratesH = getAdjustedGoalRates(getHist(home)?.competitive, getElo(home), getApiForm(home));
+  const ratesA = getAdjustedGoalRates(getHist(away)?.competitive, getElo(away), getApiForm(away));
   const BASE  = 1.35;
   const atkH  = ratesH.avgGoalsFor;
   const defH  = ratesH.avgGoalsAgainst;
@@ -448,8 +448,8 @@ export function simulateMatchMonteCarlo(home, away, fixtureId = null, n = 2000) 
     .map(([score, count]) => ({ score, pct: +((count / n) * 100).toFixed(1) }));
 
   // Also compute xG averages for display
-  const ratesH = getAdjustedGoalRates(getHist(home)?.competitive, getElo(home));
-  const ratesA = getAdjustedGoalRates(getHist(away)?.competitive, getElo(away));
+  const ratesH = getAdjustedGoalRates(getHist(home)?.competitive, getElo(home), getApiForm(home));
+  const ratesA = getAdjustedGoalRates(getHist(away)?.competitive, getElo(away), getApiForm(away));
   const BASE  = 1.35;
   const pred = predictMatch(
     getElo(home), getElo(away),

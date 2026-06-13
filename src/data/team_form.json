@@ -1,674 +1,4690 @@
 {
   "England": {
     "apiId": 10,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:36:24.698Z"
+    "fotmobId": 8491,
+    "played": 10,
+    "wins": 8,
+    "draws": 1,
+    "losses": 1,
+    "goalsFor": 24,
+    "goalsAgainst": 2,
+    "goalDiff": 22,
+    "winRate": 80,
+    "avgGoalsFor": 2.4,
+    "avgGoalsAgainst": 0.2,
+    "ppg": 2.5,
+    "formScore": 86,
+    "recentForm": "WWWWWWDLWW",
+    "matches": [
+      {
+        "date": "2025-09-06",
+        "opponent": "Andorra",
+        "result": "W",
+        "score": "2-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. K",
+        "home": true
+      },
+      {
+        "date": "2025-09-09",
+        "opponent": "Serbia",
+        "result": "W",
+        "score": "5-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. K",
+        "home": false
+      },
+      {
+        "date": "2025-10-09",
+        "opponent": "Wales",
+        "result": "W",
+        "score": "3-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-10-14",
+        "opponent": "Latvia",
+        "result": "W",
+        "score": "5-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. K",
+        "home": false
+      },
+      {
+        "date": "2025-11-13",
+        "opponent": "Serbia",
+        "result": "W",
+        "score": "2-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. K",
+        "home": true
+      },
+      {
+        "date": "2025-11-16",
+        "opponent": "Albania",
+        "result": "W",
+        "score": "2-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. K",
+        "home": false
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Uruguay",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Japan",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "New Zealand",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-10",
+        "opponent": "Costa Rica",
+        "result": "W",
+        "score": "3-0",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:39.554Z"
   },
   "France": {
     "apiId": 2,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:36:39.037Z"
+    "fotmobId": 6723,
+    "played": 10,
+    "wins": 8,
+    "draws": 1,
+    "losses": 1,
+    "goalsFor": 25,
+    "goalsAgainst": 9,
+    "goalDiff": 16,
+    "winRate": 80,
+    "avgGoalsFor": 2.5,
+    "avgGoalsAgainst": 0.9,
+    "ppg": 2.5,
+    "formScore": 84,
+    "recentForm": "WWWDWWWWLW",
+    "matches": [
+      {
+        "date": "2025-09-05",
+        "opponent": "Ukraine",
+        "result": "W",
+        "score": "2-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. D",
+        "home": false
+      },
+      {
+        "date": "2025-09-09",
+        "opponent": "Iceland",
+        "result": "W",
+        "score": "2-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. D",
+        "home": true
+      },
+      {
+        "date": "2025-10-10",
+        "opponent": "Azerbaijan",
+        "result": "W",
+        "score": "3-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. D",
+        "home": true
+      },
+      {
+        "date": "2025-10-13",
+        "opponent": "Iceland",
+        "result": "D",
+        "score": "2-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. D",
+        "home": false
+      },
+      {
+        "date": "2025-11-13",
+        "opponent": "Ukraine",
+        "result": "W",
+        "score": "4-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. D",
+        "home": true
+      },
+      {
+        "date": "2025-11-16",
+        "opponent": "Azerbaijan",
+        "result": "W",
+        "score": "3-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. D",
+        "home": false
+      },
+      {
+        "date": "2026-03-26",
+        "opponent": "Brazil",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-29",
+        "opponent": "Colombia",
+        "result": "W",
+        "score": "3-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-04",
+        "opponent": "Ivory Coast",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-08",
+        "opponent": "Northern Ireland",
+        "result": "W",
+        "score": "3-1",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:31.209Z"
   },
   "Germany": {
     "apiId": 25,
-    "played": 0,
-    "wins": 0,
+    "fotmobId": 8570,
+    "played": 10,
+    "wins": 9,
     "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:36:53.355Z"
+    "losses": 1,
+    "goalsFor": 28,
+    "goalsAgainst": 8,
+    "goalDiff": 20,
+    "winRate": 90,
+    "avgGoalsFor": 2.8,
+    "avgGoalsAgainst": 0.8,
+    "ppg": 2.7,
+    "formScore": 92,
+    "recentForm": "LWWWWWWWWW",
+    "matches": [
+      {
+        "date": "2025-09-04",
+        "opponent": "Slovakia",
+        "result": "L",
+        "score": "0-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. A",
+        "home": false
+      },
+      {
+        "date": "2025-09-07",
+        "opponent": "Northern Ireland",
+        "result": "W",
+        "score": "3-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. A",
+        "home": true
+      },
+      {
+        "date": "2025-10-10",
+        "opponent": "Luxembourg",
+        "result": "W",
+        "score": "4-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. A",
+        "home": true
+      },
+      {
+        "date": "2025-10-13",
+        "opponent": "Northern Ireland",
+        "result": "W",
+        "score": "1-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. A",
+        "home": false
+      },
+      {
+        "date": "2025-11-14",
+        "opponent": "Luxembourg",
+        "result": "W",
+        "score": "2-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. A",
+        "home": false
+      },
+      {
+        "date": "2025-11-17",
+        "opponent": "Slovakia",
+        "result": "W",
+        "score": "6-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. A",
+        "home": true
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Switzerland",
+        "result": "W",
+        "score": "4-3",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-30",
+        "opponent": "Ghana",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-05-31",
+        "opponent": "Finland",
+        "result": "W",
+        "score": "4-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "USA",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:20.424Z"
   },
   "Spain": {
     "apiId": 9,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
+    "fotmobId": 6720,
+    "played": 10,
+    "wins": 7,
+    "draws": 3,
     "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:37:13.036Z"
+    "goalsFor": 28,
+    "goalsAgainst": 4,
+    "goalDiff": 24,
+    "winRate": 70,
+    "avgGoalsFor": 2.8,
+    "avgGoalsAgainst": 0.4,
+    "ppg": 2.4,
+    "formScore": 83,
+    "recentForm": "WWWWWDWDDW",
+    "matches": [
+      {
+        "date": "2025-09-04",
+        "opponent": "Bulgaria",
+        "result": "W",
+        "score": "3-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. E",
+        "home": false
+      },
+      {
+        "date": "2025-09-07",
+        "opponent": "Turkiye",
+        "result": "W",
+        "score": "6-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. E",
+        "home": false
+      },
+      {
+        "date": "2025-10-11",
+        "opponent": "Georgia",
+        "result": "W",
+        "score": "2-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. E",
+        "home": true
+      },
+      {
+        "date": "2025-10-14",
+        "opponent": "Bulgaria",
+        "result": "W",
+        "score": "4-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. E",
+        "home": true
+      },
+      {
+        "date": "2025-11-15",
+        "opponent": "Georgia",
+        "result": "W",
+        "score": "4-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. E",
+        "home": false
+      },
+      {
+        "date": "2025-11-18",
+        "opponent": "Turkiye",
+        "result": "D",
+        "score": "2-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. E",
+        "home": true
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Serbia",
+        "result": "W",
+        "score": "3-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Egypt",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-04",
+        "opponent": "Iraq",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-09",
+        "opponent": "Peru",
+        "result": "W",
+        "score": "3-1",
+        "competition": "Friendlies",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:25.065Z"
   },
   "Portugal": {
     "apiId": 27,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:37:31.581Z"
+    "fotmobId": 8361,
+    "played": 10,
+    "wins": 7,
+    "draws": 2,
+    "losses": 1,
+    "goalsFor": 26,
+    "goalsAgainst": 9,
+    "goalDiff": 17,
+    "winRate": 70,
+    "avgGoalsFor": 2.6,
+    "avgGoalsAgainst": 0.9,
+    "ppg": 2.3,
+    "formScore": 79,
+    "recentForm": "WWWDLWDWWW",
+    "matches": [
+      {
+        "date": "2025-09-06",
+        "opponent": "Armenia",
+        "result": "W",
+        "score": "5-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. F",
+        "home": false
+      },
+      {
+        "date": "2025-09-09",
+        "opponent": "Hungary",
+        "result": "W",
+        "score": "3-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. F",
+        "home": false
+      },
+      {
+        "date": "2025-10-11",
+        "opponent": "Ireland",
+        "result": "W",
+        "score": "1-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. F",
+        "home": true
+      },
+      {
+        "date": "2025-10-14",
+        "opponent": "Hungary",
+        "result": "D",
+        "score": "2-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. F",
+        "home": true
+      },
+      {
+        "date": "2025-11-13",
+        "opponent": "Ireland",
+        "result": "L",
+        "score": "0-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. F",
+        "home": false
+      },
+      {
+        "date": "2025-11-16",
+        "opponent": "Armenia",
+        "result": "W",
+        "score": "9-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. F",
+        "home": true
+      },
+      {
+        "date": "2026-03-29",
+        "opponent": "Mexico",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "USA",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "Chile",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-10",
+        "opponent": "Nigeria",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:40.166Z"
   },
   "Netherlands": {
     "apiId": 34,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:37:50.104Z"
+    "fotmobId": 6708,
+    "played": 10,
+    "wins": 6,
+    "draws": 3,
+    "losses": 1,
+    "goalsFor": 22,
+    "goalsAgainst": 8,
+    "goalDiff": 14,
+    "winRate": 60,
+    "avgGoalsFor": 2.2,
+    "avgGoalsAgainst": 0.8,
+    "ppg": 2.1,
+    "formScore": 72,
+    "recentForm": "DWWWDWWDLW",
+    "matches": [
+      {
+        "date": "2025-09-04",
+        "opponent": "Poland",
+        "result": "D",
+        "score": "1-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. G",
+        "home": true
+      },
+      {
+        "date": "2025-09-07",
+        "opponent": "Lithuania",
+        "result": "W",
+        "score": "3-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. G",
+        "home": false
+      },
+      {
+        "date": "2025-10-09",
+        "opponent": "Malta",
+        "result": "W",
+        "score": "4-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. G",
+        "home": false
+      },
+      {
+        "date": "2025-10-12",
+        "opponent": "Finland",
+        "result": "W",
+        "score": "4-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. G",
+        "home": true
+      },
+      {
+        "date": "2025-11-14",
+        "opponent": "Poland",
+        "result": "D",
+        "score": "1-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. G",
+        "home": false
+      },
+      {
+        "date": "2025-11-17",
+        "opponent": "Lithuania",
+        "result": "W",
+        "score": "4-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. G",
+        "home": true
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Norway",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Ecuador",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-03",
+        "opponent": "Algeria",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-08",
+        "opponent": "Uzbekistan",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:23.459Z"
   },
   "Belgium": {
     "apiId": 1,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
+    "fotmobId": 8263,
+    "played": 10,
+    "wins": 7,
+    "draws": 3,
     "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:38:07.070Z"
+    "goalsFor": 37,
+    "goalsAgainst": 6,
+    "goalDiff": 31,
+    "winRate": 70,
+    "avgGoalsFor": 3.7,
+    "avgGoalsAgainst": 0.6,
+    "ppg": 2.4,
+    "formScore": 83,
+    "recentForm": "WWDWDWWDWW",
+    "matches": [
+      {
+        "date": "2025-09-04",
+        "opponent": "Liechtenstein",
+        "result": "W",
+        "score": "6-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. J",
+        "home": false
+      },
+      {
+        "date": "2025-09-07",
+        "opponent": "Kazakhstan",
+        "result": "W",
+        "score": "6-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. J",
+        "home": true
+      },
+      {
+        "date": "2025-10-10",
+        "opponent": "North Macedonia",
+        "result": "D",
+        "score": "0-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. J",
+        "home": true
+      },
+      {
+        "date": "2025-10-13",
+        "opponent": "Wales",
+        "result": "W",
+        "score": "4-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. J",
+        "home": false
+      },
+      {
+        "date": "2025-11-15",
+        "opponent": "Kazakhstan",
+        "result": "D",
+        "score": "1-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. J",
+        "home": false
+      },
+      {
+        "date": "2025-11-18",
+        "opponent": "Liechtenstein",
+        "result": "W",
+        "score": "7-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. J",
+        "home": true
+      },
+      {
+        "date": "2026-03-28",
+        "opponent": "USA",
+        "result": "W",
+        "score": "5-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-04-01",
+        "opponent": "Mexico",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-02",
+        "opponent": "Croatia",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "Tunisia",
+        "result": "W",
+        "score": "5-0",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:28.171Z"
   },
   "Croatia": {
     "apiId": 3,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:38:25.174Z"
+    "fotmobId": 10155,
+    "played": 10,
+    "wins": 7,
+    "draws": 1,
+    "losses": 2,
+    "goalsFor": 19,
+    "goalsAgainst": 10,
+    "goalDiff": 9,
+    "winRate": 70,
+    "avgGoalsFor": 1.9,
+    "avgGoalsAgainst": 1,
+    "ppg": 2.2,
+    "formScore": 73,
+    "recentForm": "WWDWWWWLLW",
+    "matches": [
+      {
+        "date": "2025-09-05",
+        "opponent": "Faroe Islands",
+        "result": "W",
+        "score": "1-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. L",
+        "home": false
+      },
+      {
+        "date": "2025-09-08",
+        "opponent": "Montenegro",
+        "result": "W",
+        "score": "4-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. L",
+        "home": true
+      },
+      {
+        "date": "2025-10-09",
+        "opponent": "Czechia",
+        "result": "D",
+        "score": "0-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. L",
+        "home": false
+      },
+      {
+        "date": "2025-10-12",
+        "opponent": "Gibraltar",
+        "result": "W",
+        "score": "3-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. L",
+        "home": true
+      },
+      {
+        "date": "2025-11-14",
+        "opponent": "Faroe Islands",
+        "result": "W",
+        "score": "3-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. L",
+        "home": true
+      },
+      {
+        "date": "2025-11-17",
+        "opponent": "Montenegro",
+        "result": "W",
+        "score": "3-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. L",
+        "home": false
+      },
+      {
+        "date": "2026-03-26",
+        "opponent": "Colombia",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-04-01",
+        "opponent": "Brazil",
+        "result": "L",
+        "score": "1-3",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-02",
+        "opponent": "Belgium",
+        "result": "L",
+        "score": "0-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-07",
+        "opponent": "Slovenia",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:36.179Z"
   },
   "Switzerland": {
     "apiId": 15,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:38:41.929Z"
+    "fotmobId": 6717,
+    "played": 10,
+    "wins": 5,
+    "draws": 4,
+    "losses": 1,
+    "goalsFor": 22,
+    "goalsAgainst": 8,
+    "goalDiff": 14,
+    "winRate": 50,
+    "avgGoalsFor": 2.2,
+    "avgGoalsAgainst": 0.8,
+    "ppg": 1.9,
+    "formScore": 67,
+    "recentForm": "WWWDWDLDWD",
+    "matches": [
+      {
+        "date": "2025-09-05",
+        "opponent": "Kosovo",
+        "result": "W",
+        "score": "4-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. B",
+        "home": true
+      },
+      {
+        "date": "2025-09-08",
+        "opponent": "Slovenia",
+        "result": "W",
+        "score": "3-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. B",
+        "home": true
+      },
+      {
+        "date": "2025-10-10",
+        "opponent": "Sweden",
+        "result": "W",
+        "score": "2-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. B",
+        "home": false
+      },
+      {
+        "date": "2025-10-13",
+        "opponent": "Slovenia",
+        "result": "D",
+        "score": "0-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. B",
+        "home": false
+      },
+      {
+        "date": "2025-11-15",
+        "opponent": "Sweden",
+        "result": "W",
+        "score": "4-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. B",
+        "home": true
+      },
+      {
+        "date": "2025-11-18",
+        "opponent": "Kosovo",
+        "result": "D",
+        "score": "1-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. B",
+        "home": false
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Germany",
+        "result": "L",
+        "score": "3-4",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Norway",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-05-31",
+        "opponent": "Jordan",
+        "result": "W",
+        "score": "4-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "Australia",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:06.502Z"
   },
   "Austria": {
     "apiId": 44,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:38:58.631Z"
+    "fotmobId": 8255,
+    "played": 9,
+    "wins": 7,
+    "draws": 1,
+    "losses": 1,
+    "goalsFor": 23,
+    "goalsAgainst": 4,
+    "goalDiff": 19,
+    "winRate": 77.8,
+    "avgGoalsFor": 2.56,
+    "avgGoalsAgainst": 0.44,
+    "ppg": 2.44,
+    "formScore": 84,
+    "recentForm": "WWWLWDWWW",
+    "matches": [
+      {
+        "date": "2025-09-06",
+        "opponent": "Cyprus",
+        "result": "W",
+        "score": "1-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. H",
+        "home": true
+      },
+      {
+        "date": "2025-09-09",
+        "opponent": "Bosnia and Herzegovina",
+        "result": "W",
+        "score": "2-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. H",
+        "home": false
+      },
+      {
+        "date": "2025-10-09",
+        "opponent": "San Marino",
+        "result": "W",
+        "score": "10-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. H",
+        "home": true
+      },
+      {
+        "date": "2025-10-12",
+        "opponent": "Romania",
+        "result": "L",
+        "score": "0-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. H",
+        "home": false
+      },
+      {
+        "date": "2025-11-15",
+        "opponent": "Cyprus",
+        "result": "W",
+        "score": "2-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. H",
+        "home": false
+      },
+      {
+        "date": "2025-11-18",
+        "opponent": "Bosnia and Herzegovina",
+        "result": "D",
+        "score": "1-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. H",
+        "home": true
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Ghana",
+        "result": "W",
+        "score": "5-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "South Korea",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-01",
+        "opponent": "Tunisia",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:35.131Z"
   },
   "Scotland": {
     "apiId": 35,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:39:16.579Z"
+    "fotmobId": 8498,
+    "played": 10,
+    "wins": 6,
+    "draws": 1,
+    "losses": 3,
+    "goalsFor": 21,
+    "goalsAgainst": 10,
+    "goalDiff": 11,
+    "winRate": 60,
+    "avgGoalsFor": 2.1,
+    "avgGoalsAgainst": 1,
+    "ppg": 1.9,
+    "formScore": 65,
+    "recentForm": "DWWWLWLLWW",
+    "matches": [
+      {
+        "date": "2025-09-05",
+        "opponent": "Denmark",
+        "result": "D",
+        "score": "0-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. C",
+        "home": false
+      },
+      {
+        "date": "2025-09-08",
+        "opponent": "Belarus",
+        "result": "W",
+        "score": "2-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. C",
+        "home": false
+      },
+      {
+        "date": "2025-10-09",
+        "opponent": "Greece",
+        "result": "W",
+        "score": "3-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. C",
+        "home": true
+      },
+      {
+        "date": "2025-10-12",
+        "opponent": "Belarus",
+        "result": "W",
+        "score": "2-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. C",
+        "home": true
+      },
+      {
+        "date": "2025-11-15",
+        "opponent": "Greece",
+        "result": "L",
+        "score": "2-3",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. C",
+        "home": false
+      },
+      {
+        "date": "2025-11-18",
+        "opponent": "Denmark",
+        "result": "W",
+        "score": "4-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. C",
+        "home": true
+      },
+      {
+        "date": "2026-03-28",
+        "opponent": "Japan",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Ivory Coast",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-05-30",
+        "opponent": "Curacao",
+        "result": "W",
+        "score": "4-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "Bolivia",
+        "result": "W",
+        "score": "4-0",
+        "competition": "Friendlies",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:13.677Z"
   },
   "Sweden": {
     "apiId": 14,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:39:33.823Z"
+    "fotmobId": 8520,
+    "played": 10,
+    "wins": 2,
+    "draws": 3,
+    "losses": 5,
+    "goalsFor": 13,
+    "goalsAgainst": 20,
+    "goalDiff": -7,
+    "winRate": 20,
+    "avgGoalsFor": 1.3,
+    "avgGoalsAgainst": 2,
+    "ppg": 0.9,
+    "formScore": 30,
+    "recentForm": "DLLLLDWWLD",
+    "matches": [
+      {
+        "date": "2025-09-05",
+        "opponent": "Slovenia",
+        "result": "D",
+        "score": "2-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. B",
+        "home": false
+      },
+      {
+        "date": "2025-09-08",
+        "opponent": "Kosovo",
+        "result": "L",
+        "score": "0-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. B",
+        "home": false
+      },
+      {
+        "date": "2025-10-10",
+        "opponent": "Switzerland",
+        "result": "L",
+        "score": "0-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. B",
+        "home": true
+      },
+      {
+        "date": "2025-10-13",
+        "opponent": "Kosovo",
+        "result": "L",
+        "score": "0-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. B",
+        "home": true
+      },
+      {
+        "date": "2025-11-15",
+        "opponent": "Switzerland",
+        "result": "L",
+        "score": "1-4",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. B",
+        "home": false
+      },
+      {
+        "date": "2025-11-18",
+        "opponent": "Slovenia",
+        "result": "D",
+        "score": "1-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. B",
+        "home": true
+      },
+      {
+        "date": "2026-03-26",
+        "opponent": "Ukraine",
+        "result": "W",
+        "score": "3-1",
+        "competition": "World Cup Qualification UEFA 2nd Round",
+        "home": false
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Poland",
+        "result": "W",
+        "score": "3-2",
+        "competition": "World Cup Qualification UEFA 2nd Round",
+        "home": true
+      },
+      {
+        "date": "2026-06-01",
+        "opponent": "Norway",
+        "result": "L",
+        "score": "1-3",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-04",
+        "opponent": "Greece",
+        "result": "D",
+        "score": "2-2",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:21.757Z"
   },
   "Czechia": {
     "apiId": 29,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:39:48.135Z"
+    "fotmobId": 8496,
+    "played": 10,
+    "wins": 6,
+    "draws": 2,
+    "losses": 2,
+    "goalsFor": 26,
+    "goalsAgainst": 15,
+    "goalDiff": 11,
+    "winRate": 60,
+    "avgGoalsFor": 2.6,
+    "avgGoalsAgainst": 1.5,
+    "ppg": 2,
+    "formScore": 68,
+    "recentForm": "DDLWWWWWWL",
+    "matches": [
+      {
+        "date": "2025-09-08",
+        "opponent": "Saudi Arabia",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-10-09",
+        "opponent": "Croatia",
+        "result": "D",
+        "score": "0-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. L",
+        "home": true
+      },
+      {
+        "date": "2025-10-12",
+        "opponent": "Faroe Islands",
+        "result": "L",
+        "score": "1-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. L",
+        "home": false
+      },
+      {
+        "date": "2025-11-13",
+        "opponent": "San Marino",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-11-17",
+        "opponent": "Gibraltar",
+        "result": "W",
+        "score": "6-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. L",
+        "home": true
+      },
+      {
+        "date": "2026-03-26",
+        "opponent": "Ireland",
+        "result": "W",
+        "score": "6-5",
+        "competition": "World Cup Qualification UEFA 2nd Round",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Denmark",
+        "result": "W",
+        "score": "5-3",
+        "competition": "World Cup Qualification UEFA 2nd Round",
+        "home": true
+      },
+      {
+        "date": "2026-05-31",
+        "opponent": "Kosovo",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-05",
+        "opponent": "Guatemala",
+        "result": "W",
+        "score": "3-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-12",
+        "opponent": "South Korea",
+        "result": "L",
+        "score": "1-2",
+        "competition": "World Cup Grp. A",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:05.717Z"
   },
   "Bosnia": {
     "apiId": 21,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:40:02.477Z"
+    "fotmobId": 10106,
+    "played": 10,
+    "wins": 4,
+    "draws": 5,
+    "losses": 1,
+    "goalsFor": 23,
+    "goalsAgainst": 14,
+    "goalDiff": 9,
+    "winRate": 40,
+    "avgGoalsFor": 2.3,
+    "avgGoalsAgainst": 1.4,
+    "ppg": 1.7,
+    "formScore": 59,
+    "recentForm": "LDWWDWWDDD",
+    "matches": [
+      {
+        "date": "2025-09-09",
+        "opponent": "Austria",
+        "result": "L",
+        "score": "1-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. H",
+        "home": true
+      },
+      {
+        "date": "2025-10-09",
+        "opponent": "Cyprus",
+        "result": "D",
+        "score": "2-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. H",
+        "home": false
+      },
+      {
+        "date": "2025-10-12",
+        "opponent": "Malta",
+        "result": "W",
+        "score": "4-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-15",
+        "opponent": "Romania",
+        "result": "W",
+        "score": "3-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. H",
+        "home": true
+      },
+      {
+        "date": "2025-11-18",
+        "opponent": "Austria",
+        "result": "D",
+        "score": "1-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. H",
+        "home": false
+      },
+      {
+        "date": "2026-03-26",
+        "opponent": "Wales",
+        "result": "W",
+        "score": "5-3",
+        "competition": "World Cup Qualification UEFA 2nd Round",
+        "home": false
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Italy",
+        "result": "W",
+        "score": "5-2",
+        "competition": "World Cup Qualification UEFA 2nd Round",
+        "home": true
+      },
+      {
+        "date": "2026-05-29",
+        "opponent": "North Macedonia",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "Panama",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-12",
+        "opponent": "Canada",
+        "result": "D",
+        "score": "1-1",
+        "competition": "World Cup Grp. B",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:07.596Z"
   },
   "Türkiye": {
     "apiId": 777,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:40:16.817Z"
+    "fotmobId": 6595,
+    "played": 10,
+    "wins": 8,
+    "draws": 1,
+    "losses": 1,
+    "goalsFor": 25,
+    "goalsAgainst": 13,
+    "goalDiff": 12,
+    "winRate": 80,
+    "avgGoalsFor": 2.5,
+    "avgGoalsAgainst": 1.3,
+    "ppg": 2.5,
+    "formScore": 83,
+    "recentForm": "WLWWWDWWWW",
+    "matches": [
+      {
+        "date": "2025-09-04",
+        "opponent": "Georgia",
+        "result": "W",
+        "score": "3-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. E",
+        "home": false
+      },
+      {
+        "date": "2025-09-07",
+        "opponent": "Spain",
+        "result": "L",
+        "score": "0-6",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. E",
+        "home": true
+      },
+      {
+        "date": "2025-10-11",
+        "opponent": "Bulgaria",
+        "result": "W",
+        "score": "6-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. E",
+        "home": false
+      },
+      {
+        "date": "2025-10-14",
+        "opponent": "Georgia",
+        "result": "W",
+        "score": "4-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. E",
+        "home": true
+      },
+      {
+        "date": "2025-11-15",
+        "opponent": "Bulgaria",
+        "result": "W",
+        "score": "2-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. E",
+        "home": true
+      },
+      {
+        "date": "2025-11-18",
+        "opponent": "Spain",
+        "result": "D",
+        "score": "2-2",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. E",
+        "home": false
+      },
+      {
+        "date": "2026-03-26",
+        "opponent": "Romania",
+        "result": "W",
+        "score": "1-0",
+        "competition": "World Cup Qualification UEFA 2nd Round",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Kosovo",
+        "result": "W",
+        "score": "1-0",
+        "competition": "World Cup Qualification UEFA 2nd Round",
+        "home": false
+      },
+      {
+        "date": "2026-06-01",
+        "opponent": "North Macedonia",
+        "result": "W",
+        "score": "4-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "Venezuela",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:24.321Z"
   },
   "Norway": {
     "apiId": 53,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:40:31.192Z"
+    "fotmobId": 8492,
+    "played": 10,
+    "wins": 6,
+    "draws": 3,
+    "losses": 1,
+    "goalsFor": 31,
+    "goalsAgainst": 8,
+    "goalDiff": 23,
+    "winRate": 60,
+    "avgGoalsFor": 3.1,
+    "avgGoalsAgainst": 0.8,
+    "ppg": 2.1,
+    "formScore": 75,
+    "recentForm": "WWWDWWLDWD",
+    "matches": [
+      {
+        "date": "2025-09-04",
+        "opponent": "Finland",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-09-09",
+        "opponent": "Moldova",
+        "result": "W",
+        "score": "11-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. I",
+        "home": true
+      },
+      {
+        "date": "2025-10-11",
+        "opponent": "Israel",
+        "result": "W",
+        "score": "5-0",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. I",
+        "home": true
+      },
+      {
+        "date": "2025-10-14",
+        "opponent": "New Zealand",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-11-13",
+        "opponent": "Estonia",
+        "result": "W",
+        "score": "4-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. I",
+        "home": true
+      },
+      {
+        "date": "2025-11-16",
+        "opponent": "Italy",
+        "result": "W",
+        "score": "4-1",
+        "competition": "World Cup Qualification UEFA 1st Round Grp. I",
+        "home": false
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Netherlands",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Switzerland",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-01",
+        "opponent": "Sweden",
+        "result": "W",
+        "score": "3-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-07",
+        "opponent": "Morocco",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:30.567Z"
   },
   "Argentina": {
     "apiId": 26,
-    "played": 0,
-    "wins": 0,
+    "fotmobId": 6706,
+    "played": 9,
+    "wins": 8,
     "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:40:45.533Z"
+    "losses": 1,
+    "goalsFor": 24,
+    "goalsAgainst": 2,
+    "goalDiff": 22,
+    "winRate": 88.9,
+    "avgGoalsFor": 2.67,
+    "avgGoalsAgainst": 0.22,
+    "ppg": 2.67,
+    "formScore": 91,
+    "recentForm": "WLWWWWWWW",
+    "matches": [
+      {
+        "date": "2025-09-04",
+        "opponent": "Venezuela",
+        "result": "W",
+        "score": "3-0",
+        "competition": "World Cup Qualification CONMEBOL",
+        "home": true
+      },
+      {
+        "date": "2025-09-09",
+        "opponent": "Ecuador",
+        "result": "L",
+        "score": "0-1",
+        "competition": "World Cup Qualification CONMEBOL",
+        "home": false
+      },
+      {
+        "date": "2025-10-11",
+        "opponent": "Venezuela",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-10-15",
+        "opponent": "Puerto Rico",
+        "result": "W",
+        "score": "6-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-14",
+        "opponent": "Angola",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Mauritania",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Zambia",
+        "result": "W",
+        "score": "5-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-07",
+        "opponent": "Honduras",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-10",
+        "opponent": "Iceland",
+        "result": "W",
+        "score": "3-0",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:34.262Z"
   },
   "Brazil": {
     "apiId": 6,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:40:59.877Z"
+    "fotmobId": 8256,
+    "played": 10,
+    "wins": 6,
+    "draws": 1,
+    "losses": 3,
+    "goalsFor": 25,
+    "goalsAgainst": 11,
+    "goalDiff": 14,
+    "winRate": 60,
+    "avgGoalsFor": 2.5,
+    "avgGoalsAgainst": 1.1,
+    "ppg": 1.9,
+    "formScore": 67,
+    "recentForm": "WLWLWDLWWW",
+    "matches": [
+      {
+        "date": "2025-09-05",
+        "opponent": "Chile",
+        "result": "W",
+        "score": "3-0",
+        "competition": "World Cup Qualification CONMEBOL",
+        "home": true
+      },
+      {
+        "date": "2025-09-09",
+        "opponent": "Bolivia",
+        "result": "L",
+        "score": "0-1",
+        "competition": "World Cup Qualification CONMEBOL",
+        "home": false
+      },
+      {
+        "date": "2025-10-10",
+        "opponent": "South Korea",
+        "result": "W",
+        "score": "5-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-10-14",
+        "opponent": "Japan",
+        "result": "L",
+        "score": "2-3",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-15",
+        "opponent": "Senegal",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-11-18",
+        "opponent": "Tunisia",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-26",
+        "opponent": "France",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-04-01",
+        "opponent": "Croatia",
+        "result": "W",
+        "score": "3-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-05-31",
+        "opponent": "Panama",
+        "result": "W",
+        "score": "6-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "Egypt",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:14.077Z"
   },
   "Uruguay": {
     "apiId": 32,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:41:14.232Z"
+    "fotmobId": 5796,
+    "played": 8,
+    "wins": 3,
+    "draws": 4,
+    "losses": 1,
+    "goalsFor": 8,
+    "goalsAgainst": 7,
+    "goalDiff": 1,
+    "winRate": 37.5,
+    "avgGoalsFor": 1,
+    "avgGoalsAgainst": 0.88,
+    "ppg": 1.63,
+    "formScore": 54,
+    "recentForm": "WDWWDLDD",
+    "matches": [
+      {
+        "date": "2025-09-04",
+        "opponent": "Peru",
+        "result": "W",
+        "score": "3-0",
+        "competition": "World Cup Qualification CONMEBOL",
+        "home": true
+      },
+      {
+        "date": "2025-09-09",
+        "opponent": "Chile",
+        "result": "D",
+        "score": "0-0",
+        "competition": "World Cup Qualification CONMEBOL",
+        "home": false
+      },
+      {
+        "date": "2025-10-10",
+        "opponent": "Dominican Republic",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-10-13",
+        "opponent": "Uzbekistan",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-16",
+        "opponent": "Mexico",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-19",
+        "opponent": "USA",
+        "result": "L",
+        "score": "1-5",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "England",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Algeria",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:27.452Z"
   },
   "Colombia": {
     "apiId": 8,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:41:28.676Z"
+    "fotmobId": 8258,
+    "played": 10,
+    "wins": 7,
+    "draws": 1,
+    "losses": 2,
+    "goalsFor": 25,
+    "goalsAgainst": 10,
+    "goalDiff": 15,
+    "winRate": 70,
+    "avgGoalsFor": 2.5,
+    "avgGoalsAgainst": 1,
+    "ppg": 2.2,
+    "formScore": 75,
+    "recentForm": "WWWDWWLLWW",
+    "matches": [
+      {
+        "date": "2025-09-04",
+        "opponent": "Bolivia",
+        "result": "W",
+        "score": "3-0",
+        "competition": "World Cup Qualification CONMEBOL",
+        "home": true
+      },
+      {
+        "date": "2025-09-09",
+        "opponent": "Venezuela",
+        "result": "W",
+        "score": "6-3",
+        "competition": "World Cup Qualification CONMEBOL",
+        "home": false
+      },
+      {
+        "date": "2025-10-12",
+        "opponent": "Mexico",
+        "result": "W",
+        "score": "4-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-10-15",
+        "opponent": "Canada",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-16",
+        "opponent": "New Zealand",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-11-19",
+        "opponent": "Australia",
+        "result": "W",
+        "score": "3-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-26",
+        "opponent": "Croatia",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-29",
+        "opponent": "France",
+        "result": "L",
+        "score": "1-3",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-01",
+        "opponent": "Costa Rica",
+        "result": "W",
+        "score": "3-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-07",
+        "opponent": "Jordan",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:04.468Z"
   },
   "Ecuador": {
     "apiId": 57,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
+    "fotmobId": 6707,
+    "played": 10,
+    "wins": 4,
+    "draws": 6,
     "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:41:43.012Z"
+    "goalsFor": 12,
+    "goalsAgainst": 5,
+    "goalDiff": 7,
+    "winRate": 40,
+    "avgGoalsFor": 1.2,
+    "avgGoalsAgainst": 0.5,
+    "ppg": 1.8,
+    "formScore": 61,
+    "recentForm": "DWDDDWDDWW",
+    "matches": [
+      {
+        "date": "2025-09-04",
+        "opponent": "Paraguay",
+        "result": "D",
+        "score": "0-0",
+        "competition": "World Cup Qualification CONMEBOL",
+        "home": false
+      },
+      {
+        "date": "2025-09-09",
+        "opponent": "Argentina",
+        "result": "W",
+        "score": "1-0",
+        "competition": "World Cup Qualification CONMEBOL",
+        "home": true
+      },
+      {
+        "date": "2025-10-11",
+        "opponent": "USA",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-10-15",
+        "opponent": "Mexico",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-14",
+        "opponent": "Canada",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-19",
+        "opponent": "New Zealand",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Morocco",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Netherlands",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-05-31",
+        "opponent": "Saudi Arabia",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-07",
+        "opponent": "Guatemala",
+        "result": "W",
+        "score": "3-0",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:19.824Z"
   },
   "Paraguay": {
     "apiId": 38,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
+    "fotmobId": 6724,
+    "played": 10,
+    "wins": 4,
+    "draws": 2,
+    "losses": 4,
+    "goalsFor": 13,
+    "goalsAgainst": 13,
     "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:41:57.468Z"
+    "winRate": 40,
+    "avgGoalsFor": 1.3,
+    "avgGoalsAgainst": 1.3,
+    "ppg": 1.4,
+    "formScore": 47,
+    "recentForm": "DWDLLWWLWL",
+    "matches": [
+      {
+        "date": "2025-09-04",
+        "opponent": "Ecuador",
+        "result": "D",
+        "score": "0-0",
+        "competition": "World Cup Qualification CONMEBOL",
+        "home": true
+      },
+      {
+        "date": "2025-09-09",
+        "opponent": "Peru",
+        "result": "W",
+        "score": "1-0",
+        "competition": "World Cup Qualification CONMEBOL",
+        "home": false
+      },
+      {
+        "date": "2025-10-10",
+        "opponent": "Japan",
+        "result": "D",
+        "score": "2-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-10-14",
+        "opponent": "South Korea",
+        "result": "L",
+        "score": "0-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-15",
+        "opponent": "USA",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-19",
+        "opponent": "Mexico",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Greece",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Morocco",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-05",
+        "opponent": "Nicaragua",
+        "result": "W",
+        "score": "4-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-13",
+        "opponent": "USA",
+        "result": "L",
+        "score": "1-4",
+        "competition": "World Cup Grp. D",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:16.972Z"
   },
   "Morocco": {
     "apiId": 31,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
+    "fotmobId": 6262,
+    "played": 10,
+    "wins": 7,
+    "draws": 3,
     "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:42:11.904Z"
+    "goalsFor": 22,
+    "goalsAgainst": 6,
+    "goalDiff": 16,
+    "winRate": 70,
+    "avgGoalsFor": 2.2,
+    "avgGoalsAgainst": 0.6,
+    "ppg": 2.4,
+    "formScore": 82,
+    "recentForm": "DWWWWWDWWD",
+    "matches": [
+      {
+        "date": "2025-12-26",
+        "opponent": "Mali",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Africa Cup of Nations Grp. A",
+        "home": true
+      },
+      {
+        "date": "2025-12-29",
+        "opponent": "Zambia",
+        "result": "W",
+        "score": "3-0",
+        "competition": "Africa Cup of Nations Grp. A",
+        "home": false
+      },
+      {
+        "date": "2026-01-04",
+        "opponent": "Tanzania",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Africa Cup of Nations",
+        "home": true
+      },
+      {
+        "date": "2026-01-09",
+        "opponent": "Cameroon",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Africa Cup of Nations",
+        "home": false
+      },
+      {
+        "date": "2026-01-14",
+        "opponent": "Nigeria",
+        "result": "W",
+        "score": "4-2",
+        "competition": "Africa Cup of Nations",
+        "home": false
+      },
+      {
+        "date": "2026-01-18",
+        "opponent": "Senegal",
+        "result": "W",
+        "score": "3-0",
+        "competition": "Africa Cup of Nations",
+        "home": false
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Ecuador",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Paraguay",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-02",
+        "opponent": "Madagascar",
+        "result": "W",
+        "score": "4-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-07",
+        "opponent": "Norway",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:11.680Z"
   },
   "Algeria": {
     "apiId": 46,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:42:26.474Z"
+    "fotmobId": 6317,
+    "played": 10,
+    "wins": 7,
+    "draws": 1,
+    "losses": 2,
+    "goalsFor": 27,
+    "goalsAgainst": 11,
+    "goalDiff": 16,
+    "winRate": 70,
+    "avgGoalsFor": 2.7,
+    "avgGoalsAgainst": 1.1,
+    "ppg": 2.2,
+    "formScore": 76,
+    "recentForm": "LWWWWLWDWW",
+    "matches": [
+      {
+        "date": "2025-12-12",
+        "opponent": "UAE",
+        "result": "L",
+        "score": "7-8",
+        "competition": "FIFA Arab Cup",
+        "home": true
+      },
+      {
+        "date": "2025-12-24",
+        "opponent": "Sudan",
+        "result": "W",
+        "score": "3-0",
+        "competition": "Africa Cup of Nations Grp. E",
+        "home": true
+      },
+      {
+        "date": "2025-12-28",
+        "opponent": "Burkina Faso",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Africa Cup of Nations Grp. E",
+        "home": true
+      },
+      {
+        "date": "2025-12-31",
+        "opponent": "Equatorial Guinea",
+        "result": "W",
+        "score": "3-1",
+        "competition": "Africa Cup of Nations Grp. E",
+        "home": false
+      },
+      {
+        "date": "2026-01-06",
+        "opponent": "DR Congo",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Africa Cup of Nations",
+        "home": true
+      },
+      {
+        "date": "2026-01-10",
+        "opponent": "Nigeria",
+        "result": "L",
+        "score": "0-2",
+        "competition": "Africa Cup of Nations",
+        "home": true
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Guatemala",
+        "result": "W",
+        "score": "7-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Uruguay",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-03",
+        "opponent": "Netherlands",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-11",
+        "opponent": "Bolivia",
+        "result": "W",
+        "score": "4-0",
+        "competition": "Friendlies",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:41.135Z"
   },
   "Senegal": {
     "apiId": 37,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:42:43.308Z"
+    "fotmobId": 6395,
+    "played": 10,
+    "wins": 6,
+    "draws": 2,
+    "losses": 2,
+    "goalsFor": 16,
+    "goalsAgainst": 9,
+    "goalDiff": 7,
+    "winRate": 60,
+    "avgGoalsFor": 1.6,
+    "avgGoalsAgainst": 0.9,
+    "ppg": 2,
+    "formScore": 67,
+    "recentForm": "DWWWWLWWLD",
+    "matches": [
+      {
+        "date": "2025-12-27",
+        "opponent": "DR Congo",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Africa Cup of Nations Grp. D",
+        "home": true
+      },
+      {
+        "date": "2025-12-30",
+        "opponent": "Benin",
+        "result": "W",
+        "score": "3-0",
+        "competition": "Africa Cup of Nations Grp. D",
+        "home": false
+      },
+      {
+        "date": "2026-01-03",
+        "opponent": "Sudan",
+        "result": "W",
+        "score": "3-1",
+        "competition": "Africa Cup of Nations",
+        "home": true
+      },
+      {
+        "date": "2026-01-09",
+        "opponent": "Mali",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Africa Cup of Nations",
+        "home": false
+      },
+      {
+        "date": "2026-01-14",
+        "opponent": "Egypt",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Africa Cup of Nations",
+        "home": true
+      },
+      {
+        "date": "2026-01-18",
+        "opponent": "Morocco",
+        "result": "L",
+        "score": "0-3",
+        "competition": "Africa Cup of Nations",
+        "home": true
+      },
+      {
+        "date": "2026-03-28",
+        "opponent": "Peru",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Gambia",
+        "result": "W",
+        "score": "3-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-05-31",
+        "opponent": "USA",
+        "result": "L",
+        "score": "2-3",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-09",
+        "opponent": "Saudi Arabia",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:31.976Z"
   },
   "Ivory Coast": {
     "apiId": 42,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:42:57.647Z"
+    "fotmobId": 6709,
+    "played": 10,
+    "wins": 7,
+    "draws": 1,
+    "losses": 2,
+    "goalsFor": 19,
+    "goalsAgainst": 8,
+    "goalDiff": 11,
+    "winRate": 70,
+    "avgGoalsFor": 1.9,
+    "avgGoalsAgainst": 0.8,
+    "ppg": 2.2,
+    "formScore": 74,
+    "recentForm": "LWWDWWLWWW",
+    "matches": [
+      {
+        "date": "2025-11-14",
+        "opponent": "Saudi Arabia",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-18",
+        "opponent": "Oman",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-12-24",
+        "opponent": "Mozambique",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Africa Cup of Nations Grp. F",
+        "home": true
+      },
+      {
+        "date": "2025-12-28",
+        "opponent": "Cameroon",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Africa Cup of Nations Grp. F",
+        "home": true
+      },
+      {
+        "date": "2025-12-31",
+        "opponent": "Gabon",
+        "result": "W",
+        "score": "3-2",
+        "competition": "Africa Cup of Nations Grp. F",
+        "home": false
+      },
+      {
+        "date": "2026-01-06",
+        "opponent": "Burkina Faso",
+        "result": "W",
+        "score": "3-0",
+        "competition": "Africa Cup of Nations",
+        "home": true
+      },
+      {
+        "date": "2026-01-10",
+        "opponent": "Egypt",
+        "result": "L",
+        "score": "2-3",
+        "competition": "Africa Cup of Nations",
+        "home": false
+      },
+      {
+        "date": "2026-03-28",
+        "opponent": "South Korea",
+        "result": "W",
+        "score": "4-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Scotland",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-04",
+        "opponent": "France",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:19.139Z"
   },
   "Egypt": {
     "apiId": 36,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:43:12.018Z"
+    "fotmobId": 10255,
+    "played": 10,
+    "wins": 5,
+    "draws": 2,
+    "losses": 3,
+    "goalsFor": 15,
+    "goalsAgainst": 10,
+    "goalDiff": 5,
+    "winRate": 50,
+    "avgGoalsFor": 1.5,
+    "avgGoalsAgainst": 1,
+    "ppg": 1.7,
+    "formScore": 58,
+    "recentForm": "WDWWLLWDWL",
+    "matches": [
+      {
+        "date": "2025-12-26",
+        "opponent": "South Africa",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Africa Cup of Nations Grp. B",
+        "home": true
+      },
+      {
+        "date": "2025-12-29",
+        "opponent": "Angola",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Africa Cup of Nations Grp. B",
+        "home": false
+      },
+      {
+        "date": "2026-01-05",
+        "opponent": "Benin",
+        "result": "W",
+        "score": "3-1",
+        "competition": "Africa Cup of Nations",
+        "home": true
+      },
+      {
+        "date": "2026-01-10",
+        "opponent": "Ivory Coast",
+        "result": "W",
+        "score": "3-2",
+        "competition": "Africa Cup of Nations",
+        "home": true
+      },
+      {
+        "date": "2026-01-14",
+        "opponent": "Senegal",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Africa Cup of Nations",
+        "home": false
+      },
+      {
+        "date": "2026-01-17",
+        "opponent": "Nigeria",
+        "result": "L",
+        "score": "2-4",
+        "competition": "Africa Cup of Nations",
+        "home": true
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Saudi Arabia",
+        "result": "W",
+        "score": "4-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Spain",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-05-28",
+        "opponent": "Russia",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "Brazil",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:29.055Z"
   },
   "Tunisia": {
     "apiId": 49,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:43:26.337Z"
+    "fotmobId": 6719,
+    "played": 10,
+    "wins": 3,
+    "draws": 3,
+    "losses": 4,
+    "goalsFor": 15,
+    "goalsAgainst": 17,
+    "goalDiff": -2,
+    "winRate": 30,
+    "avgGoalsFor": 1.5,
+    "avgGoalsAgainst": 1.7,
+    "ppg": 1.2,
+    "formScore": 41,
+    "recentForm": "DWWLDLWDLL",
+    "matches": [
+      {
+        "date": "2025-12-04",
+        "opponent": "Palestine",
+        "result": "D",
+        "score": "2-2",
+        "competition": "FIFA Arab Cup",
+        "home": false
+      },
+      {
+        "date": "2025-12-07",
+        "opponent": "Qatar",
+        "result": "W",
+        "score": "3-0",
+        "competition": "FIFA Arab Cup",
+        "home": false
+      },
+      {
+        "date": "2025-12-23",
+        "opponent": "Uganda",
+        "result": "W",
+        "score": "3-1",
+        "competition": "Africa Cup of Nations Grp. C",
+        "home": true
+      },
+      {
+        "date": "2025-12-27",
+        "opponent": "Nigeria",
+        "result": "L",
+        "score": "2-3",
+        "competition": "Africa Cup of Nations Grp. C",
+        "home": false
+      },
+      {
+        "date": "2025-12-30",
+        "opponent": "Tanzania",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Africa Cup of Nations Grp. C",
+        "home": false
+      },
+      {
+        "date": "2026-01-03",
+        "opponent": "Mali",
+        "result": "L",
+        "score": "3-4",
+        "competition": "Africa Cup of Nations",
+        "home": false
+      },
+      {
+        "date": "2026-03-29",
+        "opponent": "Haiti",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-04-01",
+        "opponent": "Canada",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-01",
+        "opponent": "Austria",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "Belgium",
+        "result": "L",
+        "score": "0-5",
+        "competition": "Friendlies",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:22.710Z"
   },
   "Ghana": {
     "apiId": 22,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:43:40.741Z"
+    "fotmobId": 6714,
+    "played": 10,
+    "wins": 3,
+    "draws": 1,
+    "losses": 6,
+    "goalsFor": 10,
+    "goalsAgainst": 14,
+    "goalDiff": -4,
+    "winRate": 30,
+    "avgGoalsFor": 1,
+    "avgGoalsAgainst": 1.4,
+    "ppg": 1,
+    "formScore": 34,
+    "recentForm": "WWWLLLLLLD",
+    "matches": [
+      {
+        "date": "2025-09-08",
+        "opponent": "Mali",
+        "result": "W",
+        "score": "1-0",
+        "competition": "World Cup Qualification CAF Grp. I",
+        "home": true
+      },
+      {
+        "date": "2025-10-08",
+        "opponent": "Central African Republic",
+        "result": "W",
+        "score": "5-0",
+        "competition": "World Cup Qualification CAF Grp. I",
+        "home": false
+      },
+      {
+        "date": "2025-10-12",
+        "opponent": "Comoros",
+        "result": "W",
+        "score": "1-0",
+        "competition": "World Cup Qualification CAF Grp. I",
+        "home": true
+      },
+      {
+        "date": "2025-11-14",
+        "opponent": "Japan",
+        "result": "L",
+        "score": "0-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-18",
+        "opponent": "South Korea",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-12-16",
+        "opponent": "South Africa",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Austria",
+        "result": "L",
+        "score": "1-5",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-30",
+        "opponent": "Germany",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-05-23",
+        "opponent": "Mexico",
+        "result": "L",
+        "score": "0-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-02",
+        "opponent": "Wales",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:37.381Z"
   },
   "South Africa": {
     "apiId": 181,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
+    "fotmobId": 6316,
+    "played": 10,
+    "wins": 4,
+    "draws": 2,
+    "losses": 4,
+    "goalsFor": 12,
+    "goalsAgainst": 12,
     "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:43:55.097Z"
+    "winRate": 40,
+    "avgGoalsFor": 1.2,
+    "avgGoalsAgainst": 1.2,
+    "ppg": 1.4,
+    "formScore": 47,
+    "recentForm": "WWWLWLDLDL",
+    "matches": [
+      {
+        "date": "2025-11-15",
+        "opponent": "Zambia",
+        "result": "W",
+        "score": "3-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-12-16",
+        "opponent": "Ghana",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-12-22",
+        "opponent": "Angola",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Africa Cup of Nations Grp. B",
+        "home": true
+      },
+      {
+        "date": "2025-12-26",
+        "opponent": "Egypt",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Africa Cup of Nations Grp. B",
+        "home": false
+      },
+      {
+        "date": "2025-12-29",
+        "opponent": "Zimbabwe",
+        "result": "W",
+        "score": "3-2",
+        "competition": "Africa Cup of Nations Grp. B",
+        "home": false
+      },
+      {
+        "date": "2026-01-04",
+        "opponent": "Cameroon",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Africa Cup of Nations",
+        "home": true
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Panama",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Panama",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-05-29",
+        "opponent": "Nicaragua",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-11",
+        "opponent": "Mexico",
+        "result": "L",
+        "score": "0-2",
+        "competition": "World Cup Grp. A",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:17:04.966Z"
   },
   "Cape Verde": {
     "apiId": 204,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:44:09.460Z"
+    "fotmobId": 5888,
+    "played": 9,
+    "wins": 5,
+    "draws": 1,
+    "losses": 3,
+    "goalsFor": 24,
+    "goalsAgainst": 18,
+    "goalDiff": 6,
+    "winRate": 55.6,
+    "avgGoalsFor": 2.67,
+    "avgGoalsAgainst": 2,
+    "ppg": 1.78,
+    "formScore": 60,
+    "recentForm": "WWDWLLLWW",
+    "matches": [
+      {
+        "date": "2025-09-04",
+        "opponent": "Mauritius",
+        "result": "W",
+        "score": "2-0",
+        "competition": "World Cup Qualification CAF Grp. D",
+        "home": false
+      },
+      {
+        "date": "2025-09-09",
+        "opponent": "Cameroon",
+        "result": "W",
+        "score": "1-0",
+        "competition": "World Cup Qualification CAF Grp. D",
+        "home": true
+      },
+      {
+        "date": "2025-10-08",
+        "opponent": "Libya",
+        "result": "D",
+        "score": "3-3",
+        "competition": "World Cup Qualification CAF Grp. D",
+        "home": false
+      },
+      {
+        "date": "2025-10-13",
+        "opponent": "Eswatini",
+        "result": "W",
+        "score": "3-0",
+        "competition": "World Cup Qualification CAF Grp. D",
+        "home": true
+      },
+      {
+        "date": "2025-11-13",
+        "opponent": "Iran",
+        "result": "L",
+        "score": "4-5",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-17",
+        "opponent": "Egypt",
+        "result": "L",
+        "score": "1-3",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Chile",
+        "result": "L",
+        "score": "2-4",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-30",
+        "opponent": "Finland",
+        "result": "W",
+        "score": "5-3",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-05-31",
+        "opponent": "Serbia",
+        "result": "W",
+        "score": "3-0",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:25.855Z"
   },
   "DR Congo": {
     "apiId": 164,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:44:23.887Z"
+    "fotmobId": 6321,
+    "played": 10,
+    "wins": 6,
+    "draws": 2,
+    "losses": 2,
+    "goalsFor": 15,
+    "goalsAgainst": 8,
+    "goalDiff": 7,
+    "winRate": 60,
+    "avgGoalsFor": 1.5,
+    "avgGoalsAgainst": 0.8,
+    "ppg": 2,
+    "formScore": 67,
+    "recentForm": "WWWDWLWWDL",
+    "matches": [
+      {
+        "date": "2025-11-13",
+        "opponent": "Cameroon",
+        "result": "W",
+        "score": "1-0",
+        "competition": "World Cup Qualification CAF",
+        "home": false
+      },
+      {
+        "date": "2025-11-16",
+        "opponent": "Nigeria",
+        "result": "W",
+        "score": "5-4",
+        "competition": "World Cup Qualification CAF",
+        "home": false
+      },
+      {
+        "date": "2025-12-23",
+        "opponent": "Benin",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Africa Cup of Nations Grp. D",
+        "home": true
+      },
+      {
+        "date": "2025-12-27",
+        "opponent": "Senegal",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Africa Cup of Nations Grp. D",
+        "home": false
+      },
+      {
+        "date": "2025-12-30",
+        "opponent": "Botswana",
+        "result": "W",
+        "score": "3-0",
+        "competition": "Africa Cup of Nations Grp. D",
+        "home": false
+      },
+      {
+        "date": "2026-01-06",
+        "opponent": "Algeria",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Africa Cup of Nations",
+        "home": false
+      },
+      {
+        "date": "2026-03-25",
+        "opponent": "Bermuda",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Jamaica",
+        "result": "W",
+        "score": "1-0",
+        "competition": "World Cup Qualification Inter-Confederation Playoff",
+        "home": true
+      },
+      {
+        "date": "2026-06-03",
+        "opponent": "Denmark",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-09",
+        "opponent": "Chile",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:10.243Z"
   },
   "Japan": {
     "apiId": 30,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:44:38.257Z"
+    "fotmobId": 6715,
+    "played": 9,
+    "wins": 6,
+    "draws": 2,
+    "losses": 1,
+    "goalsFor": 13,
+    "goalsAgainst": 6,
+    "goalDiff": 7,
+    "winRate": 66.7,
+    "avgGoalsFor": 1.44,
+    "avgGoalsAgainst": 0.67,
+    "ppg": 2.22,
+    "formScore": 73,
+    "recentForm": "DLDWWWWWW",
+    "matches": [
+      {
+        "date": "2025-09-07",
+        "opponent": "Mexico",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-09-09",
+        "opponent": "USA",
+        "result": "L",
+        "score": "0-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-10-10",
+        "opponent": "Paraguay",
+        "result": "D",
+        "score": "2-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-10-14",
+        "opponent": "Brazil",
+        "result": "W",
+        "score": "3-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-11-14",
+        "opponent": "Ghana",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-11-18",
+        "opponent": "Bolivia",
+        "result": "W",
+        "score": "3-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-28",
+        "opponent": "Scotland",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "England",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-05-31",
+        "opponent": "Iceland",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:21.075Z"
   },
   "South Korea": {
     "apiId": 48,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:44:52.631Z"
+    "fotmobId": 7804,
+    "played": 10,
+    "wins": 6,
+    "draws": 1,
+    "losses": 3,
+    "goalsFor": 15,
+    "goalsAgainst": 13,
+    "goalDiff": 2,
+    "winRate": 60,
+    "avgGoalsFor": 1.5,
+    "avgGoalsAgainst": 1.3,
+    "ppg": 1.9,
+    "formScore": 62,
+    "recentForm": "DLWWWLLWWW",
+    "matches": [
+      {
+        "date": "2025-09-10",
+        "opponent": "Mexico",
+        "result": "D",
+        "score": "2-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-10-10",
+        "opponent": "Brazil",
+        "result": "L",
+        "score": "0-5",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-10-14",
+        "opponent": "Paraguay",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-11-14",
+        "opponent": "Bolivia",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-11-18",
+        "opponent": "Ghana",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-28",
+        "opponent": "Ivory Coast",
+        "result": "L",
+        "score": "0-4",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Austria",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-05-31",
+        "opponent": "Trinidad and Tobago",
+        "result": "W",
+        "score": "5-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-04",
+        "opponent": "El Salvador",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-12",
+        "opponent": "Czechia",
+        "result": "W",
+        "score": "2-1",
+        "competition": "World Cup Grp. A",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:14.807Z"
   },
   "Iran": {
     "apiId": 45,
-    "played": 0,
-    "wins": 0,
+    "fotmobId": 6711,
+    "played": 6,
+    "wins": 3,
     "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:45:06.985Z"
+    "losses": 3,
+    "goalsFor": 15,
+    "goalsAgainst": 13,
+    "goalDiff": 2,
+    "winRate": 50,
+    "avgGoalsFor": 2.5,
+    "avgGoalsAgainst": 2.17,
+    "ppg": 1.5,
+    "formScore": 51,
+    "recentForm": "LWWLLW",
+    "matches": [
+      {
+        "date": "2025-10-10",
+        "opponent": "Russia",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-10-14",
+        "opponent": "Tanzania",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-11-13",
+        "opponent": "Cape Verde",
+        "result": "W",
+        "score": "5-4",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-11-18",
+        "opponent": "Uzbekistan",
+        "result": "L",
+        "score": "3-4",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Nigeria",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-05-29",
+        "opponent": "Gambia",
+        "result": "W",
+        "score": "3-1",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:29.746Z"
   },
   "Saudi Arabia": {
     "apiId": 60,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:45:21.327Z"
+    "fotmobId": 7795,
+    "played": 10,
+    "wins": 3,
+    "draws": 2,
+    "losses": 5,
+    "goalsFor": 10,
+    "goalsAgainst": 12,
+    "goalDiff": -2,
+    "winRate": 30,
+    "avgGoalsFor": 1,
+    "avgGoalsAgainst": 1.2,
+    "ppg": 1.1,
+    "formScore": 38,
+    "recentForm": "WLWLDLLLWD",
+    "matches": [
+      {
+        "date": "2025-12-05",
+        "opponent": "Comoros",
+        "result": "W",
+        "score": "3-1",
+        "competition": "FIFA Arab Cup",
+        "home": false
+      },
+      {
+        "date": "2025-12-08",
+        "opponent": "Morocco",
+        "result": "L",
+        "score": "0-1",
+        "competition": "FIFA Arab Cup",
+        "home": false
+      },
+      {
+        "date": "2025-12-11",
+        "opponent": "Palestine",
+        "result": "W",
+        "score": "2-1",
+        "competition": "FIFA Arab Cup",
+        "home": false
+      },
+      {
+        "date": "2025-12-15",
+        "opponent": "Jordan",
+        "result": "L",
+        "score": "0-1",
+        "competition": "FIFA Arab Cup",
+        "home": true
+      },
+      {
+        "date": "2025-12-18",
+        "opponent": "UAE",
+        "result": "D",
+        "score": "0-0",
+        "competition": "FIFA Arab Cup",
+        "home": true
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Egypt",
+        "result": "L",
+        "score": "0-4",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Serbia",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-05-31",
+        "opponent": "Ecuador",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-05",
+        "opponent": "Puerto Rico",
+        "result": "W",
+        "score": "3-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-09",
+        "opponent": "Senegal",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:26.820Z"
   },
   "Uzbekistan": {
     "apiId": 330,
-    "played": 0,
-    "wins": 0,
+    "fotmobId": 8700,
+    "played": 7,
+    "wins": 4,
     "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:45:35.679Z"
+    "losses": 3,
+    "goalsFor": 16,
+    "goalsAgainst": 14,
+    "goalDiff": 2,
+    "winRate": 57.1,
+    "avgGoalsFor": 2.29,
+    "avgGoalsAgainst": 2,
+    "ppg": 1.71,
+    "formScore": 57,
+    "recentForm": "LWWWWLL",
+    "matches": [
+      {
+        "date": "2025-10-13",
+        "opponent": "Uruguay",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-11-14",
+        "opponent": "Egypt",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-11-18",
+        "opponent": "Iran",
+        "result": "W",
+        "score": "4-3",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Gabon",
+        "result": "W",
+        "score": "3-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-30",
+        "opponent": "Venezuela",
+        "result": "W",
+        "score": "5-4",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-02",
+        "opponent": "Canada",
+        "result": "L",
+        "score": "0-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-08",
+        "opponent": "Netherlands",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:03.755Z"
   },
   "Jordan": {
     "apiId": 163,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:45:50.018Z"
+    "fotmobId": 5816,
+    "played": 10,
+    "wins": 5,
+    "draws": 2,
+    "losses": 3,
+    "goalsFor": 15,
+    "goalsAgainst": 13,
+    "goalDiff": 2,
+    "winRate": 50,
+    "avgGoalsFor": 1.5,
+    "avgGoalsAgainst": 1.3,
+    "ppg": 1.7,
+    "formScore": 56,
+    "recentForm": "DWWWWWLDLL",
+    "matches": [
+      {
+        "date": "2025-11-18",
+        "opponent": "Mali",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-12-03",
+        "opponent": "UAE",
+        "result": "W",
+        "score": "2-1",
+        "competition": "FIFA Arab Cup",
+        "home": true
+      },
+      {
+        "date": "2025-12-06",
+        "opponent": "Kuwait",
+        "result": "W",
+        "score": "3-1",
+        "competition": "FIFA Arab Cup",
+        "home": false
+      },
+      {
+        "date": "2025-12-09",
+        "opponent": "Egypt",
+        "result": "W",
+        "score": "3-0",
+        "competition": "FIFA Arab Cup",
+        "home": false
+      },
+      {
+        "date": "2025-12-12",
+        "opponent": "Iraq",
+        "result": "W",
+        "score": "1-0",
+        "competition": "FIFA Arab Cup",
+        "home": true
+      },
+      {
+        "date": "2025-12-15",
+        "opponent": "Saudi Arabia",
+        "result": "W",
+        "score": "1-0",
+        "competition": "FIFA Arab Cup",
+        "home": false
+      },
+      {
+        "date": "2025-12-18",
+        "opponent": "Morocco",
+        "result": "L",
+        "score": "2-3",
+        "competition": "FIFA Arab Cup",
+        "home": true
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Costa Rica",
+        "result": "D",
+        "score": "2-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-05-31",
+        "opponent": "Switzerland",
+        "result": "L",
+        "score": "1-4",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-07",
+        "opponent": "Colombia",
+        "result": "L",
+        "score": "0-2",
+        "competition": "Friendlies",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:41.827Z"
   },
   "Iraq": {
     "apiId": 162,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:46:04.412Z"
+    "fotmobId": 5819,
+    "played": 10,
+    "wins": 5,
+    "draws": 2,
+    "losses": 3,
+    "goalsFor": 11,
+    "goalsAgainst": 10,
+    "goalDiff": 1,
+    "winRate": 50,
+    "avgGoalsFor": 1.1,
+    "avgGoalsAgainst": 1,
+    "ppg": 1.7,
+    "formScore": 56,
+    "recentForm": "DWWWLLWWDL",
+    "matches": [
+      {
+        "date": "2025-11-13",
+        "opponent": "UAE",
+        "result": "D",
+        "score": "1-1",
+        "competition": "World Cup Qualification AFC 5th Round",
+        "home": false
+      },
+      {
+        "date": "2025-11-18",
+        "opponent": "UAE",
+        "result": "W",
+        "score": "2-1",
+        "competition": "World Cup Qualification AFC 5th Round",
+        "home": true
+      },
+      {
+        "date": "2025-12-03",
+        "opponent": "Bahrain",
+        "result": "W",
+        "score": "2-1",
+        "competition": "FIFA Arab Cup",
+        "home": true
+      },
+      {
+        "date": "2025-12-06",
+        "opponent": "Sudan",
+        "result": "W",
+        "score": "2-0",
+        "competition": "FIFA Arab Cup",
+        "home": false
+      },
+      {
+        "date": "2025-12-09",
+        "opponent": "Algeria",
+        "result": "L",
+        "score": "0-2",
+        "competition": "FIFA Arab Cup",
+        "home": false
+      },
+      {
+        "date": "2025-12-12",
+        "opponent": "Jordan",
+        "result": "L",
+        "score": "0-1",
+        "competition": "FIFA Arab Cup",
+        "home": false
+      },
+      {
+        "date": "2026-04-01",
+        "opponent": "Bolivia",
+        "result": "W",
+        "score": "2-1",
+        "competition": "World Cup Qualification Inter-Confederation Playoff",
+        "home": true
+      },
+      {
+        "date": "2026-05-29",
+        "opponent": "Andorra",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-04",
+        "opponent": "Spain",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-10",
+        "opponent": "Venezuela",
+        "result": "L",
+        "score": "0-2",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:32.666Z"
   },
   "Qatar": {
     "apiId": 184,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:46:18.741Z"
+    "fotmobId": 5902,
+    "played": 9,
+    "wins": 1,
+    "draws": 3,
+    "losses": 5,
+    "goalsFor": 5,
+    "goalsAgainst": 13,
+    "goalDiff": -8,
+    "winRate": 11.1,
+    "avgGoalsFor": 0.56,
+    "avgGoalsAgainst": 1.44,
+    "ppg": 0.67,
+    "formScore": 23,
+    "recentForm": "LDWLLDLLD",
+    "matches": [
+      {
+        "date": "2025-09-07",
+        "opponent": "Russia",
+        "result": "L",
+        "score": "1-4",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-10-08",
+        "opponent": "Oman",
+        "result": "D",
+        "score": "0-0",
+        "competition": "World Cup Qualification AFC 4th Round Grp. A",
+        "home": false
+      },
+      {
+        "date": "2025-10-14",
+        "opponent": "UAE",
+        "result": "W",
+        "score": "2-1",
+        "competition": "World Cup Qualification AFC 4th Round Grp. A",
+        "home": true
+      },
+      {
+        "date": "2025-11-17",
+        "opponent": "Zimbabwe",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-12-01",
+        "opponent": "Palestine",
+        "result": "L",
+        "score": "0-1",
+        "competition": "FIFA Arab Cup",
+        "home": true
+      },
+      {
+        "date": "2025-12-04",
+        "opponent": "Syria",
+        "result": "D",
+        "score": "1-1",
+        "competition": "FIFA Arab Cup",
+        "home": false
+      },
+      {
+        "date": "2025-12-07",
+        "opponent": "Tunisia",
+        "result": "L",
+        "score": "0-3",
+        "competition": "FIFA Arab Cup",
+        "home": true
+      },
+      {
+        "date": "2026-05-28",
+        "opponent": "Ireland",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "El Salvador",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:09.497Z"
   },
   "Australia": {
     "apiId": 24,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:46:33.368Z"
+    "fotmobId": 6716,
+    "played": 10,
+    "wins": 5,
+    "draws": 1,
+    "losses": 4,
+    "goalsFor": 13,
+    "goalsAgainst": 10,
+    "goalDiff": 3,
+    "winRate": 50,
+    "avgGoalsFor": 1.3,
+    "avgGoalsAgainst": 1,
+    "ppg": 1.6,
+    "formScore": 54,
+    "recentForm": "WWWLLLWWLD",
+    "matches": [
+      {
+        "date": "2025-09-05",
+        "opponent": "New Zealand",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-09-09",
+        "opponent": "New Zealand",
+        "result": "W",
+        "score": "3-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-10-10",
+        "opponent": "Canada",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-10-15",
+        "opponent": "USA",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-15",
+        "opponent": "Venezuela",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-19",
+        "opponent": "Colombia",
+        "result": "L",
+        "score": "0-3",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Cameroon",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Curacao",
+        "result": "W",
+        "score": "5-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-05-31",
+        "opponent": "Mexico",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "Switzerland",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:17.841Z"
   },
   "USA": {
     "apiId": 13,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:46:47.679Z"
+    "fotmobId": 6713,
+    "played": 10,
+    "wins": 6,
+    "draws": 1,
+    "losses": 3,
+    "goalsFor": 22,
+    "goalsAgainst": 16,
+    "goalDiff": 6,
+    "winRate": 60,
+    "avgGoalsFor": 2.2,
+    "avgGoalsAgainst": 1.6,
+    "ppg": 1.9,
+    "formScore": 64,
+    "recentForm": "WDWWWLLWLW",
+    "matches": [
+      {
+        "date": "2025-09-09",
+        "opponent": "Japan",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-10-11",
+        "opponent": "Ecuador",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-10-15",
+        "opponent": "Australia",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-11-15",
+        "opponent": "Paraguay",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-11-19",
+        "opponent": "Uruguay",
+        "result": "W",
+        "score": "5-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-28",
+        "opponent": "Belgium",
+        "result": "L",
+        "score": "2-5",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Portugal",
+        "result": "L",
+        "score": "0-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-05-31",
+        "opponent": "Senegal",
+        "result": "W",
+        "score": "3-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "Germany",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-13",
+        "opponent": "Paraguay",
+        "result": "W",
+        "score": "4-1",
+        "competition": "World Cup Grp. D",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:15.704Z"
   },
   "Mexico": {
     "apiId": 16,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:47:02.003Z"
+    "fotmobId": 6710,
+    "played": 10,
+    "wins": 7,
+    "draws": 2,
+    "losses": 1,
+    "goalsFor": 18,
+    "goalsAgainst": 4,
+    "goalDiff": 14,
+    "winRate": 70,
+    "avgGoalsFor": 1.8,
+    "avgGoalsAgainst": 0.4,
+    "ppg": 2.3,
+    "formScore": 78,
+    "recentForm": "LWWWDDWWWW",
+    "matches": [
+      {
+        "date": "2025-11-19",
+        "opponent": "Paraguay",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-01-23",
+        "opponent": "Panama",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-01-25",
+        "opponent": "Bolivia",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-02-26",
+        "opponent": "Iceland",
+        "result": "W",
+        "score": "4-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-29",
+        "opponent": "Portugal",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-04-01",
+        "opponent": "Belgium",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-05-23",
+        "opponent": "Ghana",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-05-31",
+        "opponent": "Australia",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-05",
+        "opponent": "Serbia",
+        "result": "W",
+        "score": "5-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-11",
+        "opponent": "South Africa",
+        "result": "W",
+        "score": "2-0",
+        "competition": "World Cup Grp. A",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:17:03.805Z"
   },
   "Canada": {
     "apiId": 43,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:47:16.323Z"
+    "fotmobId": 5810,
+    "played": 10,
+    "wins": 3,
+    "draws": 6,
+    "losses": 1,
+    "goalsFor": 9,
+    "goalsAgainst": 5,
+    "goalDiff": 4,
+    "winRate": 30,
+    "avgGoalsFor": 0.9,
+    "avgGoalsAgainst": 0.5,
+    "ppg": 1.5,
+    "formScore": 52,
+    "recentForm": "LDDWWDDWDD",
+    "matches": [
+      {
+        "date": "2025-10-10",
+        "opponent": "Australia",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-10-15",
+        "opponent": "Colombia",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-11-14",
+        "opponent": "Ecuador",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-11-19",
+        "opponent": "Venezuela",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-01-18",
+        "opponent": "Guatemala",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-28",
+        "opponent": "Iceland",
+        "result": "D",
+        "score": "2-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-04-01",
+        "opponent": "Tunisia",
+        "result": "D",
+        "score": "0-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-02",
+        "opponent": "Uzbekistan",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-05",
+        "opponent": "Ireland",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-12",
+        "opponent": "Bosnia and Herzegovina",
+        "result": "D",
+        "score": "1-1",
+        "competition": "World Cup Grp. B",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:08.762Z"
   },
   "Panama": {
     "apiId": 130,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:47:30.722Z"
+    "fotmobId": 5922,
+    "played": 10,
+    "wins": 4,
+    "draws": 4,
+    "losses": 2,
+    "goalsFor": 18,
+    "goalsAgainst": 16,
+    "goalDiff": 2,
+    "winRate": 40,
+    "avgGoalsFor": 1.8,
+    "avgGoalsAgainst": 1.6,
+    "ppg": 1.6,
+    "formScore": 54,
+    "recentForm": "DWWDLDWLWD",
+    "matches": [
+      {
+        "date": "2025-10-15",
+        "opponent": "Suriname",
+        "result": "D",
+        "score": "1-1",
+        "competition": "World Cup Qualification CONCACAF 3rd Round Grp. A",
+        "home": true
+      },
+      {
+        "date": "2025-11-14",
+        "opponent": "Guatemala",
+        "result": "W",
+        "score": "3-2",
+        "competition": "World Cup Qualification CONCACAF 3rd Round Grp. A",
+        "home": false
+      },
+      {
+        "date": "2025-11-19",
+        "opponent": "El Salvador",
+        "result": "W",
+        "score": "3-0",
+        "competition": "World Cup Qualification CONCACAF 3rd Round Grp. A",
+        "home": true
+      },
+      {
+        "date": "2026-01-18",
+        "opponent": "Bolivia",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-01-23",
+        "opponent": "Mexico",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "South Africa",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "South Africa",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-05-31",
+        "opponent": "Brazil",
+        "result": "L",
+        "score": "2-6",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-04",
+        "opponent": "Dominican Republic",
+        "result": "W",
+        "score": "4-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "Bosnia and Herzegovina",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:38.171Z"
   },
   "Haiti": {
     "apiId": 274,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:47:45.073Z"
+    "fotmobId": 5934,
+    "played": 10,
+    "wins": 4,
+    "draws": 3,
+    "losses": 3,
+    "goalsFor": 15,
+    "goalsAgainst": 10,
+    "goalDiff": 5,
+    "winRate": 40,
+    "avgGoalsFor": 1.5,
+    "avgGoalsAgainst": 1,
+    "ppg": 1.5,
+    "formScore": 52,
+    "recentForm": "DDWLWWLDWL",
+    "matches": [
+      {
+        "date": "2025-09-06",
+        "opponent": "Honduras",
+        "result": "D",
+        "score": "0-0",
+        "competition": "World Cup Qualification CONCACAF 3rd Round Grp. C",
+        "home": true
+      },
+      {
+        "date": "2025-09-10",
+        "opponent": "Costa Rica",
+        "result": "D",
+        "score": "3-3",
+        "competition": "World Cup Qualification CONCACAF 3rd Round Grp. C",
+        "home": false
+      },
+      {
+        "date": "2025-10-10",
+        "opponent": "Nicaragua",
+        "result": "W",
+        "score": "3-0",
+        "competition": "World Cup Qualification CONCACAF 3rd Round Grp. C",
+        "home": false
+      },
+      {
+        "date": "2025-10-14",
+        "opponent": "Honduras",
+        "result": "L",
+        "score": "0-3",
+        "competition": "World Cup Qualification CONCACAF 3rd Round Grp. C",
+        "home": false
+      },
+      {
+        "date": "2025-11-14",
+        "opponent": "Costa Rica",
+        "result": "W",
+        "score": "1-0",
+        "competition": "World Cup Qualification CONCACAF 3rd Round Grp. C",
+        "home": true
+      },
+      {
+        "date": "2025-11-19",
+        "opponent": "Nicaragua",
+        "result": "W",
+        "score": "2-0",
+        "competition": "World Cup Qualification CONCACAF 3rd Round Grp. C",
+        "home": true
+      },
+      {
+        "date": "2026-03-29",
+        "opponent": "Tunisia",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Iceland",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-03",
+        "opponent": "New Zealand",
+        "result": "W",
+        "score": "4-0",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "Peru",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": true
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:12.944Z"
   },
   "Curaçao": {
     "apiId": 619,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
+    "fotmobId": 287981,
+    "played": 10,
+    "wins": 3,
+    "draws": 3,
+    "losses": 4,
+    "goalsFor": 16,
+    "goalsAgainst": 16,
     "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:47:59.418Z"
+    "winRate": 30,
+    "avgGoalsFor": 1.6,
+    "avgGoalsAgainst": 1.6,
+    "ppg": 1.2,
+    "formScore": 42,
+    "recentForm": "LDWWDWDLLL",
+    "matches": [
+      {
+        "date": "2025-06-25",
+        "opponent": "Honduras",
+        "result": "L",
+        "score": "1-2",
+        "competition": "CONCACAF Gold Cup Grp. B",
+        "home": false
+      },
+      {
+        "date": "2025-09-06",
+        "opponent": "Trinidad and Tobago",
+        "result": "D",
+        "score": "0-0",
+        "competition": "World Cup Qualification CONCACAF 3rd Round Grp. B",
+        "home": false
+      },
+      {
+        "date": "2025-09-10",
+        "opponent": "Bermuda",
+        "result": "W",
+        "score": "3-2",
+        "competition": "World Cup Qualification CONCACAF 3rd Round Grp. B",
+        "home": true
+      },
+      {
+        "date": "2025-10-10",
+        "opponent": "Jamaica",
+        "result": "W",
+        "score": "2-0",
+        "competition": "World Cup Qualification CONCACAF 3rd Round Grp. B",
+        "home": true
+      },
+      {
+        "date": "2025-10-14",
+        "opponent": "Trinidad and Tobago",
+        "result": "D",
+        "score": "1-1",
+        "competition": "World Cup Qualification CONCACAF 3rd Round Grp. B",
+        "home": true
+      },
+      {
+        "date": "2025-11-14",
+        "opponent": "Bermuda",
+        "result": "W",
+        "score": "7-0",
+        "competition": "World Cup Qualification CONCACAF 3rd Round Grp. B",
+        "home": false
+      },
+      {
+        "date": "2025-11-19",
+        "opponent": "Jamaica",
+        "result": "D",
+        "score": "0-0",
+        "competition": "World Cup Qualification CONCACAF 3rd Round Grp. B",
+        "home": false
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "China",
+        "result": "L",
+        "score": "0-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-31",
+        "opponent": "Australia",
+        "result": "L",
+        "score": "1-5",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-05-30",
+        "opponent": "Scotland",
+        "result": "L",
+        "score": "1-4",
+        "competition": "Friendlies",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:18.539Z"
   },
   "New Zealand": {
     "apiId": 199,
-    "played": 0,
-    "wins": 0,
-    "draws": 0,
-    "losses": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "goalDiff": 0,
-    "winRate": 0,
-    "formScore": 0,
-    "recentForm": "",
-    "fetchedAt": "2026-05-20T02:48:13.760Z"
+    "fotmobId": 5820,
+    "played": 10,
+    "wins": 1,
+    "draws": 1,
+    "losses": 8,
+    "goalsFor": 7,
+    "goalsAgainst": 18,
+    "goalDiff": -11,
+    "winRate": 10,
+    "avgGoalsFor": 0.7,
+    "avgGoalsAgainst": 1.8,
+    "ppg": 0.4,
+    "formScore": 15,
+    "recentForm": "LLLDLLLWLL",
+    "matches": [
+      {
+        "date": "2025-09-05",
+        "opponent": "Australia",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-09-09",
+        "opponent": "Australia",
+        "result": "L",
+        "score": "1-3",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2025-10-09",
+        "opponent": "Poland",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-10-14",
+        "opponent": "Norway",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-16",
+        "opponent": "Colombia",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2025-11-19",
+        "opponent": "Ecuador",
+        "result": "L",
+        "score": "0-2",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-03-27",
+        "opponent": "Finland",
+        "result": "L",
+        "score": "0-2",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-03-30",
+        "opponent": "Chile",
+        "result": "W",
+        "score": "4-1",
+        "competition": "Friendlies",
+        "home": true
+      },
+      {
+        "date": "2026-06-03",
+        "opponent": "Haiti",
+        "result": "L",
+        "score": "0-4",
+        "competition": "Friendlies",
+        "home": false
+      },
+      {
+        "date": "2026-06-06",
+        "opponent": "England",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": false
+      }
+    ],
+    "fetchedAt": "2026-06-13T09:09:33.629Z"
   }
 }

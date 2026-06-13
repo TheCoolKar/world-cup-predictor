@@ -33,8 +33,12 @@ const ROOT = path.resolve(__dirname, "..");
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
-const envRaw = fs.readFileSync(path.join(ROOT, ".env"), "utf8");
-const envVar = (name) => envRaw.match(new RegExp(`${name}=(.+)`))?.[1]?.trim();
+// Read credentials from process.env (CI / scheduled runs) first, falling back
+// to a local .env file for hands-on dev. Either source works.
+let envRaw = "";
+try { envRaw = fs.readFileSync(path.join(ROOT, ".env"), "utf8"); } catch { /* no .env — rely on process.env */ }
+const envVar = (name) =>
+  process.env[name] ?? envRaw.match(new RegExp(`${name}=(.+)`))?.[1]?.trim();
 
 const SUPABASE_URL = envVar("VITE_SUPABASE_URL");
 const SERVICE_KEY  = envVar("SUPABASE_SERVICE_KEY");

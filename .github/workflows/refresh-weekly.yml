@@ -1,0 +1,50 @@
+name: Refresh squads, player stats & model (weekly)
+
+# Full refresh: re-scrapes every squad's player stats from FotMob, rebuilds the
+# squad-strength index, refreshes recent form, and re-runs the simulation, then
+# commits. Heavier (~15 min) so it runs weekly rather than daily. The push
+# triggers Vercel's auto-deploy.
+#
+# Only reads FotMob (public) and writes local JSON — no secrets required.
+
+on:
+  schedule:
+    # 08:00 UTC every Monday
+    - cron: "0 8 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Fetch player stats, rebuild strength index + simulation
+        run: npm run refresh:full
+
+      - name: Commit & push if data changed
+        run: |
+          git config user.name  "wc-data-bot"
+          git config user.email "actions@github.com"
+          if git diff --quiet -- src/data/; then
+            echo "No data changes — nothing to commit."
+          else
+            git add src/data/
+            git commit -m "chore(data): weekly squad + player-stats + model refresh"
+            git push
+          fi

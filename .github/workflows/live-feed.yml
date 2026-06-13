@@ -1,0 +1,43 @@
+name: Live match feed
+
+# Polls FotMob for live scores / goals / cards / subs and writes them to
+# Supabase, where the site picks them up instantly via Realtime. Runs every
+# ~5 min during World Cup match hours (≈15:00–04:00 UTC, covering ET/CT/PT
+# kickoffs). Each run does a single pass and exits; if no match is live the
+# script returns in seconds.
+#
+# Free on this public repo (unlimited Actions minutes). For true 60-second
+# updates, a Supabase Edge Function on pg_cron is the upgrade path.
+#
+# Requires one secret: SUPABASE_SERVICE_KEY  (Settings → Secrets → Actions).
+# The Supabase URL is the public project URL, passed as an env var below.
+
+# Schedules disabled — live feed now runs via Supabase Edge Function + pg_cron
+# (every 60s, no GitHub Actions minutes consumed, laptop-independent).
+# workflow_dispatch kept so you can still trigger a manual run if needed.
+on:
+  workflow_dispatch: {}
+
+concurrency:
+  group: live-feed
+  cancel-in-progress: true
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Poll live feed → Supabase
+        env:
+          VITE_SUPABASE_URL: ${{ vars.SUPABASE_URL || 'https://efrhtycodarydbkogwue.supabase.co' }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: npm run live-feed-once

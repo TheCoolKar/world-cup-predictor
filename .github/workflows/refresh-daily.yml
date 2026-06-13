@@ -1,0 +1,50 @@
+name: Refresh form & predictions (daily)
+
+# Pulls each team's latest results from FotMob, re-runs the tournament
+# simulation, and commits the updated data files. The push triggers Vercel's
+# auto-deploy, so the live site picks up fresh form/odds with no manual steps.
+#
+# Only reads FotMob (public) and writes local JSON — no secrets required.
+
+on:
+  schedule:
+    # 09:00 UTC daily — after the previous match day's evening (ET) games settle
+    - cron: "0 9 * * *"
+  workflow_dispatch: {}   # allow manual run from the Actions tab
+
+# Let the default GITHUB_TOKEN push the data commit back to the repo
+permissions:
+  contents: write
+
+# Don't let two scheduled runs overlap / race on the commit
+concurrency:
+  group: refresh-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Fetch recent form + regenerate simulation
+        run: npm run refresh:daily
+
+      - name: Commit & push if data changed
+        run: |
+          git config user.name  "wc-data-bot"
+          git config user.email "actions@github.com"
+          if git diff --quiet -- src/data/; then
+            echo "No data changes — nothing to commit."
+          else
+            git add src/data/
+            git commit -m "chore(data): daily form + simulation refresh"
+            git push
+          fi

@@ -11,6 +11,7 @@ import weights from "../data/model_weights.json";
 import polymarketOdds from "../data/polymarket_odds.json";
 import eaFcRatings from "../data/ea_fc_ratings.json";
 import squadQuality from "../data/team_squad_quality.json";
+import teamForm from "../data/team_form.json";
 
 const MARKET_WEIGHT = 0.55;
 const MODEL_WEIGHT = 1 - MARKET_WEIGHT;
@@ -18,6 +19,17 @@ const SQUAD_WEIGHT = 0.20;
 
 const BASE_GOALS = 1.35;
 const MAX_GOALS = 6;
+
+// Recent-form blend: how strongly the last ~10 games (friendlies + tournament,
+// from team_form.json) pull the historical goal rates toward current form.
+// Sample-size shrinkage w = played / (played + FORM_K), capped at FORM_MAX_WEIGHT
+// so a hot run of friendlies nudges but never overrides the historical base.
+const FORM_MAX_WEIGHT = 0.30;
+const FORM_K = 20;
+
+function formFor(team) {
+  return team ? (teamForm[team] ?? null) : null;
+}
 
 function sigmoid(z) {
   return 1 / (1 + Math.exp(-z));
@@ -35,36 +47,56 @@ function ratingStrength(fifaPoints = 1400) {
   return clamp((fifaPoints - 1150) / 650, 0.35, 1.25);
 }
 
-export function getAdjustedGoalRates(hist, fifaPoints = 1400) {
+export function getAdjustedGoalRates(hist, fifaPoints = 1400, recentForm = null) {
   const played = hist?.played ?? 0;
   const confidence = sampleConfidence(played);
   const strength = ratingStrength(fifaPoints);
   const atk = hist?.avgGoalsFor ?? BASE_GOALS;
   const def = hist?.avgGoalsAgainst ?? BASE_GOALS;
 
-  return {
-    avgGoalsFor: BASE_GOALS + confidence * (atk - BASE_GOALS) * strength,
-    avgGoalsAgainst: BASE_GOALS + confidence * (def - BASE_GOALS) * strength,
-    confidence,
-    strength,
-  };
+  let avgGoalsFor = BASE_GOALS + confidence * (atk - BASE_GOALS) * strength;
+  let avgGoalsAgainst = BASE_GOALS + confidence * (def - BASE_GOALS) * strength;
+
+  // Blend in recent form (last ~10 games incl. friendlies + tournament).
+  let formWeight = 0;
+  const fp = recentForm?.played ?? 0;
+  if (fp >= 3 && recentForm?.avgGoalsFor != null && recentForm?.avgGoalsAgainst != null) {
+    formWeight = Math.min(FORM_MAX_WEIGHT, fp / (fp + FORM_K));
+    const recFor = clamp(recentForm.avgGoalsFor, 0.3, 4);
+    const recAgainst = clamp(recentForm.avgGoalsAgainst, 0.3, 4);
+    avgGoalsFor = (1 - formWeight) * avgGoalsFor + formWeight * recFor;
+    avgGoalsAgainst = (1 - formWeight) * avgGoalsAgainst + formWeight * recAgainst;
+  }
+
+  return { avgGoalsFor, avgGoalsAgainst, confidence, strength, formWeight };
 }
 
 /**
- * Squad quality gap between two teams, on a comparable ±1.5 scale.
+ * Squad quality gap between two teams, on a comparable ±2 scale.
  *
- * Primary signal: squad market value (sum of FotMob player market values,
- * from team_squad_quality.json — regenerate with `npm run fetch-squads-stats`).
- * Expressed as log10(valueHome / valueAway) so England (~€1.5bn) vs Haiti
- * (~€20m) ≈ +1.9 while near-peers stay near 0. Market value is used instead
- * of raw FotMob player ratings because ratings aren't comparable across
- * leagues (a 7.3 in the South African league ≠ a 7.3 in the Premier League);
- * the ratings are still stored in the JSON for display.
+ * Primary signal: a precomputed squad strength index (team_squad_quality.json,
+ * built by `npm run build-squad-strength`) that blends two inputs:
+ *   • 60% squad market value  — clean cross-league quality anchor
+ *   • 40% league-normalised player rating — current-season form from
+ *     player_stats.json. Raw FotMob ratings are league-inflated, so each
+ *     player's rating is adjusted by a league-strength coefficient before
+ *     aggregating; the normalised team rating correlates ~0.84 with log
+ *     market value while still adding independent form information.
+ * The index is standardised across the 48 teams; the ×0.5 scale keeps this
+ * blended feature's influence calibrated to the previous market-value-only
+ * feature it replaces.
  *
- * Fallback: EA FC game ratings (top-11 average / 10) when market values are
- * missing for either squad.
+ * Fallbacks: raw market value log-ratio, then EA FC game ratings, when the
+ * strength index is missing for either team.
  */
 function squadRatingDiff(homeTeam, awayTeam) {
+  const siH = homeTeam ? squadQuality[homeTeam]?.strengthIndex : null;
+  const siA = awayTeam ? squadQuality[awayTeam]?.strengthIndex : null;
+  if (siH != null && siA != null) {
+    const diff = clamp(0.5 * (siH - siA), -2, 2);
+    return { squadDiff: diff, squadSource: "strength_index" };
+  }
+
   const mvH = homeTeam ? squadQuality[homeTeam]?.marketValueEur : null;
   const mvA = awayTeam ? squadQuality[awayTeam]?.marketValueEur : null;
   if (mvH > 0 && mvA > 0) {
@@ -93,8 +125,8 @@ function runLogisticRegression(eloHome, eloAway, histHome, histAway, h2h, neutra
     h2hCentered = homeTeamWins / played - 0.5;
   }
 
-  const ratesH = getAdjustedGoalRates(histHome, eloHome);
-  const ratesA = getAdjustedGoalRates(histAway, eloAway);
+  const ratesH = getAdjustedGoalRates(histHome, eloHome, formFor(homeTeam));
+  const ratesA = getAdjustedGoalRates(histAway, eloAway, formFor(awayTeam));
   const atkDiff = ratesH.avgGoalsFor - ratesA.avgGoalsFor;
   const defDiff = ratesA.avgGoalsAgainst - ratesH.avgGoalsAgainst;
 
@@ -204,10 +236,10 @@ export function predictScore(
   histHome,
   histAway,
   homeWinProb = 0.5,
-  { eloHome = 1400, eloAway = 1400, stage = "group" } = {},
+  { eloHome = 1400, eloAway = 1400, stage = "group", homeTeam = null, awayTeam = null } = {},
 ) {
-  const ratesH = getAdjustedGoalRates(histHome, eloHome);
-  const ratesA = getAdjustedGoalRates(histAway, eloAway);
+  const ratesH = getAdjustedGoalRates(histHome, eloHome, formFor(homeTeam));
+  const ratesA = getAdjustedGoalRates(histAway, eloAway, formFor(awayTeam));
   const atkH = ratesH.avgGoalsFor;
   const defH = ratesH.avgGoalsAgainst;
   const atkA = ratesA.avgGoalsFor;
