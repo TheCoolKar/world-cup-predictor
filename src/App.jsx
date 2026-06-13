@@ -213,6 +213,13 @@ export default function App() {
   const [disclaimerDone, setDisclaimerDone]   = useState(() => hasAcceptedDisclaimer());
 
   const { user, profile, loading: authLoading, signOut } = useAuth();
+
+  // Bracket ids are per-account (namespaced localStorage), so an open bracket
+  // from one account doesn't exist after switching to another.
+  useEffect(() => {
+    setActiveBracketId(null);
+  }, [user?.id]);
+
   const displayName = user
     ? (user.user_metadata?.display_name || user.email?.split("@")[0] || "You")
     : null;
@@ -590,14 +597,15 @@ export default function App() {
                     onSignUp={() => { setAuthMode("signup"); setShowAuth(true); }}
                   />
               )}
-              {activeTab === "mine"      && (
+              {activeTab === "mine"      && !authLoading && (
                 activeBracketId
                   ? <MyBracket
+                      key={user?.id ?? "guest"}
                       bracketData={getBracketById(activeBracketId)}
                       onBack={() => setActiveBracketId(null)}
                       onNavigate={navigate}
                     />
-                  : <MyBrackets onOpen={(id) => setActiveBracketId(id)} />
+                  : <MyBrackets key={user?.id ?? "guest"} onOpen={(id) => setActiveBracketId(id)} />
               )}
               {activeTab === "teams"       && <Teams />}
               {activeTab === "leaderboard" && <Leaderboard initialLeague={leagueContext} onViewProfile={handleViewProfile} />}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
+import { setActiveStorageUser } from "../utils/storage";
 
 export function useAuth() {
   const [user,    setUser]    = useState(null);
@@ -19,6 +20,7 @@ export function useAuth() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       const u = data.session?.user ?? null;
+      setActiveStorageUser(u?.id ?? null); // before setUser, so re-renders read the right namespace
       setUser(u);
       fetchProfile(u?.id);
       setLoading(false);
@@ -26,6 +28,7 @@ export function useAuth() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       const u = session?.user ?? null;
+      setActiveStorageUser(u?.id ?? null);
       setUser(u);
       fetchProfile(u?.id);
     });

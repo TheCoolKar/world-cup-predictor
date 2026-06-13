@@ -5,16 +5,56 @@ const LEGACY_BRACKET_KEY        = "wc2026_bracket";
 const LEGACY_BRACKET_SCORES_KEY = "wc2026_bracket_scores";
 
 // ── Multi-bracket storage ─────────────────────────────────────────────────────
-const BRACKETS_KEY        = "wc2026_brackets";
+// Keys are namespaced per signed-in user so accounts sharing a browser never
+// see each other's local picks. Logged-out picks live under the "guest" key.
+const LEGACY_BRACKETS_KEY = "wc2026_brackets";
 const MIGRATION_DONE_KEY  = "wc2026_migrated";
 
-function readBrackets() {
-  try { return JSON.parse(localStorage.getItem(BRACKETS_KEY)) || []; }
+let activeUserId = null; // null = guest
+
+const bracketsKey = (userId = activeUserId) =>
+  `wc2026_brackets::${userId ?? "guest"}`;
+
+function readBracketsForKey(key) {
+  try { return JSON.parse(localStorage.getItem(key)) || []; }
   catch { return []; }
 }
 
+function readBrackets() {
+  return readBracketsForKey(bracketsKey());
+}
+
 function writeBrackets(list) {
-  localStorage.setItem(BRACKETS_KEY, JSON.stringify(list));
+  localStorage.setItem(bracketsKey(), JSON.stringify(list));
+}
+
+// Called by useAuth whenever the session changes. Handles the one-time rename
+// of the old global key into the guest namespace, and adopts guest picks into
+// a freshly signed-in account that has no local data of its own yet.
+export function setActiveStorageUser(userId) {
+  // Legacy global key → guest namespace (one-time)
+  const legacy = localStorage.getItem(LEGACY_BRACKETS_KEY);
+  if (legacy !== null) {
+    if (localStorage.getItem(bracketsKey(null)) === null) {
+      localStorage.setItem(bracketsKey(null), legacy);
+    }
+    localStorage.removeItem(LEGACY_BRACKETS_KEY);
+  }
+
+  activeUserId = userId ?? null;
+
+  // Guest adoption: first sign-in on this browser inherits guest picks.
+  // updatedAt is preserved so cloud-vs-local reconciliation stays correct.
+  if (activeUserId) {
+    const userKey = bracketsKey(activeUserId);
+    if (localStorage.getItem(userKey) === null) {
+      const guestList = readBracketsForKey(bracketsKey(null));
+      if (guestList.some(b => Object.keys(b?.picks ?? {}).length > 0)) {
+        localStorage.setItem(userKey, JSON.stringify(guestList));
+        localStorage.removeItem(bracketsKey(null));
+      }
+    }
+  }
 }
 
 export function getAllBrackets() {
