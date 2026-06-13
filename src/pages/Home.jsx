@@ -1,6 +1,7 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
+import { useLiveFeed } from "../hooks/useLiveFeed";
 import { getLeagueLeaderboard } from "../utils/social";
 import { buildResultsMap, calculateGroupScores, calculateStreaks } from "../utils/scoring";
 import fixtures from "../data/wc2026_fixtures.json";
@@ -131,8 +132,6 @@ function SectionHeader({ label, action }) {
   );
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────────
-
 // ── Today's Matches + Countdown ───────────────────────────────────────────────
 
 function parseFixtureDate(dateStr, timeStr) {
@@ -155,7 +154,7 @@ function formatCountdown(ms) {
   return `${min}:${String(sec).padStart(2, "0")}`;
 }
 
-function TodaysMatches() {
+function TodaysMatches({ liveMatches = {}, onNavigate }) {
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
@@ -174,14 +173,9 @@ function TodaysMatches() {
   if (!nextMatch && todayMatches.length === 0) return null;
 
   const msToNext = nextMatch ? nextMatch.kickoff - now : 0;
-  const nextIsToday = nextMatch?.date === todayET;
 
   function fmtTime(kickoff) {
     return kickoff.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/New_York" }) + " ET";
-  }
-
-  function isLive(kickoff) {
-    return now >= kickoff && now < new Date(kickoff.getTime() + 120 * 60 * 1000);
   }
 
   return (
@@ -194,6 +188,7 @@ function TodaysMatches() {
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg"
             style={{ background: "rgba(200,240,0,0.08)", border: "1px solid rgba(200,240,0,0.15)" }}>
             <span style={{ fontSize: "0.7rem" }}>⏱</span>
+            <span className="text-xs font-semibold" style={{ color: "rgba(200,240,0,0.7)" }}>Next match</span>
             <span className="text-xs font-black tabular-nums" style={{ color: "#c8f000" }}>
               {formatCountdown(msToNext)}
             </span>
@@ -211,26 +206,75 @@ function TodaysMatches() {
 
       <div className="flex flex-col gap-2">
         {todayMatches.map(f => {
-          const live = isLive(f.kickoff);
-          const finished = now >= new Date(f.kickoff.getTime() + 120 * 60 * 1000);
+          const live = liveMatches[f.id];
+          const isLive = live
+            ? live.status === "LIVE" || live.status === "HT"
+            : now >= f.kickoff && now < new Date(f.kickoff.getTime() + 120 * 60 * 1000);
+          const isFinished = live
+            ? live.status !== "NS" && live.status !== "LIVE" && live.status !== "HT" && live.home_score != null
+            : now >= new Date(f.kickoff.getTime() + 120 * 60 * 1000);
+          const hasLiveScore = live?.home_score != null;
+
           return (
-            <div key={f.id} className="flex items-center gap-3 px-4 py-3 rounded-xl"
-              style={{ background: "rgba(255,255,255,0.03)", border: `1px solid ${live ? "rgba(34,197,94,0.2)" : "rgba(255,255,255,0.06)"}` }}>
-              <span className="text-xs shrink-0" style={{ color: "rgba(255,255,255,0.3)", minWidth: 32 }}>
+            <button key={f.id}
+              onClick={() => onNavigate?.("schedule", { matchId: f.id })}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-150"
+              style={{
+                background: isLive ? "rgba(34,197,94,0.04)" : "rgba(255,255,255,0.03)",
+                border: `1px solid ${isLive ? "rgba(34,197,94,0.2)" : "rgba(255,255,255,0.06)"}`,
+                cursor: "pointer",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = isLive ? "rgba(34,197,94,0.4)" : "rgba(200,240,0,0.2)"; e.currentTarget.style.background = isLive ? "rgba(34,197,94,0.07)" : "rgba(255,255,255,0.05)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = isLive ? "rgba(34,197,94,0.2)" : "rgba(255,255,255,0.06)"; e.currentTarget.style.background = isLive ? "rgba(34,197,94,0.04)" : "rgba(255,255,255,0.03)"; }}
+            >
+              <span className="text-xs shrink-0" style={{ color: "rgba(255,255,255,0.3)", minWidth: 36 }}>
                 {f.group ? `Grp ${f.group}` : f.round ?? ""}
               </span>
-              <span className="flex-1 text-sm font-semibold" style={{ color: "rgba(255,255,255,0.85)" }}>
-                {f.home} <span style={{ color: "rgba(255,255,255,0.4)" }}>vs</span> {f.away}
+
+              {/* Home */}
+              <span className="flex-1 text-sm font-semibold text-right truncate" style={{ color: "rgba(255,255,255,0.85)" }}>
+                {f.home}
               </span>
-              {live ? (
-                <span className="text-xs font-black px-2 py-0.5 rounded-full shrink-0"
-                  style={{ background: "rgba(34,197,94,0.15)", color: "#22c55e" }}>LIVE</span>
-              ) : finished ? (
-                <span className="text-xs shrink-0" style={{ color: "rgba(255,255,255,0.3)" }}>FT</span>
-              ) : (
-                <span className="text-xs font-semibold shrink-0" style={{ color: "rgba(255,255,255,0.55)" }}>{fmtTime(f.kickoff)}</span>
-              )}
-            </div>
+
+              {/* Score / status */}
+              <div className="shrink-0 text-center" style={{ minWidth: 72 }}>
+                {isLive ? (
+                  <div className="flex flex-col items-center gap-0.5">
+                    {hasLiveScore && (
+                      <span className="font-black tabular-nums text-sm" style={{ color: "#22c55e" }}>
+                        {live.home_score} – {live.away_score}
+                      </span>
+                    )}
+                    <span className="text-xs font-black px-2 py-0.5 rounded-full"
+                      style={{ background: "rgba(34,197,94,0.15)", color: "#22c55e" }}>
+                      {live?.status === "HT" ? "HT" : live?.minute ? `${live.minute}'` : "LIVE"}
+                    </span>
+                  </div>
+                ) : isFinished && hasLiveScore ? (
+                  <div className="flex flex-col items-center">
+                    <span className="font-black tabular-nums text-sm" style={{ color: "#c8f000" }}>
+                      {live.home_score} – {live.away_score}
+                    </span>
+                    <span className="text-xs" style={{ color: "rgba(255,255,255,0.3)", fontWeight: 700 }}>FT</span>
+                  </div>
+                ) : isFinished ? (
+                  <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.3)" }}>FT</span>
+                ) : (
+                  <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.55)" }}>{fmtTime(f.kickoff)}</span>
+                )}
+              </div>
+
+              {/* Away */}
+              <span className="flex-1 text-sm font-semibold truncate" style={{ color: "rgba(255,255,255,0.85)" }}>
+                {f.away}
+              </span>
+
+              {/* Chevron hint */}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                style={{ color: "rgba(255,255,255,0.2)", flexShrink: 0 }}>
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
           );
         })}
       </div>
@@ -378,6 +422,7 @@ function HowItWorksTeaser({ onLearnMore }) {
 
 export default function Home({ onNavigate, onSignIn, onSignUp }) {
   const { user } = useAuth();
+  const { liveMatches } = useLiveFeed();
   const [showHowItWorks, setShowHowItWorks] = useState(false);
 
   return (
@@ -389,6 +434,16 @@ export default function Home({ onNavigate, onSignIn, onSignUp }) {
       />
     )}
     <div className="max-w-2xl mx-auto px-4 py-8 flex flex-col gap-8">
+
+      {/* Today's matches + countdown — always visible, always first */}
+      <TodaysMatches liveMatches={liveMatches} onNavigate={onNavigate} />
+
+      {/* My Picks / Stats */}
+      {user && (
+        <section>
+          <MyStatsCard userId={user.id} onNavigate={onNavigate} />
+        </section>
+      )}
 
       {/* My Leagues */}
       {user && (
@@ -419,16 +474,6 @@ export default function Home({ onNavigate, onSignIn, onSignUp }) {
           </button>
         </section>
       )}
-
-      {/* My Picks / Stats */}
-      {user && (
-        <section>
-          <MyStatsCard userId={user.id} onNavigate={onNavigate} />
-        </section>
-      )}
-
-      {/* Today's matches + countdown — always visible */}
-      <TodaysMatches />
 
       {/* How It Works teaser — always visible */}
       <HowItWorksTeaser onLearnMore={() => setShowHowItWorks(true)} />
