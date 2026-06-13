@@ -16,7 +16,12 @@
     "live-feed-once": "node scripts/fetchLiveFeed.mjs",
     "fetch-squads": "node scripts/fetchFotmobSquads.mjs",
     "fetch-squads-stats": "node scripts/fetchFotmobSquads.mjs --stats",
-    "fetch-player-stats": "node scripts/fetchPlayerStats.mjs"
+    "fetch-player-stats": "node scripts/fetchPlayerStats.mjs",
+    "build-squad-strength": "node scripts/buildSquadStrength.mjs",
+    "fetch-form": "node scripts/fetchRecentForm.mjs",
+    "sim": "node scripts/generateMonteCarlo.mjs",
+    "refresh:daily": "npm run fetch-form && npm run sim",
+    "refresh:full": "npm run fetch-form && npm run fetch-player-stats && npm run build-squad-strength && npm run sim"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.1",
