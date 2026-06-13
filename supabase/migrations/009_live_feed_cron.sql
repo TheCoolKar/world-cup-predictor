@@ -1,33 +1,48 @@
--- Migration 009: pg_cron job to invoke the live-feed Edge Function every minute
--- Run this in the Supabase SQL editor.
--- Safe to re-run.
+-- Migration 009: schedule the live-feed edge function via pg_cron
 --
--- Prerequisites (Supabase Dashboard → Database → Extensions):
---   pg_cron  — enable if not already on
---   pg_net   — enable if not already on
+-- Polls the `live-feed` Edge Function every minute during World Cup match hours
+-- (~15:00–04:59 UTC, covering ET/CT/PT kickoffs) for true minute-by-minute
+-- updates — the always-free upgrade over the 5-minute GitHub Actions poller.
 --
--- The anon key below is intentionally public (it's already in the frontend
--- bundle). The function is deployed with --no-verify-jwt so any valid JWT works.
--- The actual service role key lives only inside the Edge Function as a Supabase-
--- injected env var — it never appears here.
+-- ── ONE-TIME SETUP (do these before/after running this migration) ────────────
+--
+--   1. Pick a random secret and set it on the function:
+--        supabase secrets set CRON_SECRET=<random-string>
+--
+--   2. Store the SAME secret in Vault so the cron job can present it
+--      (run once in the SQL editor — keeps the secret OUT of this repo):
+--        select vault.create_secret('<random-string>', 'live_feed_cron_secret');
+--
+--   3. Deploy the function (no JWT — the shared secret is the guard):
+--        supabase functions deploy live-feed --no-verify-jwt
+--
+--   4. Run this migration.
+--
+-- Verify the project URL below matches your project ref.
 
--- Remove previous schedule if it exists (makes this safe to re-run)
-do $$
-begin
-  if exists (select 1 from cron.job where jobname = 'live-feed-poll') then
-    perform cron.unschedule('live-feed-poll');
-  end if;
-end $$;
+create extension if not exists pg_cron;
+create extension if not exists pg_net;
+
+-- Replace any previous schedule so this migration is safe to re-run
+select cron.unschedule('live-feed-poll')
+where exists (select 1 from cron.job where jobname = 'live-feed-poll');
 
 select cron.schedule(
   'live-feed-poll',
-  '* * * * *',
+  '* 15-23,0-4 * * *',        -- every minute, 15:00–23:59 and 00:00–04:59 UTC
   $$
   select net.http_post(
-    url     := 'https://rrscrikhzrbymrfjodet.supabase.co/functions/v1/live-feed',
-    headers := '{"Content-Type":"application/json","Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyc2NyaWtoenJieW1yZmpvZGV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0NjUxMTYsImV4cCI6MjA5NTA0MTExNn0.Mro0aHrmx9C0JoOVgDn7M338K0BTtz5Yx8fh-Fb8Cnw"}'::jsonb,
-    body    := '{}'::jsonb,
-    timeout_milliseconds := 55000
-  ) as request_id;
+    url     := 'https://efrhtycodarydbkogwue.supabase.co/functions/v1/live-feed',
+    headers := jsonb_build_object(
+      'Content-Type',  'application/json',
+      'x-cron-secret', (select decrypted_secret from vault.decrypted_secrets
+                        where name = 'live_feed_cron_secret')
+    ),
+    body                 := '{}'::jsonb,
+    timeout_milliseconds := 30000
+  );
   $$
 );
+
+-- Inspect runs:    select * from cron.job_run_details order by start_time desc limit 20;
+-- Pause for a day: select cron.unschedule('live-feed-poll');
