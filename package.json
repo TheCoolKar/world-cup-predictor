@@ -13,7 +13,9 @@
     "scrape-ea-fc": "python3 scripts/scrape_ea_fc_ratings.py",
     "fetch-results": "node scripts/fetchResults.js",
     "live-feed": "node scripts/fetchLiveFeed.mjs --watch",
-    "live-feed-once": "node scripts/fetchLiveFeed.mjs"
+    "live-feed-once": "node scripts/fetchLiveFeed.mjs",
+    "fetch-squads": "node scripts/fetchFotmobSquads.mjs",
+    "fetch-squads-stats": "node scripts/fetchFotmobSquads.mjs --stats"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.1",

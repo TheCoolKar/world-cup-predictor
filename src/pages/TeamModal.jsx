@@ -200,12 +200,12 @@ export default function TeamModal() {
             </section>
           )}
 
-          {/* ── Predicted Lineup ── */}
+          {/* ── Official Squad ── */}
           {lineup?.players?.length > 0 && (
             <section>
-              <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.6)" }}>Predicted Lineup</p>
+              <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.6)" }}>World Cup Squad</p>
               <p className="text-xs mb-3" style={{ color: "rgba(255,255,255,0.2)" }}>
-                {lineup.formation} · {lineup.coach}
+                {[lineup.coach, `${lineup.players.length} players`].filter(Boolean).join(" · ")}
               </p>
               <div className="flex flex-col gap-1">
                 {posOrder.filter(pos => groupedPlayers[pos]).map(pos => (

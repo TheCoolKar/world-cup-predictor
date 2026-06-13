@@ -65,7 +65,7 @@ export default function MatchCard({ match }) {
 
   // Metadata (model badges, market blend info) — kept from deterministic model
   const prediction = eloHome && eloAway
-    ? predictMatch(eloHome, eloAway, apiFormHome, apiFormAway, histHome?.competitive, histAway?.competitive, h2h, match.id)
+    ? predictMatch(eloHome, eloAway, apiFormHome, apiFormAway, histHome?.competitive, histAway?.competitive, h2h, match.id, { homeTeam: home, awayTeam: away })
     : null;
 
   // Win/draw/away % and score come from Monte Carlo (2 000 Poisson samples)

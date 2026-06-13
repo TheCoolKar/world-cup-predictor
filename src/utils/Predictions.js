@@ -10,6 +10,7 @@
 import weights from "../data/model_weights.json";
 import polymarketOdds from "../data/polymarket_odds.json";
 import eaFcRatings from "../data/ea_fc_ratings.json";
+import squadQuality from "../data/team_squad_quality.json";
 
 const MARKET_WEIGHT = 0.55;
 const MODEL_WEIGHT = 1 - MARKET_WEIGHT;
@@ -49,6 +50,36 @@ export function getAdjustedGoalRates(hist, fifaPoints = 1400) {
   };
 }
 
+/**
+ * Squad quality gap between two teams, on a comparable ±1.5 scale.
+ *
+ * Primary signal: squad market value (sum of FotMob player market values,
+ * from team_squad_quality.json — regenerate with `npm run fetch-squads-stats`).
+ * Expressed as log10(valueHome / valueAway) so England (~€1.5bn) vs Haiti
+ * (~€20m) ≈ +1.9 while near-peers stay near 0. Market value is used instead
+ * of raw FotMob player ratings because ratings aren't comparable across
+ * leagues (a 7.3 in the South African league ≠ a 7.3 in the Premier League);
+ * the ratings are still stored in the JSON for display.
+ *
+ * Fallback: EA FC game ratings (top-11 average / 10) when market values are
+ * missing for either squad.
+ */
+function squadRatingDiff(homeTeam, awayTeam) {
+  const mvH = homeTeam ? squadQuality[homeTeam]?.marketValueEur : null;
+  const mvA = awayTeam ? squadQuality[awayTeam]?.marketValueEur : null;
+  if (mvH > 0 && mvA > 0) {
+    const diff = clamp(Math.log10(mvH / mvA), -2, 2);
+    return { squadDiff: diff, squadSource: "market_value" };
+  }
+
+  const top11Home = eaFcRatings[homeTeam]?.top11_avg ?? null;
+  const top11Away = eaFcRatings[awayTeam]?.top11_avg ?? null;
+  if (top11Home != null && top11Away != null) {
+    return { squadDiff: (top11Home - top11Away) / 10, squadSource: "eafc" };
+  }
+  return { squadDiff: 0, squadSource: null };
+}
+
 function runLogisticRegression(eloHome, eloAway, histHome, histAway, h2h, neutralSite = false, homeTeam = null, awayTeam = null) {
   const eloDiff = (eloHome - eloAway) / 100;
 
@@ -67,11 +98,7 @@ function runLogisticRegression(eloHome, eloAway, histHome, histAway, h2h, neutra
   const atkDiff = ratesH.avgGoalsFor - ratesA.avgGoalsFor;
   const defDiff = ratesA.avgGoalsAgainst - ratesH.avgGoalsAgainst;
 
-  const top11Home = eaFcRatings[homeTeam]?.top11_avg ?? null;
-  const top11Away = eaFcRatings[awayTeam]?.top11_avg ?? null;
-  const squadDiff = top11Home != null && top11Away != null
-    ? (top11Home - top11Away) / 10
-    : 0;
+  const { squadDiff, squadSource } = squadRatingDiff(homeTeam, awayTeam);
 
   const z =
     (neutralSite ? 0 : weights.intercept) +
@@ -93,6 +120,7 @@ function runLogisticRegression(eloHome, eloAway, histHome, histAway, h2h, neutra
       atkDiff,
       defDiff,
       squadDiff: squadDiff !== 0 ? +squadDiff.toFixed(3) : null,
+      squadSource,
       neutralSite,
       z,
     },

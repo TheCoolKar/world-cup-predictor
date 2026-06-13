@@ -1,0 +1,290 @@
+{
+  "Mexico": {
+    "rating": 7.199,
+    "ratedPlayers": 25,
+    "marketValueEur": 177152923,
+    "squadSize": 26
+  },
+  "South Africa": {
+    "rating": 7.288,
+    "ratedPlayers": 25,
+    "marketValueEur": 33924914,
+    "squadSize": 26
+  },
+  "Uzbekistan": {
+    "rating": null,
+    "ratedPlayers": 7,
+    "marketValueEur": 79116364,
+    "squadSize": 26
+  },
+  "Colombia": {
+    "rating": 7.259,
+    "ratedPlayers": 25,
+    "marketValueEur": 308378030,
+    "squadSize": 26
+  },
+  "Czechia": {
+    "rating": 7.3,
+    "ratedPlayers": 26,
+    "marketValueEur": 162241235,
+    "squadSize": 26
+  },
+  "Switzerland": {
+    "rating": 7.024,
+    "ratedPlayers": 26,
+    "marketValueEur": 347936798,
+    "squadSize": 26
+  },
+  "Bosnia": {
+    "rating": 7.019,
+    "ratedPlayers": 23,
+    "marketValueEur": 110560458,
+    "squadSize": 26
+  },
+  "Canada": {
+    "rating": 7.009,
+    "ratedPlayers": 26,
+    "marketValueEur": 186832711,
+    "squadSize": 26
+  },
+  "Qatar": {
+    "rating": null,
+    "ratedPlayers": 1,
+    "marketValueEur": 13682160,
+    "squadSize": 26
+  },
+  "DR Congo": {
+    "rating": 6.948,
+    "ratedPlayers": 24,
+    "marketValueEur": 141869192,
+    "squadSize": 26
+  },
+  "Morocco": {
+    "rating": 7.134,
+    "ratedPlayers": 24,
+    "marketValueEur": 420909593,
+    "squadSize": 26
+  },
+  "Haiti": {
+    "rating": 6.679,
+    "ratedPlayers": 17,
+    "marketValueEur": 56902090,
+    "squadSize": 26
+  },
+  "Scotland": {
+    "rating": 7.042,
+    "ratedPlayers": 25,
+    "marketValueEur": 195010874,
+    "squadSize": 26
+  },
+  "Brazil": {
+    "rating": 7.366,
+    "ratedPlayers": 26,
+    "marketValueEur": 819747907,
+    "squadSize": 26
+  },
+  "South Korea": {
+    "rating": 7.217,
+    "ratedPlayers": 26,
+    "marketValueEur": 130710662,
+    "squadSize": 26
+  },
+  "USA": {
+    "rating": 7.253,
+    "ratedPlayers": 26,
+    "marketValueEur": 361806142,
+    "squadSize": 26
+  },
+  "Paraguay": {
+    "rating": 7.132,
+    "ratedPlayers": 26,
+    "marketValueEur": 143750750,
+    "squadSize": 26
+  },
+  "Australia": {
+    "rating": 7.146,
+    "ratedPlayers": 25,
+    "marketValueEur": 69889200,
+    "squadSize": 26
+  },
+  "Curaçao": {
+    "rating": 6.878,
+    "ratedPlayers": 23,
+    "marketValueEur": 23779429,
+    "squadSize": 26
+  },
+  "Ivory Coast": {
+    "rating": 7.218,
+    "ratedPlayers": 25,
+    "marketValueEur": 464920382,
+    "squadSize": 26
+  },
+  "Ecuador": {
+    "rating": 7.178,
+    "ratedPlayers": 26,
+    "marketValueEur": 388421319,
+    "squadSize": 26
+  },
+  "Germany": {
+    "rating": 7.342,
+    "ratedPlayers": 26,
+    "marketValueEur": 943937481,
+    "squadSize": 26
+  },
+  "Japan": {
+    "rating": 7.124,
+    "ratedPlayers": 26,
+    "marketValueEur": 263776579,
+    "squadSize": 26
+  },
+  "Sweden": {
+    "rating": 7.087,
+    "ratedPlayers": 24,
+    "marketValueEur": 459971539,
+    "squadSize": 26
+  },
+  "Tunisia": {
+    "rating": 6.716,
+    "ratedPlayers": 17,
+    "marketValueEur": 67192628,
+    "squadSize": 23
+  },
+  "Netherlands": {
+    "rating": 7.067,
+    "ratedPlayers": 26,
+    "marketValueEur": 836725630,
+    "squadSize": 26
+  },
+  "Türkiye": {
+    "rating": 7.271,
+    "ratedPlayers": 26,
+    "marketValueEur": 472849998,
+    "squadSize": 26
+  },
+  "Spain": {
+    "rating": 7.347,
+    "ratedPlayers": 26,
+    "marketValueEur": 1265645148,
+    "squadSize": 26
+  },
+  "Cape Verde": {
+    "rating": 6.838,
+    "ratedPlayers": 18,
+    "marketValueEur": 45095448,
+    "squadSize": 26
+  },
+  "Saudi Arabia": {
+    "rating": 7.196,
+    "ratedPlayers": 25,
+    "marketValueEur": 27509119,
+    "squadSize": 26
+  },
+  "Uruguay": {
+    "rating": 7.208,
+    "ratedPlayers": 26,
+    "marketValueEur": 414752325,
+    "squadSize": 26
+  },
+  "Belgium": {
+    "rating": 7.198,
+    "ratedPlayers": 26,
+    "marketValueEur": 564929943,
+    "squadSize": 26
+  },
+  "Egypt": {
+    "rating": 7.214,
+    "ratedPlayers": 22,
+    "marketValueEur": 133280784,
+    "squadSize": 26
+  },
+  "Iran": {
+    "rating": 6.863,
+    "ratedPlayers": 9,
+    "marketValueEur": 24674771,
+    "squadSize": 26
+  },
+  "Norway": {
+    "rating": 7.29,
+    "ratedPlayers": 26,
+    "marketValueEur": 543591393,
+    "squadSize": 26
+  },
+  "France": {
+    "rating": 7.412,
+    "ratedPlayers": 26,
+    "marketValueEur": 1433462903,
+    "squadSize": 26
+  },
+  "Senegal": {
+    "rating": 7.114,
+    "ratedPlayers": 26,
+    "marketValueEur": 511409624,
+    "squadSize": 26
+  },
+  "Iraq": {
+    "rating": 6.77,
+    "ratedPlayers": 13,
+    "marketValueEur": 20440985,
+    "squadSize": 26
+  },
+  "New Zealand": {
+    "rating": 7.115,
+    "ratedPlayers": 25,
+    "marketValueEur": 26943993,
+    "squadSize": 26
+  },
+  "Argentina": {
+    "rating": 7.367,
+    "ratedPlayers": 26,
+    "marketValueEur": 848314011,
+    "squadSize": 26
+  },
+  "Austria": {
+    "rating": 7.169,
+    "ratedPlayers": 25,
+    "marketValueEur": 225054285,
+    "squadSize": 25
+  },
+  "Croatia": {
+    "rating": 7.184,
+    "ratedPlayers": 26,
+    "marketValueEur": 348094292,
+    "squadSize": 26
+  },
+  "Ghana": {
+    "rating": 7.053,
+    "ratedPlayers": 24,
+    "marketValueEur": 224733550,
+    "squadSize": 26
+  },
+  "Panama": {
+    "rating": 6.976,
+    "ratedPlayers": 17,
+    "marketValueEur": 29517906,
+    "squadSize": 26
+  },
+  "England": {
+    "rating": 7.306,
+    "ratedPlayers": 26,
+    "marketValueEur": 1405236053,
+    "squadSize": 26
+  },
+  "Portugal": {
+    "rating": 7.489,
+    "ratedPlayers": 26,
+    "marketValueEur": 962019332,
+    "squadSize": 26
+  },
+  "Algeria": {
+    "rating": 7.184,
+    "ratedPlayers": 20,
+    "marketValueEur": 252796728,
+    "squadSize": 26
+  },
+  "Jordan": {
+    "rating": null,
+    "ratedPlayers": 5,
+    "marketValueEur": 13823944,
+    "squadSize": 25
+  }
+}

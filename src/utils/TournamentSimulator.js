@@ -115,7 +115,7 @@ function stochasticMatch(home, away, knockout = false, fixtureId = null, rng = M
     getHist(away)?.competitive,
     null,
     fixtureId,
-    { neutralSite: knockout },
+    { neutralSite: knockout, homeTeam: home, awayTeam: away },
   );
   const homeWinProb = pred.homeWin / 100;
 
@@ -458,7 +458,7 @@ export function simulateMatchMonteCarlo(home, away, fixtureId = null, n = 2000) 
     getHist(away)?.competitive,
     null,
     fixtureId,
-    { neutralSite: false },
+    { neutralSite: false, homeTeam: home, awayTeam: away },
   );
   const bias = (pred.homeWin / 100 - 0.5) * 0.9;
   const xGHome = +Math.max(0.3, Math.min(4.5,
