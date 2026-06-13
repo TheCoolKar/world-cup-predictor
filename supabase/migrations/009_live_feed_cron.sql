@@ -1,4 +1,4 @@
--- Migration 008: schedule the live-feed edge function via pg_cron
+-- Migration 009: schedule the live-feed edge function via pg_cron
 --
 -- Polls the `live-feed` Edge Function every minute during World Cup match hours
 -- (~15:00–04:59 UTC, covering ET/CT/PT kickoffs) for true minute-by-minute
