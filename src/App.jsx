@@ -215,6 +215,7 @@ export default function App() {
   const [activeTab,   setActiveTab]   = useState(inviteToken ? "invite" : "home"); // "home"|"groups"|"bracket"|"mine"|"leaderboard"|"leagues"|"invite"|"profile"|"dashboard"
   const [leagueContext, setLeagueContext] = useState(null); // { id, name } when navigating to leaderboard from a league
   const [leagueNavCtx, setLeagueNavCtx] = useState(null); // { leagueId, leagueName } when navigating to leagues from home
+  const [scheduleMatchCtx, setScheduleMatchCtx] = useState(null); // { matchId } when navigating to schedule from home
   const [showRules,   setShowRules]   = useState(false);
   const [showAdmin,   setShowAdmin]   = useState(false);
   const [showAuth,    setShowAuth]    = useState(false);
@@ -264,6 +265,7 @@ export default function App() {
     if (tab === "leaderboard") setLeagueContext(ctx);
     if (tab === "leagues") setLeagueNavCtx(ctx); // ctx = { leagueId, leagueName } from home card click
     else setLeagueNavCtx(null);
+    if (tab === "schedule") setScheduleMatchCtx(ctx ?? null); // ctx = { matchId } from home match click
   }
 
   // ── Nav item ─────────────────────────────────────────────────────────────────
@@ -641,7 +643,7 @@ export default function App() {
               )}
               {activeTab === "teams"       && <Teams />}
               {activeTab === "leaderboard" && <Leaderboard initialLeague={leagueContext} onViewProfile={handleViewProfile} />}
-              {activeTab === "schedule" && <Schedule />}
+              {activeTab === "schedule" && <Schedule initialMatchCtx={scheduleMatchCtx} />}
               {activeTab === "leagues"     && <Leagues onNavigate={navigate} initialLeagueCtx={leagueNavCtx} onViewProfile={handleViewProfile} />}
               {activeTab === "invite"      && <InviteRedirect token={inviteToken} onNavigate={navigate} onSignUp={() => { setAuthMode("signup"); setShowAuth(true); }} />}
               {activeTab === "dashboard"   && <Dashboard onNavigate={navigate} />}

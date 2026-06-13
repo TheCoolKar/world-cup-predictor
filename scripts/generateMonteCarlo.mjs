@@ -1,4 +1,3 @@
-`
 /**
  * Regenerate the precomputed full-tournament Monte Carlo snapshot.
  *

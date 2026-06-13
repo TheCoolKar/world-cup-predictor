@@ -675,15 +675,16 @@ function MatchRow({ fixture, result, now, r32Slots, bw, userPick = null, conf = 
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
-export default function Schedule() {
+export default function Schedule({ initialMatchCtx = null }) {
   const { user } = useAuth();
   const { liveMatches, liveEvents } = useLiveFeed();
   const [tab, setTab] = useState("schedule");
   const [resultsMap, setResultsMap] = useState({});
   const [now, setNow] = useState(() => new Date());
   const [mySub, setMySub] = useState(null); // { picks, confidence } for breakdown cards
-  const [expandedId, setExpandedId] = useState(null);
+  const [expandedId, setExpandedId] = useState(() => initialMatchCtx?.matchId ?? null);
   const dateRefs = useRef({});
+  const matchRefs = useRef({});
   const scrolledRef = useRef(false);
 
   useEffect(() => {
@@ -738,6 +739,22 @@ export default function Schedule() {
 
   useEffect(() => {
     if (scrolledRef.current || tab !== "schedule") return;
+    const matchId = initialMatchCtx?.matchId;
+    if (matchId) {
+      // Navigate to a specific match: expand it and scroll to it
+      setExpandedId(matchId);
+      const tryScroll = () => {
+        const el = matchRefs.current[matchId];
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          scrolledRef.current = true;
+        }
+      };
+      // Give the DOM a tick to render before scrolling
+      setTimeout(tryScroll, 80);
+      return;
+    }
+    // Default: scroll to today
     const todayET = now.toLocaleDateString("en-CA", { timeZone: "America/New_York" });
     const dates = Object.keys(grouped).sort();
     const target = dates.find(d => d >= todayET);
@@ -798,13 +815,15 @@ export default function Schedule() {
                 </div>
                 <div className="flex flex-col gap-1.5">
                   {dayFixtures.map(f => (
-                    <MatchRow key={f.id} fixture={f} result={resultsMap[f.id] ?? null} now={now} r32Slots={liveR32Slots} bw={liveBw}
-                      userPick={mySub?.picks?.[f.id] ?? null}
-                      conf={mySub?.confidence?.[f.id] ?? 1}
-                      expanded={expandedId === f.id}
-                      onToggle={() => setExpandedId(prev => prev === f.id ? null : f.id)}
-                      live={liveMatches[f.id] ?? null}
-                      liveEvents={liveEvents[f.id] ?? []} />
+                    <div key={f.id} ref={el => { matchRefs.current[f.id] = el; }}>
+                      <MatchRow fixture={f} result={resultsMap[f.id] ?? null} now={now} r32Slots={liveR32Slots} bw={liveBw}
+                        userPick={mySub?.picks?.[f.id] ?? null}
+                        conf={mySub?.confidence?.[f.id] ?? 1}
+                        expanded={expandedId === f.id}
+                        onToggle={() => setExpandedId(prev => prev === f.id ? null : f.id)}
+                        live={liveMatches[f.id] ?? null}
+                        liveEvents={liveEvents[f.id] ?? []} />
+                    </div>
                   ))}
                 </div>
               </div>
