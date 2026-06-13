@@ -22,6 +22,7 @@ function usernameValid(u) {
 
 export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
   const [mode,         setMode]         = useState(initialMode);
+  const [emailFormOpen, setEmailFormOpen] = useState(false); // email/password hidden until requested
   const [email,        setEmail]        = useState("");
   const [name,         setName]         = useState("");
   const [username,     setUsername]     = useState("");
@@ -227,9 +228,32 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
               })}
             </div>
 
+            {/* Email option — fields stay hidden until requested */}
+            {!emailFormOpen && (
+              <button type="button" onClick={() => setEmailFormOpen(true)}
+                disabled={!!oauthLoading || loading}
+                className="w-full flex items-center justify-center gap-2.5 py-2.5 rounded-xl font-semibold text-sm transition-all active:scale-95"
+                style={{
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.11)",
+                  color: "rgba(255,255,255,0.8)",
+                }}
+                onMouseEnter={e => { if (!oauthLoading) { e.currentTarget.style.background = "rgba(255,255,255,0.11)"; }}}
+                onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2"/>
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                </svg>
+                <span>Continue with Email</span>
+              </button>
+            )}
+
+            {emailFormOpen && (<>
+
             <div className="flex items-center gap-3">
               <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.08)" }} />
-              <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.2)" }}>or</span>
+              <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.2)" }}>or continue with email</span>
               <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.08)" }} />
             </div>
 
@@ -282,12 +306,6 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
               </div>
             )}
 
-            {error && (
-              <p className="text-xs px-3 py-2 rounded-lg" style={{ background: "rgba(239,68,68,0.1)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.2)" }}>
-                {error}
-              </p>
-            )}
-
             <button type="submit" disabled={loading || (mode === "signup" && usernameState !== "available")}
               className="w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95 mt-1"
               style={{
@@ -298,6 +316,14 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
               }}>
               {loading ? "Please wait…" : mode === "signup" ? "Create Account & Save" : mode === "magic" ? "Send Magic Link" : "Sign In & Save Bracket"}
             </button>
+
+            </>)}
+
+            {error && (
+              <p className="text-xs px-3 py-2 rounded-lg" style={{ background: "rgba(239,68,68,0.1)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.2)" }}>
+                {error}
+              </p>
+            )}
           </form>
         )}
 
@@ -311,7 +337,7 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
                   onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.35)"}>
                   No account? Sign up →
                 </button>
-                <button onClick={() => { setMode("magic"); setError(null); }}
+                <button onClick={() => { setMode("magic"); setEmailFormOpen(true); setError(null); }}
                   className="text-xs transition-colors" style={{ color: "rgba(255,255,255,0.55)" }}
                   onMouseEnter={e => e.currentTarget.style.color = "rgba(255,255,255,0.6)"}
                   onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.25)"}>
