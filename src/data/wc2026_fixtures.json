@@ -21,7 +21,7 @@
   { "id": "C6", "group": "C", "matchday": 3, "home": "Morocco",  "away": "Haiti",    "date": "2026-06-24", "time": "6:00 PM ET",  "venue": "Atlanta Stadium",                "city": "Atlanta, USA" },
 
   { "id": "D1", "group": "D", "matchday": 1, "home": "USA",       "away": "Paraguay",  "date": "2026-06-12", "time": "9:00 PM ET",   "venue": "Los Angeles Stadium",            "city": "Inglewood, USA" },
-  { "id": "D2", "group": "D", "matchday": 1, "home": "Australia", "away": "Türkiye",   "date": "2026-06-13", "time": "11:59 PM ET",   "venue": "BC Place",                       "city": "Vancouver, Canada" },
+  { "id": "D2", "group": "D", "matchday": 1, "home": "Australia", "away": "Türkiye",   "date": "2026-06-14", "time": "12:00 AM ET",   "venue": "BC Place",                       "city": "Vancouver, Canada" },
   { "id": "D3", "group": "D", "matchday": 2, "home": "USA",       "away": "Australia", "date": "2026-06-19", "time": "3:00 PM ET",   "venue": "Seattle Stadium",                "city": "Seattle, USA" },
   { "id": "D4", "group": "D", "matchday": 2, "home": "Türkiye",   "away": "Paraguay",  "date": "2026-06-19", "time": "12:00 AM ET",  "venue": "San Francisco Bay Area Stadium", "city": "Santa Clara, USA" },
   { "id": "D5", "group": "D", "matchday": 3, "home": "Türkiye",   "away": "USA",       "date": "2026-06-25", "time": "10:00 PM ET",  "venue": "Los Angeles Stadium",            "city": "Inglewood, USA" },
