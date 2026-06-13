@@ -283,7 +283,7 @@ function ScorePicker({ value, onChange }) {
 
 // ── Group stage: match pick row ───────────────────────────────────────────────
 
-function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode, result, locked }) {
+function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode, result, locked, assumption, onAssume }) {
   const { home, away, matchday } = match;
   const { openTeam } = useTeamModal();
   const hVal = score?.home??0, aVal = score?.away??0;
@@ -353,16 +353,37 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode, r
   const pickColor = pick === "home" ? "#c8f000" : pick === "away" ? "#ef4444" : pick === "draw" ? "#f59e0b" : null;
 
   if (locked) {
+    // Match was locked before the user picked it and no result is in yet: offer an
+    // "assumed outcome" so late joiners can still resolve their bracket. Worth 0 pts;
+    // replaced by the real result once it lands.
+    const canAssume = !resultKnown && pick == null && typeof onAssume === "function";
+    const ABTN = ({ value, label, color }) => (
+      <button onClick={()=>onAssume(match.id, value)}
+        className="w-8 h-7 rounded font-black text-xs transition-all duration-100 active:scale-95 shrink-0"
+        style={{background:assumption===value?`${color}22`:"rgba(255,255,255,0.04)",
+          color:assumption===value?color:"rgba(255,255,255,0.35)",
+          border:`1px dashed ${assumption===value?`${color}88`:"rgba(255,255,255,0.18)"}`}}>
+        {label}
+      </button>
+    );
+    const homeHL = canAssume ? assumption === "home" : homeW;
+    const awayHL = canAssume ? assumption === "away" : awayW;
     return (
-      <div style={{ opacity: 0.75 }}>
+      <div style={{ opacity: 0.85 }}>
         <div className="flex items-center gap-2 py-1.5 px-3">
           <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
             <span className="text-xs font-semibold truncate text-right"
-              style={{ color: homeW ? "#c8f000" : "rgba(255,255,255,0.6)" }}>{home}</span>
+              style={{ color: homeHL ? "#c8f000" : "rgba(255,255,255,0.6)" }}>{home}</span>
             <span className={getFlagClass(home) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
           </div>
           <div className="flex items-center gap-1 shrink-0">
-            {pickLabel ? (
+            {canAssume ? (
+              <>
+                <ABTN value="home" label="H" color="#c8f000" />
+                <ABTN value="draw" label="X" color="#f59e0b" />
+                <ABTN value="away" label="A" color="#ef4444" />
+              </>
+            ) : pickLabel ? (
               <span className="w-8 h-7 rounded font-black text-xs flex items-center justify-center shrink-0"
                 style={{ background: `${pickColor}22`, color: pickColor, border: `1px solid ${pickColor}55` }}>
                 {pickLabel}
@@ -375,11 +396,18 @@ function MatchPickRow({ match, pick, score, onPickChange, onScoreChange, mode, r
           <div className="flex items-center gap-1.5 flex-1 min-w-0">
             <span className={getFlagClass(away) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
             <span className="text-xs font-semibold truncate"
-              style={{ color: awayW ? "#ef4444" : "rgba(255,255,255,0.6)" }}>{away}</span>
+              style={{ color: awayHL ? "#ef4444" : "rgba(255,255,255,0.6)" }}>{away}</span>
           </div>
           <span style={{color:"rgba(255,255,255,0.18)",fontSize:"0.6rem",flexShrink:0}}>MD{matchday}</span>
           {ResultBadge}
         </div>
+        {canAssume && (
+          <div className="px-3 pb-1.5" style={{ marginTop: -2 }}>
+            <span style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.3)", fontWeight: 600 }}>
+              Kicked off before you picked — choose an assumed outcome to seed your bracket (0 pts, replaced by the real result)
+            </span>
+          </div>
+        )}
         {VenueLine}
       </div>
     );
@@ -494,9 +522,10 @@ function MiniStandings({ standings, thirds, onReorder, readOnly }) {
 
 // ── Group card ────────────────────────────────────────────────────────────────
 
-function GroupCard({ group, picks, scores, onPick, onScore, standings, thirds, mode, isOpen, onToggle, matchResults, onReorderStandings, readOnly }) {
+function GroupCard({ group, picks, scores, onPick, onScore, standings, thirds, mode, isOpen, onToggle, matchResults, onReorderStandings, readOnly, assumptions = {}, onAssume }) {
   const matches=GROUP_MATCHES.filter(m=>m.group===group);
-  const picked=matches.filter(m=>picks[m.id]).length;
+  // Results and assumed outcomes count as resolved for the progress badge
+  const picked=matches.filter(m=>picks[m.id] ?? matchResults?.[m.id]?.result ?? assumptions[m.id]).length;
   const done=picked===matches.length;
   const teams=[...new Set(matches.flatMap(m=>[m.home,m.away]))];
   const byDay={};
@@ -561,7 +590,8 @@ function GroupCard({ group, picks, scores, onPick, onScore, standings, thirds, m
               {dayMatches.map(m=>(
                 <MatchPickRow key={m.id} match={m} pick={picks[m.id]} score={scores[m.id]}
                   onPickChange={onPick} onScoreChange={onScore} mode={mode} result={matchResults?.[m.id] ?? null}
-                  locked={isMatchLocked(m.id)} />
+                  locked={isMatchLocked(m.id)}
+                  assumption={assumptions[m.id]} onAssume={readOnly ? undefined : onAssume} />
               ))}
             </div>
           ))}
@@ -775,6 +805,10 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
   const [bScores,setBScores]= useState(()=> bracketData?.bracketScores ?? {});
   // confidence: { [matchId]: 1 | 2 | 3 } — multiplies points for correct picks
   const [confidence, setConfidence] = useState(()=> bracketData?.confidence ?? {});
+  // assumptions: { [matchId]: "home"|"away"|"draw" } — assumed outcomes for matches
+  // already locked when the user joined. Seed bracket standings only; never scored,
+  // and superseded by the real result once it's in match_results.
+  const [assumptions, setAssumptions] = useState(()=> bracketData?.assumptions ?? {});
   const [showPowerups, setShowPowerups] = useState(false);
 
   const isLocked = isTournamentStarted();
@@ -812,12 +846,13 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
   useEffect(() => {
     if (!user || restoredRef.current || readOnly) return;
     restoredRef.current = true;
-    supabase.from("submissions").select("picks,scores,bracket,bracket_scores,confidence,tiebreaks,is_submitted,updated_at")
+    supabase.from("submissions").select("picks,scores,bracket,bracket_scores,confidence,assumptions,tiebreaks,is_submitted,updated_at")
       .eq("user_id", user.id).maybeSingle()
       .then(({ data, error }) => {
         if (error || !data) return;
         setIsSubmitted(data.is_submitted ?? false);
-        if (Object.keys(data.picks ?? {}).length === 0) return;
+        if (Object.keys(data.picks ?? {}).length === 0 &&
+            Object.keys(data.assumptions ?? {}).length === 0) return;
         const dbUpdated    = data.updated_at ? new Date(data.updated_at).getTime() : 0;
         const localUpdated = bracketData?.updatedAt ?? 0;
         if (localUpdated > dbUpdated && Object.keys(picks).length > 0) return;
@@ -826,6 +861,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         setBw({ ...emptyWinners(), ...(data.bracket ?? {}) });
         setBScores(data.bracket_scores ?? {});
         setConfidence(data.confidence ?? {});
+        setAssumptions(data.assumptions ?? {});
         // Only adopt cloud tiebreaks when they exist — an empty object must not
         // wipe the auto-seeded best-thirds defaults (which seed before this fetch returns)
         const dbThirds = data.tiebreaks?.thirds ?? [];
@@ -836,6 +872,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
           upsertBracket({ ...bracketData, picks: data.picks, scores: data.scores ?? {},
             bracket: data.bracket ?? null, bracketScores: data.bracket_scores ?? {},
             confidence: data.confidence ?? {},
+            assumptions: data.assumptions ?? {},
             tiebreaks: {
               thirds:      dbThirds.length > 0 ? dbThirds : (bracketData.tiebreaks?.thirds ?? []),
               groupOrders: Object.keys(dbOrders).length > 0 ? dbOrders : (bracketData.tiebreaks?.groupOrders ?? {}),
@@ -845,10 +882,22 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
       .then(() => setRestoreDone(true), () => setRestoreDone(true));
   }, [user]);
 
-  // Fetch match results for pick result badges
+  // Fetch match results for pick result badges, then keep them fresh via Realtime
+  // so TBD bracket slots fill in live as the feed writes final scores
+  // (requires match_results in the supabase_realtime publication — migration 008)
   useEffect(() => {
     supabase.from("match_results").select("*")
       .then(({ data }) => { if (data) setMatchResults(buildResultsMap(data)); });
+    const channel = supabase
+      .channel("match-results-live")
+      .on("postgres_changes", { event: "*", schema: "public", table: "match_results" },
+        (payload) => {
+          if (payload.new?.match_id) {
+            setMatchResults(prev => ({ ...prev, [payload.new.match_id]: payload.new }));
+          }
+        })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
   }, []);
 
   // Auto-save to Supabase (debounced 1.5s) whenever picks change and user is logged in.
@@ -859,7 +908,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
     clearTimeout(autoSaveRef.current);
     setSaveIndicator("saving");
     autoSaveRef.current = setTimeout(async () => {
-      const hasData = Object.keys(picks).length > 0 || Object.values(bw).some(arr => Array.isArray(arr) && arr.some(Boolean));
+      const hasData = Object.keys(picks).length > 0 || Object.keys(assumptions).length > 0 || Object.values(bw).some(arr => Array.isArray(arr) && arr.some(Boolean));
       if (!hasData) { setSaveIndicator(null); return; }
       await supabase.from("submissions").upsert({
         user_id:           user.id,
@@ -871,6 +920,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         bracket:           bw,
         bracket_scores:    bScores,
         confidence,
+        assumptions,
         tiebreaks:         { thirds: thirdsUserPicks, groupOrders: groupOrderOverrides },
         group_picks_count: Object.keys(picks).length,
         updated_at:        new Date().toISOString(),
@@ -899,19 +949,20 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
       }
     }, 1500);
     return () => clearTimeout(autoSaveRef.current);
-  }, [picks, scores, bw, bScores, confidence, thirdsUserPicks, groupOrderOverrides, user, isSubmitted, restoreDone]);
+  }, [picks, scores, bw, bScores, confidence, assumptions, thirdsUserPicks, groupOrderOverrides, user, isSubmitted, restoreDone]);
 
   // Persist the whole bracket object to localStorage whenever anything changes
-  function save(newPicks, newScores, newBw, newBScores, newConfidence = confidence) {
+  function save(newPicks, newScores, newBw, newBScores, newConfidence = confidence, newAssumptions = assumptions) {
     if (!bracketData || readOnly || isSubmitted) return;
     upsertBracket({ ...bracketData, picks: newPicks, scores: newScores, bracket: newBw, bracketScores: newBScores, confidence: newConfidence,
+      assumptions: newAssumptions,
       tiebreaks: { thirds: thirdsUserPicks, groupOrders: groupOrderOverrides } });
   }
 
   // Tiebreak choices change outside save()'s call sites — persist them to localStorage themselves
   useEffect(() => {
     if (!bracketData || readOnly || isSubmitted) return;
-    upsertBracket({ ...bracketData, picks, scores, bracket: bw, bracketScores: bScores, confidence,
+    upsertBracket({ ...bracketData, picks, scores, bracket: bw, bracketScores: bScores, confidence, assumptions,
       tiebreaks: { thirds: thirdsUserPicks, groupOrders: groupOrderOverrides } });
   }, [thirdsUserPicks, groupOrderOverrides]);
 
@@ -932,6 +983,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         bracket:           bw,
         bracket_scores:    bScores,
         confidence,
+        assumptions,
         tiebreaks:         { thirds: thirdsUserPicks, groupOrders: groupOrderOverrides },
         group_picks_count: Object.keys(picks).length,
         is_submitted:      true,
@@ -965,13 +1017,14 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
     } catch { /* ignore */ }
   }
 
-  const { byGroup, thirds, r32Slots } = useMemo(()=>{
-    // For locked matches the user hasn't picked, fall back to the actual result so
-    // group standings and bracket seeding stay correct for late-entry users.
+  const { byGroup, thirds, r32Slots, effectivePicks } = useMemo(()=>{
+    // For locked matches the user hasn't picked, fall back to the actual result —
+    // or, while no result is in yet, the user's assumed outcome — so group standings
+    // and bracket seeding stay correct for late-entry users.
     const effectivePicks = { ...picks };
     for (const m of GROUP_MATCHES) {
-      if (effectivePicks[m.id] == null && isMatchLocked(m.id) && matchResults[m.id]?.result) {
-        effectivePicks[m.id] = matchResults[m.id].result;
+      if (effectivePicks[m.id] == null && isMatchLocked(m.id)) {
+        effectivePicks[m.id] = matchResults[m.id]?.result ?? assumptions[m.id] ?? null;
       }
     }
     const byGroup=computeAllStandings(effectivePicks);
@@ -998,13 +1051,16 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
     const resolvedTied = [...tiedAtCut.filter(t => userPicksFromTied.includes(t.group)), ...autoFill].slice(0, spotsLeft);
     const resolvedThirds = [...autoQualified, ...resolvedTied];
     while (resolvedThirds.length < 8) resolvedThirds.push({ team: null });
-    return { byGroup, thirds: resolvedThirds, r32Slots:buildR32Slots(byGroup,resolvedThirds,picks) };
-  },[picks, groupOrderOverrides, thirdsUserPicks, matchResults]);
+    return { byGroup, thirds: resolvedThirds, r32Slots:buildR32Slots(byGroup,resolvedThirds,effectivePicks), effectivePicks };
+  },[picks, assumptions, groupOrderOverrides, thirdsUserPicks, matchResults]);
 
   const unlockedMatches = GROUP_MATCHES.filter(m => !isMatchLocked(m.id));
   const totalMatches = unlockedMatches.length;
   const pickedCount  = unlockedMatches.filter(m => picks[m.id] != null).length;
   const allPicked    = totalMatches > 0 && pickedCount === totalMatches;
+  // Matches with no pick, no real result, and no assumed outcome — these keep
+  // bracket slots stuck on TBD
+  const unresolvedCount = GROUP_MATCHES.filter(m => effectivePicks[m.id] == null).length;
 
   // Pre-pick the best 3rd-place teams at the cut-line tie by default — users
   // who don't care about the tiebreak get a complete bracket without doing
@@ -1041,6 +1097,18 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
     setBw(fresh);
     setBScores({});
     save(newPicks, scores, fresh, {});
+  }
+
+  // Assumed outcome for a match that was already locked when the user joined.
+  // Only allowed while no real result exists; reseeds the bracket like a pick.
+  function handleAssumption(matchId, pick) {
+    if (readOnly || isSubmitted || !isMatchLocked(matchId) || matchResults[matchId]?.result) return;
+    const newAssumptions = {...assumptions, [matchId]: pick};
+    const fresh = emptyWinners();
+    setAssumptions(newAssumptions);
+    setBw(fresh);
+    setBScores({});
+    save(picks, scores, fresh, {}, confidence, newAssumptions);
   }
 
   function handleConfidence(matchId, value) {
@@ -1701,6 +1769,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
                 onToggle={()=>setOpenGroup(prev=>prev===g?null:g)}
                 matchResults={matchResults}
                 readOnly={readOnly || isSubmitted}
+                assumptions={assumptions} onAssume={handleAssumption}
                 onReorderStandings={order => setGroupOrderOverrides(prev => ({...prev, [g]: order}))}
               />
             ))}
@@ -1779,12 +1848,12 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
       {/* ══ KNOCKOUT BRACKET ════════════════════════════════════════════════ */}
       {view==="knockout"&&(
         <div>
-          {!allPicked && !readOnly &&(
+          {unresolvedCount > 0 && !readOnly &&(
             <div className="flex items-center gap-3 mb-5 px-4 py-3 rounded-xl"
               style={{background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.2)"}}>
               <span className="text-lg">⚠️</span>
               <p className="text-xs" style={{color:"rgba(255,255,255,0.5)"}}>
-                <strong style={{color:"#f59e0b"}}>{totalMatches-pickedCount} group matches</strong> still unpicked — unresolved teams show as TBD.
+                <strong style={{color:"#f59e0b"}}>{unresolvedCount} group matches</strong> still unresolved (no pick, result, or assumed outcome) — unresolved teams show as TBD.
               </p>
               <button onClick={()=>setView("groups")}
                 className="ml-auto px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap"

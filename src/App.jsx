@@ -21,6 +21,7 @@ import Teams         from "./pages/Teams";
 import { useAuth }   from "./hooks/useAuth";
 import { supabase }  from "./lib/supabase";
 import { getFlagClass } from "./utils/flags";
+import { buildResultsMap, calculateStreaks, calculateGroupScores } from "./utils/scoring";
 import banner        from "./assets/worldcupbanner.webp";
 import trophy        from "./assets/worldcuppng.webp";
 import wclogo        from "./assets/worldcuplogo.webp";
@@ -77,18 +78,41 @@ function CountdownBanner() {
 
 // ── User Profile Modal ────────────────────────────────────────────────────────
 
+function ProfileStat({ label, value, accent, icon }) {
+  return (
+    <div className="flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-xl"
+      style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
+      <span className="flex items-center gap-1 font-black tabular-nums" style={{ color: accent ?? "white", fontSize: "1.25rem", lineHeight: 1 }}>
+        {icon && <span style={{ fontSize: "0.9rem" }}>{icon}</span>}{value}
+      </span>
+      <span style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+        {label}
+      </span>
+    </div>
+  );
+}
+
 function UserProfileModal({ userId, username, avatarUrl, onClose, onViewBracket }) {
   const [profile, setProfile]     = useState(null);
   const [submission, setSubmission] = useState(null);
+  const [stats, setStats]         = useState(null); // { current, best, accuracy, graded }
   const [loading, setLoading]     = useState(true);
 
   useEffect(() => {
     Promise.all([
       supabase.from("profiles").select("username, avatar_url").eq("id", userId).maybeSingle(),
-      supabase.from("submissions").select("group_picks_count, bracket").eq("user_id", userId).maybeSingle(),
-    ]).then(([{ data: p }, { data: s }]) => {
+      supabase.from("submissions").select("group_picks_count, bracket, picks").eq("user_id", userId).maybeSingle(),
+      supabase.from("match_results").select("match_id, result"),
+    ]).then(([{ data: p }, { data: s }, { data: r }]) => {
       setProfile(p);
       setSubmission(s);
+      if (s?.picks) {
+        const resultsMap = buildResultsMap(r ?? []);
+        const { current, best, graded } = calculateStreaks(s.picks, resultsMap);
+        const { correct, incorrect } = calculateGroupScores(s.picks, resultsMap);
+        const total = correct + incorrect;
+        setStats({ current, best, graded, accuracy: total > 0 ? Math.round((correct / total) * 100) : null });
+      }
       setLoading(false);
     });
   }, [userId]);
@@ -99,75 +123,80 @@ function UserProfileModal({ userId, username, avatarUrl, onClose, onViewBracket 
   const flagCls = champion ? getFlagClass(champion) : null;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col" style={{ background: "rgba(10,2,26,0.97)", backdropFilter: "blur(12px)" }}>
-      {/* Header */}
-      <div className="flex items-center gap-3 px-5 py-4 shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-        <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "1.1rem", color: "rgba(255,255,255,0.7)", letterSpacing: "0.08em" }}>Profile</span>
-        <button onClick={onClose}
-          className="ml-auto w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold transition-all"
-          style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.75)" }}
-          onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.15)"; e.currentTarget.style.color = "white"; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.07)"; e.currentTarget.style.color = "rgba(255,255,255,0.5)"; }}>
-          ✕
-        </button>
-      </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-6" onClick={onClose}
+      style={{ background: "rgba(10,2,26,0.85)", backdropFilter: "blur(12px)" }}>
+      {loading ? (
+        <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>Loading…</p>
+      ) : (
+        <div className="w-full max-w-sm rounded-2xl overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}
+          style={{ background: "linear-gradient(160deg,#1f0645,#160336)", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 24px 60px rgba(0,0,0,0.55)" }}>
 
-      {/* Body */}
-      <div className="flex-1 flex items-center justify-center p-6">
-        {loading ? (
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>Loading…</p>
-        ) : (
-          <div className="w-full max-w-sm rounded-2xl p-8 flex flex-col items-center gap-5"
-            style={{ background: "linear-gradient(160deg,#1f0645,#160336)", border: "1px solid rgba(255,255,255,0.1)" }}>
+          {/* Header band */}
+          <div className="relative flex flex-col items-center pt-8 pb-5 px-6"
+            style={{ background: "linear-gradient(180deg, rgba(200,240,0,0.1), transparent)" }}>
+            <button onClick={onClose}
+              className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold transition-all"
+              style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.75)" }}
+              onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.15)"; e.currentTarget.style.color = "white"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.07)"; e.currentTarget.style.color = "rgba(255,255,255,0.75)"; }}>
+              ✕
+            </button>
 
             {/* Avatar */}
-            {displayAvatar
-              ? <img src={displayAvatar} alt={displayName} className="rounded-full object-cover" style={{ width: 80, height: 80 }} />
-              : <div className="rounded-full flex items-center justify-center font-black"
-                  style={{ width: 80, height: 80, background: "rgba(200,240,0,0.15)", color: "#c8f000", fontSize: "2rem" }}>
-                  {displayName?.[0]?.toUpperCase() ?? "?"}
-                </div>
-            }
-
-            {/* Username */}
-            <div className="text-center">
-              <h2 style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "2rem", color: "white", letterSpacing: "0.06em", lineHeight: 1 }}>
-                {displayName}
-              </h2>
+            <div className="rounded-full p-0.5" style={{ background: "linear-gradient(135deg,#c8f000,#84cc16)" }}>
+              {displayAvatar
+                ? <img src={displayAvatar} alt={displayName} className="rounded-full object-cover block"
+                    style={{ width: 80, height: 80, border: "3px solid #1a0533" }} />
+                : <div className="rounded-full flex items-center justify-center font-black"
+                    style={{ width: 80, height: 80, background: "#241048", color: "#c8f000", fontSize: "2rem", border: "3px solid #1a0533" }}>
+                    {displayName?.[0]?.toUpperCase() ?? "?"}
+                  </div>
+              }
             </div>
 
-            {/* Stats */}
-            {submission ? (
-              <div className="flex flex-col items-center gap-3 w-full">
-                <div className="flex items-center gap-2 px-3 py-2 rounded-xl"
-                  style={{ background: "rgba(200,240,0,0.07)", border: "1px solid rgba(200,240,0,0.15)" }}>
-                  <span className="text-xs font-black tabular-nums" style={{ color: "#c8f000" }}>{submission.group_picks_count}</span>
-                  <span className="text-xs" style={{ color: "rgba(255,255,255,0.7)" }}>group picks</span>
-                </div>
-                {champion && (
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-xl"
-                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                    <span style={{ fontSize: "1rem" }}>🏆</span>
-                    {flagCls && <span className={flagCls} style={{ fontSize: "1rem" }} />}
-                    <span className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.85)" }}>{champion}</span>
-                  </div>
-                )}
+            <h2 className="mt-3" style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "2rem", color: "white", letterSpacing: "0.06em", lineHeight: 1 }}>
+              {displayName}
+            </h2>
+            {champion && (
+              <div className="flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full"
+                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <span style={{ fontSize: "0.8rem" }}>🏆</span>
+                {flagCls && <span className={flagCls} style={{ fontSize: "0.9rem" }} />}
+                <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.85)" }}>{champion}</span>
               </div>
-            ) : (
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>No picks yet</p>
-            )}
-
-            {/* View Bracket button */}
-            {submission && (
-              <button onClick={onViewBracket}
-                className="w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95 mt-1"
-                style={{ background: "linear-gradient(135deg,#c8f000,#84cc16)", color: "#1a0533" }}>
-                View Bracket
-              </button>
             )}
           </div>
-        )}
-      </div>
+
+          {/* Stats */}
+          <div className="px-6 pb-6 flex flex-col gap-4">
+            {submission ? (
+              <>
+                <div className="grid grid-cols-2 gap-2">
+                  <ProfileStat label="Current streak" value={stats?.current ?? 0} icon="🔥"
+                    accent={(stats?.current ?? 0) > 0 ? "#fb923c" : "rgba(255,255,255,0.45)"} />
+                  <ProfileStat label="Best streak" value={stats?.best ?? 0} accent="#c8f000" />
+                  <ProfileStat label="Accuracy"
+                    value={stats?.accuracy != null ? `${stats.accuracy}%` : "—"}
+                    accent={stats?.accuracy != null ? (stats.accuracy >= 50 ? "#22c55e" : "#f59e0b") : "rgba(255,255,255,0.45)"} />
+                  <ProfileStat label="Group picks" value={submission.group_picks_count ?? 0} />
+                </div>
+                {stats?.graded > 0 && (
+                  <p className="text-center" style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.3)", marginTop: -6 }}>
+                    Accuracy over {stats.graded} graded {stats.graded === 1 ? "match" : "matches"}
+                  </p>
+                )}
+                <button onClick={onViewBracket}
+                  className="w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95"
+                  style={{ background: "linear-gradient(135deg,#c8f000,#84cc16)", color: "#1a0533" }}>
+                  View Bracket
+                </button>
+              </>
+            ) : (
+              <p className="text-sm text-center py-4" style={{ color: "rgba(255,255,255,0.6)" }}>No picks yet</p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

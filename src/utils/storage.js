@@ -118,6 +118,7 @@ export function createBracket(name = "My Bracket", mode = "winner") {
     bracket:       null,
     bracketScores: {},
     confidence:    {},
+    assumptions:   {},
   };
 }
 
