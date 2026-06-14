@@ -230,50 +230,89 @@ function bestThirdPlace(standings) {
 
 // ── 3. Round of 32 bracket structure ─────────────────────────────────────────
 //
-// 24 group qualifiers (1st + 2nd × 12 groups) + 8 best 3rd-place = 32 teams.
+// Official FIFA 2026 R32 seeding (M73–M88), mirroring MyBracket.jsx exactly.
 //
-// Bracket layout — 16 R32 matches:
-//   Matches  1-12 : cross-pair group winner vs runner-up from adjacent group
-//   Matches 13-16 : 8 best third-place teams play each other (seeded 1v8, 2v7, 3v6, 4v5)
+// R16 pairings (winners of R32):
+//   R16-0: R32-1  vs R32-4   R16-4: R32-10 vs R32-11
+//   R16-1: R32-0  vs R32-2   R16-5: R32-8  vs R32-9
+//   R16-2: R32-3  vs R32-5   R16-6: R32-13 vs R32-15
+//   R16-3: R32-6  vs R32-7   R16-7: R32-12 vs R32-14
 //
-// R16 pairing (winners of R32):
-//   R16-1 : R32-1  vs R32-13
-//   R16-2 : R32-2  vs R32-14
-//   R16-3 : R32-3  vs R32-15
-//   R16-4 : R32-4  vs R32-16
-//   R16-5 : R32-5  vs R32-9
-//   R16-6 : R32-6  vs R32-10
-//   R16-7 : R32-7  vs R32-11
-//   R16-8 : R32-8  vs R32-12
+// QF: QF-0: R16-0 vs R16-1 | QF-1: R16-4 vs R16-5
+//     QF-2: R16-2 vs R16-3 | QF-3: R16-6 vs R16-7
 //
-// QF: QF-1: R16-1 vs R16-2 | QF-2: R16-3 vs R16-4
-//     QF-3: R16-5 vs R16-6 | QF-4: R16-7 vs R16-8
-//
-// SF: SF-1: QF-1 vs QF-2 | SF-2: QF-3 vs QF-4
-// Final: SF-1 vs SF-2
+// SF: SF-0: QF-0 vs QF-1 | SF-1: QF-2 vs QF-3
+// Final: SF-0 vs SF-1
 
-function buildR32Slots(standings, thirds) {
-  // Helper: get team at group position (0=1st, 1=2nd, 2=3rd)
-  const pos = (group, idx) => standings[group][idx].team;
+// 3rd-place slots: R32 index → eligible source groups (official FIFA constraint)
+const THIRD_SLOTS = [
+  [1,  new Set(['A','B','C','D','F'])],
+  [4,  new Set(['C','D','F','G','H'])],
+  [6,  new Set(['C','E','F','H','I'])],
+  [7,  new Set(['E','H','I','J','K'])],
+  [8,  new Set(['B','E','F','I','J'])],
+  [9,  new Set(['A','E','H','I','J'])],
+  [12, new Set(['E','F','G','I','J'])],
+  [14, new Set(['D','E','I','J','L'])],
+];
 
-  // 12 cross-pairs: 1X vs 2(adjacent group)
-  // Group pairs: A↔B, C↔D, E↔F, G↔H, I↔J, K↔L
-  const pairs = [["A","B"],["C","D"],["E","F"],["G","H"],["I","J"],["K","L"]];
+// Assign 8 qualifying 3rd-place teams to their official bracket slots via backtracking.
+function assign3rdPlace(thirds) {
+  const ordered = [...THIRD_SLOTS]
+    .map(([idx, eligible]) => ({ idx, eligible, count: thirds.filter(t => t.team && eligible.has(t.group)).length }))
+    .sort((a, b) => a.count - b.count);
 
-  const r32 = [];
-  for (const [g1, g2] of pairs) {
-    r32.push({ home: pos(g1,0), away: pos(g2,1) });  // 1G1 vs 2G2
-    r32.push({ home: pos(g2,0), away: pos(g1,1) });  // 1G2 vs 2G1
+  const result = {};
+  const used = new Set();
+
+  function bt(i) {
+    if (i === ordered.length) return true;
+    const { idx, eligible } = ordered[i];
+    for (const t of thirds) {
+      if (t.team && !used.has(t.group) && eligible.has(t.group)) {
+        result[idx] = t.team;
+        used.add(t.group);
+        if (bt(i + 1)) return true;
+        delete result[idx];
+        used.delete(t.group);
+      }
+    }
+    return false;
   }
 
-  // 4 matches among 8 best 3rd-place teams (seeded: 1v8, 2v7, 3v6, 4v5)
-  const t = thirds.map(x => x.team);
-  r32.push({ home: t[0], away: t[7] });
-  r32.push({ home: t[1], away: t[6] });
-  r32.push({ home: t[2], away: t[5] });
-  r32.push({ home: t[3], away: t[4] });
+  bt(0);
+  return result; // { slotIdx: team }
+}
 
-  return r32; // 16 slots
+function buildR32Slots(standings, thirds) {
+  const pos = (group, idx) => standings[group][idx].team;
+
+  // Official R32 matchups (M73–M88)
+  const slots = [
+    { home: pos('A',1), away: pos('B',1) },  // 0  M73: 2A vs 2B
+    { home: pos('E',0), away: null        },  // 1  M74: 1E vs 3rd(A/B/C/D/F)
+    { home: pos('F',0), away: pos('C',1)  },  // 2  M75: 1F vs 2C
+    { home: pos('C',0), away: pos('F',1)  },  // 3  M76: 1C vs 2F
+    { home: pos('I',0), away: null        },  // 4  M77: 1I vs 3rd(C/D/F/G/H)
+    { home: pos('E',1), away: pos('I',1)  },  // 5  M78: 2E vs 2I
+    { home: pos('A',0), away: null        },  // 6  M79: 1A vs 3rd(C/E/F/H/I)
+    { home: pos('L',0), away: null        },  // 7  M80: 1L vs 3rd(E/H/I/J/K)
+    { home: pos('D',0), away: null        },  // 8  M81: 1D vs 3rd(B/E/F/I/J)
+    { home: pos('G',0), away: null        },  // 9  M82: 1G vs 3rd(A/E/H/I/J)
+    { home: pos('K',1), away: pos('L',1)  },  // 10 M83: 2K vs 2L
+    { home: pos('H',0), away: pos('J',1)  },  // 11 M84: 1H vs 2J
+    { home: pos('B',0), away: null        },  // 12 M85: 1B vs 3rd(E/F/G/I/J)
+    { home: pos('J',0), away: pos('H',1)  },  // 13 M86: 1J vs 2H
+    { home: pos('K',0), away: null        },  // 14 M87: 1K vs 3rd(D/E/I/J/L)
+    { home: pos('D',1), away: pos('G',1)  },  // 15 M88: 2D vs 2G
+  ];
+
+  const assignments = assign3rdPlace(thirds);
+  for (const [idx] of THIRD_SLOTS) {
+    if (assignments[idx]) slots[idx].away = assignments[idx];
+  }
+
+  return slots;
 }
 
 // ── 4. Full Knockout Simulation ───────────────────────────────────────────────
@@ -282,17 +321,17 @@ function simulateKnockout(r32Slots) {
   // Play all 16 R32 matches
   const r32Results = r32Slots.map(({ home, away }) => knockoutWinner(home, away));
 
-  // R16 pairings (by R32 match indices, 0-based)
+  // R16 pairings — official FIFA bracket (matches MATCH_SOURCES in MyBracket.jsx)
   const r16Pairs = [
-    [0,12],[1,13],[2,14],[3,15],   // zone A (groups A-D + 3rds)
-    [4,8],[5,9],[6,10],[7,11],     // zone B (groups E-L)
+    [1,4],[0,2],[3,5],[6,7],       // M89–M92
+    [10,11],[8,9],[13,15],[12,14], // M93–M96
   ];
   const r16Results = r16Pairs.map(([i, j]) =>
     knockoutWinner(r32Results[i].winner, r32Results[j].winner)
   );
 
-  // QF
-  const qfPairs = [[0,1],[2,3],[4,5],[6,7]];
+  // QF — official FIFA bracket
+  const qfPairs = [[0,1],[4,5],[2,3],[6,7]];
   const qfResults = qfPairs.map(([i, j]) =>
     knockoutWinner(r16Results[i].winner, r16Results[j].winner)
   );
@@ -373,12 +412,12 @@ function stochasticGroupStage() {
 function stochasticKnockout(r32Slots) {
   const r32Results = r32Slots.map(({ home, away }) => stochasticMatch(home, away, true));
 
-  const r16Pairs = [[0,12],[1,13],[2,14],[3,15],[4,8],[5,9],[6,10],[7,11]];
+  const r16Pairs = [[1,4],[0,2],[3,5],[6,7],[10,11],[8,9],[13,15],[12,14]];
   const r16Results = r16Pairs.map(([i, j]) =>
     stochasticMatch(r32Results[i].winner, r32Results[j].winner, true)
   );
 
-  const qfPairs = [[0,1],[2,3],[4,5],[6,7]];
+  const qfPairs = [[0,1],[4,5],[2,3],[6,7]];
   const qfResults = qfPairs.map(([i, j]) =>
     stochasticMatch(r16Results[i].winner, r16Results[j].winner, true)
   );

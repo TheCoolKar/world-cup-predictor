@@ -7,7 +7,7 @@
  *   • Full knockout bracket (R32 → R16 → QF → SF → Final + 3rd place)
  */
 
-import { useMemo }            from "react";
+import { useMemo, useState }  from "react";
 import { simulateTournament } from "../utils/TournamentSimulator";
 import { useTeamModal }       from "../context/TeamModalContext";
 import { getFlagClass } from '../utils/flags';
@@ -220,69 +220,11 @@ function RoundColumn({ title, matches, labelFn, isThirdPlace = false }) {
   );
 }
 
-function ChampionCard({ team }) {
-  return (
-    <div className="flex flex-col items-center gap-3 shrink-0">
-      <p className="font-bold uppercase tracking-widest" style={{ color: "#fbbf24", fontSize: "0.6rem" }}>
-        Champion
-      </p>
-      <div
-        className="flex flex-col items-center gap-2 rounded-2xl px-5 py-4"
-        style={{
-          background: "linear-gradient(135deg, rgba(251,191,36,0.18), rgba(251,191,36,0.06))",
-          border: "1px solid rgba(251,191,36,0.4)",
-          boxShadow: "0 0 32px rgba(251,191,36,0.15)",
-        }}
-      >
-        <span className={getFlagClass(team) ?? ''} style={{fontSize:'2.5rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
-        <span
-          className="text-white font-black text-center"
-          style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.3rem", letterSpacing: "0.06em" }}
-        >
-          {team}
-        </span>
-        <span style={{ fontSize: "1.5rem" }}>🏆</span>
-      </div>
-    </div>
-  );
-}
 
-function OddsBar({ value, color = "#c8f000" }) {
-  return (
-    <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
-      <div
-        className="h-full rounded-full"
-        style={{ width: `${Math.min(100, value)}%`, background: color }}
-      />
-    </div>
-  );
-}
-
-function OddsTeam({ team, value, rank }) {
-  const { openTeam } = useTeamModal();
-
-  return (
-    <button
-      onClick={() => openTeam(team)}
-      className="rounded-xl p-3 text-left transition-transform duration-150 hover:-translate-y-0.5"
-      style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
-    >
-      <div className="flex items-center gap-2 mb-2">
-        <span className="text-xs font-black w-5" style={{ color: "rgba(255,255,255,0.55)" }}>#{rank}</span>
-        <span className={getFlagClass(team) ?? ''} style={{fontSize:'1.2rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
-        <span className="text-xs font-bold text-white truncate flex-1">{team}</span>
-        <span className="text-xs font-black tabular-nums" style={{ color: "#fbbf24" }}>{value}%</span>
-      </div>
-      <OddsBar value={value} color="#fbbf24" />
-    </button>
-  );
-}
 
 function MonteCarloSection() {
   const { openTeam } = useTeamModal();
-  const championOdds = Object.entries(monteCarlo.champion)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 8);
+  const [open, setOpen] = useState(false);
 
   const deepRunOdds = Object.keys(monteCarlo.groupStage)
     .map(team => ({
@@ -298,77 +240,93 @@ function MonteCarloSection() {
 
   return (
     <section className="mb-10">
-      <div className="flex items-end justify-between gap-4 mb-4">
-        <div>
-          <h3
-            className="text-white"
-            style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.4rem", letterSpacing: "0.06em" }}
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between gap-4 px-4 py-3 rounded-xl text-left transition-colors hover:bg-white/5"
+        style={{
+          border: "1px solid rgba(255,255,255,0.1)",
+          background: open ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)",
+          marginBottom: open ? "0.75rem" : 0,
+          borderBottomLeftRadius: open ? 0 : undefined,
+          borderBottomRightRadius: open ? 0 : undefined,
+          borderBottom: open ? "1px solid rgba(255,255,255,0.06)" : undefined,
+        }}
+      >
+        <div className="flex items-center gap-3 min-w-0">
+          <span
+            className="text-xs font-black px-2 py-0.5 rounded-md shrink-0"
+            style={{ background: "rgba(251,191,36,0.12)", color: "#fbbf24", letterSpacing: "0.06em" }}
           >
-            10,000 Simulation Odds
-          </h3>
-          <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.6)" }}>
-            Advancement probabilities from full-tournament Monte Carlo runs
-          </p>
+            {monteCarlo.simulations.toLocaleString()} SIMS
+          </span>
+          <span
+            className="text-sm font-bold text-white truncate"
+            style={{ letterSpacing: "0.01em" }}
+          >
+            Top 16 teams odds after 10,000 simulations
+          </span>
         </div>
         <span
-          className="text-xs font-black px-2 py-1 rounded-md shrink-0"
-          style={{ background: "rgba(251,191,36,0.12)", color: "#fbbf24", letterSpacing: "0.06em" }}
+          className="text-xs font-bold shrink-0 ml-2"
+          style={{ color: "rgba(255,255,255,0.45)" }}
         >
-          {monteCarlo.simulations.toLocaleString()} SIMS
+          {open ? "▲" : "▼"}
         </span>
-      </div>
+      </button>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-2 mb-4">
-        {championOdds.map(([team, value], i) => (
-          <OddsTeam key={team} team={team} value={value} rank={i + 1} />
-        ))}
-      </div>
-
-      <div
-        className="rounded-xl overflow-x-auto"
-        style={{ border: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.03)" }}
-      >
+      {open && (
         <div
-          className="grid items-center px-3 py-2 text-xs font-bold uppercase tracking-widest"
+          className="overflow-x-auto"
           style={{
-            gridTemplateColumns: "minmax(150px,1fr) repeat(5,64px)",
-            color: "rgba(255,255,255,0.6)",
-            background: "rgba(255,255,255,0.04)",
-            borderBottom: "1px solid rgba(255,255,255,0.06)",
-            fontSize: "0.58rem",
+            border: "1px solid rgba(255,255,255,0.1)",
+            borderTop: "none",
+            borderBottomLeftRadius: "0.75rem",
+            borderBottomRightRadius: "0.75rem",
+            background: "rgba(255,255,255,0.03)",
           }}
         >
-          <span>Team</span>
-          <span className="text-right">R16</span>
-          <span className="text-right">QF</span>
-          <span className="text-right">SF</span>
-          <span className="text-right">Final</span>
-          <span className="text-right">Win</span>
-        </div>
-
-        {deepRunOdds.map((row, i) => (
-          <button
-            key={row.team}
-            onClick={() => openTeam(row.team)}
-            className="grid items-center w-full px-3 py-2 text-xs transition-colors hover:bg-white/5"
+          <div
+            className="grid items-center px-3 py-2 text-xs font-bold uppercase tracking-widest"
             style={{
               gridTemplateColumns: "minmax(150px,1fr) repeat(5,64px)",
-              borderBottom: i < deepRunOdds.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none",
+              color: "rgba(255,255,255,0.6)",
+              background: "rgba(255,255,255,0.04)",
+              borderBottom: "1px solid rgba(255,255,255,0.06)",
+              fontSize: "0.58rem",
             }}
           >
-            <span className="flex items-center gap-2 min-w-0">
-              <span className="font-black w-5" style={{ color: "rgba(255,255,255,0.55)" }}>{i + 1}</span>
-              <span className={getFlagClass(row.team) ?? ''} style={{fontSize:'1rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
-              <span className="font-semibold text-white truncate">{row.team}</span>
-            </span>
-            <span className="text-right tabular-nums" style={{ color: "rgba(255,255,255,0.7)" }}>{row.r16}%</span>
-            <span className="text-right tabular-nums" style={{ color: "rgba(255,255,255,0.55)" }}>{row.qf}%</span>
-            <span className="text-right tabular-nums" style={{ color: "#c8f000" }}>{row.sf}%</span>
-            <span className="text-right tabular-nums" style={{ color: "#a5b4fc" }}>{row.final}%</span>
-            <span className="text-right tabular-nums font-black" style={{ color: "#fbbf24" }}>{row.champion}%</span>
-          </button>
-        ))}
-      </div>
+            <span>Team</span>
+            <span className="text-right">R16</span>
+            <span className="text-right">QF</span>
+            <span className="text-right">SF</span>
+            <span className="text-right">Final</span>
+            <span className="text-right">Win</span>
+          </div>
+
+          {deepRunOdds.map((row, i) => (
+            <button
+              key={row.team}
+              onClick={() => openTeam(row.team)}
+              className="grid items-center w-full px-3 py-2 text-xs transition-colors hover:bg-white/5"
+              style={{
+                gridTemplateColumns: "minmax(150px,1fr) repeat(5,64px)",
+                borderBottom: i < deepRunOdds.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none",
+              }}
+            >
+              <span className="flex items-center gap-2 min-w-0">
+                <span className="font-black w-5" style={{ color: "rgba(255,255,255,0.55)" }}>{i + 1}</span>
+                <span className={getFlagClass(row.team) ?? ''} style={{fontSize:'1rem',lineHeight:1,display:'inline-block',flexShrink:0}} />
+                <span className="font-semibold text-white truncate">{row.team}</span>
+              </span>
+              <span className="text-right tabular-nums" style={{ color: "rgba(255,255,255,0.7)" }}>{row.r16}%</span>
+              <span className="text-right tabular-nums" style={{ color: "rgba(255,255,255,0.55)" }}>{row.qf}%</span>
+              <span className="text-right tabular-nums" style={{ color: "#c8f000" }}>{row.sf}%</span>
+              <span className="text-right tabular-nums" style={{ color: "#a5b4fc" }}>{row.final}%</span>
+              <span className="text-right tabular-nums font-black" style={{ color: "#fbbf24" }}>{row.champion}%</span>
+            </button>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
@@ -493,7 +451,7 @@ export default function Bracket() {
             <RoundColumn title="Quarterfinal" matches={qfResults.slice(0, 2)}  labelFn={i => `QF · ${i + 1}`} />
             <Connector />
 
-            {/* Centre column: SF1 → Champion ← SF2 → 3rd Place */}
+            {/* Centre column: SF1 → Final → SF2 + 3rd Place */}
             <div className="flex flex-col items-center gap-3 shrink-0">
               <p
                 className="font-bold uppercase tracking-widest text-center mb-1"
@@ -502,12 +460,31 @@ export default function Bracket() {
                 Semifinal
               </p>
               <KOMatch result={sfResults[0]} label="SF 1" />
-              <div className="my-2">
-                <ChampionCard team={finalResult.winner} />
+
+              {/* Final */}
+              <div className="flex flex-col items-center gap-2 my-1 w-full">
+                <div className="flex items-center gap-2 w-full">
+                  <div className="h-px flex-1" style={{ background: "rgba(251,191,36,0.25)" }} />
+                  <span style={{ color: "#fbbf24", fontSize: "0.65rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", whiteSpace: "nowrap" }}>
+                    🏆 Final
+                  </span>
+                  <div className="h-px flex-1" style={{ background: "rgba(251,191,36,0.25)" }} />
+                </div>
+                <KOMatch result={finalResult} label="Final" isChampion />
+                <div className="flex flex-col items-center gap-1 pb-1">
+                  <span className={getFlagClass(finalResult.winner) ?? ''} style={{ fontSize: "2rem", lineHeight: 1, display: "inline-block" }} />
+                  <span
+                    style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", color: "#fbbf24", letterSpacing: "0.08em" }}
+                  >
+                    {finalResult.winner}
+                  </span>
+                  <span style={{ fontSize: "1.2rem" }}>🏆</span>
+                </div>
               </div>
+
               <KOMatch result={sfResults[1]} label="SF 2" />
 
-              {/* 3rd place — sits naturally below the two SF losers */}
+              {/* 3rd place */}
               <div className="flex flex-col items-center gap-2 mt-1 w-full">
                 <div className="flex items-center gap-2 w-full">
                   <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.08)" }} />
