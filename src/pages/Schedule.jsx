@@ -118,42 +118,42 @@ const KO_THIRD_SLOTS = [
 
 // Official FIFA 2026 knockout schedule
 const KO_SCHEDULE = [
-  // R32 — M73–M88
+  // R32 — M73–M88 (official dates June 28 – July 3; times converted to ET)
   { id:"M73",  round:"R32", idx:0,  date:"2026-06-28", time:"3:00 PM ET" },
-  { id:"M74",  round:"R32", idx:1,  date:"2026-06-28", time:"7:00 PM ET" },
-  { id:"M75",  round:"R32", idx:2,  date:"2026-06-29", time:"3:00 PM ET" },
-  { id:"M76",  round:"R32", idx:3,  date:"2026-06-29", time:"7:00 PM ET" },
-  { id:"M77",  round:"R32", idx:4,  date:"2026-06-30", time:"3:00 PM ET" },
-  { id:"M78",  round:"R32", idx:5,  date:"2026-06-30", time:"7:00 PM ET" },
-  { id:"M79",  round:"R32", idx:6,  date:"2026-07-01", time:"3:00 PM ET" },
-  { id:"M80",  round:"R32", idx:7,  date:"2026-07-01", time:"7:00 PM ET" },
-  { id:"M81",  round:"R32", idx:8,  date:"2026-07-02", time:"3:00 PM ET" },
-  { id:"M82",  round:"R32", idx:9,  date:"2026-07-02", time:"7:00 PM ET" },
-  { id:"M83",  round:"R32", idx:10, date:"2026-07-03", time:"3:00 PM ET" },
-  { id:"M84",  round:"R32", idx:11, date:"2026-07-03", time:"7:00 PM ET" },
-  { id:"M85",  round:"R32", idx:12, date:"2026-07-04", time:"3:00 PM ET" },
-  { id:"M86",  round:"R32", idx:13, date:"2026-07-04", time:"7:00 PM ET" },
-  { id:"M87",  round:"R32", idx:14, date:"2026-07-05", time:"3:00 PM ET" },
-  { id:"M88",  round:"R32", idx:15, date:"2026-07-05", time:"7:00 PM ET" },
-  // R16 — M89–M96
-  { id:"M89",  round:"R16", idx:0,  date:"2026-07-06", time:"3:00 PM ET" },
-  { id:"M90",  round:"R16", idx:1,  date:"2026-07-06", time:"7:00 PM ET" },
-  { id:"M91",  round:"R16", idx:2,  date:"2026-07-07", time:"3:00 PM ET" },
-  { id:"M92",  round:"R16", idx:3,  date:"2026-07-07", time:"7:00 PM ET" },
-  { id:"M93",  round:"R16", idx:4,  date:"2026-07-08", time:"3:00 PM ET" },
-  { id:"M94",  round:"R16", idx:5,  date:"2026-07-08", time:"7:00 PM ET" },
-  { id:"M95",  round:"R16", idx:6,  date:"2026-07-09", time:"3:00 PM ET" },
-  { id:"M96",  round:"R16", idx:7,  date:"2026-07-09", time:"7:00 PM ET" },
-  // QF — M97–M100
-  { id:"M97",  round:"QF",  idx:0,  date:"2026-07-11", time:"3:00 PM ET" },
-  { id:"M98",  round:"QF",  idx:1,  date:"2026-07-11", time:"7:00 PM ET" },
-  { id:"M99",  round:"QF",  idx:2,  date:"2026-07-12", time:"3:00 PM ET" },
-  { id:"M100", round:"QF",  idx:3,  date:"2026-07-12", time:"7:00 PM ET" },
-  // SF — M101–M102
-  { id:"M101", round:"SF",  idx:0,  date:"2026-07-14", time:"7:00 PM ET" },
-  { id:"M102", round:"SF",  idx:1,  date:"2026-07-15", time:"7:00 PM ET" },
-  // Final — M104 (M103 = 3rd place)
-  { id:"M104", round:"F",   idx:0,  date:"2026-07-19", time:"7:00 PM ET" },
+  { id:"M74",  round:"R32", idx:1,  date:"2026-06-29", time:"4:30 PM ET" },
+  { id:"M75",  round:"R32", idx:2,  date:"2026-06-29", time:"9:00 PM ET" },
+  { id:"M76",  round:"R32", idx:3,  date:"2026-06-29", time:"12:00 PM ET" },
+  { id:"M77",  round:"R32", idx:4,  date:"2026-06-30", time:"5:00 PM ET" },
+  { id:"M78",  round:"R32", idx:5,  date:"2026-06-30", time:"1:00 PM ET" },
+  { id:"M79",  round:"R32", idx:6,  date:"2026-06-30", time:"9:00 PM ET" },
+  { id:"M80",  round:"R32", idx:7,  date:"2026-07-01", time:"12:00 PM ET" },
+  { id:"M81",  round:"R32", idx:8,  date:"2026-07-01", time:"8:00 PM ET" },
+  { id:"M82",  round:"R32", idx:9,  date:"2026-07-01", time:"4:00 PM ET" },
+  { id:"M83",  round:"R32", idx:10, date:"2026-07-02", time:"7:00 PM ET" },
+  { id:"M84",  round:"R32", idx:11, date:"2026-07-02", time:"3:00 PM ET" },
+  { id:"M85",  round:"R32", idx:12, date:"2026-07-02", time:"11:00 PM ET" },
+  { id:"M86",  round:"R32", idx:13, date:"2026-07-03", time:"6:00 PM ET" },
+  { id:"M87",  round:"R32", idx:14, date:"2026-07-03", time:"8:30 PM ET" },
+  { id:"M88",  round:"R32", idx:15, date:"2026-07-03", time:"1:00 PM ET" },
+  // R16 — M89–M96 (official dates July 4 – 7)
+  { id:"M89",  round:"R16", idx:0,  date:"2026-07-04", time:"5:00 PM ET" },
+  { id:"M90",  round:"R16", idx:1,  date:"2026-07-04", time:"12:00 PM ET" },
+  { id:"M91",  round:"R16", idx:2,  date:"2026-07-05", time:"4:00 PM ET" },
+  { id:"M92",  round:"R16", idx:3,  date:"2026-07-05", time:"8:00 PM ET" },
+  { id:"M93",  round:"R16", idx:4,  date:"2026-07-06", time:"2:00 PM ET" },
+  { id:"M94",  round:"R16", idx:5,  date:"2026-07-06", time:"8:00 PM ET" },
+  { id:"M95",  round:"R16", idx:6,  date:"2026-07-07", time:"12:00 PM ET" },
+  { id:"M96",  round:"R16", idx:7,  date:"2026-07-07", time:"4:00 PM ET" },
+  // QF — M97–M100 (official dates July 9 – 11)
+  { id:"M97",  round:"QF",  idx:0,  date:"2026-07-09", time:"4:00 PM ET" },
+  { id:"M98",  round:"QF",  idx:1,  date:"2026-07-10", time:"3:00 PM ET" },
+  { id:"M99",  round:"QF",  idx:2,  date:"2026-07-11", time:"5:00 PM ET" },
+  { id:"M100", round:"QF",  idx:3,  date:"2026-07-11", time:"8:00 PM ET" },
+  // SF — M101–M102 (official dates July 14 – 15)
+  { id:"M101", round:"SF",  idx:0,  date:"2026-07-14", time:"2:00 PM ET" },
+  { id:"M102", round:"SF",  idx:1,  date:"2026-07-15", time:"3:00 PM ET" },
+  // Final — M104 at MetLife, East Rutherford (M103 3rd-place play-off July 18, untracked)
+  { id:"M104", round:"F",   idx:0,  date:"2026-07-19", time:"3:00 PM ET" },
 ];
 
 const KO_SCHEDULE_BY_ID = Object.fromEntries(KO_SCHEDULE.map(m => [m.id, m]));
