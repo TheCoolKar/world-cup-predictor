@@ -508,7 +508,7 @@
       {
         "id": 863098,
         "name": "Matheus Cunha",
-        "pos": "ST",
+        "pos": "LW",
         "club": "Manchester United",
         "age": 27
       },
@@ -858,7 +858,7 @@
         "name": "Pascal Groß",
         "pos": "DM",
         "club": "Brighton & Hove Albion",
-        "age": 34
+        "age": 35
       },
       {
         "id": 1047667,
@@ -2026,7 +2026,7 @@
       {
         "id": 889536,
         "name": "Timothy Weah",
-        "pos": "RB",
+        "pos": "RWB",
         "club": "Marseille",
         "age": 26
       },
@@ -2179,7 +2179,7 @@
       {
         "id": 1670377,
         "name": "Gilberto Mora",
-        "pos": "AM",
+        "pos": "CM",
         "club": "Tijuana",
         "age": 17
       },
@@ -2727,6 +2727,13 @@
         "age": 27
       },
       {
+        "id": 848289,
+        "name": "Takefusa Kubo",
+        "pos": "RW",
+        "club": "Real Sociedad",
+        "age": 25
+      },
+      {
         "id": 629805,
         "name": "Ritsu Doan",
         "pos": "RW",
@@ -2762,13 +2769,6 @@
         "age": 26
       },
       {
-        "id": 848289,
-        "name": "Takefusa Kubo",
-        "pos": "RW",
-        "club": "Real Sociedad",
-        "age": 25
-      },
-      {
         "id": 1436730,
         "name": "Keisuke Goto",
         "pos": "ST",
@@ -2792,7 +2792,7 @@
       {
         "id": 604044,
         "name": "Junya Ito",
-        "pos": "LW",
+        "pos": "RW",
         "club": "Genk",
         "age": 33
       },
@@ -3720,7 +3720,7 @@
         "name": "Mohamed Salah",
         "pos": "RW",
         "club": "Liverpool",
-        "age": 33
+        "age": 34
       },
       {
         "id": 1426403,
@@ -4189,18 +4189,18 @@
         "age": 24
       },
       {
-        "id": 1391753,
-        "name": "Yaimar Medina",
-        "pos": "LB",
-        "club": "Genk",
-        "age": 21
-      },
-      {
         "id": 1032039,
         "name": "Jackson Porozo",
         "pos": "CB",
         "club": "Tijuana",
         "age": 25
+      },
+      {
+        "id": 1391753,
+        "name": "Yaimar Medina",
+        "pos": "LB",
+        "club": "Genk",
+        "age": 21
       },
       {
         "id": 950396,
@@ -5795,7 +5795,7 @@
         "name": "Iñaki Williams",
         "pos": "RW",
         "club": "Athletic Club",
-        "age": 31
+        "age": 32
       },
       {
         "id": 1211610,
@@ -5899,7 +5899,7 @@
         "name": "Achref Abada",
         "pos": "CB",
         "club": "USM Alger",
-        "age": 26
+        "age": 27
       },
       {
         "id": 1074967,
@@ -7582,7 +7582,7 @@
       {
         "id": 848345,
         "name": "Joe Bell",
-        "pos": "DM",
+        "pos": "CM",
         "club": "Viking",
         "age": 27
       },
@@ -7775,6 +7775,13 @@
         "age": 26
       },
       {
+        "id": 1224691,
+        "name": "Ahmed Qasem",
+        "pos": "LW",
+        "club": "Nashville SC",
+        "age": 22
+      },
+      {
         "id": 1138592,
         "name": "Zidane Iqbal",
         "pos": "DM",
@@ -7836,13 +7843,6 @@
         "pos": "ST",
         "club": "Dibba Al Fujairah",
         "age": 25
-      },
-      {
-        "id": 1224691,
-        "name": "Ahmed Qasem",
-        "pos": "LW",
-        "club": "Nashville SC",
-        "age": 22
       },
       {
         "id": 1478238,
@@ -8364,7 +8364,7 @@
         "name": "Jovane Cabral",
         "pos": "LW",
         "club": "Estrela da Amadora",
-        "age": 27
+        "age": 28
       },
       {
         "id": 1241302,
@@ -8875,6 +8875,13 @@
         "age": 32
       },
       {
+        "id": 1286428,
+        "name": "Garven Metusala",
+        "pos": "CB",
+        "club": "Colorado Springs Switchbacks FC",
+        "age": 26
+      },
+      {
         "id": 769168,
         "name": "Jean-Kévin Duverne",
         "pos": "CB",
@@ -8894,13 +8901,6 @@
         "pos": "RW",
         "club": "FC Dallas",
         "age": 25
-      },
-      {
-        "id": 899318,
-        "name": "Leverton Pierre",
-        "pos": "CM",
-        "club": "Vizela",
-        "age": 28
       },
       {
         "id": 1329461,
