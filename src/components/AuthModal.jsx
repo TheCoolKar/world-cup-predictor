@@ -1,5 +1,6 @@
 ﻿import { useState, useEffect, useRef } from "react";
 import { supabase } from "../lib/supabase";
+import { useModalA11y } from "../hooks/useModalA11y";
 
 const OAUTH_PROVIDERS = [
   {
@@ -33,6 +34,8 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
   const [error,        setError]        = useState(null);
   const [sent,         setSent]         = useState(false);
   const debounceRef = useRef(null);
+
+  useModalA11y(onClose);
 
   // Live username uniqueness check
   useEffect(() => {
@@ -160,6 +163,7 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
     >
       <div
         className="relative w-full max-w-sm rounded-2xl p-8"
+        role="dialog" aria-modal="true" aria-label={mode === "signup" ? "Create account" : "Sign in"}
         style={{
           background: "linear-gradient(160deg, #1f0645 0%, #160336 100%)",
           border: "1px solid rgba(255,255,255,0.1)",
@@ -170,6 +174,7 @@ export default function AuthModal({ onClose, onAuth, initialMode = "login" }) {
       >
         <button
           onClick={onClose}
+          aria-label="Close"
           className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-full transition-colors"
           style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.7)", fontSize: "0.75rem" }}
           onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.14)"; e.currentTarget.style.color = "#fff"; }}
