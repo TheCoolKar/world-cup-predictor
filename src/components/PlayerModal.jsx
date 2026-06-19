@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTeamModal } from "../context/TeamModalContext";
+import { useModalA11y } from "../hooks/useModalA11y";
 import { getFlagClass } from "../utils/flags";
 import playerStats from "../data/player_stats.json";
 
@@ -63,6 +64,7 @@ function StatBar({ label, value, pct }) {
 export default function PlayerModal() {
   const { player, closePlayer } = useTeamModal();
   const [imgOk, setImgOk] = useState(true);
+  useModalA11y(player ? closePlayer : null);
   if (!player) return null;
 
   const data = playerStats[player.id] ?? playerStats[String(player.id)] ?? null;
@@ -77,6 +79,7 @@ export default function PlayerModal() {
       onClick={closePlayer}>
 
       <div className="relative w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl"
+        role="dialog" aria-modal="true" aria-label={`${name} player profile`}
         style={{
           background: "linear-gradient(160deg,#1f0645 0%,#160336 100%)",
           border: "1px solid rgba(255,255,255,0.1)",
@@ -87,7 +90,7 @@ export default function PlayerModal() {
         {/* Header */}
         <div className="sticky top-0 z-10 px-6 pt-6 pb-4"
           style={{ background: "linear-gradient(160deg,#1f0645,#1a0533)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-          <button onClick={closePlayer}
+          <button onClick={closePlayer} aria-label="Close player profile"
             className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full"
             style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.5)", fontSize: "0.75rem" }}>
             ✕

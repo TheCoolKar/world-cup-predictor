@@ -1,0 +1,44 @@
+name: CI
+
+# Code-quality gate. Runs on every push/PR to main:
+#   • production build must succeed (hard gate)
+#   • unit/integration tests must pass (hard gate)
+#   • lint runs for visibility but does not block yet — the existing code has
+#     ~280 lint findings; once those are cleaned up, drop `continue-on-error`
+#     from the lint step to make it a hard gate too.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint (report-only for now)
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Test
+        run: npm test
+
+      - name: Production build
+        run: npm run build

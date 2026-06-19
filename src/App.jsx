@@ -335,6 +335,7 @@ export default function App() {
 
         {/* Collapse toggle (desktop) */}
         <button
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           onClick={() => setCollapsed(c => !c)}
           className="hidden md:flex items-center justify-center rounded-lg transition-all shrink-0"
           style={{
@@ -519,7 +520,7 @@ export default function App() {
           className="md:hidden sticky top-0 z-30 flex items-center gap-3 px-4 py-3 shrink-0"
           style={{ background: "rgba(13,1,32,0.97)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}
         >
-          <button onClick={() => setSidebarOpen(true)} style={{ color: "rgba(255,255,255,0.6)" }}>
+          <button onClick={() => setSidebarOpen(true)} aria-label="Open menu" style={{ color: "rgba(255,255,255,0.6)" }}>
             <IconMenu />
           </button>
           <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", color: "white", letterSpacing: "0.08em" }}>

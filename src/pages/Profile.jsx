@@ -39,6 +39,24 @@ export default function Profile() {
   const [saved,        setSaved]        = useState(false);
   const [saveError,    setSaveError]    = useState(null);
   const [resetSent,    setResetSent]    = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting,      setDeleting]      = useState(false);
+  const [deleteError,   setDeleteError]   = useState(null);
+
+  async function handleDeleteAccount() {
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      const { error } = await supabase.functions.invoke("delete-account", { method: "POST" });
+      if (error) throw error;
+      // Account + data gone — clear the session and return to a signed-out state.
+      await supabase.auth.signOut();
+      window.location.reload();
+    } catch (err) {
+      setDeleteError(err.message ?? "Could not delete account. Please try again.");
+      setDeleting(false);
+    }
+  }
   const [resetError,   setResetError]   = useState(null);
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [avatarError,     setAvatarError]     = useState(null);
@@ -409,6 +427,46 @@ export default function Profile() {
           onMouseLeave={e => e.currentTarget.style.background = "rgba(239,68,68,0.1)"}>
           Sign Out
         </button>
+      </section>
+
+      {/* Delete account */}
+      <section className="rounded-2xl p-6"
+        style={{ background: "rgba(239,68,68,0.04)", border: "1px solid rgba(239,68,68,0.2)" }}>
+        <h4 className="font-black mb-1" style={{ color: "#ef4444" }}>Delete Account</h4>
+        <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.65)" }}>
+          Permanently deletes your account and all your data — profile, predictions,
+          confidence picks, and league memberships. Any leagues you created will be
+          removed for their members too. <strong style={{ color: "rgba(255,255,255,0.8)" }}>This cannot be undone.</strong>
+        </p>
+
+        {!confirmDelete ? (
+          <button onClick={() => { setConfirmDelete(true); setDeleteError(null); }}
+            className="px-5 py-2.5 rounded-xl font-bold text-sm transition-all active:scale-95"
+            style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)", color: "#ef4444" }}
+            onMouseEnter={e => e.currentTarget.style.background = "rgba(239,68,68,0.18)"}
+            onMouseLeave={e => e.currentTarget.style.background = "rgba(239,68,68,0.1)"}>
+            Delete My Account
+          </button>
+        ) : (
+          <div className="flex flex-col gap-3">
+            <p className="text-xs font-bold" style={{ color: "#ef4444" }}>
+              Are you sure? This permanently erases everything tied to your account.
+            </p>
+            <div className="flex items-center gap-3">
+              <button onClick={handleDeleteAccount} disabled={deleting}
+                className="px-5 py-2.5 rounded-xl font-black text-sm transition-all active:scale-95"
+                style={{ background: deleting ? "rgba(239,68,68,0.3)" : "#ef4444", color: "white", opacity: deleting ? 0.7 : 1 }}>
+                {deleting ? "Deleting…" : "Yes, delete everything"}
+              </button>
+              <button onClick={() => setConfirmDelete(false)} disabled={deleting}
+                className="px-5 py-2.5 rounded-xl font-semibold text-sm transition-all"
+                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.75)" }}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+        {deleteError && <p className="text-xs mt-3" style={{ color: "#ef4444" }}>{deleteError}</p>}
       </section>
 
       <FriendsPanel />

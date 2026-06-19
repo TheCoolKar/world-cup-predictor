@@ -1,4 +1,5 @@
 ﻿import { useTeamModal } from "../context/TeamModalContext";
+import { useModalA11y } from "../hooks/useModalA11y";
 import { getFlagClass } from '../utils/flags';
 import eloRatings from "../data/elo_ratings.json";
 import teamForm   from "../data/team_form.json";
@@ -42,6 +43,7 @@ function StatRow({ label, value, accent }) {
 
 export default function TeamModal() {
   const { team, closeTeam, openTeam, openPlayer } = useTeamModal();
+  useModalA11y(team ? closeTeam : null);
   if (!team) return null;
 
   const elo      = eloRatings[team] ?? "—";
@@ -85,6 +87,7 @@ export default function TeamModal() {
       onClick={closeTeam}>
 
       <div className="relative w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl"
+        role="dialog" aria-modal="true" aria-label={`${team} team profile`}
         style={{
           background: "linear-gradient(160deg,#1f0645 0%,#160336 100%)",
           border: "1px solid rgba(255,255,255,0.1)",
@@ -95,7 +98,7 @@ export default function TeamModal() {
         {/* ── Header ── */}
         <div className="sticky top-0 z-10 px-6 pt-6 pb-4"
           style={{ background: "linear-gradient(160deg,#1f0645,#1a0533)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-          <button onClick={closeTeam}
+          <button onClick={closeTeam} aria-label="Close team profile"
             className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full transition-colors"
             style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.7)", fontSize: "0.75rem" }}
             onMouseEnter={e => { e.currentTarget.style.background="rgba(255,255,255,0.14)"; e.currentTarget.style.color="#fff"; }}
