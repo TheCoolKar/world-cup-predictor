@@ -6,8 +6,20 @@ import { useTeamModal }  from "../context/TeamModalContext";
 import teamForm          from "../data/team_form.json";
 import historicalStats   from "../data/team_historical_stats.json";
 import h2hStats          from "../data/h2h_stats.json";
+import snapshotData      from "../data/match_predictions_snapshot.json";
 import H2HModal          from "./H2HModal";
 import { getFlagClass } from "../utils/flags";
+
+// Parse "2026-06-11" + "3:00 PM ET" → UTC timestamp (EDT = UTC-4)
+function parseKickoffMs(dateStr, timeStr) {
+  const clean = timeStr.replace(" ET", "").trim();
+  const [timePart, meridiem] = clean.split(" ");
+  let [h, m] = timePart.split(":").map(Number);
+  if (meridiem === "PM" && h !== 12) h += 12;
+  if (meridiem === "AM" && h === 12) h = 0;
+  const [y, mo, d] = dateStr.split("-").map(Number);
+  return Date.UTC(y, mo - 1, d, h + 4, m);
+}
 
 function FlagEmoji({ country }) {
   return <span className={getFlagClass(country) ?? ''} style={{fontSize:'1.8rem',lineHeight:1,display:'inline-block',flexShrink:0}} />;
@@ -68,10 +80,15 @@ export default function MatchCard({ match }) {
     ? predictMatch(eloHome, eloAway, apiFormHome, apiFormAway, histHome?.competitive, histAway?.competitive, h2h, match.id, { homeTeam: home, awayTeam: away })
     : null;
 
-  // Win/draw/away % and score come from Monte Carlo (2 000 Poisson samples)
+  // Win/draw/away % and score come from Monte Carlo (2 000 Poisson samples).
+  // For matches that have already kicked off, use the frozen snapshot so the
+  // AI prediction doesn't retroactively change when form data is refreshed.
+  const isPast = parseKickoffMs(date, time) <= Date.now();
   const mc = useMemo(
-    () => simulateMatchMonteCarlo(home, away, match.id),
-    [home, away, match.id],
+    () => (isPast && snapshotData[match.id])
+      ? snapshotData[match.id]
+      : simulateMatchMonteCarlo(home, away, match.id),
+    [home, away, match.id, isPast],
   );
 
   const homePct        = mc.homeWin;

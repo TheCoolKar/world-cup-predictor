@@ -20,6 +20,7 @@
     "build-squad-strength": "node scripts/buildSquadStrength.mjs",
     "fetch-form": "node scripts/fetchRecentForm.mjs",
     "sim": "node scripts/generateMonteCarlo.mjs",
+    "snapshot-predictions": "node scripts/snapshotPredictions.mjs",
     "refresh:daily": "npm run fetch-form && npm run sim",
     "refresh:full": "npm run fetch-form && npm run fetch-player-stats && npm run build-squad-strength && npm run sim"
   },

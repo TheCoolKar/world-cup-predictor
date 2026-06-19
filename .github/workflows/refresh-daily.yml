@@ -34,6 +34,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Snapshot predictions for kicked-off matches (before form changes)
+        run: npm run snapshot-predictions
+
       - name: Fetch recent form + regenerate simulation
         run: npm run refresh:daily
 

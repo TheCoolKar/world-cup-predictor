@@ -428,16 +428,31 @@ function TermsLogTab() {
   const [error,   setError]   = useState(null);
 
   useEffect(() => {
-    supabase
-      .from("terms_acceptances")
-      .select("id, user_id, email, version, user_agent, accepted_at")
-      .order("accepted_at", { ascending: false })
-      .limit(500)
-      .then(({ data, error }) => {
-        if (error) setError(error.message);
-        else setRows(data ?? []);
-        setLoading(false);
-      });
+    async function load() {
+      const { data, error } = await supabase
+        .from("terms_acceptances")
+        .select("id, user_id, email, version, user_agent, accepted_at")
+        .order("accepted_at", { ascending: false })
+        .limit(500);
+
+      if (error) { setError(error.message); setLoading(false); return; }
+
+      const rows = data ?? [];
+      // For rows that have a user_id but no email, look up the profile username
+      const unknownIds = [...new Set(rows.filter(r => r.user_id && !r.email).map(r => r.user_id))];
+      let profileMap = {};
+      if (unknownIds.length) {
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("id, username")
+          .in("id", unknownIds);
+        profileMap = Object.fromEntries((profiles ?? []).map(p => [p.id, p.username]));
+      }
+
+      setRows(rows.map(r => ({ ...r, username: r.user_id ? (profileMap[r.user_id] ?? null) : null })));
+      setLoading(false);
+    }
+    load();
   }, []);
 
   if (loading) return (
@@ -481,10 +496,14 @@ function TermsLogTab() {
               <td className="px-4 py-3">
                 {row.email
                   ? <span className="font-semibold" style={{ color: "rgba(255,255,255,0.85)" }}>{row.email}</span>
-                  : <span className="text-xs font-bold px-2 py-0.5 rounded-full"
-                      style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.45)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                      Anonymous
-                    </span>
+                  : row.username
+                    ? <span className="font-semibold" style={{ color: "#a5b4fc" }}>@{row.username}</span>
+                    : row.user_id
+                      ? <span className="font-mono text-xs" style={{ color: "rgba(255,255,255,0.4)" }} title={row.user_id}>{row.user_id.slice(0, 8)}…</span>
+                      : <span className="text-xs font-bold px-2 py-0.5 rounded-full"
+                          style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.45)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                          Anonymous
+                        </span>
                 }
               </td>
               <td className="px-4 py-3">
