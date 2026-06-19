@@ -110,7 +110,10 @@ flowchart TD
 - The **FotMob API is unofficial** — the poller/scrapers are the single point to
   fix if its shape changes; the DB schema and UI are source-agnostic.
 
-## Known gaps (see the engineering-hardening backlog)
-Load/stress/resilience testing, formal DR/RPO, key-rotation runbook, and
-regulatory (GDPR/CCPA) review are tracked but not yet implemented — several
-require infrastructure or legal input rather than code.
+## Known gaps (engineering-hardening backlog)
+- **Load testing** — read-path scaffold in [`tests/load/`](../tests/load/) (k6);
+  stress/soak/resilience scenarios still to do.
+- **Key rotation** — runbook at [`docs/RUNBOOK-key-rotation.md`](RUNBOOK-key-rotation.md);
+  rotation itself is a manual operational task.
+- **Still open:** formal DR/RPO (Supabase plan decision) and regulatory
+  (GDPR/CCPA) review (legal) — infrastructure/legal input, not code.
