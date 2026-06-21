@@ -2,6 +2,7 @@
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import { generateInviteToken } from "../utils/social";
+import { trackActivityEvent } from "../hooks/useActivityTracking";
 
 function Avatar({ url, username, size = 30 }) {
   if (url) return <img src={url} alt={username} className="rounded-full object-cover shrink-0" style={{ width: size, height: size }} />;
@@ -63,7 +64,8 @@ export default function FriendsPanel() {
   }, [searchQuery]);
 
   async function sendRequest(addresseeId) {
-    await supabase.from("friendships").insert({ requester_id: user.id, addressee_id: addresseeId });
+    const { error } = await supabase.from("friendships").insert({ requester_id: user.id, addressee_id: addresseeId });
+    if (!error) trackActivityEvent("friend_request_sent");
     loadFriendships();
     setSearchQuery("");
     setSearchResults([]);

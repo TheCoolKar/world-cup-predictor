@@ -8,38 +8,7 @@
  */
 
 import { useState } from "react";
-import { supabase } from "../lib/supabase";
-
-const TERMS_VERSION = "v1";
-const STORAGE_KEY   = `wc2026-disclaimer-${TERMS_VERSION}`;
-
-/** Call this from App.jsx to check whether the user has already accepted. */
-export function hasAcceptedDisclaimer() {
-  try { return localStorage.getItem(STORAGE_KEY) === "accepted"; }
-  catch { return false; }
-}
-
-/** Persist acceptance so the modal won't re-appear this session/browser. */
-export function persistAcceptance() {
-  try { localStorage.setItem(STORAGE_KEY, "accepted"); }
-  catch { /* storage blocked (private browsing, etc.) — degrade gracefully */ }
-}
-
-/**
- * Record the acceptance in Supabase so admins can audit who agreed and when.
- * Fire-and-forget: a logging failure must never block entry to the site.
- */
-async function logAcceptance() {
-  try {
-    const { data } = await supabase.auth.getUser();
-    await supabase.from("terms_acceptances").insert({
-      user_id:    data?.user?.id    ?? null,
-      email:      data?.user?.email ?? null,
-      version:    TERMS_VERSION,
-      user_agent: navigator.userAgent,
-    });
-  } catch { /* logging is best-effort */ }
-}
+import { persistAcceptance, recordTermsAcceptance } from "../lib/terms";
 
 // ── Disclaimer sections ───────────────────────────────────────────────────────
 
@@ -74,7 +43,7 @@ const SECTIONS = [
   },
   {
     heading: "8. Privacy",
-    body: `If you choose to create an account, your email address and prediction data are stored securely via Supabase. We do not sell your personal data to third parties. By creating an account you consent to this storage. You may request deletion of your data at any time by contacting the site administrator.`,
+    body: `If you choose to create an account, your email address and prediction data are stored securely via Supabase. To understand and improve use of the app, we also record first-party usage information including page views, feature interactions, session duration, and basic browser/device information. We do not record the content of keystrokes, sell personal data, or share usage data with advertising networks. By continuing you consent to this storage. You may request deletion of your data at any time by contacting the site administrator.`,
   },
   {
     heading: "9. Changes to These Terms",
@@ -95,7 +64,9 @@ export default function DisclaimerModal({ onAccept }) {
   function handleAccept() {
     if (!checked) return;
     persistAcceptance();
-    logAcceptance();
+    recordTermsAcceptance().catch(() => {
+      // App startup retries this acceptance until the database confirms it.
+    });
     onAccept();
   }
 

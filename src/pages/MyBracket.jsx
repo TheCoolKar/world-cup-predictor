@@ -25,6 +25,7 @@ import { useAuth }  from "../hooks/useAuth";
 import AuthModal    from "../components/AuthModal";
 import { useTeamModal } from "../context/TeamModalContext";
 import { getFlagClass } from '../utils/flags';
+import { trackActivityEvent } from "../hooks/useActivityTracking";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -910,7 +911,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
     autoSaveRef.current = setTimeout(async () => {
       const hasData = Object.keys(picks).length > 0 || Object.keys(assumptions).length > 0 || Object.values(bw).some(arr => Array.isArray(arr) && arr.some(Boolean));
       if (!hasData) { setSaveIndicator(null); return; }
-      await supabase.from("submissions").upsert({
+      const { error: saveError } = await supabase.from("submissions").upsert({
         user_id:           user.id,
         email:             user.email,
         display_name:      user.user_metadata?.display_name ?? "",
@@ -925,6 +926,14 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         group_picks_count: Object.keys(picks).length,
         updated_at:        new Date().toISOString(),
       }, { onConflict: "user_id" });
+
+      if (!saveError) {
+        trackActivityEvent("prediction_saved", {
+          mode,
+          group_picks_count: Object.keys(picks).length,
+          has_knockout_picks: Object.values(bw).some(arr => Array.isArray(arr) && arr.some(Boolean)),
+        });
+      }
 
       setSaveIndicator("saved");
       clearTimeout(saveIndicatorRef.current);
@@ -990,6 +999,10 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         updated_at:        new Date().toISOString(),
       }, { onConflict: "user_id" });
       if (error) throw error;
+      trackActivityEvent("bracket_submitted", {
+        mode,
+        group_picks_count: Object.keys(picks).length,
+      });
       const hasKnockoutPicks = Object.values(bw).some(arr => Array.isArray(arr) && arr.some(Boolean));
       if (hasKnockoutPicks) {
         setIsSubmitted(true);
@@ -1012,6 +1025,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
       const { error } = await supabase.from("submissions")
         .update({ is_submitted: false }).eq("user_id", user.id);
       if (error) throw error;
+      trackActivityEvent("bracket_withdrawn");
       setIsSubmitted(false);
       setSubmitStatus(null);
     } catch { /* ignore */ }

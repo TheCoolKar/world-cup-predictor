@@ -2,6 +2,7 @@
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import fixtures from "../data/wc2026_fixtures.json";
+import { featureLabel, formatDuration, pageLabel } from "../utils/analytics";
 
 const TOTAL_MATCHES = 48;
 
@@ -420,6 +421,260 @@ function LeaguesTab() {
   );
 }
 
+// ── Analytics Tab ─────────────────────────────────────────────────────────────
+
+function AnalyticsMetric({ label, value, detail, accent = "#c8f000" }) {
+  return (
+    <div className="rounded-xl p-4 min-w-0"
+      style={{ background: "rgba(255,255,255,0.035)", border: "1px solid rgba(255,255,255,0.07)" }}>
+      <p className="text-xs font-bold uppercase tracking-wider truncate" style={{ color: "rgba(255,255,255,0.5)" }}>{label}</p>
+      <p className="font-black tabular-nums mt-1" style={{ color: accent, fontSize: "1.65rem", lineHeight: 1.1 }}>{value}</p>
+      {detail && <p className="mt-1 text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>{detail}</p>}
+    </div>
+  );
+}
+
+function RankedUsageList({ title, rows, valueKey, labelFor, emptyText }) {
+  const maximum = Math.max(1, ...rows.map(row => Number(row[valueKey]) || 0));
+  return (
+    <section className="rounded-xl p-4"
+      style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)" }}>
+      <h3 className="font-black text-white mb-3">{title}</h3>
+      {!rows.length ? (
+        <p className="text-sm py-6 text-center" style={{ color: "rgba(255,255,255,0.4)" }}>{emptyText}</p>
+      ) : (
+        <div className="space-y-3">
+          {rows.map((row) => {
+            const value = Number(row[valueKey]) || 0;
+            const key = row.page ?? row.event_name;
+            return (
+              <div key={key}>
+                <div className="flex items-center justify-between gap-3 text-xs mb-1.5">
+                  <span className="font-semibold truncate" style={{ color: "rgba(255,255,255,0.78)" }}>{labelFor(key)}</span>
+                  <span className="font-black tabular-nums shrink-0" style={{ color: "#c8f000" }}>{value.toLocaleString()}</span>
+                </div>
+                <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                  <div className="h-full rounded-full" style={{ width: `${Math.max(4, (value / maximum) * 100)}%`, background: "linear-gradient(90deg,#84cc16,#c8f000)" }} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function AnalyticsTab() {
+  const [days, setDays] = useState(30);
+  const [userSort, setUserSort] = useState("active_seconds");
+  const [analytics, setAnalytics] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  function changeRange(nextDays) {
+    setLoading(true);
+    setError(null);
+    setDays(nextDays);
+  }
+
+  const refresh = useCallback(() => {
+    setLoading(true);
+    setError(null);
+    setRefreshKey(key => key + 1);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    supabase.rpc("get_app_analytics", { p_days: days }).then(({ data, error: loadError }) => {
+      if (cancelled) return;
+      if (loadError) setError(loadError.message);
+      else setAnalytics(data);
+      setLoading(false);
+    });
+    return () => { cancelled = true; };
+  }, [days, refreshKey]);
+
+  if (loading && !analytics) return (
+    <div className="flex items-center justify-center h-52">
+      <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>Building engagement report…</p>
+    </div>
+  );
+
+  if (error && !analytics) return (
+    <div className="m-4 p-4 rounded-xl text-sm" style={{ color: "#fca5a5", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.18)" }}>
+      Analytics could not load: {error}
+    </div>
+  );
+
+  const daily = analytics?.daily ?? [];
+  const maxActive = Math.max(1, ...daily.map(day => Number(day.active_users) || 0));
+  const generatedAt = analytics?.generated_at ? new Date(analytics.generated_at) : null;
+  const topUsers = [...(analytics?.top_users ?? [])]
+    .sort((a, b) => (Number(b[userSort]) || 0) - (Number(a[userSort]) || 0))
+    .slice(0, 25);
+
+  return (
+    <div className="p-4 md:p-6 space-y-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 className="font-black text-white text-lg">App engagement</h3>
+          <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.45)" }}>
+            First-party usage only · active time excludes hidden and idle tabs
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="flex rounded-lg p-1" style={{ background: "rgba(255,255,255,0.05)" }}>
+            {[7, 30, 90].map(option => (
+              <button key={option} onClick={() => changeRange(option)}
+                className="px-3 py-1.5 rounded-md text-xs font-bold transition-colors"
+                style={{ background: days === option ? "rgba(200,240,0,0.14)" : "transparent", color: days === option ? "#c8f000" : "rgba(255,255,255,0.45)" }}>
+                {option}d
+              </button>
+            ))}
+          </div>
+          <button onClick={refresh} disabled={loading} className="px-3 py-2 rounded-lg text-xs font-bold"
+            style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.65)", opacity: loading ? 0.5 : 1 }}>
+            {loading ? "Refreshing…" : "Refresh"}
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <AnalyticsMetric label="Daily active" value={Number(analytics?.dau ?? 0).toLocaleString()} detail="Today" />
+        <AnalyticsMetric label="Weekly active" value={Number(analytics?.wau ?? 0).toLocaleString()} detail="Last 7 days" accent="#60a5fa" />
+        <AnalyticsMetric label="Monthly active" value={Number(analytics?.mau ?? 0).toLocaleString()} detail="Last 30 days" accent="#c084fc" />
+        <AnalyticsMetric label="Return rate" value={`${Number(analytics?.return_rate ?? 0).toFixed(1)}%`} detail="2+ sessions in 30d" accent="#fb923c" />
+        <AnalyticsMetric label="Sessions" value={Number(analytics?.sessions ?? 0).toLocaleString()} detail={`Selected ${days} days`} />
+        <AnalyticsMetric label="Page views" value={Number(analytics?.page_views ?? 0).toLocaleString()} detail={`Selected ${days} days`} accent="#60a5fa" />
+        <AnalyticsMetric label="Avg. active time" value={formatDuration(analytics?.avg_active_seconds)} detail="Per session" accent="#fb923c" />
+        <AnalyticsMetric
+          label="Identified traffic"
+          value={`${Number(analytics?.identified_traffic_rate ?? 0).toFixed(1)}%`}
+          detail={`${Number(analytics?.identified_users ?? 0).toLocaleString()} signed-in users`}
+          accent="#c084fc"
+        />
+      </div>
+
+      <section className="rounded-xl p-4 overflow-hidden"
+        style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)" }}>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-black text-white">Active users by day</h3>
+          <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>{days}-day view</span>
+        </div>
+        <div className="overflow-x-auto pb-1">
+          <div className="flex items-end gap-1.5 h-36" style={{ minWidth: days > 30 ? 720 : 0 }}>
+            {daily.map((day) => {
+              const activeUsers = Number(day.active_users) || 0;
+              const date = new Date(`${day.day}T00:00:00`);
+              return (
+                <div key={day.day} className="flex-1 min-w-[8px] h-full flex flex-col justify-end group" title={`${date.toLocaleDateString()}: ${activeUsers} active`}>
+                  <div className="w-full rounded-t-sm transition-all" style={{ height: `${Math.max(activeUsers ? 5 : 1, (activeUsers / maxActive) * 100)}%`, background: activeUsers ? "linear-gradient(180deg,#c8f000,#65a30d)" : "rgba(255,255,255,0.06)" }} />
+                </div>
+              );
+            })}
+          </div>
+          <div className="flex justify-between mt-2 text-[10px]" style={{ color: "rgba(255,255,255,0.3)" }}>
+            <span>{daily[0]?.day ? new Date(`${daily[0].day}T00:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : ""}</span>
+            <span>{daily.at(-1)?.day ? new Date(`${daily.at(-1).day}T00:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : ""}</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="rounded-xl overflow-hidden"
+        style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)" }}>
+        <div className="p-4 flex flex-wrap items-center justify-between gap-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+          <div>
+            <h3 className="font-black text-white">Most active signed-in users</h3>
+            <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.42)" }}>
+              {Number(analytics?.identified_page_views ?? 0).toLocaleString()} identified and {Number(analytics?.anonymous_page_views ?? 0).toLocaleString()} anonymous page views
+            </p>
+          </div>
+          <div className="flex rounded-lg p-1" style={{ background: "rgba(255,255,255,0.05)" }}>
+            {[
+              ["active_seconds", "Active time"],
+              ["page_views", "Traffic"],
+              ["sessions", "Sessions"],
+            ].map(([value, label]) => (
+              <button key={value} onClick={() => setUserSort(value)}
+                className="px-2.5 py-1.5 rounded-md text-xs font-bold transition-colors"
+                style={{ background: userSort === value ? "rgba(200,240,0,0.14)" : "transparent", color: userSort === value ? "#c8f000" : "rgba(255,255,255,0.45)" }}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {!topUsers.length ? (
+          <p className="text-sm py-10 text-center" style={{ color: "rgba(255,255,255,0.4)" }}>
+            Signed-in user activity will appear here as it is recorded.
+          </p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm" style={{ minWidth: 760 }}>
+              <thead style={{ background: "rgba(255,255,255,0.025)" }}>
+                <tr>
+                  {["User", "Sessions", "Page views", "Active time", "Actions", "Last active"].map(label => (
+                    <th key={label} className="px-4 py-3 text-left text-[10px] font-black uppercase tracking-wider whitespace-nowrap"
+                      style={{ color: "rgba(255,255,255,0.38)" }}>{label}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {topUsers.map((row, index) => {
+                  const displayName = row.username || row.email?.split("@")[0] || "User";
+                  const lastActive = row.last_active_at ? new Date(row.last_active_at) : null;
+                  return (
+                    <tr key={row.user_id} style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <span className="w-5 text-xs font-black tabular-nums" style={{ color: index < 3 ? "#c8f000" : "rgba(255,255,255,0.28)" }}>{index + 1}</span>
+                          {row.avatar_url ? (
+                            <img src={row.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />
+                          ) : (
+                            <span className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-black"
+                              style={{ color: "#c8f000", background: "rgba(200,240,0,0.1)" }}>{displayName[0]?.toUpperCase()}</span>
+                          )}
+                          <div className="min-w-0">
+                            <p className="font-bold text-white truncate">{displayName}</p>
+                            <p className="text-[10px] truncate max-w-[220px]" style={{ color: "rgba(255,255,255,0.35)" }}>{row.email}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 font-bold tabular-nums" style={{ color: "rgba(255,255,255,0.72)" }}>{Number(row.sessions ?? 0).toLocaleString()}</td>
+                      <td className="px-4 py-3 font-bold tabular-nums" style={{ color: "#60a5fa" }}>{Number(row.page_views ?? 0).toLocaleString()}</td>
+                      <td className="px-4 py-3 font-bold tabular-nums" style={{ color: "#fb923c" }}>{formatDuration(row.active_seconds)}</td>
+                      <td className="px-4 py-3 font-bold tabular-nums" style={{ color: "#c8f000" }}>{Number(row.feature_actions ?? 0).toLocaleString()}</td>
+                      <td className="px-4 py-3 text-xs whitespace-nowrap" style={{ color: "rgba(255,255,255,0.45)" }}>
+                        {lastActive ? lastActive.toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "—"}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <p className="px-4 py-3 text-[10px]" style={{ color: "rgba(255,255,255,0.28)", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+          Activity before sign-in stays anonymous and is never guessed or retroactively assigned to an account.
+        </p>
+      </section>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        <RankedUsageList title="Most visited pages" rows={analytics?.popular_pages ?? []} valueKey="views" labelFor={pageLabel} emptyText="Page views will appear as people explore the app." />
+        <RankedUsageList title="Popular features" rows={analytics?.popular_features ?? []} valueKey="uses" labelFor={featureLabel} emptyText="Feature actions will appear after people save picks or use leagues." />
+      </div>
+
+      {generatedAt && (
+        <p className="text-right text-[10px]" style={{ color: "rgba(255,255,255,0.25)" }}>
+          Updated {generatedAt.toLocaleString()}
+        </p>
+      )}
+    </div>
+  );
+}
+
 // ── Terms Log Tab ─────────────────────────────────────────────────────────────
 
 function TermsLogTab() {
@@ -531,7 +786,7 @@ function TermsLogTab() {
 
 export default function Admin({ onClose }) {
   const { profile } = useAuth();
-  const [tab, setTab] = useState("submissions");
+  const [tab, setTab] = useState("analytics");
 
   if (!profile?.is_admin) {
     return (
@@ -550,6 +805,7 @@ export default function Admin({ onClose }) {
   }
 
   const TABS = [
+    { id: "analytics",   label: "Analytics" },
     { id: "submissions", label: "Submissions" },
     { id: "results",     label: "Match Results" },
     { id: "leagues",     label: "Leagues" },
@@ -562,7 +818,7 @@ export default function Admin({ onClose }) {
       style={{ background: "rgba(10,2,26,0.95)", backdropFilter: "blur(8px)" }}
     >
       <div
-        className="relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-2xl overflow-hidden"
+        className="relative w-full max-w-5xl max-h-[90vh] flex flex-col rounded-2xl overflow-hidden"
         style={{
           background: "linear-gradient(160deg, #1f0645 0%, #160336 100%)",
           border: "1px solid rgba(200,240,0,0.12)",
@@ -593,7 +849,7 @@ export default function Admin({ onClose }) {
         </div>
 
         {/* Tabs */}
-        <div className="flex shrink-0 px-6 pt-3 gap-2" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+        <div className="flex shrink-0 px-4 md:px-6 pt-3 gap-2 overflow-x-auto" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
           {TABS.map(t => (
             <button
               key={t.id}
@@ -611,6 +867,7 @@ export default function Admin({ onClose }) {
 
         {/* Body */}
         <div className="overflow-y-auto flex-1">
+          {tab === "analytics"   && <AnalyticsTab />}
           {tab === "submissions" && <SubmissionsTab />}
           {tab === "results"     && <ResultsTab />}
           {tab === "leagues"     && <LeaguesTab />}

@@ -14,14 +14,16 @@ import Schedule      from "./pages/Schedule";
 import Leagues       from "./pages/Leagues";
 import InviteRedirect from "./pages/InviteRedirect";
 import AuthModal     from "./components/AuthModal";
-import DisclaimerModal, { hasAcceptedDisclaimer } from "./components/DisclaimerModal";
+import DisclaimerModal from "./components/DisclaimerModal";
 import SignInGate from "./components/SignInGate";
 import AiPerformanceTab from "./components/AiPerformanceTab";
 import TeamModal     from "./pages/TeamModal";
 import PlayerModal    from "./components/PlayerModal";
 import Teams         from "./pages/Teams";
 import { useAuth }   from "./hooks/useAuth";
+import { useActivityTracking } from "./hooks/useActivityTracking";
 import { supabase }  from "./lib/supabase";
+import { hasAcceptedDisclaimer, recordTermsAcceptance } from "./lib/terms";
 import { getFlagClass } from "./utils/flags";
 import { buildResultsMap, calculateStreaks, calculateGroupScores } from "./utils/scoring";
 import banner        from "./assets/worldcupbanner.webp";
@@ -246,6 +248,19 @@ export default function App() {
   const [disclaimerDone, setDisclaimerDone]   = useState(() => hasAcceptedDisclaimer());
 
   const { user, profile, loading: authLoading, signOut } = useAuth();
+
+  useActivityTracking({
+    user,
+    page: activeTab,
+    enabled: !authLoading && disclaimerDone,
+  });
+
+  // Retry unconfirmed acceptances on startup and when an anonymous visitor
+  // signs in. Database uniqueness makes this safe across tabs and auth events.
+  useEffect(() => {
+    if (authLoading || !disclaimerDone) return;
+    recordTermsAcceptance(user).catch(() => {});
+  }, [authLoading, disclaimerDone, user?.id]);
 
   // Bracket ids are per-account (namespaced localStorage), so an open bracket
   // from one account doesn't exist after switching to another.

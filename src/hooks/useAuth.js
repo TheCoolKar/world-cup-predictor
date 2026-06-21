@@ -26,26 +26,12 @@ export function useAuth() {
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       const u = session?.user ?? null;
       setActiveStorageUser(u?.id ?? null);
       setUser(u);
       fetchProfile(u?.id);
 
-      // When a user signs in, link their account to any terms acceptance they made
-      // anonymously in this browser session (accepted before logging in).
-      if (event === "SIGNED_IN" && u) {
-        try {
-          if (localStorage.getItem("wc2026-disclaimer-v1") === "accepted") {
-            supabase.from("terms_acceptances").insert({
-              user_id:    u.id,
-              email:      u.email ?? null,
-              version:    "v1",
-              user_agent: navigator.userAgent,
-            }).then(() => {});
-          }
-        } catch { /* localStorage unavailable */ }
-      }
     });
 
     return () => subscription.unsubscribe();

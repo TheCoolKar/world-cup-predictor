@@ -3,6 +3,7 @@ import { useAuth }  from "../hooks/useAuth";
 import { supabase } from "../lib/supabase";
 import { calculateGroupScores, calculateStreaks, buildResultsMap } from "../utils/scoring";
 import FriendsPanel from "../components/FriendsPanel";
+import { trackActivityEvent } from "../hooks/useActivityTracking";
 
 const inputStyle = {
   width: "100%",
@@ -173,6 +174,7 @@ export default function Profile() {
       if (dbErr) throw dbErr;
 
       await refreshProfile();
+      trackActivityEvent("profile_updated", { field: "avatar" });
     } catch (err) {
       setAvatarError(err.message);
     } finally {
@@ -199,6 +201,7 @@ export default function Profile() {
       }
 
       setSaved(true);
+      trackActivityEvent("profile_updated", { field: "account" });
       setTimeout(() => setSaved(false), 3000);
     } catch (err) {
       setSaveError(err.message);
