@@ -64,7 +64,7 @@ function StatBar({ label, value, pct }) {
 export default function PlayerModal() {
   const { player, closePlayer } = useTeamModal();
   const [imgOk, setImgOk] = useState(true);
-  useModalA11y(player ? closePlayer : null);
+  useModalA11y(closePlayer, Boolean(player));
   if (!player) return null;
 
   const data = playerStats[player.id] ?? playerStats[String(player.id)] ?? null;

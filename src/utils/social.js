@@ -90,6 +90,7 @@ export async function getLeagueLeaderboard(leagueId) {
       correct:   scoring.correct,
       incorrect: scoring.incorrect,
       streak:    streaks.current,
+      bestStreak: streaks.best,
     };
   });
 

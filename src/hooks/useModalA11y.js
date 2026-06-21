@@ -9,9 +9,12 @@ import { useEffect } from "react";
  * `aria-label`/`aria-labelledby` describing it.
  *
  * @param {() => void} onClose  called when Escape is pressed (omit to disable, e.g. for required gates)
+ * @param {boolean} isOpen      whether the dialog is currently open
  */
-export function useModalA11y(onClose) {
+export function useModalA11y(onClose, isOpen = true) {
   useEffect(() => {
+    if (!isOpen) return;
+
     function onKey(e) {
       if (e.key === "Escape" && onClose) onClose();
     }
@@ -22,5 +25,5 @@ export function useModalA11y(onClose) {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
     };
-  }, [onClose]);
+  }, [onClose, isOpen]);
 }

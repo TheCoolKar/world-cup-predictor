@@ -43,7 +43,7 @@ function StatRow({ label, value, accent }) {
 
 export default function TeamModal() {
   const { team, closeTeam, openTeam, openPlayer } = useTeamModal();
-  useModalA11y(team ? closeTeam : null);
+  useModalA11y(closeTeam, Boolean(team));
   if (!team) return null;
 
   const elo      = eloRatings[team] ?? "—";

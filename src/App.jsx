@@ -16,6 +16,7 @@ import InviteRedirect from "./pages/InviteRedirect";
 import AuthModal     from "./components/AuthModal";
 import DisclaimerModal, { hasAcceptedDisclaimer } from "./components/DisclaimerModal";
 import SignInGate from "./components/SignInGate";
+import AiPerformanceTab from "./components/AiPerformanceTab";
 import TeamModal     from "./pages/TeamModal";
 import PlayerModal    from "./components/PlayerModal";
 import Teams         from "./pages/Teams";
@@ -493,11 +494,9 @@ export default function App() {
   // ── Render ────────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "#1a0533" }}>
+    <div style={{ minHeight: "100vh", background: "#1a0533" }}>
 
       <CountdownBanner />
-
-      <div className="flex flex-1 min-h-0">
 
       {/* Mobile overlay */}
       {sidebarOpen && (
@@ -511,10 +510,7 @@ export default function App() {
       {sidebar}
 
       {/* ── Main content (margin-left mirrors sidebar width on desktop) ── */}
-      <div
-        id="app-main"
-        className="flex flex-col min-h-screen flex-1 min-w-0"
-      >
+      <div id="app-main">
         {/* Mobile top bar */}
         <div
           className="md:hidden sticky top-0 z-30 flex items-center gap-3 px-4 py-3 shrink-0"
@@ -547,8 +543,8 @@ export default function App() {
           </div>
         </div>
 
-        <div className="flex flex-col flex-1 min-w-0">
-          <div className="flex flex-col flex-1 min-w-0">
+        <div>
+          <div>
 
             {/* Hero — on Home, Group Stage, and Bracket tabs */}
             {(activeTab === "home" || activeTab === "groups" || activeTab === "bracket") && (
@@ -579,9 +575,10 @@ export default function App() {
                     </div>
 
                     <div className="mt-1">
+                      <div className="flex flex-col md:flex-row items-stretch gap-3">
                       <button
                         onClick={() => { navigate("mine"); }}
-                        className="group inline-flex items-center gap-3 rounded-2xl px-6 py-4 font-black transition-all duration-200 active:scale-95"
+                        className="group inline-flex items-center justify-center gap-3 rounded-2xl px-6 py-4 font-black transition-all duration-200 active:scale-95"
                         style={{ background: "linear-gradient(135deg,#dc2626,#b91c1c)", boxShadow: "0 0 32px rgba(220,38,38,0.55),0 4px 16px rgba(0,0,0,0.4)", border: "1px solid rgba(255,100,100,0.3)", animation: "ctaPulse 2.5s ease-in-out infinite" }}
                         onMouseEnter={e => { e.currentTarget.style.background = "linear-gradient(135deg,#ef4444,#dc2626)"; e.currentTarget.style.boxShadow = "0 0 48px rgba(239,68,68,0.7)"; e.currentTarget.style.animation = "none"; }}
                         onMouseLeave={e => { e.currentTarget.style.background = "linear-gradient(135deg,#dc2626,#b91c1c)"; e.currentTarget.style.boxShadow = "0 0 32px rgba(220,38,38,0.55),0 4px 16px rgba(0,0,0,0.4)"; e.currentTarget.style.animation = "ctaPulse 2.5s ease-in-out infinite"; }}
@@ -595,6 +592,14 @@ export default function App() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                         </svg>
                       </button>
+                      {activeTab === "home" && (
+                        <AiPerformanceTab
+                          prominent
+                          label="Our AI accuracy so far"
+                          onNavigate={() => navigate("groups")}
+                        />
+                      )}
+                      </div>
                       <p className="text-xs mt-2" style={{ color: "rgba(255,255,255,0.55)" }}>Make your picks · Submit your bracket · Compete with friends</p>
                       <button onClick={() => setShowRules(true)} className="text-xs mt-1 underline underline-offset-2 transition-colors" style={{ color: "rgba(200,240,0,0.45)" }} onMouseEnter={e => e.currentTarget.style.color = "#c8f000"} onMouseLeave={e => e.currentTarget.style.color = "rgba(200,240,0,0.45)"}>
                         View Rules & Prize Details →
@@ -608,7 +613,7 @@ export default function App() {
             )}
 
             {/* Page content */}
-            <main className="flex-1" style={{ background: "#1a0533" }}>
+            <main style={{ background: "#1a0533" }}>
               {activeTab === "home" && (
                 <Home
                   onNavigate={navigate}
@@ -730,7 +735,6 @@ export default function App() {
 
       {/* Disclaimer — blocks site until user accepts */}
       {!disclaimerDone && <DisclaimerModal onAccept={() => setDisclaimerDone(true)} />}
-      </div>{/* end flex row */}
     </div>
   );
 }

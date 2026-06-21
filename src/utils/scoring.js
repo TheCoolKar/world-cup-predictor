@@ -64,3 +64,16 @@ export function calculateStreaks(picks = {}, results = {}) {
   }
   return { current, best, graded };
 }
+
+/**
+ * Return the strongest all-time streaks without changing the leaderboard order.
+ * The existing row order is used as the tiebreaker for equal streak lengths.
+ */
+export function selectHottestStreaks(rows = [], limit = 3) {
+  return rows
+    .map((row, index) => ({ row, index }))
+    .filter(({ row }) => Number(row.bestStreak) > 0)
+    .sort((a, b) => Number(b.row.bestStreak) - Number(a.row.bestStreak) || a.index - b.index)
+    .slice(0, Math.max(0, limit))
+    .map(({ row }) => row);
+}
