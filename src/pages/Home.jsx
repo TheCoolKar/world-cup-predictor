@@ -164,7 +164,7 @@ function TodaysMatches({ liveMatches = {}, onNavigate }) {
 
   const allWithDates = fixtures.map(f => ({ ...f, kickoff: parseFixtureDate(f.date, f.time) }));
   const todayET = now.toLocaleDateString("en-CA", { timeZone: "America/New_York" });
-  const todayMatches = allWithDates.filter(f => f.date === todayET);
+  const todayMatches = allWithDates.filter(f => f.date === todayET).sort((a, b) => a.kickoff - b.kickoff);
   const futureMatches = allWithDates.filter(f => f.kickoff > now);
   const nextMatch = futureMatches.length > 0
     ? futureMatches.reduce((a, b) => a.kickoff < b.kickoff ? a : b)
