@@ -41,6 +41,30 @@ function fmtShortDate(dateStr) {
 
 // ── Group standings (real results) ────────────────────────────────────────────
 
+function applyMatchToStats(stats, homeTeam, awayTeam, hs, as_) {
+  stats[homeTeam].gp++; stats[awayTeam].gp++;
+  stats[homeTeam].gf += hs; stats[homeTeam].ga += as_;
+  stats[awayTeam].gf += as_; stats[awayTeam].ga += hs;
+  if (hs > as_) {
+    stats[homeTeam].w++; stats[homeTeam].pts += 3; stats[awayTeam].l++;
+  } else if (as_ > hs) {
+    stats[awayTeam].w++; stats[awayTeam].pts += 3; stats[homeTeam].l++;
+  } else {
+    stats[homeTeam].d++; stats[homeTeam].pts++;
+    stats[awayTeam].d++; stats[awayTeam].pts++;
+  }
+}
+
+function sortStandings(stats) {
+  return Object.values(stats).sort((a, b) => {
+    if (b.pts !== a.pts) return b.pts - a.pts;
+    const gdA = a.gf - a.ga, gdB = b.gf - b.ga;
+    if (gdB !== gdA) return gdB - gdA;
+    if (b.gf !== a.gf) return b.gf - a.gf;
+    return getElo(b.team) - getElo(a.team);
+  });
+}
+
 function computeGroupStandings(groupMatches, resultsMap) {
   const stats = {};
   [...new Set(groupMatches.flatMap(m => [m.home, m.away]))]
@@ -49,27 +73,32 @@ function computeGroupStandings(groupMatches, resultsMap) {
   for (const m of groupMatches) {
     const r = resultsMap[m.id];
     if (r == null || r.home_score == null) continue;
-    const hs = Number(r.home_score), as_ = Number(r.away_score);
-    stats[m.home].gp++; stats[m.away].gp++;
-    stats[m.home].gf += hs; stats[m.home].ga += as_;
-    stats[m.away].gf += as_; stats[m.away].ga += hs;
-    if (hs > as_) {
-      stats[m.home].w++; stats[m.home].pts += 3; stats[m.away].l++;
-    } else if (as_ > hs) {
-      stats[m.away].w++; stats[m.away].pts += 3; stats[m.home].l++;
-    } else {
-      stats[m.home].d++; stats[m.home].pts++;
-      stats[m.away].d++; stats[m.away].pts++;
+    applyMatchToStats(stats, m.home, m.away, Number(r.home_score), Number(r.away_score));
+  }
+
+  return sortStandings(stats);
+}
+
+// Overlays live in-progress scores on top of finished results for provisional standings
+function computeProvisionalStandings(groupMatches, resultsMap, liveMatches) {
+  const stats = {};
+  [...new Set(groupMatches.flatMap(m => [m.home, m.away]))]
+    .forEach(t => { stats[t] = { team: t, gp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 }; });
+
+  for (const m of groupMatches) {
+    const r = resultsMap[m.id];
+    if (r != null && r.home_score != null) {
+      applyMatchToStats(stats, m.home, m.away, Number(r.home_score), Number(r.away_score));
+      continue;
+    }
+    const live = liveMatches?.[m.id];
+    const isLive = live?.status === "LIVE" || live?.status === "HT";
+    if (isLive && live.home_score != null) {
+      applyMatchToStats(stats, m.home, m.away, Number(live.home_score), Number(live.away_score));
     }
   }
 
-  return Object.values(stats).sort((a, b) => {
-    if (b.pts !== a.pts) return b.pts - a.pts;
-    const gdA = a.gf - a.ga, gdB = b.gf - b.ga;
-    if (gdB !== gdA) return gdB - gdA;
-    if (b.gf !== a.gf) return b.gf - a.gf;
-    return getElo(b.team) - getElo(a.team);
-  });
+  return sortStandings(stats);
 }
 
 // ── Knockout bracket data ─────────────────────────────────────────────────────
@@ -458,7 +487,40 @@ function KnockoutBracket({ resultsMap, now, r32Slots, bw }) {
 
 // ── Groups tab ────────────────────────────────────────────────────────────────
 
-function GroupStandings({ resultsMap }) {
+function LiveScoreBadge({ team, groupMatches, liveMatches }) {
+  for (const m of groupMatches) {
+    const live = liveMatches?.[m.id];
+    if (!live || (live.status !== "LIVE" && live.status !== "HT")) continue;
+    if (live.home_score == null) continue;
+    const isHome = m.home === team;
+    const isAway = m.away === team;
+    if (!isHome && !isAway) continue;
+
+    const hs = Number(live.home_score), as_ = Number(live.away_score);
+    const myScore = isHome ? hs : as_;
+    const oppScore = isHome ? as_ : hs;
+    const winning = myScore > oppScore;
+    const losing = myScore < oppScore;
+
+    const color = winning ? "#22c55e" : losing ? "#ef4444" : "rgba(255,255,255,0.45)";
+    const bg = winning ? "rgba(34,197,94,0.12)" : losing ? "rgba(239,68,68,0.12)" : "rgba(255,255,255,0.06)";
+    const border = winning ? "rgba(34,197,94,0.25)" : losing ? "rgba(239,68,68,0.25)" : "rgba(255,255,255,0.1)";
+
+    return (
+      <span style={{
+        fontSize: "0.6rem", fontWeight: 900, color, background: bg,
+        border: `1px solid ${border}`, borderRadius: 4,
+        padding: "1px 5px", flexShrink: 0, fontVariantNumeric: "tabular-nums",
+        letterSpacing: "0.02em",
+      }}>
+        {hs}–{as_}
+      </span>
+    );
+  }
+  return null;
+}
+
+function GroupStandings({ resultsMap, liveMatches }) {
   const col = { color: "rgba(255,255,255,0.45)", fontSize: "0.6rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" };
   const cell = { color: "rgba(255,255,255,0.7)", fontSize: "0.75rem", fontWeight: 700, textAlign: "center", minWidth: 28 };
 
@@ -466,7 +528,11 @@ function GroupStandings({ resultsMap }) {
     <div className="flex flex-col gap-5">
       {GROUPS.map(g => {
         const matches = GROUP_MATCHES.filter(m => m.group === g);
-        const rows = computeGroupStandings(matches, resultsMap);
+        const hasLive = matches.some(m => {
+          const live = liveMatches?.[m.id];
+          return live?.status === "LIVE" || live?.status === "HT";
+        });
+        const rows = computeProvisionalStandings(matches, resultsMap, liveMatches);
         const hasResults = rows.some(r => r.gp > 0);
 
         return (
@@ -474,9 +540,18 @@ function GroupStandings({ resultsMap }) {
             style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}>
             <div className="flex items-center justify-between px-4 py-2.5"
               style={{ background: "rgba(200,240,0,0.04)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-              <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "1.1rem", color: "#c8f000", letterSpacing: "0.06em" }}>
-                Group {g}
-              </span>
+              <div className="flex items-center gap-2">
+                <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: "1.1rem", color: "#c8f000", letterSpacing: "0.06em" }}>
+                  Group {g}
+                </span>
+                {hasLive && (
+                  <span style={{ fontSize: "0.55rem", fontWeight: 900, color: "#22c55e",
+                    background: "rgba(34,197,94,0.12)", border: "1px solid rgba(34,197,94,0.25)",
+                    borderRadius: 4, padding: "1px 5px", letterSpacing: "0.06em" }}>
+                    LIVE
+                  </span>
+                )}
+              </div>
               <div className="flex items-center gap-0">
                 {["GP","W","D","L","GF","GA","GD","PTS"].map(h => (
                   <span key={h} style={{ ...col, minWidth: 28, textAlign: "center" }}>{h}</span>
@@ -506,6 +581,7 @@ function GroupStandings({ resultsMap }) {
                       style={{ color: qualified ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.55)" }}>
                       {row.team}
                     </span>
+                    <LiveScoreBadge team={row.team} groupMatches={matches} liveMatches={liveMatches} />
                   </div>
                   <div className="flex items-center gap-0 shrink-0">
                     {[row.gp, row.w, row.d, row.l, row.gf, row.ga,
@@ -793,7 +869,7 @@ export default function Schedule({ initialMatchCtx = null }) {
       </div>
 
       {/* Standings tab */}
-      {tab === "groups" && <GroupStandings resultsMap={resultsMap} />}
+      {tab === "groups" && <GroupStandings resultsMap={resultsMap} liveMatches={liveMatches} />}
 
       {/* Knockouts bracket tab */}
       {tab === "knockouts" && <KnockoutBracket resultsMap={resultsMap} now={now} r32Slots={liveR32Slots} bw={liveBw} byGroup={liveByGroup} />}
