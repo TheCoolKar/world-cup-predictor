@@ -2,7 +2,7 @@
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import fixtures from "../data/wc2026_fixtures.json";
-import { featureLabel, formatDuration, pageLabel } from "../utils/analytics";
+import { aggregateUserActivity, featureLabel, formatDuration, pageLabel } from "../utils/analytics";
 
 const TOTAL_MATCHES = 48;
 
@@ -465,6 +465,55 @@ function RankedUsageList({ title, rows, valueKey, labelFor, emptyText }) {
   );
 }
 
+async function loadDirectUserActivity(days) {
+  const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+  const [sessionResult, eventResult] = await Promise.all([
+    supabase
+      .from("app_sessions")
+      .select("user_id, active_seconds, page_views, last_seen_at")
+      .gte("last_seen_at", since)
+      .order("last_seen_at", { ascending: false })
+      .limit(5000),
+    supabase
+      .from("app_activity_events")
+      .select("user_id, event_name, created_at")
+      .not("user_id", "is", null)
+      .gte("created_at", since)
+      .order("created_at", { ascending: false })
+      .limit(10000),
+  ]);
+
+  if (sessionResult.error) throw sessionResult.error;
+  if (eventResult.error) throw eventResult.error;
+
+  const sessions = sessionResult.data ?? [];
+  const events = eventResult.data ?? [];
+  const userIds = [...new Set([
+    ...sessions.map(row => row.user_id),
+    ...events.map(row => row.user_id),
+  ].filter(Boolean))].slice(0, 500);
+
+  if (!userIds.length) return aggregateUserActivity({ sessions, events });
+
+  const [profileResult, termsResult] = await Promise.all([
+    supabase.from("profiles").select("id, username, avatar_url").in("id", userIds),
+    supabase
+      .from("terms_acceptances")
+      .select("user_id, email, accepted_at")
+      .in("user_id", userIds)
+      .not("email", "is", null)
+      .order("accepted_at", { ascending: false })
+      .limit(1000),
+  ]);
+
+  return aggregateUserActivity({
+    sessions,
+    events,
+    profiles: profileResult.data ?? [],
+    terms: termsResult.data ?? [],
+  });
+}
+
 function AnalyticsTab() {
   const [days, setDays] = useState(30);
   const [userSort, setUserSort] = useState("active_seconds");
@@ -487,10 +536,13 @@ function AnalyticsTab() {
 
   useEffect(() => {
     let cancelled = false;
-    supabase.rpc("get_app_analytics", { p_days: days }).then(({ data, error: loadError }) => {
+    Promise.all([
+      supabase.rpc("get_app_analytics", { p_days: days }),
+      loadDirectUserActivity(days).catch(() => null),
+    ]).then(([{ data, error: loadError }, directUserActivity]) => {
       if (cancelled) return;
       if (loadError) setError(loadError.message);
-      else setAnalytics(data);
+      else setAnalytics(directUserActivity ? { ...data, ...directUserActivity } : data);
       setLoading(false);
     });
     return () => { cancelled = true; };

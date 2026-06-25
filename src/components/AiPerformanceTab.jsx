@@ -2,13 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import fixtures from "../data/wc2026_fixtures.json";
 import predictionSnapshot from "../data/match_predictions_snapshot.json";
 import { supabase } from "../lib/supabase";
-import { calculateAiPerformance } from "../utils/aiPerformance";
+import { buildAiPerformanceResultsMap, calculateAiPerformance } from "../utils/aiPerformance";
 
 const GROUP_FIXTURES = fixtures.filter(fixture => fixture.group);
-
-function toResultsMap(rows = []) {
-  return Object.fromEntries(rows.map(row => [row.match_id, row]));
-}
+const REFRESH_INTERVAL_MS = 60_000;
 
 function StatLine({ label, correct, total, rate, color }) {
   return (
@@ -26,41 +23,77 @@ function StatLine({ label, correct, total, rate, color }) {
 
 export default function AiPerformanceTab({ onNavigate = null, label = "AI record", prominent = false }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [resultsMap, setResultsMap] = useState({});
+  const [resultRows, setResultRows] = useState([]);
+  const [liveRows, setLiveRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const rootRef = useRef(null);
 
   useEffect(() => {
     let active = true;
+    let intervalId = null;
 
-    supabase
-      .from("match_results")
-      .select("match_id, home_score, away_score, result")
-      .then(({ data, error: loadError }) => {
-        if (!active) return;
-        if (loadError) setError(loadError.message ?? "Could not load results");
-        else setResultsMap(toResultsMap(data ?? []));
-        setLoading(false);
+    const applyRealtimeRow = setter => payload => {
+      if (!active) return;
+      const matchId = payload.new?.match_id ?? payload.old?.match_id;
+      if (!matchId) return;
+
+      setter(rows => {
+        const nextRows = rows.filter(row => row.match_id !== matchId);
+        return payload.eventType === "DELETE" ? nextRows : [...nextRows, payload.new];
       });
+      setError(null);
+    };
+
+    async function refreshScores({ showLoading = false } = {}) {
+      if (showLoading) setLoading(true);
+
+      try {
+        const [resultsResponse, liveResponse] = await Promise.all([
+          supabase.from("match_results").select("match_id, home_score, away_score, result, source, updated_at"),
+          supabase.from("live_matches").select("match_id, status, minute, home_score, away_score, updated_at"),
+        ]);
+        if (!active) return;
+
+        if (resultsResponse.error) {
+          setError(resultsResponse.error.message ?? "Could not load results");
+        } else {
+          setResultRows(resultsResponse.data ?? []);
+          setError(null);
+        }
+
+        if (!liveResponse.error) setLiveRows(liveResponse.data ?? []);
+        setLoading(false);
+      } catch (loadError) {
+        if (!active) return;
+        setError(loadError?.message ?? "Could not load results");
+        setLoading(false);
+      }
+    }
+
+    refreshScores({ showLoading: true });
 
     const channel = supabase
-      .channel("ai-performance-results")
-      .on("postgres_changes", { event: "*", schema: "public", table: "match_results" }, payload => {
-        if (!active) return;
-        const matchId = payload.new?.match_id ?? payload.old?.match_id;
-        if (!matchId) return;
-        setResultsMap(current => {
-          const next = { ...current };
-          if (payload.eventType === "DELETE") delete next[matchId];
-          else next[matchId] = payload.new;
-          return next;
-        });
-      })
-      .subscribe();
+      .channel("ai-performance-score-feed")
+      .on("postgres_changes", { event: "*", schema: "public", table: "match_results" }, applyRealtimeRow(setResultRows))
+      .on("postgres_changes", { event: "*", schema: "public", table: "live_matches" }, applyRealtimeRow(setLiveRows))
+      .subscribe(status => {
+        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") refreshScores();
+      });
+
+    const refreshIfVisible = () => {
+      if (document.visibilityState === "visible") refreshScores();
+    };
+
+    intervalId = window.setInterval(() => refreshScores(), REFRESH_INTERVAL_MS);
+    window.addEventListener("focus", refreshScores);
+    document.addEventListener("visibilitychange", refreshIfVisible);
 
     return () => {
       active = false;
+      if (intervalId) window.clearInterval(intervalId);
+      window.removeEventListener("focus", refreshScores);
+      document.removeEventListener("visibilitychange", refreshIfVisible);
       supabase.removeChannel(channel);
     };
   }, []);
@@ -81,10 +114,16 @@ export default function AiPerformanceTab({ onNavigate = null, label = "AI record
     };
   }, [isOpen]);
 
+  const resultsMap = useMemo(
+    () => buildAiPerformanceResultsMap(resultRows, liveRows),
+    [resultRows, liveRows],
+  );
+
   const stats = useMemo(
     () => calculateAiPerformance(GROUP_FIXTURES, predictionSnapshot, resultsMap),
     [resultsMap],
   );
+  const finalGraded = Math.max(stats.played - stats.provisional, 0);
 
   const tabValue = loading ? "…" : stats.played > 0 ? `${stats.successRate}%` : "—";
   const isNavigationButton = typeof onNavigate === "function";
@@ -134,11 +173,17 @@ export default function AiPerformanceTab({ onNavigate = null, label = "AI record
           <div className="px-4 py-3.5 flex items-center justify-between gap-3" style={{ background: "rgba(200,240,0,0.05)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
             <div>
               <p className="font-black" style={{ fontFamily: "'Bebas Neue',sans-serif", color: "white", fontSize: "1.25rem", letterSpacing: "0.05em", lineHeight: 1 }}>Our AI So Far</p>
-              <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.5)" }}>{stats.played} group prediction{stats.played === 1 ? "" : "s"} graded</p>
+              <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.5)" }}>
+                {stats.provisional > 0
+                  ? `${finalGraded} final + ${stats.provisional} live prediction${stats.played === 1 ? "" : "s"} graded`
+                  : `${stats.played} group prediction${stats.played === 1 ? "" : "s"} graded`}
+              </p>
             </div>
             <span className="flex items-center gap-1.5 px-2 py-1 rounded-full" style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.18)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-              <span className="font-bold uppercase tracking-wider" style={{ color: "#4ade80", fontSize: "0.5rem" }}>Live stats</span>
+              <span className="font-bold uppercase tracking-wider" style={{ color: "#4ade80", fontSize: "0.5rem" }}>
+                {stats.provisional > 0 ? "Live score" : "Live stats"}
+              </span>
             </span>
           </div>
 
@@ -152,8 +197,8 @@ export default function AiPerformanceTab({ onNavigate = null, label = "AI record
           ) : stats.played === 0 ? (
             <div className="px-4 py-8 text-center">
               <p className="text-2xl mb-2">⏳</p>
-              <p className="text-sm font-bold text-white">Waiting for final results</p>
-              <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.45)" }}>This record starts updating as group matches finish.</p>
+              <p className="text-sm font-bold text-white">Waiting for score updates</p>
+              <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.45)" }}>This record updates as group matches go live and final scores land.</p>
             </div>
           ) : (
             <div className="p-4">
@@ -171,6 +216,7 @@ export default function AiPerformanceTab({ onNavigate = null, label = "AI record
                   <p className="text-sm font-black text-white">{stats.hits} of {stats.played} matches hit</p>
                   <p className="text-xs mt-1 leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>
                     A match counts when the AI gets either the outcome or the exact scoreline right.
+                    {stats.provisional > 0 ? " Live matches are provisional until full time." : ""}
                   </p>
                 </div>
               </div>

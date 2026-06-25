@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculateAiPerformance, predictedOutcome } from "./aiPerformance";
+import { buildAiPerformanceResultsMap, calculateAiPerformance, predictedOutcome } from "./aiPerformance";
 
 const fixtures = [
   { id: "A1" },
@@ -41,6 +41,7 @@ describe("calculateAiPerformance", () => {
       hits: 2,
       outcomeCorrect: 2,
       exactScoreCorrect: 1,
+      provisional: 0,
       successRate: 66.7,
       outcomeRate: 66.7,
       exactScoreRate: 33.3,
@@ -70,9 +71,54 @@ describe("calculateAiPerformance", () => {
     expect(calculateAiPerformance(fixtures, predictions, {})).toMatchObject({
       completed: 0,
       played: 0,
+      provisional: 0,
       successRate: 0,
       outcomeRate: 0,
       exactScoreRate: 0,
     });
+  });
+});
+
+describe("buildAiPerformanceResultsMap", () => {
+  it("uses live match scores as provisional results", () => {
+    const resultsMap = buildAiPerformanceResultsMap([], [
+      { match_id: "A1", status: "LIVE", home_score: 1, away_score: 0 },
+    ]);
+
+    expect(resultsMap.A1).toMatchObject({
+      home_score: 1,
+      away_score: 0,
+      result: "home",
+      provisional: true,
+      source: "live",
+    });
+    expect(calculateAiPerformance(fixtures, predictions, resultsMap)).toMatchObject({
+      played: 1,
+      provisional: 1,
+      outcomeCorrect: 1,
+    });
+  });
+
+  it("ignores scheduled live rows without a started status", () => {
+    const resultsMap = buildAiPerformanceResultsMap([], [
+      { match_id: "A1", status: "NS", home_score: 0, away_score: 0 },
+    ]);
+
+    expect(resultsMap).toEqual({});
+  });
+
+  it("keeps final match_results authoritative over live rows", () => {
+    const resultsMap = buildAiPerformanceResultsMap(
+      [{ match_id: "A1", home_score: 2, away_score: 0, result: "home", source: "api" }],
+      [{ match_id: "A1", status: "LIVE", home_score: 0, away_score: 1 }],
+    );
+
+    expect(resultsMap.A1).toMatchObject({
+      home_score: 2,
+      away_score: 0,
+      result: "home",
+      source: "api",
+    });
+    expect(resultsMap.A1.provisional).toBeUndefined();
   });
 });

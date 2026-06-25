@@ -1,7 +1,7 @@
 /**
  * Live match feed poller — FotMob → Supabase
  *
- * Run with: node scripts/fetchLiveFeed.mjs [--watch] [--dry] [--date YYYYMMDD]
+ * Run with: node scripts/fetchLiveFeed.mjs [--watch] [--dry] [--date YYYYMMDD] [--backfill-days N]
  *   or:     npm run live-feed          (watch mode, polls every 60s)
  *
  * Each cycle:
@@ -46,8 +46,15 @@ const SERVICE_KEY  = envVar("SUPABASE_SERVICE_KEY");
 const args  = process.argv.slice(2);
 const WATCH = args.includes("--watch");
 const DRY   = args.includes("--dry");
-const dateArg = args[args.indexOf("--date") + 1];
-const FORCE_DATE = args.includes("--date") ? dateArg : null;
+const argValue = (name) => {
+  const idx = args.indexOf(name);
+  return idx >= 0 ? args[idx + 1] : null;
+};
+const FORCE_DATE = argValue("--date");
+const BACKFILL_DAYS = argValue("--backfill-days") == null
+  ? null
+  : Math.max(0, Math.floor(Number(argValue("--backfill-days")) || 0));
+const RECENT_MATCHDAY_OFFSETS = [-1, 0, 1];
 
 if (!DRY && (!SUPABASE_URL || !SERVICE_KEY)) {
   console.error("❌  SUPABASE_SERVICE_KEY not found in .env");
@@ -146,8 +153,7 @@ function etDateOf(utcTime) {
  * kickoff order within the ET day.
  */
 function mapToFixtures(fmMatches, isoDate) {
-  const nearDates = new Set([shiftIso(isoDate, -1), isoDate, shiftIso(isoDate, 1)]);
-  const dayGroup  = fixtures.filter(f => nearDates.has(f.date));
+  const dayGroup  = fixtures.filter(f => f.date === isoDate);
   const dayKo     = KO_SCHEDULE.filter(k => k.date === isoDate);
   const mapped    = [];
   const unmatched = [];
@@ -339,6 +345,111 @@ async function pollOnce() {
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
+function normalizeDateArg(yyyymmdd) {
+  return `${yyyymmdd.slice(0, 4)}-${yyyymmdd.slice(4, 6)}-${yyyymmdd.slice(6, 8)}`;
+}
+
+function matchdaysToPoll() {
+  if (FORCE_DATE) return [{ isoDate: normalizeDateArg(FORCE_DATE), offset: 0 }];
+
+  const today = todayEt();
+  const offsets = BACKFILL_DAYS != null
+    ? Array.from({ length: BACKFILL_DAYS + 2 }, (_, i) => i - BACKFILL_DAYS)
+    : RECENT_MATCHDAY_OFFSETS;
+
+  return offsets.map(offset => ({ isoDate: shiftIso(today, offset), offset }));
+}
+
+async function fetchMatchesForEtDay(isoDate) {
+  const dates = [isoDate, shiftIso(isoDate, 1)].map(d => d.replaceAll("-", ""));
+  const seen = new Set();
+  const fmMatches = [];
+  for (const d of dates) {
+    for (const m of await fetchWcMatches(d)) {
+      if (!seen.has(m.id)) { seen.add(m.id); fmMatches.push(m); }
+    }
+  }
+  return fmMatches;
+}
+
+function shouldFetchEvents(fm, state, dayOffset) {
+  if (!fm.status?.started) return false;
+  return state.status === "LIVE" || state.status === "HT" || dayOffset >= -1;
+}
+
+async function pollWindowOnce() {
+  const days = matchdaysToPoll();
+  const liveRowsById = new Map();
+  const resultRowsById = new Map();
+  const eventTargets = [];
+
+  for (const { isoDate, offset } of days) {
+    const fmMatches = await fetchMatchesForEtDay(isoDate);
+    if (!fmMatches.length) {
+      console.log(`  No World Cup matches on ${isoDate}.`);
+      continue;
+    }
+
+    const mapped = mapToFixtures(fmMatches, isoDate);
+    if (!mapped.length) console.log(`  No app fixtures mapped on ${isoDate}.`);
+
+    for (const { fixtureId, fm, flipped } of mapped) {
+      const st = extractState(fm);
+      const homeName = (flipped ? fm.away : fm.home)?.longName ?? (flipped ? fm.away : fm.home)?.name;
+      const awayName = (flipped ? fm.home : fm.away)?.longName ?? (flipped ? fm.home : fm.away)?.name;
+      const homeScore = flipped ? st.away_score : st.home_score;
+      const awayScore = flipped ? st.home_score : st.away_score;
+
+      liveRowsById.set(fixtureId, {
+        match_id:   fixtureId,
+        fotmob_id:  Number(fm.id),
+        home_team:  homeName,
+        away_team:  awayName,
+        status:     st.status,
+        minute:     st.minute,
+        home_score: homeScore,
+        away_score: awayScore,
+        kickoff:    st.kickoff,
+        updated_at: new Date().toISOString(),
+      });
+
+      if (fm.status?.finished && homeScore != null && awayScore != null) {
+        resultRowsById.set(fixtureId, {
+          match_id:   fixtureId,
+          home_score: homeScore,
+          away_score: awayScore,
+          result:     homeScore > awayScore ? "home" : awayScore > homeScore ? "away" : "draw",
+          source:     "api",
+          updated_at: new Date().toISOString(),
+        });
+      }
+
+      if (shouldFetchEvents(fm, st, offset)) eventTargets.push({ fixtureId, fm, flipped });
+      console.log(`  ${fixtureId}  ${homeName} ${homeScore ?? "-"}â€“${awayScore ?? "-"} ${awayName}  [${st.status}${st.minute ? " " + st.minute : ""}]`);
+    }
+  }
+
+  const liveRows = [...liveRowsById.values()];
+  const resultRows = [...resultRowsById.values()];
+  const liveCount = liveRows.filter(row => row.status === "LIVE" || row.status === "HT").length;
+
+  await sbUpsert("live_matches", liveRows, "match_id");
+  await sbUpsert("match_results", resultRows, "match_id");
+
+  for (const { fixtureId, fm, flipped } of eventTargets) {
+    try {
+      const detail = await fotmobGet(`/matchDetails?matchId=${fm.id}`);
+      const events = extractEvents(fixtureId, detail, flipped);
+      await sbUpsert("match_events", events, "match_id,seq");
+      console.log(`  ${fixtureId}  â†³ ${events.length} events`);
+    } catch (err) {
+      console.warn(`  âš ï¸  events failed for ${fixtureId}: ${err.message}`);
+    }
+  }
+
+  return { liveCount, matches: liveRows.length, results: resultRows.length, days: days.length };
+}
+
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 console.log(`⚽ Live feed poller ${DRY ? "(dry run) " : ""}${WATCH ? "— watch mode" : "— single pass"}`);
@@ -347,7 +458,7 @@ if (WATCH) {
   // Poll every 60s while matches are live, every 5 min otherwise
   for (;;) {
     try {
-      const { liveCount } = await pollOnce();
+      const { liveCount } = await pollWindowOnce();
       const wait = liveCount > 0 ? 60_000 : 300_000;
       console.log(`  …sleeping ${wait / 1000}s (${liveCount} live)\n`);
       await sleep(wait);
@@ -357,6 +468,6 @@ if (WATCH) {
     }
   }
 } else {
-  await pollOnce();
+  await pollWindowOnce();
   console.log("✅ Done.");
 }

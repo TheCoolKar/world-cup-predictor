@@ -11,6 +11,17 @@ function actualOutcome(result, homeScore, awayScore) {
   return "draw";
 }
 
+function isScoreBearingLiveStatus(status) {
+  const normalized = String(status ?? "").trim().toUpperCase();
+  if (!normalized) return false;
+  return !["NS", "TBD", "CAN", "CANC", "POSTP", "POSTPONED"].includes(normalized);
+}
+
+function isFinalLiveStatus(status) {
+  const normalized = String(status ?? "").trim().toUpperCase();
+  return ["FT", "AET", "AP", "PEN", "FINISHED"].includes(normalized);
+}
+
 export function predictedOutcome(prediction) {
   const probabilities = [
     ["home", Number(prediction?.homeWin)],
@@ -25,10 +36,39 @@ function percentage(correct, total) {
   return total > 0 ? Math.round((correct / total) * 1000) / 10 : 0;
 }
 
+export function buildAiPerformanceResultsMap(resultRows = [], liveRows = []) {
+  const results = {};
+
+  for (const row of resultRows ?? []) {
+    if (!row?.match_id) continue;
+    results[row.match_id] = row;
+  }
+
+  for (const row of liveRows ?? []) {
+    if (!row?.match_id || results[row.match_id]) continue;
+
+    const homeScore = numericScore(row.home_score);
+    const awayScore = numericScore(row.away_score);
+    if (homeScore == null || awayScore == null || !isScoreBearingLiveStatus(row.status)) continue;
+
+    results[row.match_id] = {
+      ...row,
+      home_score: homeScore,
+      away_score: awayScore,
+      result: actualOutcome(row, homeScore, awayScore),
+      provisional: !isFinalLiveStatus(row.status),
+      source: row.source ?? "live",
+    };
+  }
+
+  return results;
+}
+
 /**
- * Grades the frozen pre-match model snapshot against completed group matches.
+ * Grades the frozen pre-match model snapshot against score-bearing group matches.
  * A match is a hit when either the most likely outcome or the likeliest exact
- * scoreline is correct. Each completed match can contribute at most one hit.
+ * scoreline is correct. Each match can contribute at most one hit. Live rows
+ * are provisional until the final match_results row arrives.
  */
 export function calculateAiPerformance(fixtures = [], predictions = {}, results = {}) {
   let completed = 0;
@@ -36,6 +76,7 @@ export function calculateAiPerformance(fixtures = [], predictions = {}, results 
   let hits = 0;
   let outcomeCorrect = 0;
   let exactScoreCorrect = 0;
+  let provisional = 0;
 
   for (const fixture of fixtures) {
     const result = results[fixture.id];
@@ -50,6 +91,7 @@ export function calculateAiPerformance(fixtures = [], predictions = {}, results 
     const predictedAwayScore = numericScore(prediction?.score?.away);
     if (modelOutcome == null || predictedHomeScore == null || predictedAwayScore == null) continue;
     played++;
+    if (result?.provisional) provisional++;
 
     const outcomeHit = modelOutcome === actualOutcome(result, homeScore, awayScore);
     const exactScoreHit = predictedHomeScore === homeScore && predictedAwayScore === awayScore;
@@ -64,6 +106,7 @@ export function calculateAiPerformance(fixtures = [], predictions = {}, results 
     hits,
     outcomeCorrect,
     exactScoreCorrect,
+    provisional,
     successRate: percentage(hits, played),
     outcomeRate: percentage(outcomeCorrect, played),
     exactScoreRate: percentage(exactScoreCorrect, played),
