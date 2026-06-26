@@ -762,6 +762,19 @@ export default function Schedule({ initialMatchCtx = null }) {
   const dateRefs = useRef({});
   const matchRefs = useRef({});
   const scrolledRef = useRef(false);
+  const touchStartX = useRef(null);
+
+  const TABS = ["schedule", "groups", "knockouts"];
+  function handleTouchStart(e) { touchStartX.current = e.touches[0].clientX; }
+  function handleTouchEnd(e) {
+    if (touchStartX.current == null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(dx) < 60) return;
+    const idx = TABS.indexOf(tab);
+    if (dx < 0 && idx < TABS.length - 1) setTab(TABS[idx + 1]);
+    if (dx > 0 && idx > 0) setTab(TABS[idx - 1]);
+  }
 
   useEffect(() => {
     supabase.from("match_results").select("*").then(({ data }) => {
@@ -853,20 +866,32 @@ export default function Schedule({ initialMatchCtx = null }) {
         </p>
       </div>
 
-      {/* Top-level tabs */}
-      <div className="flex gap-2 mb-6 p-1 rounded-xl"
-        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", display: "inline-flex" }}>
-        {[{ id: "schedule", label: "Fixtures" }, { id: "groups", label: "Standings" }, { id: "knockouts", label: "Knockouts" }].map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)}
-            className="px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-150"
-            style={{
-              background: tab === t.id ? "linear-gradient(135deg,#c8f000,#84cc16)" : "transparent",
-              color: tab === t.id ? "#1a0533" : "rgba(255,255,255,0.5)",
-            }}>
-            {t.label}
-          </button>
-        ))}
+      {/* Top-level tabs — sticky */}
+      <div className="sticky z-20 -mx-4 px-4 py-2.5 mb-6"
+        style={{
+          top: "var(--tab-top, 52px)",
+          background: "rgba(13,1,32,0.96)",
+          backdropFilter: "blur(14px)",
+          borderBottom: "1px solid rgba(255,255,255,0.07)",
+        }}>
+        <style>{`@media (min-width: 768px) { :root { --tab-top: 0px; } }`}</style>
+        <div className="flex gap-2 p-1 rounded-xl"
+          style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", display: "inline-flex" }}>
+          {[{ id: "schedule", label: "Fixtures" }, { id: "groups", label: "Standings" }, { id: "knockouts", label: "Knockouts" }].map(t => (
+            <button key={t.id} onClick={() => setTab(t.id)}
+              className="px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-150"
+              style={{
+                background: tab === t.id ? "linear-gradient(135deg,#c8f000,#84cc16)" : "transparent",
+                color: tab === t.id ? "#1a0533" : "rgba(255,255,255,0.5)",
+              }}>
+              {t.label}
+            </button>
+          ))}
+        </div>
       </div>
+
+      {/* Swipeable content */}
+      <div onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
 
       {/* Standings tab */}
       {tab === "groups" && <GroupStandings resultsMap={resultsMap} liveMatches={liveMatches} />}
@@ -907,6 +932,8 @@ export default function Schedule({ initialMatchCtx = null }) {
           })}
         </div>
       )}
+
+      </div>{/* end swipeable */}
     </div>
   );
 }
