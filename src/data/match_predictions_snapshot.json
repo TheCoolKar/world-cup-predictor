@@ -1798,5 +1798,185 @@
       }
     ],
     "simulations": 2000
+  },
+  "G5": {
+    "homeWin": 39.3,
+    "draw": 24.3,
+    "awayWin": 36.4,
+    "score": {
+      "home": 1,
+      "away": 1,
+      "xGHome": 1.63,
+      "xGAway": 1.56,
+      "alternatives": [
+        "2–1",
+        "1–2"
+      ]
+    },
+    "topScores": [
+      {
+        "score": "1-1",
+        "pct": 10.4
+      },
+      {
+        "score": "2-1",
+        "pct": 8.1
+      },
+      {
+        "score": "1-2",
+        "pct": 7.6
+      }
+    ],
+    "simulations": 2000
+  },
+  "G6": {
+    "homeWin": 8.6,
+    "draw": 13.3,
+    "awayWin": 78.1,
+    "score": {
+      "home": 0,
+      "away": 2,
+      "xGHome": 0.8,
+      "xGAway": 2.7,
+      "alternatives": [
+        "0–3",
+        "1–3"
+      ]
+    },
+    "topScores": [
+      {
+        "score": "0-2",
+        "pct": 10.7
+      },
+      {
+        "score": "0-3",
+        "pct": 10
+      },
+      {
+        "score": "1-3",
+        "pct": 8.7
+      }
+    ],
+    "simulations": 2000
+  },
+  "H5": {
+    "homeWin": 40.7,
+    "draw": 25.1,
+    "awayWin": 34.3,
+    "score": {
+      "home": 1,
+      "away": 1,
+      "xGHome": 1.51,
+      "xGAway": 1.33,
+      "alternatives": [
+        "2–1",
+        "1–0"
+      ]
+    },
+    "topScores": [
+      {
+        "score": "1-1",
+        "pct": 11.2
+      },
+      {
+        "score": "2-1",
+        "pct": 9
+      },
+      {
+        "score": "1-0",
+        "pct": 8.6
+      }
+    ],
+    "simulations": 2000
+  },
+  "H6": {
+    "homeWin": 10.3,
+    "draw": 17.5,
+    "awayWin": 72.3,
+    "score": {
+      "home": 0,
+      "away": 2,
+      "xGHome": 0.73,
+      "xGAway": 2.23,
+      "alternatives": [
+        "0–1",
+        "0–3"
+      ]
+    },
+    "topScores": [
+      {
+        "score": "0-2",
+        "pct": 13
+      },
+      {
+        "score": "0-1",
+        "pct": 11.6
+      },
+      {
+        "score": "0-3",
+        "pct": 10.1
+      }
+    ],
+    "simulations": 2000
+  },
+  "I5": {
+    "homeWin": 23.4,
+    "draw": 18.7,
+    "awayWin": 57.9,
+    "score": {
+      "home": 1,
+      "away": 2,
+      "xGHome": 1.37,
+      "xGAway": 2.27,
+      "alternatives": [
+        "0–1",
+        "1–1"
+      ]
+    },
+    "topScores": [
+      {
+        "score": "1-2",
+        "pct": 8.7
+      },
+      {
+        "score": "0-1",
+        "pct": 6.9
+      },
+      {
+        "score": "1-1",
+        "pct": 6.8
+      }
+    ],
+    "simulations": 2000
+  },
+  "I6": {
+    "homeWin": 62.2,
+    "draw": 23.7,
+    "awayWin": 14.1,
+    "score": {
+      "home": 2,
+      "away": 0,
+      "xGHome": 1.88,
+      "xGAway": 0.73,
+      "alternatives": [
+        "1–0",
+        "1–1"
+      ]
+    },
+    "topScores": [
+      {
+        "score": "2-0",
+        "pct": 13
+      },
+      {
+        "score": "1-0",
+        "pct": 12.8
+      },
+      {
+        "score": "1-1",
+        "pct": 11
+      }
+    ],
+    "simulations": 2000
   }
 }
