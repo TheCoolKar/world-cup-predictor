@@ -15,6 +15,7 @@ import Leagues       from "./pages/Leagues";
 import InviteRedirect from "./pages/InviteRedirect";
 import AuthModal     from "./components/AuthModal";
 import DisclaimerModal from "./components/DisclaimerModal";
+import BracketScoringModal from "./components/BracketScoringModal";
 import SignInGate from "./components/SignInGate";
 import AiPerformanceTab from "./components/AiPerformanceTab";
 import TeamModal     from "./pages/TeamModal";
@@ -220,6 +221,7 @@ export default function App() {
   const [leagueNavCtx, setLeagueNavCtx] = useState(null); // { leagueId, leagueName } when navigating to leagues from home
   const [scheduleMatchCtx, setScheduleMatchCtx] = useState(null); // { matchId } when navigating to schedule from home
   const [showRules,   setShowRules]   = useState(false);
+  const [showScoringGuide, setShowScoringGuide] = useState(false);
   const [showAdmin,   setShowAdmin]   = useState(false);
   const [showAuth,    setShowAuth]    = useState(false);
   const [authMode,    setAuthMode]    = useState("login");
@@ -616,9 +618,26 @@ export default function App() {
                       )}
                       </div>
                       <p className="text-xs mt-2" style={{ color: "rgba(255,255,255,0.55)" }}>Make your picks · Submit your bracket · Compete with friends</p>
-                      <button onClick={() => setShowRules(true)} className="text-xs mt-1 underline underline-offset-2 transition-colors" style={{ color: "rgba(200,240,0,0.45)" }} onMouseEnter={e => e.currentTarget.style.color = "#c8f000"} onMouseLeave={e => e.currentTarget.style.color = "rgba(200,240,0,0.45)"}>
-                        View Rules & Prize Details →
-                      </button>
+                      <div className="flex items-center gap-3 mt-1 flex-wrap">
+                        <button onClick={() => setShowRules(true)} className="text-xs underline underline-offset-2 transition-colors" style={{ color: "rgba(200,240,0,0.45)" }} onMouseEnter={e => e.currentTarget.style.color = "#c8f000"} onMouseLeave={e => e.currentTarget.style.color = "rgba(200,240,0,0.45)"}>
+                          View Rules & Prize Details →
+                        </button>
+                        <button
+                          onClick={() => setShowScoringGuide(true)}
+                          className="flex items-center gap-2 px-4 py-2 rounded-xl font-black text-sm transition-all duration-150 active:scale-95"
+                          style={{
+                            background: "linear-gradient(135deg, rgba(245,158,11,0.22), rgba(251,191,36,0.14))",
+                            border: "1.5px solid rgba(245,158,11,0.55)",
+                            color: "#f59e0b",
+                            boxShadow: "0 0 14px rgba(245,158,11,0.25)",
+                          }}
+                          onMouseEnter={e => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(245,158,11,0.32), rgba(251,191,36,0.22))"; e.currentTarget.style.boxShadow = "0 0 22px rgba(245,158,11,0.42)"; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(245,158,11,0.22), rgba(251,191,36,0.14))"; e.currentTarget.style.boxShadow = "0 0 14px rgba(245,158,11,0.25)"; }}
+                        >
+                          🏆 How KNOCKOUT scoring works
+                          <span style={{ fontSize: "0.55rem", fontWeight: 900, letterSpacing: "0.08em", background: "#22c55e", color: "white", padding: "2px 5px", borderRadius: 4, lineHeight: 1 }}>NEW</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -745,6 +764,7 @@ export default function App() {
       {showRules && <Rules  onClose={() => setShowRules(false)} />}
       {showAdmin && <Admin  onClose={() => setShowAdmin(false)} />}
       {showAuth  && <AuthModal initialMode={authMode} onClose={() => setShowAuth(false)} onAuth={() => setShowAuth(false)} />}
+      {showScoringGuide && <BracketScoringModal onClose={() => setShowScoringGuide(false)} />}
       <TeamModal />
       <PlayerModal />
 

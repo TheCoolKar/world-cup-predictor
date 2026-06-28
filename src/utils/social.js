@@ -1,5 +1,7 @@
 import { supabase } from "../lib/supabase";
 import { calculateGroupScores, calculateStreaks, buildResultsMap } from "./scoring";
+import { scoreBracket } from "./bracketScoring";
+import { scoreSurvivor } from "./survivorScoring";
 
 export function generateJoinCode() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -37,6 +39,15 @@ export async function getMatchResults() {
   return buildResultsMap(data ?? []);
 }
 
+/** Fetch actual team names for all knockout matches (M73–M104) from live_matches. */
+export async function getKnockoutLiveMatches() {
+  const { data } = await supabase
+    .from("live_matches")
+    .select("match_id, home_team, away_team")
+    .like("match_id", "M%");
+  return Object.fromEntries((data ?? []).map(m => [m.match_id, m]));
+}
+
 /** Fetch league leaderboard using each member's chosen submission. */
 export async function getLeagueLeaderboard(leagueId) {
   // Step 1: get all members + their linked submission
@@ -56,12 +67,14 @@ export async function getLeagueLeaderboard(leagueId) {
     { data: profiles },
     { data: submissions },
     resultsMap,
+    liveMatchMap,
   ] = await Promise.all([
     supabase.from("profiles").select("id, username, avatar_url").in("id", userIds),
     submissionIds.length > 0
       ? supabase.from("submissions").select("id, picks, confidence, group_picks_count, updated_at, bracket").in("id", submissionIds)
       : Promise.resolve({ data: [] }),
     getMatchResults(),
+    getKnockoutLiveMatches(),
   ]);
 
   const profileMap = Object.fromEntries((profiles ?? []).map(p => [p.id, p]));
@@ -71,10 +84,20 @@ export async function getLeagueLeaderboard(leagueId) {
     const profile = profileMap[m.user_id] ?? {};
     const sub = m.submission_id ? subMap[m.submission_id] : null;
     const bw = sub?.bracket ?? {};
-    const scoring = sub?.picks
+    const groupScoring = sub?.picks
       ? calculateGroupScores(sub.picks, resultsMap, sub.confidence ?? {})
       : { points: null, correct: null, incorrect: null };
+    const koScoring = sub?.bracket
+      ? scoreBracket(sub.bracket, resultsMap, liveMatchMap)
+      : { totalPoints: 0 };
+    const survivorScoring = sub?.bracket
+      ? scoreSurvivor(sub.bracket, resultsMap, liveMatchMap)
+      : { totalPoints: 0 };
     const streaks = sub?.picks ? calculateStreaks(sub.picks, resultsMap) : { current: 0, best: 0 };
+    const knockoutPoints = koScoring.totalPoints + survivorScoring.totalPoints;
+    const points = groupScoring.points !== null
+      ? groupScoring.points + knockoutPoints
+      : knockoutPoints > 0 ? knockoutPoints : null;
     return {
       userId:    m.user_id,
       username:  profile.username ?? "—",
@@ -86,9 +109,9 @@ export async function getLeagueLeaderboard(leagueId) {
       finalist:  bw?.F?.[1] ?? null,
       third:     bw?.["3P"]?.[0] ?? null,
       semis:     (bw?.SF ?? []).filter(Boolean),
-      points:    scoring.points,
-      correct:   scoring.correct,
-      incorrect: scoring.incorrect,
+      points,
+      correct:   groupScoring.correct,
+      incorrect: groupScoring.incorrect,
       streak:    streaks.current,
       bestStreak: streaks.best,
     };

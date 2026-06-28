@@ -6,6 +6,7 @@ import { getLeagueLeaderboard } from "../utils/social";
 import { buildResultsMap, calculateGroupScores, calculateStreaks } from "../utils/scoring";
 import fixtures from "../data/wc2026_fixtures.json";
 import HowItWorksModal from "../components/HowItWorksModal";
+import BracketScoringModal from "../components/BracketScoringModal";
 
 
 // ── League card ───────────────────────────────────────────────────────────────
@@ -378,7 +379,7 @@ function MyStatsCard({ userId, onNavigate }) {
   );
 }
 
-function HowItWorksTeaser({ onLearnMore }) {
+function HowItWorksTeaser({ onLearnMore, onScoringGuide }) {
   const steps = [
     { icon: "🗂️", label: "Pick Groups", desc: "72 matches" },
     { icon: "⚡", label: "Build Bracket", desc: "Auto-seeded" },
@@ -405,17 +406,33 @@ function HowItWorksTeaser({ onLearnMore }) {
             </div>
             <p className="text-xs font-black text-white leading-tight">{s.label}</p>
             <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.55)" }}>{s.desc}</p>
-            {i < steps.length - 1 && (
-              <div className="absolute" style={{ display: "none" }} />
-            )}
           </div>
         ))}
       </div>
-      <div className="flex items-center mt-3 gap-1 justify-center">
+      <div className="flex items-center mt-3 mb-3 gap-1 justify-center">
         <div className="flex-1 h-px" style={{ background: "rgba(200,240,0,0.15)" }} />
         <span className="text-xs px-2" style={{ color: "rgba(255,255,255,0.3)" }}>→</span>
         <div className="flex-1 h-px" style={{ background: "rgba(200,240,0,0.15)" }} />
       </div>
+      {/* Scoring explainer — prominent new button */}
+      <button
+        onClick={onScoringGuide}
+        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-black text-sm transition-all duration-150 active:scale-95"
+        style={{
+          background: "linear-gradient(135deg, rgba(245,158,11,0.18), rgba(251,191,36,0.1))",
+          border: "1px solid rgba(245,158,11,0.45)",
+          color: "#f59e0b",
+          boxShadow: "0 0 16px rgba(245,158,11,0.15)",
+        }}
+        onMouseEnter={e => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(245,158,11,0.28), rgba(251,191,36,0.18))"; e.currentTarget.style.boxShadow = "0 0 24px rgba(245,158,11,0.28)"; }}
+        onMouseLeave={e => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(245,158,11,0.18), rgba(251,191,36,0.1))"; e.currentTarget.style.boxShadow = "0 0 16px rgba(245,158,11,0.15)"; }}
+      >
+        <span style={{ fontSize: "1rem" }}>🏆</span>
+        How knockout scoring works
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}>
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
     </div>
   );
 }
@@ -424,6 +441,7 @@ export default function Home({ onNavigate, onSignIn, onSignUp }) {
   const { user } = useAuth();
   const { liveMatches } = useLiveFeed();
   const [showHowItWorks, setShowHowItWorks] = useState(false);
+  const [showScoringModal, setShowScoringModal] = useState(false);
 
   return (
     <>
@@ -432,6 +450,9 @@ export default function Home({ onNavigate, onSignIn, onSignUp }) {
         onClose={() => setShowHowItWorks(false)}
         onGetStarted={() => { setShowHowItWorks(false); onNavigate("mine"); }}
       />
+    )}
+    {showScoringModal && (
+      <BracketScoringModal onClose={() => setShowScoringModal(false)} />
     )}
     <div className="max-w-2xl mx-auto px-4 py-8 flex flex-col gap-8">
 
@@ -476,7 +497,7 @@ export default function Home({ onNavigate, onSignIn, onSignUp }) {
       )}
 
       {/* How It Works teaser — always visible */}
-      <HowItWorksTeaser onLearnMore={() => setShowHowItWorks(true)} />
+      <HowItWorksTeaser onLearnMore={() => setShowHowItWorks(true)} onScoringGuide={() => setShowScoringModal(true)} />
 
       {/* Sign-in prompt */}
       {!user && (

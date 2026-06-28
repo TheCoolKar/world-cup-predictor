@@ -2,9 +2,12 @@
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import { useModalA11y } from "../hooks/useModalA11y";
-import { getLeagueLeaderboard, getMatchResults } from "../utils/social";
+import { getLeagueLeaderboard, getMatchResults, getKnockoutLiveMatches } from "../utils/social";
 import { calculateGroupScores, calculateStreaks, selectHottestStreaks } from "../utils/scoring";
+import { scoreBracket } from "../utils/bracketScoring";
+import { scoreSurvivor } from "../utils/survivorScoring";
 import BracketPicksSummary from "../components/BracketPicksSummary";
+import BracketScoringModal from "../components/BracketScoringModal";
 
 
 function Avatar({ url, username, size = 32 }) {
@@ -256,6 +259,7 @@ export default function Leaderboard({ initialLeague = null, onViewProfile }) {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
+  const [showScoringModal, setShowScoringModal] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -282,14 +286,25 @@ export default function Leaderboard({ initialLeague = null, onViewProfile }) {
         supabase.from("profiles").select("id, username, avatar_url"),
         supabase.from("submissions").select("user_id, group_picks_count, updated_at, bracket, picks, confidence"),
         getMatchResults(),
-      ]).then(([{ data: profiles }, { data: submissions }, resultsMap]) => {
+        getKnockoutLiveMatches(),
+      ]).then(([{ data: profiles }, { data: submissions }, resultsMap, liveMatchMap]) => {
         const subMap = Object.fromEntries((submissions ?? []).map(s => [s.user_id, s]));
         const merged = (profiles ?? []).map(p => {
           const sub = subMap[p.id];
-          const scoring = sub?.picks
+          const groupScoring = sub?.picks
             ? calculateGroupScores(sub.picks, resultsMap, sub.confidence ?? {})
             : { points: null, correct: null, incorrect: null };
+          const koScoring = sub?.bracket
+            ? scoreBracket(sub.bracket, resultsMap, liveMatchMap)
+            : { totalPoints: 0 };
+          const survivorScoring = sub?.bracket
+            ? scoreSurvivor(sub.bracket, resultsMap, liveMatchMap)
+            : { totalPoints: 0 };
           const streaks = sub?.picks ? calculateStreaks(sub.picks, resultsMap) : { current: 0, best: 0 };
+          const knockoutPoints = koScoring.totalPoints + survivorScoring.totalPoints;
+          const points = groupScoring.points !== null
+            ? groupScoring.points + knockoutPoints
+            : knockoutPoints > 0 ? knockoutPoints : null;
           return {
             userId:     p.id,
             username:   p.username ?? "—",
@@ -301,9 +316,9 @@ export default function Leaderboard({ initialLeague = null, onViewProfile }) {
             finalist:   sub?.bracket?.F?.[1] ?? null,
             third:      sub?.bracket?.["3P"]?.[0] ?? null,
             semis:      (sub?.bracket?.SF ?? []).filter(Boolean),
-            points:     scoring.points,
-            correct:    scoring.correct,
-            incorrect:  scoring.incorrect,
+            points,
+            correct:    groupScoring.correct,
+            incorrect:  groupScoring.incorrect,
             streak:     streaks.current,
             bestStreak: streaks.best,
           };
@@ -311,6 +326,21 @@ export default function Leaderboard({ initialLeague = null, onViewProfile }) {
           if (b.points !== a.points) return (b.points ?? -1) - (a.points ?? -1);
           return b.pickCount - a.pickCount;
         });
+
+        // Write back this user's knockout scores (fire-and-forget).
+        // Keeps ko_* and survivor_* columns in sync as results come in.
+        const currentUserSub = user ? subMap[user.id] : null;
+        if (user && currentUserSub?.bracket) {
+          const koResult   = scoreBracket(currentUserSub.bracket, resultsMap, liveMatchMap);
+          const survResult = scoreSurvivor(currentUserSub.bracket, resultsMap, liveMatchMap);
+          supabase.from("submissions").update({
+            ko_slot_statuses:   koResult.slotStatuses,
+            ko_points:          koResult.totalPoints,
+            survivor_points:    survResult.totalPoints,
+            survivor_breakdown: survResult.roundBreakdown,
+          }).eq("user_id", user.id).then(() => {});
+        }
+
         setRows(merged);
         setTotal(merged.length);
         setLoading(false);
@@ -330,14 +360,30 @@ export default function Leaderboard({ initialLeague = null, onViewProfile }) {
 
   return (
     <div className="mx-auto px-4 py-8" style={{ maxWidth: "calc(48rem + 230px)" }}>
+      {showScoringModal && <BracketScoringModal onClose={() => setShowScoringModal(false)} />}
       <div className="mb-6">
         <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "#c8f000" }}>Rankings</p>
         <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2.2rem", color: "white", letterSpacing: "0.04em", lineHeight: 1 }}>
           {isLeagueTab ? currentLeagueName : "Leaderboard"}
         </h1>
         <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.65)" }}>
-          {isLeagueTab ? "Each player's entered bracket picks" : "Ranked by points — ×2/×3 confidence boosts pay extra when they land, and hot streaks get a 🔥"}
+          {isLeagueTab ? "Each player's entered bracket picks" : "Ranked by points "}
         </p>
+        <button
+          onClick={() => setShowScoringModal(true)}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl font-black text-sm mt-2 transition-all duration-150 active:scale-95"
+          style={{
+            background: "linear-gradient(135deg, rgba(245,158,11,0.22), rgba(251,191,36,0.14))",
+            border: "1.5px solid rgba(245,158,11,0.55)",
+            color: "#f59e0b",
+            boxShadow: "0 0 14px rgba(245,158,11,0.25)",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(245,158,11,0.32), rgba(251,191,36,0.22))"; e.currentTarget.style.boxShadow = "0 0 22px rgba(245,158,11,0.42)"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(245,158,11,0.22), rgba(251,191,36,0.14))"; e.currentTarget.style.boxShadow = "0 0 14px rgba(245,158,11,0.25)"; }}
+        >
+          🏆 How KNOCKOUT scoring works
+          <span style={{ fontSize: "0.55rem", fontWeight: 900, letterSpacing: "0.08em", background: "#22c55e", color: "white", padding: "2px 5px", borderRadius: 4, lineHeight: 1 }}>NEW</span>
+        </button>
       </div>
 
       {/* Tab pills */}

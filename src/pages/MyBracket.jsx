@@ -20,6 +20,7 @@ import eloRatings              from "../data/elo_ratings.json";
 import { upsertBracket } from "../utils/storage";
 import { buildResultsMap, normalizeConfidence } from "../utils/scoring";
 import PowerupsModal from "../components/PowerupsModal";
+import BracketScoringModal from "../components/BracketScoringModal";
 import { supabase } from "../lib/supabase";
 import { useAuth }  from "../hooks/useAuth";
 import AuthModal    from "../components/AuthModal";
@@ -776,6 +777,18 @@ const KO_SCHED = {
   F:  [["2026-07-19","7:00 PM ET"]],
 };
 
+function formatRoundCountdown(ms) {
+  if (ms <= 0) return "NOW";
+  const totalSec = Math.floor(ms / 1000);
+  const d   = Math.floor(totalSec / 86400);
+  const h   = Math.floor((totalSec % 86400) / 3600);
+  const min = Math.floor((totalSec % 3600) / 60);
+  const sec = totalSec % 60;
+  if (d > 0) return `${d}d ${h}h ${String(min).padStart(2, "0")}m`;
+  if (h > 0) return `${h}:${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+  return `${min}:${String(sec).padStart(2, "0")}`;
+}
+
 function isMatchLocked(matchId) {
   const m = GROUP_MATCHES.find(f => f.id === matchId);
   if (!m) return false;
@@ -784,6 +797,15 @@ function isMatchLocked(matchId) {
 
 function isKoMatchLocked(round, idx) {
   const entry = KO_SCHED[round]?.[idx];
+  if (!entry) return false;
+  return Date.now() >= parseMatchKickoff(entry[0], entry[1]);
+}
+
+// Round-level lock: all picks for a round close the moment the FIRST match
+// in that round kicks off. This prevents information advantages from making
+// later picks within the same round after earlier results are known.
+function isKoRoundLocked(round) {
+  const entry = KO_SCHED[round]?.[0]; // earliest match in the round
   if (!entry) return false;
   return Date.now() >= parseMatchKickoff(entry[0], entry[1]);
 }
@@ -811,6 +833,8 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
   // and superseded by the real result once it's in match_results.
   const [assumptions, setAssumptions] = useState(()=> bracketData?.assumptions ?? {});
   const [showPowerups, setShowPowerups] = useState(false);
+  const [showScoringGuide, setShowScoringGuide] = useState(false);
+  const [now, setNow] = useState(() => new Date());
 
   const isLocked = isTournamentStarted();
 
@@ -899,6 +923,12 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
         })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
+  }, []);
+
+  // Tick `now` every second so round-lock countdown stays live
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
   }, []);
 
   // Auto-save to Supabase (debounced 1.5s) whenever picks change and user is logged in.
@@ -1140,20 +1170,20 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
   }
 
   function handleBracketPick(round, matchIdx, team) {
-    if (readOnly || isSubmitted || isKoMatchLocked(round, matchIdx)) return;
+    if (readOnly || isSubmitted || isKoRoundLocked(round)) return;
     const next=applyPick(bw,round,matchIdx,team,false);
     setBw(next); save(picks, scores, next, bScores);
   }
 
   function handleBracketForcePick(round, matchIdx, team) {
-    if (readOnly || isSubmitted || isKoMatchLocked(round, matchIdx)) return;
+    if (readOnly || isSubmitted || isKoRoundLocked(round)) return;
     const next=applyPick(bw,round,matchIdx,team,true);
     setBw(next); save(picks, scores, next, bScores);
   }
 
   function handleBracketScore(scoreKey, h, a) {
     const [round, idxStr] = scoreKey.split("_");
-    if (readOnly || isSubmitted || isKoMatchLocked(round, Number(idxStr))) return;
+    if (readOnly || isSubmitted || isKoRoundLocked(round)) return;
     const newBs = {...bScores, [scoreKey]:{home:h,away:a}};
     setBScores(newBs);
     save(picks, scores, bw, newBs);
@@ -1197,19 +1227,19 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
     for (const m of GROUP_MATCHES) {
       if (isMatchLocked(m.id) && scores[m.id] != null) keptScores[m.id] = scores[m.id];
     }
-    // Preserve locked KO winners
+    // Preserve locked KO winners (all slots in a locked round are preserved)
     const fresh = emptyWinners();
     const keptBw = { ...fresh };
     for (const round of ROUNDS) {
       for (let i = 0; i < ROUND_COUNTS[round]; i++) {
-        if (isKoMatchLocked(round, i) && bw[round][i] != null) keptBw[round][i] = bw[round][i];
+        if (isKoRoundLocked(round) && bw[round][i] != null) keptBw[round][i] = bw[round][i];
       }
     }
     const keptBScores = {};
     for (const round of ROUNDS) {
       for (let i = 0; i < ROUND_COUNTS[round]; i++) {
         const key = `${round}_${i}`;
-        if (isKoMatchLocked(round, i) && bScores[key] != null) keptBScores[key] = bScores[key];
+        if (isKoRoundLocked(round) && bScores[key] != null) keptBScores[key] = bScores[key];
       }
     }
     const keptConfidence = {};
@@ -1245,12 +1275,12 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
     // Seed locked KO winners first so they flow forward
     for (const round of ROUNDS) {
       for (let i = 0; i < ROUND_COUNTS[round]; i++) {
-        if (isKoMatchLocked(round, i) && bw[round][i] != null) newBw[round][i] = bw[round][i];
+        if (isKoRoundLocked(round) && bw[round][i] != null) newBw[round][i] = bw[round][i];
       }
     }
 
     for (let i = 0; i < 16; i++) {
-      if (isKoMatchLocked("R32", i)) continue; // already seeded above
+      if (isKoRoundLocked("R32")) continue; // already seeded above
       const home = newSlots[i].home, away = newSlots[i].away;
       const candidates = [home, away].filter(Boolean);
       if (candidates.length > 0) newBw = applyPick(newBw, "R32", i, rand(candidates), true);
@@ -1258,7 +1288,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
     for (const round of ["R16", "QF", "SF", "F"]) {
       const count = ROUND_COUNTS[round];
       for (let i = 0; i < count; i++) {
-        if (isKoMatchLocked(round, i)) continue;
+        if (isKoRoundLocked(round)) continue;
         const [hr, hi, ar, ai] = MATCH_SOURCES[round][i];
         const home = newBw[hr][hi], away = newBw[ar][ai];
         const candidates = [home, away].filter(Boolean);
@@ -1267,7 +1297,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
     }
 
     // 4. 3rd place — only randomize if not locked
-    if (!isKoMatchLocked("3P", 0)) {
+    if (!isKoRoundLocked("3P")) {
       const sfHome0 = newBw["QF"][MATCH_SOURCES["SF"][0][1]];
       const sfAway0 = newBw["QF"][MATCH_SOURCES["SF"][0][3]];
       const sf0L = [sfHome0, sfAway0].find(t => t && t !== newBw["SF"][0]) ?? null;
@@ -1282,7 +1312,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
     for (const round of ROUNDS) {
       for (let i = 0; i < ROUND_COUNTS[round]; i++) {
         const key = `${round}_${i}`;
-        if (isKoMatchLocked(round, i) && bScores[key] != null) keptBScores[key] = bScores[key];
+        if (isKoRoundLocked(round) && bScores[key] != null) keptBScores[key] = bScores[key];
       }
     }
 
@@ -1359,8 +1389,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
           <div>
             <p className="font-bold text-sm" style={{color:"#f59e0b"}}>Tournament In Progress</p>
             <p className="text-xs mt-0.5" style={{color:"rgba(255,255,255,0.7)"}}>
-              Matches lock one by one at kickoff — games that have already started are marked 🔒 and can't be changed.
-              You can still edit your picks for any upcoming match and your knockout bracket. Changes save to your account automatically.
+              Group stage matches lock individually at kickoff. Knockout picks lock for an entire round the moment the first match of that round starts — check the round deadlines in the Knockout Bracket tab.
             </p>
           </div>
         </div>
@@ -1397,6 +1426,10 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
       )}
 
       {/* ── Welcome / sign-in prompt ── */}
+      {showScoringGuide && (
+        <BracketScoringModal onClose={() => setShowScoringGuide(false)} />
+      )}
+
       {showWelcome && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
           style={{background:"rgba(10,2,26,0.92)",backdropFilter:"blur(8px)"}}>
@@ -1892,6 +1925,60 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
           </div>
           )}
 
+          {/* Round lock status + scoring guide */}
+          <div className="mb-5">
+            <div className="flex items-center gap-3 mb-2.5 flex-wrap">
+              {!readOnly && (
+                <p className="text-xs font-bold uppercase tracking-widest" style={{color:"rgba(255,255,255,0.3)"}}>
+                  Pick Deadlines
+                </p>
+              )}
+              <button
+                onClick={() => setShowScoringGuide(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl font-black text-sm transition-all duration-150 active:scale-95"
+                style={{
+                  background: "linear-gradient(135deg, rgba(245,158,11,0.22), rgba(251,191,36,0.14))",
+                  border: "1.5px solid rgba(245,158,11,0.55)",
+                  color: "#f59e0b",
+                  boxShadow: "0 0 14px rgba(245,158,11,0.25)",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(245,158,11,0.32), rgba(251,191,36,0.22))"; e.currentTarget.style.boxShadow = "0 0 22px rgba(245,158,11,0.42)"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(245,158,11,0.22), rgba(251,191,36,0.14))"; e.currentTarget.style.boxShadow = "0 0 14px rgba(245,158,11,0.25)"; }}
+              >
+                🏆 How KNOCKOUT scoring works
+                <span style={{ fontSize: "0.55rem", fontWeight: 900, letterSpacing: "0.08em", background: "#22c55e", color: "white", padding: "2px 5px", borderRadius: 4, lineHeight: 1 }}>NEW</span>
+              </button>
+            </div>
+            {!readOnly && (
+              <div className="flex flex-wrap gap-2">
+                {ROUNDS.map(round => {
+                  const roundLocked = isKoRoundLocked(round);
+                  const entry = KO_SCHED[round]?.[0];
+                  const lockTime = entry ? parseMatchKickoff(entry[0], entry[1]) : null;
+                  const msToLock = lockTime ? lockTime.getTime() - now.getTime() : null;
+                  return (
+                    <div key={round} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs"
+                      style={{
+                        background: roundLocked ? "rgba(245,158,11,0.07)" : "rgba(255,255,255,0.04)",
+                        border: `1px solid ${roundLocked ? "rgba(245,158,11,0.25)" : "rgba(255,255,255,0.08)"}`,
+                      }}>
+                      <span style={{fontWeight:700, color: roundLocked ? "#f59e0b" : "rgba(255,255,255,0.5)"}}>
+                        {ROUND_LABELS[round]}
+                      </span>
+                      {roundLocked ? (
+                        <span style={{color:"#f59e0b"}}>🔒</span>
+                      ) : msToLock != null && msToLock > 0 ? (
+                        <span className="font-black tabular-nums" style={{color:"rgba(200,240,0,0.75)"}}>
+                          {formatRoundCountdown(msToLock)}
+                        </span>
+                      ) : null}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
           {/* Scrollable bracket */}
           <div className="overflow-x-auto pb-4" style={{WebkitOverflowScrolling:"touch"}}>
             <div className="flex gap-3" style={{minWidth:"max-content",height:BRACKET_H}}>
@@ -1927,7 +2014,7 @@ export default function MyBracket({ bracketData, onBack, onNavigate, readOnly = 
                               score={score}
                               scoreMode={mode==="score"}
                               isFinal={round==="F"}
-                              locked={isKoMatchLocked(round,i)}
+                              locked={isKoRoundLocked(round)}
                             />
                           </div>
                         );
