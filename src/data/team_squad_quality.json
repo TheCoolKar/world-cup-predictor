@@ -6,7 +6,7 @@
     "squadSize": 26,
     "formRating": 6.736,
     "formRatingRaw": 7.155,
-    "strengthIndex": -0.034
+    "strengthIndex": -0.038
   },
   "South Africa": {
     "rating": 7.288,
@@ -15,7 +15,7 @@
     "squadSize": 26,
     "formRating": 6.642,
     "formRatingRaw": 7.272,
-    "strengthIndex": -0.936
+    "strengthIndex": -0.941
   },
   "Uzbekistan": {
     "rating": null,
@@ -33,7 +33,7 @@
     "squadSize": 26,
     "formRating": 6.943,
     "formRatingRaw": 7.199,
-    "strengthIndex": 0.525
+    "strengthIndex": 0.524
   },
   "Czechia": {
     "rating": 7.3,
@@ -42,7 +42,7 @@
     "squadSize": 26,
     "formRating": 6.752,
     "formRatingRaw": 7.204,
-    "strengthIndex": -0.051
+    "strengthIndex": -0.054
   },
   "Switzerland": {
     "rating": 7.024,
@@ -51,7 +51,7 @@
     "squadSize": 26,
     "formRating": 6.767,
     "formRatingRaw": 7.004,
-    "strengthIndex": 0.324
+    "strengthIndex": 0.321
   },
   "Bosnia": {
     "rating": 7.019,
@@ -60,7 +60,7 @@
     "squadSize": 26,
     "formRating": 6.424,
     "formRatingRaw": 6.924,
-    "strengthIndex": -0.708
+    "strengthIndex": -0.715
   },
   "Canada": {
     "rating": 7.009,
@@ -69,7 +69,7 @@
     "squadSize": 26,
     "formRating": 6.397,
     "formRatingRaw": 6.835,
-    "strengthIndex": -0.506
+    "strengthIndex": -0.513
   },
   "Qatar": {
     "rating": null,
@@ -87,25 +87,25 @@
     "squadSize": 26,
     "formRating": 6.487,
     "formRatingRaw": 6.917,
-    "strengthIndex": -0.501
+    "strengthIndex": -0.508
   },
   "Morocco": {
     "rating": 7.134,
     "ratedPlayers": 24,
     "marketValueEur": 420909593,
     "squadSize": 26,
-    "formRating": 6.758,
+    "formRating": 6.744,
     "formRatingRaw": 7.108,
-    "strengthIndex": 0.398
+    "strengthIndex": 0.374
   },
   "Haiti": {
     "rating": 6.679,
     "ratedPlayers": 17,
     "marketValueEur": 56902090,
     "squadSize": 26,
-    "formRating": 6.284,
-    "formRatingRaw": 6.744,
-    "strengthIndex": -1.221
+    "formRating": 6.299,
+    "formRatingRaw": 6.754,
+    "strengthIndex": -1.207
   },
   "Scotland": {
     "rating": 7.042,
@@ -114,7 +114,7 @@
     "squadSize": 26,
     "formRating": 6.524,
     "formRatingRaw": 6.992,
-    "strengthIndex": -0.3
+    "strengthIndex": -0.306
   },
   "Brazil": {
     "rating": 7.366,
@@ -123,16 +123,16 @@
     "squadSize": 26,
     "formRating": 7.14,
     "formRatingRaw": 7.273,
-    "strengthIndex": 1.265
+    "strengthIndex": 1.266
   },
   "South Korea": {
     "rating": 7.217,
     "ratedPlayers": 26,
     "marketValueEur": 130710662,
     "squadSize": 26,
-    "formRating": 6.595,
-    "formRatingRaw": 7.043,
-    "strengthIndex": -0.381
+    "formRating": 6.594,
+    "formRatingRaw": 7.042,
+    "strengthIndex": -0.388
   },
   "USA": {
     "rating": 7.253,
@@ -141,7 +141,7 @@
     "squadSize": 26,
     "formRating": 6.794,
     "formRatingRaw": 7.013,
-    "strengthIndex": 0.381
+    "strengthIndex": 0.378
   },
   "Paraguay": {
     "rating": 7.132,
@@ -150,7 +150,7 @@
     "squadSize": 26,
     "formRating": 6.762,
     "formRatingRaw": 7.049,
-    "strengthIndex": -0.093
+    "strengthIndex": -0.096
   },
   "Australia": {
     "rating": 7.146,
@@ -159,7 +159,7 @@
     "squadSize": 26,
     "formRating": 6.588,
     "formRatingRaw": 7.058,
-    "strengthIndex": -0.681
+    "strengthIndex": -0.686
   },
   "Curaçao": {
     "rating": 6.878,
@@ -168,16 +168,16 @@
     "squadSize": 26,
     "formRating": 6.258,
     "formRatingRaw": 6.872,
-    "strengthIndex": -1.662
+    "strengthIndex": -1.671
   },
   "Ivory Coast": {
     "rating": 7.218,
     "ratedPlayers": 25,
     "marketValueEur": 464920382,
     "squadSize": 26,
-    "formRating": 6.859,
-    "formRatingRaw": 7.17,
-    "strengthIndex": 0.592
+    "formRating": 6.887,
+    "formRatingRaw": 7.192,
+    "strengthIndex": 0.631
   },
   "Ecuador": {
     "rating": 7.178,
@@ -186,7 +186,7 @@
     "squadSize": 26,
     "formRating": 6.655,
     "formRatingRaw": 7.073,
-    "strengthIndex": 0.21
+    "strengthIndex": 0.206
   },
   "Germany": {
     "rating": 7.342,
@@ -195,16 +195,16 @@
     "squadSize": 26,
     "formRating": 7.185,
     "formRatingRaw": 7.305,
-    "strengthIndex": 1.397
+    "strengthIndex": 1.398
   },
   "Japan": {
     "rating": 7.124,
     "ratedPlayers": 26,
     "marketValueEur": 263776579,
     "squadSize": 26,
-    "formRating": 6.753,
-    "formRatingRaw": 7.113,
-    "strengthIndex": 0.175
+    "formRating": 6.768,
+    "formRatingRaw": 7.132,
+    "strengthIndex": 0.193
   },
   "Sweden": {
     "rating": 7.087,
@@ -213,16 +213,16 @@
     "squadSize": 26,
     "formRating": 6.727,
     "formRatingRaw": 6.957,
-    "strengthIndex": 0.393
+    "strengthIndex": 0.39
   },
   "Tunisia": {
     "rating": 6.716,
     "ratedPlayers": 17,
     "marketValueEur": 67192628,
     "squadSize": 23,
-    "formRating": 6.395,
-    "formRatingRaw": 6.784,
-    "strengthIndex": -0.981
+    "formRating": 6.426,
+    "formRatingRaw": 6.794,
+    "strengthIndex": -0.943
   },
   "Netherlands": {
     "rating": 7.067,
@@ -231,7 +231,7 @@
     "squadSize": 26,
     "formRating": 6.946,
     "formRatingRaw": 7.004,
-    "strengthIndex": 0.991
+    "strengthIndex": 0.99
   },
   "Türkiye": {
     "rating": 7.271,
@@ -240,7 +240,7 @@
     "squadSize": 26,
     "formRating": 6.93,
     "formRatingRaw": 7.273,
-    "strengthIndex": 0.704
+    "strengthIndex": 0.703
   },
   "Spain": {
     "rating": 7.347,
@@ -249,16 +249,16 @@
     "squadSize": 26,
     "formRating": 7.262,
     "formRatingRaw": 7.298,
-    "strengthIndex": 1.644
+    "strengthIndex": 1.646
   },
   "Cape Verde": {
     "rating": 6.838,
     "ratedPlayers": 18,
     "marketValueEur": 45095448,
     "squadSize": 26,
-    "formRating": 6.466,
-    "formRatingRaw": 6.984,
-    "strengthIndex": -1.061
+    "formRating": 6.467,
+    "formRatingRaw": 6.985,
+    "strengthIndex": -1.067
   },
   "Saudi Arabia": {
     "rating": 7.196,
@@ -267,7 +267,7 @@
     "squadSize": 26,
     "formRating": 6.609,
     "formRatingRaw": 7.201,
-    "strengthIndex": -1.082
+    "strengthIndex": -1.087
   },
   "Uruguay": {
     "rating": 7.208,
@@ -276,7 +276,7 @@
     "squadSize": 26,
     "formRating": 6.88,
     "formRatingRaw": 7.099,
-    "strengthIndex": 0.569
+    "strengthIndex": 0.568
   },
   "Belgium": {
     "rating": 7.198,
@@ -285,7 +285,7 @@
     "squadSize": 26,
     "formRating": 6.916,
     "formRatingRaw": 7.159,
-    "strengthIndex": 0.765
+    "strengthIndex": 0.764
   },
   "Egypt": {
     "rating": 7.214,
@@ -294,7 +294,7 @@
     "squadSize": 26,
     "formRating": 7.165,
     "formRatingRaw": 7.208,
-    "strengthIndex": 0.462
+    "strengthIndex": 0.463
   },
   "Iran": {
     "rating": 6.863,
@@ -303,7 +303,7 @@
     "squadSize": 26,
     "formRating": 6.295,
     "formRatingRaw": 6.875,
-    "strengthIndex": -1.591
+    "strengthIndex": -1.599
   },
   "Norway": {
     "rating": 7.29,
@@ -312,7 +312,7 @@
     "squadSize": 26,
     "formRating": 6.81,
     "formRatingRaw": 6.995,
-    "strengthIndex": 0.592
+    "strengthIndex": 0.59
   },
   "France": {
     "rating": 7.412,
@@ -321,7 +321,7 @@
     "squadSize": 26,
     "formRating": 7.16,
     "formRatingRaw": 7.291,
-    "strengthIndex": 1.553
+    "strengthIndex": 1.555
   },
   "Senegal": {
     "rating": 7.114,
@@ -330,16 +330,16 @@
     "squadSize": 26,
     "formRating": 6.871,
     "formRatingRaw": 7.118,
-    "strengthIndex": 0.654
+    "strengthIndex": 0.652
   },
   "Iraq": {
     "rating": 6.77,
     "ratedPlayers": 13,
     "marketValueEur": 20440985,
     "squadSize": 26,
-    "formRating": 6.213,
-    "formRatingRaw": 6.894,
-    "strengthIndex": -1.798
+    "formRating": 6.236,
+    "formRatingRaw": 6.92,
+    "strengthIndex": -1.773
   },
   "New Zealand": {
     "rating": 7.115,
@@ -348,16 +348,16 @@
     "squadSize": 26,
     "formRating": 6.505,
     "formRatingRaw": 7.168,
-    "strengthIndex": -1.243
+    "strengthIndex": -1.249
   },
   "Argentina": {
     "rating": 7.367,
     "ratedPlayers": 26,
     "marketValueEur": 848314011,
     "squadSize": 26,
-    "formRating": 7.102,
-    "formRatingRaw": 7.21,
-    "strengthIndex": 1.225
+    "formRating": 7.103,
+    "formRatingRaw": 7.211,
+    "strengthIndex": 1.227
   },
   "Austria": {
     "rating": 7.169,
@@ -366,7 +366,7 @@
     "squadSize": 25,
     "formRating": 6.871,
     "formRatingRaw": 7.1,
-    "strengthIndex": 0.274
+    "strengthIndex": 0.272
   },
   "Croatia": {
     "rating": 7.184,
@@ -375,16 +375,16 @@
     "squadSize": 26,
     "formRating": 6.858,
     "formRatingRaw": 7.099,
-    "strengthIndex": 0.456
+    "strengthIndex": 0.454
   },
   "Ghana": {
     "rating": 7.053,
     "ratedPlayers": 24,
     "marketValueEur": 224733550,
     "squadSize": 26,
-    "formRating": 6.674,
-    "formRatingRaw": 7.107,
-    "strengthIndex": -0.015
+    "formRating": 6.676,
+    "formRatingRaw": 7.109,
+    "strengthIndex": -0.017
   },
   "Panama": {
     "rating": 6.976,
@@ -393,7 +393,7 @@
     "squadSize": 26,
     "formRating": 6.572,
     "formRatingRaw": 7.078,
-    "strengthIndex": -1.102
+    "strengthIndex": -1.108
   },
   "England": {
     "rating": 7.306,
@@ -402,7 +402,7 @@
     "squadSize": 26,
     "formRating": 7.153,
     "formRatingRaw": 7.201,
-    "strengthIndex": 1.534
+    "strengthIndex": 1.535
   },
   "Portugal": {
     "rating": 7.489,
@@ -411,7 +411,7 @@
     "squadSize": 26,
     "formRating": 7.22,
     "formRatingRaw": 7.443,
-    "strengthIndex": 1.456
+    "strengthIndex": 1.458
   },
   "Algeria": {
     "rating": 7.184,
@@ -420,7 +420,7 @@
     "squadSize": 26,
     "formRating": 6.78,
     "formRatingRaw": 7.183,
-    "strengthIndex": 0.194
+    "strengthIndex": 0.191
   },
   "Jordan": {
     "rating": null,
