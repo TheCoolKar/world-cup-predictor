@@ -87,7 +87,7 @@
     "squadSize": 26,
     "formRating": 6.487,
     "formRatingRaw": 6.917,
-    "strengthIndex": -0.508
+    "strengthIndex": -0.507
   },
   "Morocco": {
     "rating": 7.134,
@@ -104,8 +104,8 @@
     "marketValueEur": 56902090,
     "squadSize": 26,
     "formRating": 6.299,
-    "formRatingRaw": 6.754,
-    "strengthIndex": -1.207
+    "formRatingRaw": 6.753,
+    "strengthIndex": -1.206
   },
   "Scotland": {
     "rating": 7.042,
@@ -130,9 +130,9 @@
     "ratedPlayers": 26,
     "marketValueEur": 130710662,
     "squadSize": 26,
-    "formRating": 6.594,
-    "formRatingRaw": 7.042,
-    "strengthIndex": -0.388
+    "formRating": 6.589,
+    "formRatingRaw": 7.038,
+    "strengthIndex": -0.395
   },
   "USA": {
     "rating": 7.253,
@@ -184,9 +184,9 @@
     "ratedPlayers": 26,
     "marketValueEur": 388421319,
     "squadSize": 26,
-    "formRating": 6.655,
-    "formRatingRaw": 7.073,
-    "strengthIndex": 0.206
+    "formRating": 6.657,
+    "formRatingRaw": 7.075,
+    "strengthIndex": 0.21
   },
   "Germany": {
     "rating": 7.342,
@@ -222,7 +222,7 @@
     "squadSize": 23,
     "formRating": 6.426,
     "formRatingRaw": 6.794,
-    "strengthIndex": -0.943
+    "strengthIndex": -0.942
   },
   "Netherlands": {
     "rating": 7.067,
@@ -321,7 +321,7 @@
     "squadSize": 26,
     "formRating": 7.16,
     "formRatingRaw": 7.291,
-    "strengthIndex": 1.555
+    "strengthIndex": 1.554
   },
   "Senegal": {
     "rating": 7.114,
@@ -337,9 +337,9 @@
     "ratedPlayers": 13,
     "marketValueEur": 20440985,
     "squadSize": 26,
-    "formRating": 6.236,
-    "formRatingRaw": 6.92,
-    "strengthIndex": -1.773
+    "formRating": 6.233,
+    "formRatingRaw": 6.917,
+    "strengthIndex": -1.777
   },
   "New Zealand": {
     "rating": 7.115,
@@ -382,18 +382,18 @@
     "ratedPlayers": 24,
     "marketValueEur": 224733550,
     "squadSize": 26,
-    "formRating": 6.676,
-    "formRatingRaw": 7.109,
-    "strengthIndex": -0.017
+    "formRating": 6.679,
+    "formRatingRaw": 7.113,
+    "strengthIndex": -0.012
   },
   "Panama": {
     "rating": 6.976,
     "ratedPlayers": 17,
     "marketValueEur": 29517906,
     "squadSize": 26,
-    "formRating": 6.572,
-    "formRatingRaw": 7.078,
-    "strengthIndex": -1.108
+    "formRating": 6.574,
+    "formRatingRaw": 7.077,
+    "strengthIndex": -1.106
   },
   "England": {
     "rating": 7.306,
