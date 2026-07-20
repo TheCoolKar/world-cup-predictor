@@ -97,7 +97,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:46.684Z"
+    "fetchedAt": "2026-07-20T11:08:39.629Z"
   },
   "France": {
     "apiId": 2,
@@ -197,7 +197,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:36.668Z"
+    "fetchedAt": "2026-07-20T11:08:31.116Z"
   },
   "Germany": {
     "apiId": 25,
@@ -297,33 +297,25 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:21.864Z"
+    "fetchedAt": "2026-07-20T11:08:18.881Z"
   },
   "Spain": {
     "apiId": 9,
     "fotmobId": 6720,
     "played": 10,
-    "wins": 7,
-    "draws": 3,
+    "wins": 8,
+    "draws": 2,
     "losses": 0,
-    "goalsFor": 17,
+    "goalsFor": 18,
     "goalsAgainst": 3,
-    "goalDiff": 14,
-    "winRate": 70,
-    "avgGoalsFor": 1.7,
+    "goalDiff": 15,
+    "winRate": 80,
+    "avgGoalsFor": 1.8,
     "avgGoalsAgainst": 0.3,
-    "ppg": 2.4,
-    "formScore": 81,
-    "recentForm": "DDWDWWWWWW",
+    "ppg": 2.6,
+    "formScore": 87,
+    "recentForm": "DWDWWWWWWW",
     "matches": [
-      {
-        "date": "2026-03-31",
-        "opponent": "Egypt",
-        "result": "D",
-        "score": "0-0",
-        "competition": "Friendlies",
-        "home": true
-      },
       {
         "date": "2026-06-04",
         "opponent": "Iraq",
@@ -395,9 +387,17 @@
         "score": "2-0",
         "competition": "World Cup",
         "home": false
+      },
+      {
+        "date": "2026-07-19",
+        "opponent": "Argentina",
+        "result": "W",
+        "score": "1-0",
+        "competition": "World Cup",
+        "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:28.433Z"
+    "fetchedAt": "2026-07-20T11:08:24.290Z"
   },
   "Portugal": {
     "apiId": 27,
@@ -497,7 +497,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:47.341Z"
+    "fetchedAt": "2026-07-20T11:08:40.671Z"
   },
   "Netherlands": {
     "apiId": 34,
@@ -597,7 +597,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:26.216Z"
+    "fetchedAt": "2026-07-20T11:08:22.069Z"
   },
   "Belgium": {
     "apiId": 1,
@@ -697,7 +697,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:32.990Z"
+    "fetchedAt": "2026-07-20T11:08:27.912Z"
   },
   "Croatia": {
     "apiId": 3,
@@ -797,7 +797,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:43.149Z"
+    "fetchedAt": "2026-07-20T11:08:36.649Z"
   },
   "Switzerland": {
     "apiId": 15,
@@ -897,7 +897,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:04.663Z"
+    "fetchedAt": "2026-07-20T11:08:04.664Z"
   },
   "Austria": {
     "apiId": 44,
@@ -997,7 +997,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:42.269Z"
+    "fetchedAt": "2026-07-20T11:08:35.899Z"
   },
   "Scotland": {
     "apiId": 35,
@@ -1097,7 +1097,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:12.785Z"
+    "fetchedAt": "2026-07-20T11:08:10.514Z"
   },
   "Sweden": {
     "apiId": 14,
@@ -1197,7 +1197,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:24.265Z"
+    "fetchedAt": "2026-07-20T11:08:20.441Z"
   },
   "Czechia": {
     "apiId": 29,
@@ -1297,7 +1297,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:03.563Z"
+    "fetchedAt": "2026-07-20T11:08:03.737Z"
   },
   "Bosnia": {
     "apiId": 21,
@@ -1397,7 +1397,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:05.591Z"
+    "fetchedAt": "2026-07-20T11:08:05.352Z"
   },
   "Türkiye": {
     "apiId": 777,
@@ -1497,7 +1497,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:27.417Z"
+    "fetchedAt": "2026-07-20T11:08:22.757Z"
   },
   "Norway": {
     "apiId": 53,
@@ -1597,33 +1597,25 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:35.608Z"
+    "fetchedAt": "2026-07-20T11:08:30.168Z"
   },
   "Argentina": {
     "apiId": 26,
     "fotmobId": 6706,
     "played": 10,
-    "wins": 10,
+    "wins": 9,
     "draws": 0,
-    "losses": 0,
-    "goalsFor": 29,
-    "goalsAgainst": 7,
-    "goalDiff": 22,
-    "winRate": 100,
-    "avgGoalsFor": 2.9,
-    "avgGoalsAgainst": 0.7,
-    "ppg": 3,
-    "formScore": 100,
-    "recentForm": "WWWWWWWWWW",
+    "losses": 1,
+    "goalsFor": 24,
+    "goalsAgainst": 8,
+    "goalDiff": 16,
+    "winRate": 90,
+    "avgGoalsFor": 2.4,
+    "avgGoalsAgainst": 0.8,
+    "ppg": 2.7,
+    "formScore": 90,
+    "recentForm": "WWWWWWWWWL",
     "matches": [
-      {
-        "date": "2026-03-31",
-        "opponent": "Zambia",
-        "result": "W",
-        "score": "5-0",
-        "competition": "Friendlies",
-        "home": true
-      },
       {
         "date": "2026-06-07",
         "opponent": "Honduras",
@@ -1695,9 +1687,17 @@
         "score": "2-1",
         "competition": "World Cup",
         "home": false
+      },
+      {
+        "date": "2026-07-19",
+        "opponent": "Spain",
+        "result": "L",
+        "score": "0-1",
+        "competition": "World Cup",
+        "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:41.042Z"
+    "fetchedAt": "2026-07-20T11:08:35.211Z"
   },
   "Brazil": {
     "apiId": 6,
@@ -1797,7 +1797,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:13.863Z"
+    "fetchedAt": "2026-07-20T11:08:11.375Z"
   },
   "Uruguay": {
     "apiId": 32,
@@ -1897,7 +1897,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:32.182Z"
+    "fetchedAt": "2026-07-20T11:08:26.923Z"
   },
   "Colombia": {
     "apiId": 8,
@@ -1997,7 +1997,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:02.234Z"
+    "fetchedAt": "2026-07-20T11:08:02.554Z"
   },
   "Ecuador": {
     "apiId": 57,
@@ -2097,7 +2097,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:20.630Z"
+    "fetchedAt": "2026-07-20T11:08:18.137Z"
   },
   "Paraguay": {
     "apiId": 38,
@@ -2197,7 +2197,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:16.588Z"
+    "fetchedAt": "2026-07-20T11:08:14.433Z"
   },
   "Morocco": {
     "apiId": 31,
@@ -2297,7 +2297,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:10.229Z"
+    "fetchedAt": "2026-07-20T11:08:08.756Z"
   },
   "Algeria": {
     "apiId": 46,
@@ -2397,7 +2397,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:48.389Z"
+    "fetchedAt": "2026-07-20T11:08:41.530Z"
   },
   "Senegal": {
     "apiId": 37,
@@ -2497,7 +2497,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:38.158Z"
+    "fetchedAt": "2026-07-20T11:08:31.961Z"
   },
   "Ivory Coast": {
     "apiId": 42,
@@ -2597,7 +2597,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:19.322Z"
+    "fetchedAt": "2026-07-20T11:08:17.132Z"
   },
   "Egypt": {
     "apiId": 36,
@@ -2697,7 +2697,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:33.986Z"
+    "fetchedAt": "2026-07-20T11:08:28.660Z"
   },
   "Tunisia": {
     "apiId": 49,
@@ -2797,7 +2797,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:25.305Z"
+    "fetchedAt": "2026-07-20T11:08:21.314Z"
   },
   "Ghana": {
     "apiId": 22,
@@ -2897,7 +2897,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:44.165Z"
+    "fetchedAt": "2026-07-20T11:08:37.727Z"
   },
   "South Africa": {
     "apiId": 181,
@@ -2997,7 +2997,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:00.210Z"
+    "fetchedAt": "2026-07-20T11:08:01.049Z"
   },
   "Cape Verde": {
     "apiId": 204,
@@ -3097,7 +3097,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:30.064Z"
+    "fetchedAt": "2026-07-20T11:08:25.062Z"
   },
   "DR Congo": {
     "apiId": 164,
@@ -3197,7 +3197,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:08.811Z"
+    "fetchedAt": "2026-07-20T11:08:08.062Z"
   },
   "Japan": {
     "apiId": 30,
@@ -3297,7 +3297,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:22.878Z"
+    "fetchedAt": "2026-07-20T11:08:19.760Z"
   },
   "South Korea": {
     "apiId": 48,
@@ -3397,7 +3397,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:14.672Z"
+    "fetchedAt": "2026-07-20T11:08:12.344Z"
   },
   "Iran": {
     "apiId": 45,
@@ -3489,7 +3489,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:34.849Z"
+    "fetchedAt": "2026-07-20T11:08:29.427Z"
   },
   "Saudi Arabia": {
     "apiId": 60,
@@ -3589,7 +3589,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:31.006Z"
+    "fetchedAt": "2026-07-20T11:08:25.833Z"
   },
   "Uzbekistan": {
     "apiId": 330,
@@ -3689,7 +3689,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:01.206Z"
+    "fetchedAt": "2026-07-20T11:08:01.758Z"
   },
   "Jordan": {
     "apiId": 163,
@@ -3789,7 +3789,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:49.338Z"
+    "fetchedAt": "2026-07-20T11:08:42.241Z"
   },
   "Iraq": {
     "apiId": 162,
@@ -3889,7 +3889,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:39.154Z"
+    "fetchedAt": "2026-07-20T11:08:32.910Z"
   },
   "Qatar": {
     "apiId": 184,
@@ -3989,7 +3989,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:07.941Z"
+    "fetchedAt": "2026-07-20T11:08:07.077Z"
   },
   "Australia": {
     "apiId": 24,
@@ -4089,7 +4089,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:17.305Z"
+    "fetchedAt": "2026-07-20T11:08:15.153Z"
   },
   "USA": {
     "apiId": 13,
@@ -4189,7 +4189,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:15.718Z"
+    "fetchedAt": "2026-07-20T11:08:13.382Z"
   },
   "Mexico": {
     "apiId": 16,
@@ -4289,7 +4289,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:20:59.115Z"
+    "fetchedAt": "2026-07-20T11:08:00.107Z"
   },
   "Canada": {
     "apiId": 43,
@@ -4389,7 +4389,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:06.646Z"
+    "fetchedAt": "2026-07-20T11:08:06.290Z"
   },
   "Panama": {
     "apiId": 130,
@@ -4489,7 +4489,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:45.138Z"
+    "fetchedAt": "2026-07-20T11:08:38.701Z"
   },
   "Haiti": {
     "apiId": 274,
@@ -4589,7 +4589,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:11.444Z"
+    "fetchedAt": "2026-07-20T11:08:09.675Z"
   },
   "Curaçao": {
     "apiId": 619,
@@ -4689,7 +4689,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:18.444Z"
+    "fetchedAt": "2026-07-20T11:08:16.060Z"
   },
   "New Zealand": {
     "apiId": 199,
@@ -4789,6 +4789,6 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-07-19T10:21:40.054Z"
+    "fetchedAt": "2026-07-20T11:08:34.264Z"
   }
 }
