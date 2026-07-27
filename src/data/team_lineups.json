@@ -99,7 +99,7 @@
         "name": "Valentín Barco",
         "pos": "DM",
         "club": "Strasbourg",
-        "age": 21
+        "age": 22
       },
       {
         "id": 604126,
@@ -467,7 +467,7 @@
         "id": 208494,
         "name": "Casemiro",
         "pos": "DM",
-        "club": "Brazil",
+        "club": "Inter Miami CF",
         "age": 34
       },
       {
@@ -515,7 +515,7 @@
       {
         "id": 19533,
         "name": "Neymar",
-        "pos": "ST",
+        "pos": "AM",
         "club": "Santos FC",
         "age": 34
       },
@@ -531,7 +531,7 @@
         "name": "Endrick",
         "pos": "RW",
         "club": "Lyon",
-        "age": 19
+        "age": 20
       },
       {
         "id": 1176214,
@@ -635,7 +635,7 @@
         "name": "Marc Cucurella",
         "pos": "LB",
         "club": "Real Madrid",
-        "age": 27
+        "age": 28
       },
       {
         "id": 288406,
@@ -753,7 +753,7 @@
   },
   "Germany": {
     "formation": "4-2-3-1",
-    "coach": "Julian Nagelsmann",
+    "coach": "Jürgen Klopp",
     "players": [
       {
         "id": 27299,
@@ -1066,8 +1066,8 @@
         "id": 883080,
         "name": "Morgan Rogers",
         "pos": "AM",
-        "club": "Aston Villa",
-        "age": 23
+        "club": "Chelsea",
+        "age": 24
       },
       {
         "id": 818975,
@@ -1498,14 +1498,14 @@
         "id": 941213,
         "name": "Crysencio Summerville",
         "pos": "LW",
-        "club": "West Ham United",
+        "club": "Al Hilal",
         "age": 24
       }
     ]
   },
   "Belgium": {
     "formation": "4-3-3",
-    "coach": "Rudi Garcia",
+    "coach": "Mark van Bommel",
     "players": [
       {
         "id": 170323,
@@ -1812,7 +1812,7 @@
         "name": "Federico Valverde",
         "pos": "RB",
         "club": "Real Madrid",
-        "age": 27
+        "age": 28
       },
       {
         "id": 438647,
@@ -1887,7 +1887,7 @@
         "id": 729988,
         "name": "Matt Turner",
         "pos": "GK",
-        "club": "Lyon",
+        "club": "New England Revolution",
         "age": 32
       },
       {
@@ -2277,7 +2277,7 @@
         "id": 1415372,
         "name": "Owen Goodman",
         "pos": "GK",
-        "club": "Crystal Palace U18",
+        "club": "Dundee FC",
         "age": 22
       },
       {
@@ -2500,7 +2500,7 @@
         "id": 696443,
         "name": "Issa Diop",
         "pos": "CB",
-        "club": "Fulham",
+        "club": "Ipswich Town",
         "age": 29
       },
       {
@@ -2715,7 +2715,7 @@
       {
         "id": 1337765,
         "name": "Junnosuke Suzuki",
-        "pos": "RB",
+        "pos": "CB",
         "club": "FC København",
         "age": 23
       },
@@ -2779,7 +2779,7 @@
         "id": 728765,
         "name": "Daizen Maeda",
         "pos": "ST",
-        "club": "Celtic",
+        "club": "Ipswich Town",
         "age": 28
       },
       {
@@ -2897,7 +2897,7 @@
         "id": 623698,
         "name": "In-Beom Hwang",
         "pos": "DM",
-        "club": "Feyenoord",
+        "club": "FC Porto",
         "age": 29
       },
       {
@@ -2939,7 +2939,7 @@
         "id": 940976,
         "name": "Kang-In Lee",
         "pos": "CM",
-        "club": "Paris Saint-Germain",
+        "club": "Atletico Madrid",
         "age": 25
       },
       {
@@ -2952,7 +2952,7 @@
       {
         "id": 622980,
         "name": "Jin-Gyu Kim",
-        "pos": "AM",
+        "pos": "DM",
         "club": "Jeonbuk Hyundai Motors FC",
         "age": 29
       },
@@ -3015,7 +3015,7 @@
         "id": 50065,
         "name": "David Ospina",
         "pos": "GK",
-        "club": "Atletico Nacional",
+        "club": "Atlante",
         "age": 37
       },
       {
@@ -3100,7 +3100,7 @@
         "name": "Gustavo Puerta",
         "pos": "DM",
         "club": "Racing Santander",
-        "age": 22
+        "age": 23
       },
       {
         "id": 1281230,
@@ -3120,7 +3120,7 @@
         "id": 207617,
         "name": "Juan Quintero",
         "pos": "AM",
-        "club": "River Plate",
+        "club": "Colombia",
         "age": 33
       },
       {
@@ -3351,7 +3351,7 @@
         "name": "Ante Budimir",
         "pos": "ST",
         "club": "Osasuna",
-        "age": 34
+        "age": 35
       },
       {
         "id": 163670,
@@ -3426,7 +3426,7 @@
         "id": 588626,
         "name": "Abdoulaye Seck",
         "pos": "CB",
-        "club": "Maccabi Haifa",
+        "club": "Al-Faisaly",
         "age": 34
       },
       {
@@ -3488,7 +3488,7 @@
       {
         "id": 1107280,
         "name": "Pape Sarr",
-        "pos": "DM",
+        "pos": "CM",
         "club": "Tottenham Hotspur",
         "age": 23
       },
@@ -4096,7 +4096,7 @@
         "name": "Erling Haaland",
         "pos": "ST",
         "club": "Manchester City",
-        "age": 25
+        "age": 26
       },
       {
         "id": 821100,
@@ -4221,7 +4221,7 @@
         "name": "Anthony Valencia",
         "pos": "AM",
         "club": "Royal Antwerp",
-        "age": 22
+        "age": 23
       },
       {
         "id": 1108611,
@@ -4372,8 +4372,8 @@
       {
         "id": 630459,
         "name": "Milad Mohammadi",
-        "pos": "LB",
-        "club": "Persepolis",
+        "pos": "LWB",
+        "club": "ML Vitebsk",
         "age": 32
       },
       {
@@ -4401,7 +4401,7 @@
         "id": 505959,
         "name": "Ramin Rezaeian",
         "pos": "RB",
-        "club": "Esteghlal",
+        "club": "Iran",
         "age": 36
       },
       {
@@ -4430,7 +4430,7 @@
         "name": "Roozbeh Cheshmi",
         "pos": "CM",
         "club": "Esteghlal",
-        "age": 32
+        "age": 33
       },
       {
         "id": 621519,
@@ -4491,7 +4491,7 @@
       {
         "id": 505960,
         "name": "Ali Alipour",
-        "pos": "ST",
+        "pos": "RW",
         "club": "Persepolis",
         "age": 30
       },
@@ -4596,7 +4596,7 @@
         "id": 620027,
         "name": "Xaver Schlager",
         "pos": "CM",
-        "club": "Austria",
+        "club": "Nottingham Forest",
         "age": 28
       },
       {
@@ -4666,7 +4666,7 @@
         "id": 461357,
         "name": "Alessandro Schöpf",
         "pos": "DM",
-        "club": "Wolfsberger AC",
+        "club": "LASK",
         "age": 32
       },
       {
@@ -4804,7 +4804,7 @@
       {
         "id": 935409,
         "name": "Orkun Kökcü",
-        "pos": "DM",
+        "pos": "AM",
         "club": "Beşiktaş",
         "age": 25
       },
@@ -4881,7 +4881,7 @@
       {
         "id": 1092015,
         "name": "Oguz Aydin",
-        "pos": "LW",
+        "pos": "RW",
         "club": "Fenerbahçe",
         "age": 25
       }
@@ -5154,7 +5154,7 @@
         "name": "Adam Hlozek",
         "pos": "AM",
         "club": "Hoffenheim",
-        "age": 23
+        "age": 24
       },
       {
         "id": 1151313,
@@ -5592,7 +5592,7 @@
         "id": 1527363,
         "name": "Paul Okon-Engstler",
         "pos": "DM",
-        "club": "Sydney FC",
+        "club": "1. FC Köln",
         "age": 21
       },
       {
@@ -5710,7 +5710,7 @@
         "id": 562801,
         "name": "Derrick Luckassen",
         "pos": "CB",
-        "club": "Pafos FC",
+        "club": "Ghana",
         "age": 31
       },
       {
@@ -5766,7 +5766,7 @@
         "id": 1265626,
         "name": "Abdul Fatawu",
         "pos": "RW",
-        "club": "Leicester City",
+        "club": "Ipswich Town",
         "age": 22
       },
       {
@@ -5905,7 +5905,7 @@
         "id": 1074967,
         "name": "Ramiz Zerrouki",
         "pos": "DM",
-        "club": "Feyenoord",
+        "club": "FC Twente",
         "age": 28
       },
       {
@@ -5948,7 +5948,7 @@
         "name": "Yacine Titraoui",
         "pos": "DM",
         "club": "Sporting Charleroi",
-        "age": 22
+        "age": 23
       },
       {
         "id": 1231029,
@@ -6023,7 +6023,7 @@
         "id": 535669,
         "name": "Mohammed Al Owais",
         "pos": "GK",
-        "club": "Al-Ula FC",
+        "club": "Al Hilal",
         "age": 34
       },
       {
@@ -6087,7 +6087,7 @@
         "name": "Jehad Thikri",
         "pos": "CB",
         "club": "Al Qadsiah",
-        "age": 24
+        "age": 25
       },
       {
         "id": 910986,
@@ -6274,7 +6274,7 @@
         "id": 1015128,
         "name": "Elias Achouri",
         "pos": "LW",
-        "club": "FC København",
+        "club": "San Diego FC",
         "age": 27
       },
       {
@@ -6288,7 +6288,7 @@
         "id": 1244924,
         "name": "Ismaël Gharbi",
         "pos": "AM",
-        "club": "Braga",
+        "club": "Leganes",
         "age": 22
       },
       {
@@ -6385,7 +6385,7 @@
         "id": 698273,
         "name": "Alban Lafont",
         "pos": "GK",
-        "club": "Nantes",
+        "club": "Amed Sportif",
         "age": 27
       },
       {
@@ -6466,13 +6466,6 @@
         "age": 29
       },
       {
-        "id": 1070052,
-        "name": "Amad Diallo",
-        "pos": "RW",
-        "club": "Manchester United",
-        "age": 24
-      },
-      {
         "id": 795371,
         "name": "Ibrahim Sangaré",
         "pos": "DM",
@@ -6527,6 +6520,13 @@
         "pos": "ST",
         "club": "Reims",
         "age": 22
+      },
+      {
+        "id": 1070052,
+        "name": "Amad Diallo",
+        "pos": "RW",
+        "club": "Manchester United",
+        "age": 24
       },
       {
         "id": 1087966,
@@ -6595,7 +6595,7 @@
         "name": "Aubrey Modiba",
         "pos": "LB",
         "club": "Mamelodi Sundowns FC",
-        "age": 30
+        "age": 31
       },
       {
         "id": 1719066,
@@ -6609,7 +6609,7 @@
         "name": "Kamogelo Sebelebele",
         "pos": "RB",
         "club": "Orlando Pirates",
-        "age": 23
+        "age": 24
       },
       {
         "id": 1680659,
@@ -6747,7 +6747,7 @@
         "id": 466867,
         "name": "Nikola Vasilj",
         "pos": "GK",
-        "club": "St. Pauli",
+        "club": "Al Diriyah",
         "age": 30
       },
       {
@@ -6768,14 +6768,14 @@
         "id": 857436,
         "name": "Nihad Mujakic",
         "pos": "CB",
-        "club": "Partizan Beograd",
+        "club": "Erzurumspor FK",
         "age": 28
       },
       {
         "id": 797797,
         "name": "Dennis Hadzikadunic",
         "pos": "CB",
-        "club": "FC Rostov",
+        "club": "Bosnia and Herzegovina",
         "age": 28
       },
       {
@@ -7207,7 +7207,7 @@
         "id": 727101,
         "name": "Cristian Martínez",
         "pos": "DM",
-        "club": "Hapoel Ironi Kiryat Shmona",
+        "club": "Slovan Bratislava",
         "age": 29
       },
       {
@@ -7382,7 +7382,7 @@
         "name": "Alexandro Maidana",
         "pos": "LB",
         "club": "Talleres",
-        "age": 20
+        "age": 21
       },
       {
         "id": 1354561,
@@ -7580,6 +7580,13 @@
         "age": 27
       },
       {
+        "id": 676431,
+        "name": "Logan Rogerson",
+        "pos": "RW",
+        "club": "Auckland FC",
+        "age": 28
+      },
+      {
         "id": 1209597,
         "name": "Marko Stamenic",
         "pos": "DM",
@@ -7625,15 +7632,8 @@
         "id": 1565865,
         "name": "Lachlan Bayliss",
         "pos": "AM",
-        "club": "Newcastle Jets",
-        "age": 23
-      },
-      {
-        "id": 676431,
-        "name": "Logan Rogerson",
-        "pos": "RW",
         "club": "Auckland FC",
-        "age": 28
+        "age": 24
       },
       {
         "id": 169719,
@@ -7646,7 +7646,7 @@
         "id": 1053736,
         "name": "Elijah Just",
         "pos": "AM",
-        "club": "Motherwell",
+        "club": "Swansea City",
         "age": 26
       },
       {
@@ -7667,7 +7667,7 @@
         "id": 1460327,
         "name": "Jesse Randall",
         "pos": "LW",
-        "club": "Auckland FC",
+        "club": "Dundee United",
         "age": 23
       }
     ]
@@ -7757,7 +7757,7 @@
         "id": 320139,
         "name": "Frans Putros",
         "pos": "CM",
-        "club": "Persib Bandung",
+        "club": "Cong An Ha Noi",
         "age": 33
       },
       {
@@ -7786,7 +7786,7 @@
         "name": "Amir Al Ammari",
         "pos": "CM",
         "club": "Cracovia",
-        "age": 28
+        "age": 29
       },
       {
         "id": 941579,
@@ -7974,7 +7974,7 @@
         "name": "Raja'ei Ayed",
         "pos": "CM",
         "club": "Al-Hussein SC",
-        "age": 32
+        "age": 33
       },
       {
         "id": 1202924,
@@ -8092,7 +8092,7 @@
         "name": "Sherzod Nasrulloev",
         "pos": "LWB",
         "club": "Nasaf Qarshi",
-        "age": 27
+        "age": 28
       },
       {
         "id": 922298,
@@ -8169,7 +8169,7 @@
         "name": "Dostonbek Khamdamov",
         "pos": "RW",
         "club": "Pakhtakor Tashkent",
-        "age": 29
+        "age": 30
       },
       {
         "id": 1294120,
@@ -8377,7 +8377,7 @@
         "id": 873832,
         "name": "Willy Semedo",
         "pos": "LW",
-        "club": "Omonia Nicosia",
+        "club": "United FC",
         "age": 32
       },
       {
@@ -8433,7 +8433,7 @@
         "name": "Timothy Fayulu",
         "pos": "GK",
         "club": "Sion",
-        "age": 26
+        "age": 27
       },
       {
         "id": 1257080,
@@ -8467,7 +8467,7 @@
         "id": 751762,
         "name": "Dylan Batubinsika",
         "pos": "CB",
-        "club": "AE Larissa",
+        "club": "FCSB",
         "age": 30
       },
       {
