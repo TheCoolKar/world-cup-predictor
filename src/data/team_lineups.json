@@ -98,7 +98,7 @@
         "id": 1272440,
         "name": "Valentín Barco",
         "pos": "DM",
-        "club": "Strasbourg",
+        "club": "Chelsea",
         "age": 22
       },
       {
@@ -189,7 +189,7 @@
   },
   "France": {
     "formation": "4-3-3",
-    "coach": "Didier Deschamps",
+    "coach": "Zinedine Zidane",
     "players": [
       {
         "id": 279714,
@@ -272,7 +272,7 @@
         "id": 950485,
         "name": "Maxence Lacroix",
         "pos": "CB",
-        "club": "Crystal Palace",
+        "club": "Chelsea",
         "age": 26
       },
       {
@@ -513,13 +513,6 @@
         "age": 27
       },
       {
-        "id": 19533,
-        "name": "Neymar",
-        "pos": "AM",
-        "club": "Santos FC",
-        "age": 34
-      },
-      {
         "id": 696679,
         "name": "Raphinha",
         "pos": "LW",
@@ -559,7 +552,7 @@
         "name": "Rayan",
         "pos": "RW",
         "club": "AFC Bournemouth",
-        "age": 19
+        "age": 20
       }
     ]
   },
@@ -982,7 +975,7 @@
         "id": 263653,
         "name": "John Stones",
         "pos": "CB",
-        "club": "England",
+        "club": "Inter",
         "age": 32
       },
       {
@@ -1052,7 +1045,7 @@
         "id": 156008,
         "name": "Jordan Henderson",
         "pos": "DM",
-        "club": "Brentford",
+        "club": "England",
         "age": 36
       },
       {
@@ -1088,7 +1081,7 @@
         "name": "Harry Kane",
         "pos": "ST",
         "club": "Bayern München",
-        "age": 32
+        "age": 33
       },
       {
         "id": 696365,
@@ -1192,7 +1185,7 @@
         "name": "Renato Veiga",
         "pos": "CB",
         "club": "Villarreal",
-        "age": 22
+        "age": 23
       },
       {
         "id": 1165710,
@@ -1415,7 +1408,7 @@
         "name": "Tijjani Reijnders",
         "pos": "AM",
         "club": "Manchester City",
-        "age": 27
+        "age": 28
       },
       {
         "id": 866516,
@@ -1526,7 +1519,7 @@
         "name": "Mike Penders",
         "pos": "GK",
         "club": "Chelsea",
-        "age": 20
+        "age": 21
       },
       {
         "id": 1232172,
@@ -1620,13 +1613,6 @@
         "age": 25
       },
       {
-        "id": 1342754,
-        "name": "Diego Moreira",
-        "pos": "RW",
-        "club": "Strasbourg",
-        "age": 21
-      },
-      {
         "id": 203666,
         "name": "Hans Vanaken",
         "pos": "AM",
@@ -1683,6 +1669,13 @@
         "age": 28
       },
       {
+        "id": 1342754,
+        "name": "Diego Moreira",
+        "pos": "RW",
+        "club": "Strasbourg",
+        "age": 21
+      },
+      {
         "id": 1444231,
         "name": "Matias Fernandez-Pardo",
         "pos": "ST",
@@ -1706,7 +1699,7 @@
         "id": 848027,
         "name": "Santiago Mele",
         "pos": "GK",
-        "club": "Monterrey",
+        "club": "Independiente",
         "age": 28
       },
       {
@@ -1867,7 +1860,7 @@
         "id": 1032811,
         "name": "Federico Viñas",
         "pos": "ST",
-        "club": "Leon",
+        "club": "Toluca",
         "age": 28
       },
       {
@@ -1894,7 +1887,7 @@
         "id": 1026065,
         "name": "Matt Freese",
         "pos": "GK",
-        "club": "New York City FC",
+        "club": "MLS All-Stars",
         "age": 27
       },
       {
@@ -1943,7 +1936,7 @@
         "id": 198444,
         "name": "Tim Ream",
         "pos": "CB",
-        "club": "Charlotte FC",
+        "club": "MLS All-Stars",
         "age": 38
       },
       {
@@ -1999,7 +1992,7 @@
         "id": 1136096,
         "name": "Sebastian Berhalter",
         "pos": "DM",
-        "club": "Vancouver Whitecaps",
+        "club": "Middlesbrough",
         "age": 25
       },
       {
@@ -2020,7 +2013,7 @@
         "id": 1348329,
         "name": "Max Arfsten",
         "pos": "LWB",
-        "club": "Columbus Crew",
+        "club": "MLS All-Stars",
         "age": 25
       },
       {
@@ -2082,7 +2075,7 @@
         "id": 751164,
         "name": "Carlos Acevedo",
         "pos": "GK",
-        "club": "Santos Laguna",
+        "club": "Liga MX All-Stars",
         "age": 30
       },
       {
@@ -2117,7 +2110,7 @@
         "id": 971628,
         "name": "Érik Lira",
         "pos": "CB",
-        "club": "Cruz Azul",
+        "club": "Liga MX All-Stars",
         "age": 26
       },
       {
@@ -2131,7 +2124,7 @@
         "id": 1074586,
         "name": "Israel Reyes",
         "pos": "CB",
-        "club": "CF America",
+        "club": "Liga MX All-Stars",
         "age": 26
       },
       {
@@ -2145,7 +2138,7 @@
         "id": 597976,
         "name": "Jesús Gallardo",
         "pos": "LB",
-        "club": "Toluca",
+        "club": "Liga MX All-Stars",
         "age": 31
       },
       {
@@ -2270,7 +2263,7 @@
         "id": 464919,
         "name": "Maxime Crépeau",
         "pos": "GK",
-        "club": "Orlando City",
+        "club": "MLS All-Stars",
         "age": 32
       },
       {
@@ -2333,7 +2326,7 @@
         "id": 729506,
         "name": "Richie Laryea",
         "pos": "LB",
-        "club": "Toronto FC",
+        "club": "MLS All-Stars",
         "age": 31
       },
       {
@@ -2514,7 +2507,7 @@
         "id": 1298186,
         "name": "Redouane Halhal",
         "pos": "CB",
-        "club": "KV Mechelen",
+        "club": "Venezia",
         "age": 23
       },
       {
@@ -2592,7 +2585,7 @@
         "name": "Brahim Díaz",
         "pos": "RW",
         "club": "Real Madrid",
-        "age": 26
+        "age": 27
       },
       {
         "id": 1603755,
@@ -2647,7 +2640,7 @@
         "name": "Keisuke Osako",
         "pos": "GK",
         "club": "Sanfrecce Hiroshima",
-        "age": 26
+        "age": 27
       },
       {
         "id": 1232143,
@@ -2787,7 +2780,7 @@
         "name": "Keito Nakamura",
         "pos": "LW",
         "club": "Reims",
-        "age": 25
+        "age": 26
       },
       {
         "id": 604044,
@@ -2884,7 +2877,7 @@
         "name": "Moon-Hwan Kim",
         "pos": "RB",
         "club": "Daejeon Hana Citizen",
-        "age": 30
+        "age": 31
       },
       {
         "id": 1132818,
@@ -2919,7 +2912,7 @@
         "name": "Tae-Seok Lee",
         "pos": "LWB",
         "club": "Austria Wien",
-        "age": 23
+        "age": 24
       },
       {
         "id": 925647,
@@ -2947,7 +2940,7 @@
         "name": "Jens Castrop",
         "pos": "LWB",
         "club": "Borussia Mönchengladbach",
-        "age": 22
+        "age": 23
       },
       {
         "id": 622980,
@@ -2960,7 +2953,7 @@
         "id": 212867,
         "name": "Heung-Min Son",
         "pos": "ST",
-        "club": "Los Angeles FC",
+        "club": "MLS All-Stars",
         "age": 34
       },
       {
@@ -3064,7 +3057,7 @@
         "id": 965205,
         "name": "Willer Ditta",
         "pos": "CB",
-        "club": "Cruz Azul",
+        "club": "Liga MX All-Stars",
         "age": 28
       },
       {
@@ -3127,7 +3120,7 @@
         "id": 578756,
         "name": "Deiver Machado",
         "pos": "LB",
-        "club": "Nantes",
+        "club": "Colombia",
         "age": 32
       },
       {
@@ -3378,7 +3371,7 @@
         "id": 709796,
         "name": "Petar Musa",
         "pos": "ST",
-        "club": "FC Dallas",
+        "club": "MLS All-Stars",
         "age": 28
       }
     ]
@@ -3474,7 +3467,7 @@
       {
         "id": 872396,
         "name": "Pathé Ciss",
-        "pos": "CB",
+        "pos": "DM",
         "club": "Rayo Vallecano",
         "age": 32
       },
@@ -3510,7 +3503,7 @@
         "id": 1798782,
         "name": "Bara Ndiaye",
         "pos": "DM",
-        "club": "Gambinos Stars",
+        "club": "Bayern München",
         "age": 18
       },
       {
@@ -3692,14 +3685,14 @@
         "name": "Marwan Attia",
         "pos": "DM",
         "club": "Al Ahly SC",
-        "age": 27
+        "age": 28
       },
       {
         "id": 1291391,
         "name": "Mahmoud Saber",
         "pos": "CM",
         "club": "Pyramids FC",
-        "age": 24
+        "age": 25
       },
       {
         "id": 513492,
@@ -3816,7 +3809,7 @@
         "id": 705484,
         "name": "Eray Cömert",
         "pos": "CB",
-        "club": "Switzerland",
+        "club": "Torino",
         "age": 28
       },
       {
@@ -3824,7 +3817,7 @@
         "name": "Aurèle Amenda",
         "pos": "CB",
         "club": "Coventry City",
-        "age": 22
+        "age": 23
       },
       {
         "id": 1270002,
@@ -3873,7 +3866,7 @@
         "name": "Ardon Jashari",
         "pos": "CM",
         "club": "Milan",
-        "age": 23
+        "age": 24
       },
       {
         "id": 707970,
@@ -3970,7 +3963,7 @@
         "name": "Egil Selvik",
         "pos": "GK",
         "club": "Watford",
-        "age": 28
+        "age": 29
       },
       {
         "id": 552718,
@@ -4372,7 +4365,7 @@
       {
         "id": 630459,
         "name": "Milad Mohammadi",
-        "pos": "LWB",
+        "pos": "LB",
         "club": "ML Vitebsk",
         "age": 32
       },
@@ -4421,7 +4414,7 @@
       {
         "id": 532220,
         "name": "Saman Ghoddos",
-        "pos": "CM",
+        "pos": "AM",
         "club": "Al Ittihad Kalba",
         "age": 32
       },
@@ -4445,13 +4438,6 @@
         "pos": "CM",
         "club": "Al-Wahda",
         "age": 25
-      },
-      {
-        "id": 892709,
-        "name": "Dennis Eckert",
-        "pos": "AM",
-        "club": "Standard Liege",
-        "age": 29
       },
       {
         "id": 1583232,
@@ -4508,6 +4494,13 @@
         "pos": "ST",
         "club": "Al Ittihad Kalba",
         "age": 31
+      },
+      {
+        "id": 892709,
+        "name": "Dennis Eckert",
+        "pos": "ST",
+        "club": "Standard Liege",
+        "age": 29
       }
     ]
   },
@@ -5013,7 +5006,7 @@
       {
         "id": 1558461,
         "name": "Findlay Curtis",
-        "pos": "LW",
+        "pos": "RW",
         "club": "Rangers",
         "age": 19
       },
@@ -5070,7 +5063,7 @@
   },
   "Czechia": {
     "formation": "4-2-3-1",
-    "coach": "Miroslav Koubek",
+    "coach": "Santi Denia",
     "players": [
       {
         "id": 1077903,
@@ -5522,7 +5515,7 @@
         "id": 1686118,
         "name": "Lucas Herrington",
         "pos": "CB",
-        "club": "Colorado Rapids",
+        "club": "MLS All-Stars",
         "age": 18
       },
       {
@@ -5530,7 +5523,7 @@
         "name": "Jacob Italiano",
         "pos": "AM",
         "club": "Grazer AK",
-        "age": 24
+        "age": 25
       },
       {
         "id": 185014,
@@ -5925,7 +5918,7 @@
       {
         "id": 1345875,
         "name": "Farès Chaïbi",
-        "pos": "DM",
+        "pos": "CM",
         "club": "Eintracht Frankfurt",
         "age": 23
       },
@@ -6253,7 +6246,7 @@
         "id": 1131928,
         "name": "Mohamed Amine Ben Hmida",
         "pos": "LB",
-        "club": "Espérance",
+        "club": "Al Hazem",
         "age": 30
       },
       {
@@ -6636,7 +6629,7 @@
         "id": 1469826,
         "name": "Olwethu Makhanya",
         "pos": "CB",
-        "club": "Philadelphia Union",
+        "club": "Rangers",
         "age": 22
       },
       {
@@ -6672,7 +6665,7 @@
         "name": "Themba Zwane",
         "pos": "AM",
         "club": "Mamelodi Sundowns FC",
-        "age": 36
+        "age": 37
       },
       {
         "id": 1107735,
@@ -6712,7 +6705,7 @@
       {
         "id": 1471333,
         "name": "Relebohile Mofokeng",
-        "pos": "AM",
+        "pos": "LW",
         "club": "Union St.Gilloise",
         "age": 21
       },
@@ -6901,7 +6894,7 @@
         "id": 1684401,
         "name": "Kerim Alajbegovic",
         "pos": "LW",
-        "club": "Bayer Leverkusen",
+        "club": "Juventus",
         "age": 18
       },
       {
@@ -7176,6 +7169,20 @@
         "age": 29
       },
       {
+        "id": 1017520,
+        "name": "Carlos Harvey",
+        "pos": "CB",
+        "club": "Minnesota United",
+        "age": 26
+      },
+      {
+        "id": 503710,
+        "name": "Éric Davis",
+        "pos": "LWB",
+        "club": "CD Plaza Amador",
+        "age": 35
+      },
+      {
         "id": 688449,
         "name": "Andrés Andrade",
         "pos": "CB",
@@ -7223,20 +7230,6 @@
         "pos": "CM",
         "club": "Mazatlan FC",
         "age": 32
-      },
-      {
-        "id": 1017520,
-        "name": "Carlos Harvey",
-        "pos": "CB",
-        "club": "Minnesota United",
-        "age": 26
-      },
-      {
-        "id": 503710,
-        "name": "Éric Davis",
-        "pos": "LWB",
-        "club": "CD Plaza Amador",
-        "age": 35
       },
       {
         "id": 183088,
@@ -7402,7 +7395,7 @@
         "id": 529625,
         "name": "Andrés Cubas",
         "pos": "DM",
-        "club": "Vancouver Whitecaps",
+        "club": "MLS All-Stars",
         "age": 30
       },
       {
@@ -8090,7 +8083,7 @@
       {
         "id": 1258316,
         "name": "Sherzod Nasrulloev",
-        "pos": "LWB",
+        "pos": "LB",
         "club": "Nasaf Qarshi",
         "age": 28
       },
@@ -8293,7 +8286,7 @@
         "id": 444000,
         "name": "Steven Moreira",
         "pos": "CB",
-        "club": "Columbus Crew",
+        "club": "MLS All-Stars",
         "age": 31
       },
       {
@@ -8426,7 +8419,7 @@
         "name": "Lionel Mpasi-Nzau",
         "pos": "GK",
         "club": "Le Havre",
-        "age": 31
+        "age": 32
       },
       {
         "id": 976996,
@@ -8558,7 +8551,7 @@
         "id": 466132,
         "name": "Théo Bongonda",
         "pos": "RW",
-        "club": "Spartak Moscow",
+        "club": "Al-Faisaly",
         "age": 30
       },
       {
@@ -8696,7 +8689,7 @@
       {
         "id": 614574,
         "name": "Juninho Bacuna",
-        "pos": "DM",
+        "pos": "CM",
         "club": "Gaziantep FK",
         "age": 28
       },
@@ -8921,7 +8914,7 @@
         "name": "Dominique Simon",
         "pos": "CM",
         "club": "Pardubice",
-        "age": 25
+        "age": 26
       },
       {
         "id": 1447452,
