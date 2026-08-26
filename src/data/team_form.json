@@ -97,7 +97,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:18.165Z"
+    "fetchedAt": "2026-08-26T09:34:14.322Z"
   },
   "France": {
     "apiId": 2,
@@ -197,7 +197,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:09.395Z"
+    "fetchedAt": "2026-08-26T09:34:07.012Z"
   },
   "Germany": {
     "apiId": 25,
@@ -297,7 +297,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:56.918Z"
+    "fetchedAt": "2026-08-26T09:33:53.976Z"
   },
   "Spain": {
     "apiId": 9,
@@ -397,7 +397,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:01.920Z"
+    "fetchedAt": "2026-08-26T09:33:59.293Z"
   },
   "Portugal": {
     "apiId": 27,
@@ -497,7 +497,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:18.823Z"
+    "fetchedAt": "2026-08-26T09:34:14.917Z"
   },
   "Netherlands": {
     "apiId": 34,
@@ -597,7 +597,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:00.616Z"
+    "fetchedAt": "2026-08-26T09:33:57.460Z"
   },
   "Belgium": {
     "apiId": 1,
@@ -697,7 +697,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:05.552Z"
+    "fetchedAt": "2026-08-26T09:34:02.938Z"
   },
   "Croatia": {
     "apiId": 3,
@@ -797,7 +797,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:15.510Z"
+    "fetchedAt": "2026-08-26T09:34:11.769Z"
   },
   "Switzerland": {
     "apiId": 15,
@@ -897,7 +897,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:40.935Z"
+    "fetchedAt": "2026-08-26T09:33:41.204Z"
   },
   "Austria": {
     "apiId": 44,
@@ -997,7 +997,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:14.817Z"
+    "fetchedAt": "2026-08-26T09:34:11.123Z"
   },
   "Scotland": {
     "apiId": 35,
@@ -1097,7 +1097,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:47.844Z"
+    "fetchedAt": "2026-08-26T09:33:47.015Z"
   },
   "Sweden": {
     "apiId": 14,
@@ -1197,7 +1197,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:58.609Z"
+    "fetchedAt": "2026-08-26T09:33:55.513Z"
   },
   "Czechia": {
     "apiId": 29,
@@ -1297,7 +1297,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:39.935Z"
+    "fetchedAt": "2026-08-26T09:33:40.298Z"
   },
   "Bosnia": {
     "apiId": 21,
@@ -1397,7 +1397,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:41.667Z"
+    "fetchedAt": "2026-08-26T09:33:42.064Z"
   },
   "Türkiye": {
     "apiId": 777,
@@ -1497,7 +1497,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:01.269Z"
+    "fetchedAt": "2026-08-26T09:33:58.386Z"
   },
   "Norway": {
     "apiId": 53,
@@ -1597,7 +1597,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:08.541Z"
+    "fetchedAt": "2026-08-26T09:34:06.362Z"
   },
   "Argentina": {
     "apiId": 26,
@@ -1697,7 +1697,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:13.703Z"
+    "fetchedAt": "2026-08-26T09:34:10.367Z"
   },
   "Brazil": {
     "apiId": 6,
@@ -1797,7 +1797,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:48.721Z"
+    "fetchedAt": "2026-08-26T09:33:47.818Z"
   },
   "Uruguay": {
     "apiId": 32,
@@ -1897,7 +1897,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:04.869Z"
+    "fetchedAt": "2026-08-26T09:34:02.085Z"
   },
   "Colombia": {
     "apiId": 8,
@@ -1997,7 +1997,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:39.177Z"
+    "fetchedAt": "2026-08-26T09:33:39.722Z"
   },
   "Ecuador": {
     "apiId": 57,
@@ -2097,7 +2097,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:56.288Z"
+    "fetchedAt": "2026-08-26T09:33:53.179Z"
   },
   "Paraguay": {
     "apiId": 38,
@@ -2197,7 +2197,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:51.480Z"
+    "fetchedAt": "2026-08-26T09:33:50.093Z"
   },
   "Morocco": {
     "apiId": 31,
@@ -2297,7 +2297,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:45.910Z"
+    "fetchedAt": "2026-08-26T09:33:45.600Z"
   },
   "Algeria": {
     "apiId": 46,
@@ -2397,7 +2397,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:20.056Z"
+    "fetchedAt": "2026-08-26T09:34:15.944Z"
   },
   "Senegal": {
     "apiId": 37,
@@ -2497,7 +2497,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:10.664Z"
+    "fetchedAt": "2026-08-26T09:34:08.041Z"
   },
   "Ivory Coast": {
     "apiId": 42,
@@ -2597,7 +2597,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:55.063Z"
+    "fetchedAt": "2026-08-26T09:33:52.416Z"
   },
   "Egypt": {
     "apiId": 36,
@@ -2697,7 +2697,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:06.542Z"
+    "fetchedAt": "2026-08-26T09:34:04.069Z"
   },
   "Tunisia": {
     "apiId": 49,
@@ -2797,7 +2797,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:59.913Z"
+    "fetchedAt": "2026-08-26T09:33:56.332Z"
   },
   "Ghana": {
     "apiId": 22,
@@ -2897,7 +2897,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:16.701Z"
+    "fetchedAt": "2026-08-26T09:34:12.834Z"
   },
   "South Africa": {
     "apiId": 181,
@@ -2997,7 +2997,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:37.317Z"
+    "fetchedAt": "2026-08-26T09:33:38.311Z"
   },
   "Cape Verde": {
     "apiId": 204,
@@ -3097,7 +3097,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:03.025Z"
+    "fetchedAt": "2026-08-26T09:34:00.661Z"
   },
   "DR Congo": {
     "apiId": 164,
@@ -3197,7 +3197,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:45.096Z"
+    "fetchedAt": "2026-08-26T09:33:44.734Z"
   },
   "Japan": {
     "apiId": 30,
@@ -3297,7 +3297,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:57.947Z"
+    "fetchedAt": "2026-08-26T09:33:54.758Z"
   },
   "South Korea": {
     "apiId": 48,
@@ -3397,7 +3397,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:49.713Z"
+    "fetchedAt": "2026-08-26T09:33:48.416Z"
   },
   "Iran": {
     "apiId": 45,
@@ -3489,7 +3489,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:07.697Z"
+    "fetchedAt": "2026-08-26T09:34:05.427Z"
   },
   "Saudi Arabia": {
     "apiId": 60,
@@ -3589,7 +3589,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:04.164Z"
+    "fetchedAt": "2026-08-26T09:34:01.354Z"
   },
   "Uzbekistan": {
     "apiId": 330,
@@ -3689,7 +3689,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:38.515Z"
+    "fetchedAt": "2026-08-26T09:33:39.006Z"
   },
   "Jordan": {
     "apiId": 163,
@@ -3789,7 +3789,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:20.737Z"
+    "fetchedAt": "2026-08-26T09:34:16.711Z"
   },
   "Iraq": {
     "apiId": 162,
@@ -3889,7 +3889,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:11.650Z"
+    "fetchedAt": "2026-08-26T09:34:08.689Z"
   },
   "Qatar": {
     "apiId": 184,
@@ -3989,7 +3989,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:43.884Z"
+    "fetchedAt": "2026-08-26T09:33:43.906Z"
   },
   "Australia": {
     "apiId": 24,
@@ -4089,7 +4089,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:52.382Z"
+    "fetchedAt": "2026-08-26T09:33:50.728Z"
   },
   "USA": {
     "apiId": 13,
@@ -4189,7 +4189,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:50.736Z"
+    "fetchedAt": "2026-08-26T09:33:49.379Z"
   },
   "Mexico": {
     "apiId": 16,
@@ -4289,7 +4289,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:36.065Z"
+    "fetchedAt": "2026-08-26T09:33:37.296Z"
   },
   "Canada": {
     "apiId": 43,
@@ -4389,7 +4389,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:42.597Z"
+    "fetchedAt": "2026-08-26T09:33:43.029Z"
   },
   "Panama": {
     "apiId": 130,
@@ -4489,7 +4489,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:17.482Z"
+    "fetchedAt": "2026-08-26T09:34:13.690Z"
   },
   "Haiti": {
     "apiId": 274,
@@ -4589,7 +4589,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:46.814Z"
+    "fetchedAt": "2026-08-26T09:33:46.192Z"
   },
   "Curaçao": {
     "apiId": 619,
@@ -4689,7 +4689,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:27:53.468Z"
+    "fetchedAt": "2026-08-26T09:33:51.501Z"
   },
   "New Zealand": {
     "apiId": 199,
@@ -4789,6 +4789,6 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-08-25T09:28:12.894Z"
+    "fetchedAt": "2026-08-26T09:34:09.621Z"
   }
 }
