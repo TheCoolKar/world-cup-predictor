@@ -97,7 +97,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:43.908Z"
+    "fetchedAt": "2026-10-05T17:02:45.801Z"
   },
   "France": {
     "apiId": 2,
@@ -197,33 +197,25 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:36.832Z"
+    "fetchedAt": "2026-10-05T17:02:36.242Z"
   },
   "Germany": {
     "apiId": 25,
     "fotmobId": 8570,
     "played": 10,
-    "wins": 6,
-    "draws": 1,
+    "wins": 5,
+    "draws": 2,
     "losses": 3,
-    "goalsFor": 25,
-    "goalsAgainst": 13,
-    "goalDiff": 12,
-    "winRate": 60,
-    "avgGoalsFor": 2.5,
-    "avgGoalsAgainst": 1.3,
-    "ppg": 1.9,
-    "formScore": 66,
-    "recentForm": "WWWWWLLDLW",
+    "goalsFor": 23,
+    "goalsAgainst": 12,
+    "goalDiff": 11,
+    "winRate": 50,
+    "avgGoalsFor": 2.3,
+    "avgGoalsAgainst": 1.2,
+    "ppg": 1.7,
+    "formScore": 60,
+    "recentForm": "WWWWLLDLWD",
     "matches": [
-      {
-        "date": "2026-03-30",
-        "opponent": "Ghana",
-        "result": "W",
-        "score": "2-1",
-        "competition": "Friendlies",
-        "home": true
-      },
       {
         "date": "2026-05-31",
         "opponent": "Finland",
@@ -295,9 +287,17 @@
         "score": "2-0",
         "competition": "UEFA Nations League A Grp. 2",
         "home": true
+      },
+      {
+        "date": "2026-10-04",
+        "opponent": "Greece",
+        "result": "D",
+        "score": "0-0",
+        "competition": "UEFA Nations League A Grp. 2",
+        "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:24.904Z"
+    "fetchedAt": "2026-10-05T17:02:23.118Z"
   },
   "Spain": {
     "apiId": 9,
@@ -397,7 +397,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:30.666Z"
+    "fetchedAt": "2026-10-05T17:02:28.971Z"
   },
   "Portugal": {
     "apiId": 27,
@@ -414,16 +414,8 @@
     "avgGoalsAgainst": 0.8,
     "ppg": 2.3,
     "formScore": 77,
-    "recentForm": "WWDWDWLWWW",
+    "recentForm": "WDWDWLWWWW",
     "matches": [
-      {
-        "date": "2026-06-06",
-        "opponent": "Chile",
-        "result": "W",
-        "score": "2-1",
-        "competition": "Friendlies",
-        "home": true
-      },
       {
         "date": "2026-06-10",
         "opponent": "Nigeria",
@@ -495,35 +487,35 @@
         "score": "4-2",
         "competition": "UEFA Nations League A Grp. 4",
         "home": false
+      },
+      {
+        "date": "2026-10-04",
+        "opponent": "Norway",
+        "result": "W",
+        "score": "2-1",
+        "competition": "UEFA Nations League A Grp. 4",
+        "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:44.604Z"
+    "fetchedAt": "2026-10-05T17:02:46.624Z"
   },
   "Netherlands": {
     "apiId": 34,
     "fotmobId": 6708,
     "played": 10,
-    "wins": 4,
-    "draws": 4,
+    "wins": 5,
+    "draws": 3,
     "losses": 2,
-    "goalsFor": 21,
+    "goalsFor": 22,
     "goalsAgainst": 15,
-    "goalDiff": 6,
-    "winRate": 40,
-    "avgGoalsFor": 2.1,
+    "goalDiff": 7,
+    "winRate": 50,
+    "avgGoalsFor": 2.2,
     "avgGoalsAgainst": 1.5,
-    "ppg": 1.6,
-    "formScore": 55,
-    "recentForm": "DLWDWWLDWD",
+    "ppg": 1.8,
+    "formScore": 61,
+    "recentForm": "LWDWWLDWDW",
     "matches": [
-      {
-        "date": "2026-03-31",
-        "opponent": "Ecuador",
-        "result": "D",
-        "score": "1-1",
-        "competition": "Friendlies",
-        "home": true
-      },
       {
         "date": "2026-06-03",
         "opponent": "Algeria",
@@ -595,9 +587,17 @@
         "score": "2-2",
         "competition": "UEFA Nations League A Grp. 2",
         "home": false
+      },
+      {
+        "date": "2026-10-04",
+        "opponent": "Serbia",
+        "result": "W",
+        "score": "2-1",
+        "competition": "UEFA Nations League A Grp. 2",
+        "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:28.690Z"
+    "fetchedAt": "2026-10-05T17:02:27.058Z"
   },
   "Belgium": {
     "apiId": 1,
@@ -697,7 +697,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:34.076Z"
+    "fetchedAt": "2026-10-05T17:02:32.703Z"
   },
   "Croatia": {
     "apiId": 3,
@@ -797,7 +797,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:41.850Z"
+    "fetchedAt": "2026-10-05T17:02:42.132Z"
   },
   "Switzerland": {
     "apiId": 15,
@@ -897,33 +897,25 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:12.656Z"
+    "fetchedAt": "2026-10-05T17:02:04.813Z"
   },
   "Austria": {
     "apiId": 44,
     "fotmobId": 8255,
     "played": 10,
-    "wins": 6,
-    "draws": 2,
+    "wins": 5,
+    "draws": 3,
     "losses": 2,
-    "goalsFor": 21,
+    "goalsFor": 17,
     "goalsAgainst": 14,
-    "goalDiff": 7,
-    "winRate": 60,
-    "avgGoalsFor": 2.1,
+    "goalDiff": 3,
+    "winRate": 50,
+    "avgGoalsFor": 1.7,
     "avgGoalsAgainst": 1.4,
-    "ppg": 2,
-    "formScore": 67,
-    "recentForm": "WWWWLDLWWD",
+    "ppg": 1.8,
+    "formScore": 60,
+    "recentForm": "WWWLDLWWDD",
     "matches": [
-      {
-        "date": "2026-03-27",
-        "opponent": "Ghana",
-        "result": "W",
-        "score": "5-1",
-        "competition": "Friendlies",
-        "home": true
-      },
       {
         "date": "2026-03-31",
         "opponent": "South Korea",
@@ -995,9 +987,17 @@
         "score": "2-2",
         "competition": "UEFA Nations League B Grp. 3",
         "home": false
+      },
+      {
+        "date": "2026-10-04",
+        "opponent": "Kosovo",
+        "result": "D",
+        "score": "1-1",
+        "competition": "UEFA Nations League B Grp. 3",
+        "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:41.167Z"
+    "fetchedAt": "2026-10-05T17:02:40.985Z"
   },
   "Scotland": {
     "apiId": 35,
@@ -1097,7 +1097,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:18.086Z"
+    "fetchedAt": "2026-10-05T17:02:12.359Z"
   },
   "Sweden": {
     "apiId": 14,
@@ -1197,7 +1197,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:26.563Z"
+    "fetchedAt": "2026-10-05T17:02:25.218Z"
   },
   "Czechia": {
     "apiId": 29,
@@ -1297,7 +1297,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:11.856Z"
+    "fetchedAt": "2026-10-05T17:02:03.910Z"
   },
   "Bosnia": {
     "apiId": 21,
@@ -1397,7 +1397,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:14.063Z"
+    "fetchedAt": "2026-10-05T17:02:05.917Z"
   },
   "Türkiye": {
     "apiId": 777,
@@ -1497,33 +1497,25 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:29.367Z"
+    "fetchedAt": "2026-10-05T17:02:28.185Z"
   },
   "Norway": {
     "apiId": 53,
     "fotmobId": 8492,
     "played": 10,
     "wins": 5,
-    "draws": 1,
-    "losses": 4,
+    "draws": 0,
+    "losses": 5,
     "goalsFor": 19,
-    "goalsAgainst": 18,
-    "goalDiff": 1,
+    "goalsAgainst": 19,
+    "goalDiff": 0,
     "winRate": 50,
     "avgGoalsFor": 1.9,
-    "avgGoalsAgainst": 1.8,
-    "ppg": 1.6,
-    "formScore": 53,
-    "recentForm": "DWWLWWLWLL",
+    "avgGoalsAgainst": 1.9,
+    "ppg": 1.5,
+    "formScore": 50,
+    "recentForm": "WWLWWLWLLL",
     "matches": [
-      {
-        "date": "2026-06-07",
-        "opponent": "Morocco",
-        "result": "D",
-        "score": "1-1",
-        "competition": "Friendlies",
-        "home": false
-      },
       {
         "date": "2026-06-16",
         "opponent": "Iraq",
@@ -1595,9 +1587,17 @@
         "score": "1-2",
         "competition": "UEFA Nations League A Grp. 4",
         "home": false
+      },
+      {
+        "date": "2026-10-04",
+        "opponent": "Portugal",
+        "result": "L",
+        "score": "1-2",
+        "competition": "UEFA Nations League A Grp. 4",
+        "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:36.151Z"
+    "fetchedAt": "2026-10-05T17:02:35.280Z"
   },
   "Argentina": {
     "apiId": 26,
@@ -1697,7 +1697,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:40.439Z"
+    "fetchedAt": "2026-10-05T17:02:40.151Z"
   },
   "Brazil": {
     "apiId": 6,
@@ -1797,7 +1797,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:18.745Z"
+    "fetchedAt": "2026-10-05T17:02:14.026Z"
   },
   "Uruguay": {
     "apiId": 32,
@@ -1897,7 +1897,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:32.709Z"
+    "fetchedAt": "2026-10-05T17:02:31.696Z"
   },
   "Colombia": {
     "apiId": 8,
@@ -1997,7 +1997,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:11.129Z"
+    "fetchedAt": "2026-10-05T17:02:03.076Z"
   },
   "Ecuador": {
     "apiId": 57,
@@ -2097,7 +2097,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:24.197Z"
+    "fetchedAt": "2026-10-05T17:02:21.623Z"
   },
   "Paraguay": {
     "apiId": 38,
@@ -2197,33 +2197,25 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:21.451Z"
+    "fetchedAt": "2026-10-05T17:02:16.944Z"
   },
   "Morocco": {
     "apiId": 31,
     "fotmobId": 6262,
     "played": 10,
-    "wins": 7,
-    "draws": 2,
+    "wins": 6,
+    "draws": 3,
     "losses": 1,
-    "goalsFor": 22,
-    "goalsAgainst": 9,
-    "goalDiff": 13,
-    "winRate": 70,
-    "avgGoalsFor": 2.2,
-    "avgGoalsAgainst": 0.9,
-    "ppg": 2.3,
-    "formScore": 78,
-    "recentForm": "WDDWWWWLWW",
+    "goalsFor": 19,
+    "goalsAgainst": 10,
+    "goalDiff": 9,
+    "winRate": 60,
+    "avgGoalsFor": 1.9,
+    "avgGoalsAgainst": 1,
+    "ppg": 2.1,
+    "formScore": 70,
+    "recentForm": "DDWWWWLWWD",
     "matches": [
-      {
-        "date": "2026-06-02",
-        "opponent": "Madagascar",
-        "result": "W",
-        "score": "4-0",
-        "competition": "Friendlies",
-        "home": true
-      },
       {
         "date": "2026-06-07",
         "opponent": "Norway",
@@ -2295,9 +2287,17 @@
         "score": "2-0",
         "competition": "Africa Cup of Nations Qualification Grp. A",
         "home": false
+      },
+      {
+        "date": "2026-10-04",
+        "opponent": "Mali",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:16.771Z"
+    "fetchedAt": "2026-10-05T17:02:10.398Z"
   },
   "Algeria": {
     "apiId": 46,
@@ -2397,7 +2397,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:45.294Z"
+    "fetchedAt": "2026-10-05T17:02:47.712Z"
   },
   "Senegal": {
     "apiId": 37,
@@ -2406,24 +2406,16 @@
     "wins": 4,
     "draws": 2,
     "losses": 4,
-    "goalsFor": 19,
+    "goalsFor": 18,
     "goalsAgainst": 14,
-    "goalDiff": 5,
+    "goalDiff": 4,
     "winRate": 40,
-    "avgGoalsFor": 1.9,
+    "avgGoalsFor": 1.8,
     "avgGoalsAgainst": 1.4,
     "ppg": 1.4,
     "formScore": 49,
-    "recentForm": "WWLDLLWLDW",
+    "recentForm": "WLDLLWLDWW",
     "matches": [
-      {
-        "date": "2026-03-28",
-        "opponent": "Peru",
-        "result": "W",
-        "score": "2-0",
-        "competition": "Friendlies",
-        "home": true
-      },
       {
         "date": "2026-03-31",
         "opponent": "Gambia",
@@ -2495,9 +2487,17 @@
         "score": "1-0",
         "competition": "Africa Cup of Nations Qualification Grp. J",
         "home": false
+      },
+      {
+        "date": "2026-10-04",
+        "opponent": "Comoros",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:37.503Z"
+    "fetchedAt": "2026-10-05T17:02:37.298Z"
   },
   "Ivory Coast": {
     "apiId": 42,
@@ -2597,33 +2597,25 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:23.424Z"
+    "fetchedAt": "2026-10-05T17:02:20.439Z"
   },
   "Egypt": {
     "apiId": 36,
     "fotmobId": 10255,
     "played": 10,
     "wins": 4,
-    "draws": 4,
-    "losses": 2,
+    "draws": 3,
+    "losses": 3,
     "goalsFor": 19,
-    "goalsAgainst": 11,
-    "goalDiff": 8,
+    "goalsAgainst": 12,
+    "goalDiff": 7,
     "winRate": 40,
     "avgGoalsFor": 1.9,
-    "avgGoalsAgainst": 1.1,
-    "ppg": 1.6,
-    "formScore": 56,
-    "recentForm": "DWLDWDWLDW",
+    "avgGoalsAgainst": 1.2,
+    "ppg": 1.5,
+    "formScore": 53,
+    "recentForm": "WLDWDWLDWL",
     "matches": [
-      {
-        "date": "2026-03-31",
-        "opponent": "Spain",
-        "result": "D",
-        "score": "0-0",
-        "competition": "Friendlies",
-        "home": false
-      },
       {
         "date": "2026-05-28",
         "opponent": "Russia",
@@ -2695,9 +2687,17 @@
         "score": "5-0",
         "competition": "Africa Cup of Nations Qualification Grp. B",
         "home": false
+      },
+      {
+        "date": "2026-10-04",
+        "opponent": "South Africa",
+        "result": "L",
+        "score": "0-1",
+        "competition": "Friendlies",
+        "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:34.692Z"
+    "fetchedAt": "2026-10-05T17:02:33.484Z"
   },
   "Tunisia": {
     "apiId": 49,
@@ -2797,7 +2797,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:27.510Z"
+    "fetchedAt": "2026-10-05T17:02:26.131Z"
   },
   "Ghana": {
     "apiId": 22,
@@ -2897,33 +2897,25 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:42.384Z"
+    "fetchedAt": "2026-10-05T17:02:43.171Z"
   },
   "South Africa": {
     "apiId": 181,
     "fotmobId": 6316,
     "played": 10,
-    "wins": 3,
+    "wins": 4,
     "draws": 3,
-    "losses": 4,
+    "losses": 3,
     "goalsFor": 12,
-    "goalsAgainst": 10,
-    "goalDiff": 2,
-    "winRate": 30,
+    "goalsAgainst": 8,
+    "goalDiff": 4,
+    "winRate": 40,
     "avgGoalsFor": 1.2,
-    "avgGoalsAgainst": 1,
-    "ppg": 1.2,
-    "formScore": 42,
-    "recentForm": "LDLDLDWLWW",
+    "avgGoalsAgainst": 0.8,
+    "ppg": 1.5,
+    "formScore": 52,
+    "recentForm": "DLDLDWLWWW",
     "matches": [
-      {
-        "date": "2026-01-04",
-        "opponent": "Cameroon",
-        "result": "L",
-        "score": "1-2",
-        "competition": "Africa Cup of Nations",
-        "home": true
-      },
       {
         "date": "2026-03-27",
         "opponent": "Panama",
@@ -2995,9 +2987,17 @@
         "score": "5-0",
         "competition": "Africa Cup of Nations Qualification Grp. D",
         "home": false
+      },
+      {
+        "date": "2026-10-04",
+        "opponent": "Egypt",
+        "result": "W",
+        "score": "1-0",
+        "competition": "Friendlies",
+        "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:09.773Z"
+    "fetchedAt": "2026-10-05T17:02:00.488Z"
   },
   "Cape Verde": {
     "apiId": 204,
@@ -3097,33 +3097,25 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:31.449Z"
+    "fetchedAt": "2026-10-05T17:02:30.052Z"
   },
   "DR Congo": {
     "apiId": 164,
     "fotmobId": 6321,
     "played": 10,
-    "wins": 4,
-    "draws": 2,
+    "wins": 3,
+    "draws": 3,
     "losses": 4,
     "goalsFor": 11,
-    "goalsAgainst": 10,
-    "goalDiff": 1,
-    "winRate": 40,
+    "goalsAgainst": 11,
+    "goalDiff": 0,
+    "winRate": 30,
     "avgGoalsFor": 1.1,
-    "avgGoalsAgainst": 1,
-    "ppg": 1.4,
-    "formScore": 48,
-    "recentForm": "WDLDLWLWWL",
+    "avgGoalsAgainst": 1.1,
+    "ppg": 1.2,
+    "formScore": 42,
+    "recentForm": "DLDLWLWWLD",
     "matches": [
-      {
-        "date": "2026-03-31",
-        "opponent": "Jamaica",
-        "result": "W",
-        "score": "1-0",
-        "competition": "World Cup Qualification Inter-Confederation Playoff",
-        "home": true
-      },
       {
         "date": "2026-06-03",
         "opponent": "Denmark",
@@ -3195,9 +3187,17 @@
         "score": "0-2",
         "competition": "Friendlies",
         "home": true
+      },
+      {
+        "date": "2026-10-05",
+        "opponent": "Uganda",
+        "result": "D",
+        "score": "1-1",
+        "competition": "Friendlies",
+        "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:16.113Z"
+    "fetchedAt": "2026-10-05T17:02:09.582Z"
   },
   "Japan": {
     "apiId": 30,
@@ -3206,24 +3206,16 @@
     "wins": 7,
     "draws": 2,
     "losses": 1,
-    "goalsFor": 21,
-    "goalsAgainst": 11,
+    "goalsFor": 22,
+    "goalsAgainst": 12,
     "goalDiff": 10,
     "winRate": 70,
-    "avgGoalsFor": 2.1,
-    "avgGoalsAgainst": 1.1,
+    "avgGoalsFor": 2.2,
+    "avgGoalsAgainst": 1.2,
     "ppg": 2.3,
     "formScore": 76,
-    "recentForm": "WWWDWDLWWW",
+    "recentForm": "WWDWDLWWWW",
     "matches": [
-      {
-        "date": "2026-03-28",
-        "opponent": "Scotland",
-        "result": "W",
-        "score": "1-0",
-        "competition": "Friendlies",
-        "home": false
-      },
       {
         "date": "2026-03-31",
         "opponent": "England",
@@ -3295,9 +3287,17 @@
         "score": "5-4",
         "competition": "Friendlies",
         "home": true
+      },
+      {
+        "date": "2026-10-05",
+        "opponent": "New Zealand",
+        "result": "W",
+        "score": "2-1",
+        "competition": "Friendlies",
+        "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:25.678Z"
+    "fetchedAt": "2026-10-05T17:02:24.124Z"
   },
   "South Korea": {
     "apiId": 48,
@@ -3397,7 +3397,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:19.291Z"
+    "fetchedAt": "2026-10-05T17:02:15.150Z"
   },
   "Iran": {
     "apiId": 45,
@@ -3497,7 +3497,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:35.406Z"
+    "fetchedAt": "2026-10-05T17:02:34.173Z"
   },
   "Saudi Arabia": {
     "apiId": 60,
@@ -3597,7 +3597,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:32.030Z"
+    "fetchedAt": "2026-10-05T17:02:30.870Z"
   },
   "Uzbekistan": {
     "apiId": 330,
@@ -3697,7 +3697,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:10.435Z"
+    "fetchedAt": "2026-10-05T17:02:01.819Z"
   },
   "Jordan": {
     "apiId": 163,
@@ -3797,7 +3797,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:45.840Z"
+    "fetchedAt": "2026-10-05T17:02:48.394Z"
   },
   "Iraq": {
     "apiId": 162,
@@ -3897,7 +3897,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:38.462Z"
+    "fetchedAt": "2026-10-05T17:02:37.986Z"
   },
   "Qatar": {
     "apiId": 184,
@@ -3997,7 +3997,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:15.343Z"
+    "fetchedAt": "2026-10-05T17:02:08.548Z"
   },
   "Australia": {
     "apiId": 24,
@@ -4097,7 +4097,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:22.016Z"
+    "fetchedAt": "2026-10-05T17:02:17.857Z"
   },
   "USA": {
     "apiId": 13,
@@ -4197,7 +4197,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:20.136Z"
+    "fetchedAt": "2026-10-05T17:02:16.033Z"
   },
   "Mexico": {
     "apiId": 16,
@@ -4297,7 +4297,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:09.132Z"
+    "fetchedAt": "2026-10-05T17:01:59.374Z"
   },
   "Canada": {
     "apiId": 43,
@@ -4397,7 +4397,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:14.651Z"
+    "fetchedAt": "2026-10-05T17:02:07.135Z"
   },
   "Panama": {
     "apiId": 130,
@@ -4497,7 +4497,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:43.186Z"
+    "fetchedAt": "2026-10-05T17:02:44.293Z"
   },
   "Haiti": {
     "apiId": 274,
@@ -4507,23 +4507,15 @@
     "draws": 1,
     "losses": 5,
     "goalsFor": 17,
-    "goalsAgainst": 15,
-    "goalDiff": 2,
+    "goalsAgainst": 16,
+    "goalDiff": 1,
     "winRate": 40,
     "avgGoalsFor": 1.7,
-    "avgGoalsAgainst": 1.5,
+    "avgGoalsAgainst": 1.6,
     "ppg": 1.3,
     "formScore": 45,
-    "recentForm": "LDWLLLLWWW",
+    "recentForm": "DWLLLLWWWL",
     "matches": [
-      {
-        "date": "2026-03-29",
-        "opponent": "Tunisia",
-        "result": "L",
-        "score": "0-1",
-        "competition": "Friendlies",
-        "home": true
-      },
       {
         "date": "2026-03-31",
         "opponent": "Iceland",
@@ -4595,9 +4587,17 @@
         "score": "4-1",
         "competition": "CONCACAF Nations League A Grp. 1",
         "home": false
+      },
+      {
+        "date": "2026-10-05",
+        "opponent": "Costa Rica",
+        "result": "L",
+        "score": "0-2",
+        "competition": "CONCACAF Nations League A Grp. 1",
+        "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:17.439Z"
+    "fetchedAt": "2026-10-05T17:02:11.207Z"
   },
   "Curaçao": {
     "apiId": 619,
@@ -4606,24 +4606,16 @@
     "wins": 3,
     "draws": 2,
     "losses": 5,
-    "goalsFor": 14,
-    "goalsAgainst": 24,
+    "goalsFor": 15,
+    "goalsAgainst": 25,
     "goalDiff": -10,
     "winRate": 30,
-    "avgGoalsFor": 1.4,
-    "avgGoalsAgainst": 2.4,
+    "avgGoalsFor": 1.5,
+    "avgGoalsAgainst": 2.5,
     "ppg": 1.1,
     "formScore": 35,
-    "recentForm": "DLLLLDLWWW",
+    "recentForm": "LLLLDLWWWD",
     "matches": [
-      {
-        "date": "2025-11-19",
-        "opponent": "Jamaica",
-        "result": "D",
-        "score": "0-0",
-        "competition": "World Cup Qualification CONCACAF 3rd Round Grp. B",
-        "home": false
-      },
       {
         "date": "2026-03-27",
         "opponent": "China",
@@ -4695,9 +4687,17 @@
         "score": "1-0",
         "competition": "CONCACAF Nations League A Grp. 1",
         "home": true
+      },
+      {
+        "date": "2026-10-04",
+        "opponent": "Trinidad and Tobago",
+        "result": "D",
+        "score": "1-1",
+        "competition": "CONCACAF Nations League A Grp. 1",
+        "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:22.744Z"
+    "fetchedAt": "2026-10-05T17:02:18.837Z"
   },
   "New Zealand": {
     "apiId": 199,
@@ -4706,24 +4706,16 @@
     "wins": 3,
     "draws": 2,
     "losses": 5,
-    "goalsFor": 19,
+    "goalsFor": 20,
     "goalsAgainst": 24,
-    "goalDiff": -5,
+    "goalDiff": -4,
     "winRate": 30,
-    "avgGoalsFor": 1.9,
+    "avgGoalsFor": 2,
     "avgGoalsAgainst": 2.4,
     "ppg": 1.1,
     "formScore": 37,
-    "recentForm": "LWLLDLLDWW",
+    "recentForm": "WLLDLLDWWL",
     "matches": [
-      {
-        "date": "2026-03-27",
-        "opponent": "Finland",
-        "result": "L",
-        "score": "0-2",
-        "competition": "Friendlies",
-        "home": true
-      },
       {
         "date": "2026-03-30",
         "opponent": "Chile",
@@ -4795,8 +4787,16 @@
         "score": "6-4",
         "competition": "Friendlies",
         "home": false
+      },
+      {
+        "date": "2026-10-05",
+        "opponent": "Japan",
+        "result": "L",
+        "score": "1-2",
+        "competition": "Friendlies",
+        "home": false
       }
     ],
-    "fetchedAt": "2026-10-04T14:32:39.328Z"
+    "fetchedAt": "2026-10-05T17:02:39.174Z"
   }
 }
