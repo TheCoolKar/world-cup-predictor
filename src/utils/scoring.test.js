@@ -4,6 +4,7 @@ import {
   calculateGroupScores,
   buildResultsMap,
   calculateStreaks,
+  selectHottestStreaks,
 } from "./scoring";
 
 describe("normalizeConfidence", () => {
@@ -86,5 +87,37 @@ describe("calculateStreaks", () => {
     const picks = { A1: "home", A2: "home" };
     const results = { A1: { result: "home" } }; // A2 not graded
     expect(calculateStreaks(picks, results)).toEqual({ current: 1, best: 1, graded: 1 });
+  });
+});
+
+describe("selectHottestStreaks", () => {
+  const rows = [
+    { userId: "leader", bestStreak: 4 },
+    { userId: "zero", bestStreak: 0 },
+    { userId: "first-tie", bestStreak: 6 },
+    { userId: "winner", bestStreak: 9 },
+    { userId: "second-tie", bestStreak: 6 },
+  ];
+
+  it("returns the top three positive streaks in descending order", () => {
+    expect(selectHottestStreaks(rows).map(row => row.userId)).toEqual([
+      "winner",
+      "first-tie",
+      "second-tie",
+    ]);
+  });
+
+  it("preserves leaderboard order when streaks are tied", () => {
+    expect(selectHottestStreaks(rows, 5).map(row => row.userId)).toEqual([
+      "winner",
+      "first-tie",
+      "second-tie",
+      "leader",
+    ]);
+  });
+
+  it("handles empty and ineligible leaderboards", () => {
+    expect(selectHottestStreaks()).toEqual([]);
+    expect(selectHottestStreaks([{ userId: "none", bestStreak: 0 }])).toEqual([]);
   });
 });

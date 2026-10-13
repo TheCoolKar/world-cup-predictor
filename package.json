@@ -16,6 +16,7 @@
     "fetch-results": "node scripts/fetchResults.js",
     "live-feed": "node scripts/fetchLiveFeed.mjs --watch",
     "live-feed-once": "node scripts/fetchLiveFeed.mjs",
+    "live-feed-backfill": "node scripts/fetchLiveFeed.mjs --backfill-days 14",
     "fetch-squads": "node scripts/fetchFotmobSquads.mjs",
     "fetch-squads-stats": "node scripts/fetchFotmobSquads.mjs --stats",
     "fetch-player-stats": "node scripts/fetchPlayerStats.mjs",

@@ -3,6 +3,7 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
 import { generateJoinCode, getLeagueLeaderboard } from "../utils/social";
 import BracketPicksSummary from "../components/BracketPicksSummary";
+import { trackActivityEvent } from "../hooks/useActivityTracking";
 
 // ── Shared helpers ────────────────────────────────────────────────────────────
 
@@ -209,6 +210,7 @@ function LeagueChat({ leagueId }) {
     if (data) {
       // Optimistically add own message — don't wait for realtime
       setMessages(prev => [...prev, { ...data, profiles: { username: profile?.username, avatar_url: profile?.avatar_url } }]);
+      trackActivityEvent("league_message_sent", { league_id: leagueId });
     }
     setSending(false);
   }
@@ -556,6 +558,7 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null, onViewPro
       setCreateLoading(false);
       setShowCreate(false);
       setCreateName(""); setCreateDesc(""); setCreatePublic(false);
+      trackActivityEvent("league_created", { is_public: createPublic });
       loadMyLeagues(); loadPublicLeagues();
     });
   }
@@ -571,6 +574,7 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null, onViewPro
     setJoinLoading(false);
     if (error?.code === "23505") { setJoinError("You're already in this league."); return; }
     if (error) { setJoinError(error.message); return; }
+    trackActivityEvent("league_joined", { source: "join_code" });
     // Auto-link submission if user has one
     const { data: sub } = await supabase.from("submissions").select("id").eq("user_id", user.id).maybeSingle();
     if (sub) await supabase.from("league_members").update({ submission_id: sub.id }).eq("league_id", league.id).eq("user_id", user.id);
@@ -579,10 +583,12 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null, onViewPro
   }
 
   async function handleJoinPublic(league) {
-    await supabase.from("league_members").insert({ league_id: league.id, user_id: user.id });
+    const { error } = await supabase.from("league_members").insert({ league_id: league.id, user_id: user.id });
+    if (error) return;
     // Auto-link submission if user has one
     const { data: sub } = await supabase.from("submissions").select("id").eq("user_id", user.id).maybeSingle();
     if (sub) await supabase.from("league_members").update({ submission_id: sub.id }).eq("league_id", league.id).eq("user_id", user.id);
+    trackActivityEvent("league_joined", { source: "public_directory" });
     loadMyLeagues();
   }
 
@@ -610,8 +616,10 @@ export default function Leagues({ onNavigate, initialLeagueCtx = null, onViewPro
 
   async function handleLeaveLeague() {
     setLeavingLeague(true);
-    await supabase.from("league_members").delete().eq("league_id", selectedLeague.id).eq("user_id", user.id);
+    const { error } = await supabase.from("league_members").delete().eq("league_id", selectedLeague.id).eq("user_id", user.id);
     setLeavingLeague(false);
+    if (error) return;
+    trackActivityEvent("league_left");
     setSelectedLeague(null);
     loadMyLeagues();
   }

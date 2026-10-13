@@ -1,6 +1,7 @@
 ﻿import { useState } from "react";
 import fixtures from "../data/wc2026_fixtures.json";
 import MatchCard from "../components/MatchCard";
+import AiPerformanceTab from "../components/AiPerformanceTab";
 import { useTeamModal } from "../context/TeamModalContext";
 
 const GROUPS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
@@ -15,16 +16,19 @@ export default function GroupStage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
-      <div className="mb-8">
-        <h2
-          className="text-white mb-1"
-          style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2rem", letterSpacing: "0.08em" }}
-        >
-          Group Stage
-        </h2>
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
-          Click a group to view match predictions · June 11 – June 27, 2026
-        </p>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div>
+          <h2
+            className="text-white mb-1"
+            style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2rem", letterSpacing: "0.08em" }}
+          >
+            Group Stage
+          </h2>
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
+            Click a group to view match predictions · June 11 – June 27, 2026
+          </p>
+        </div>
+        <AiPerformanceTab />
       </div>
 
       <div className="flex flex-col gap-2">

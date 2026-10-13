@@ -4,7 +4,7 @@
  * Minute-by-minute World Cup live feed. Invoked by pg_cron (see
  * supabase/migrations/008_live_feed_cron.sql) every minute during match hours.
  * Each invocation:
- *   1. Pulls today's World Cup matches from FotMob (league 77)
+ *   1. Pulls recent World Cup matchdays from FotMob (league 77)
  *   2. Maps them to app fixture ids (A1–L6 by team names; M73–M104 knockouts
  *      by date + kickoff order)
  *   3. Upserts live_matches (status / minute / score)
@@ -34,6 +34,10 @@ const UA = { "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Appl
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const CRON_SECRET = Deno.env.get("CRON_SECRET") ?? "";
+const RECENT_MATCHDAY_OFFSETS = [-1, 0, 1];
+const AUTO_BACKFILL_DAYS = 14;
+const AUTO_BACKFILL_INTERVAL_MINUTES = 15;
+const MAX_REQUESTED_BACKFILL_DAYS = 30;
 
 type Fixture = { id: string; group: string; home: string; away: string; date: string };
 
@@ -103,8 +107,7 @@ function etDateOf(utcTime?: string): string | null {
 }
 
 function mapToFixtures(fmMatches: any[], isoDate: string) {
-  const nearDates = new Set([shiftIso(isoDate, -1), isoDate, shiftIso(isoDate, 1)]);
-  const dayGroup = (fixtures as Fixture[]).filter((f) => nearDates.has(f.date));
+  const dayGroup = (fixtures as Fixture[]).filter((f) => f.date === isoDate);
   const dayKo = KO_SCHEDULE.filter((k) => k.date === isoDate);
   const mapped: { fixtureId: string; fm: any; flipped: boolean }[] = [];
   const unmatched: any[] = [];
@@ -196,8 +199,30 @@ function todayEt(): string {
   return new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
 }
 
-async function pollOnce() {
-  const isoDate = todayEt();
+function requestedBackfillDays(req: Request): number | null {
+  const raw = new URL(req.url).searchParams.get("backfillDays");
+  if (!raw) return null;
+  const parsed = Number(raw);
+  if (!Number.isFinite(parsed) || parsed < 0) return null;
+  return Math.min(Math.floor(parsed), MAX_REQUESTED_BACKFILL_DAYS);
+}
+
+function shouldRunAutoBackfill(now = new Date()): boolean {
+  return now.getUTCMinutes() % AUTO_BACKFILL_INTERVAL_MINUTES === 0;
+}
+
+function matchdaysToPoll(backfillDays: number | null) {
+  const today = todayEt();
+  const offsets = backfillDays != null
+    ? Array.from({ length: backfillDays + 2 }, (_, i) => i - backfillDays)
+    : shouldRunAutoBackfill()
+      ? Array.from({ length: AUTO_BACKFILL_DAYS + 2 }, (_, i) => i - AUTO_BACKFILL_DAYS)
+      : RECENT_MATCHDAY_OFFSETS;
+
+  return offsets.map((offset) => ({ isoDate: shiftIso(today, offset), offset }));
+}
+
+async function fetchMatchesForEtDay(isoDate: string) {
   const dates = [isoDate, shiftIso(isoDate, 1)].map((d) => d.replaceAll("-", ""));
   const seen = new Set<number>();
   const fmMatches: any[] = [];
@@ -206,52 +231,68 @@ async function pollOnce() {
       if (!seen.has(m.id)) { seen.add(m.id); fmMatches.push(m); }
     }
   }
-  if (!fmMatches.length) return { date: isoDate, matches: 0, live: 0 };
+  return fmMatches;
+}
 
-  const mapped = mapToFixtures(fmMatches, isoDate);
-  const liveRows: any[] = [];
-  const resultRows: any[] = [];
-  let live = 0;
+function shouldFetchEvents(fm: any, state: ReturnType<typeof extractState>, dayOffset: number) {
+  if (!fm.status?.started) return false;
+  return state.status === "LIVE" || state.status === "HT" || dayOffset >= -1;
+}
 
-  for (const { fixtureId, fm, flipped } of mapped) {
-    const st = extractState(fm);
-    const homeName = (flipped ? fm.away : fm.home)?.longName ?? (flipped ? fm.away : fm.home)?.name;
-    const awayName = (flipped ? fm.home : fm.away)?.longName ?? (flipped ? fm.home : fm.away)?.name;
-    const homeScore = flipped ? st.away_score : st.home_score;
-    const awayScore = flipped ? st.home_score : st.away_score;
+async function pollOnce(backfillDays: number | null = null) {
+  const days = matchdaysToPoll(backfillDays);
+  const liveRowsById = new Map<string, any>();
+  const resultRowsById = new Map<string, any>();
+  const eventTargets: { fixtureId: string; fm: any; flipped: boolean }[] = [];
 
-    liveRows.push({
-      match_id: fixtureId,
-      fotmob_id: Number(fm.id),
-      home_team: homeName,
-      away_team: awayName,
-      status: st.status,
-      minute: st.minute,
-      home_score: homeScore,
-      away_score: awayScore,
-      kickoff: st.kickoff,
-      updated_at: new Date().toISOString(),
-    });
-    if (st.status === "LIVE" || st.status === "HT") live++;
+  for (const { isoDate, offset } of days) {
+    const fmMatches = await fetchMatchesForEtDay(isoDate);
+    const mapped = mapToFixtures(fmMatches, isoDate);
 
-    if (fm.status?.finished && homeScore != null && awayScore != null) {
-      resultRows.push({
+    for (const { fixtureId, fm, flipped } of mapped) {
+      const st = extractState(fm);
+      const homeName = (flipped ? fm.away : fm.home)?.longName ?? (flipped ? fm.away : fm.home)?.name;
+      const awayName = (flipped ? fm.home : fm.away)?.longName ?? (flipped ? fm.home : fm.away)?.name;
+      const homeScore = flipped ? st.away_score : st.home_score;
+      const awayScore = flipped ? st.home_score : st.away_score;
+
+      liveRowsById.set(fixtureId, {
         match_id: fixtureId,
+        fotmob_id: Number(fm.id),
+        home_team: homeName,
+        away_team: awayName,
+        status: st.status,
+        minute: st.minute,
         home_score: homeScore,
         away_score: awayScore,
-        result: homeScore > awayScore ? "home" : awayScore > homeScore ? "away" : "draw",
-        source: "api",
+        kickoff: st.kickoff,
         updated_at: new Date().toISOString(),
       });
+
+      if (fm.status?.finished && homeScore != null && awayScore != null) {
+        resultRowsById.set(fixtureId, {
+          match_id: fixtureId,
+          home_score: homeScore,
+          away_score: awayScore,
+          result: homeScore > awayScore ? "home" : awayScore > homeScore ? "away" : "draw",
+          source: "api",
+          updated_at: new Date().toISOString(),
+        });
+      }
+
+      if (shouldFetchEvents(fm, st, offset)) eventTargets.push({ fixtureId, fm, flipped });
     }
   }
+
+  const liveRows = [...liveRowsById.values()];
+  const resultRows = [...resultRowsById.values()];
+  const live = liveRows.filter((row) => row.status === "LIVE" || row.status === "HT").length;
 
   await sbUpsert("live_matches", liveRows, "match_id");
   await sbUpsert("match_results", resultRows, "match_id");
 
   let eventCount = 0;
-  for (const { fixtureId, fm, flipped } of mapped) {
-    if (!fm.status?.started) continue;
+  for (const { fixtureId, fm, flipped } of eventTargets) {
     try {
       const detail = await fotmobGet(`/matchDetails?matchId=${fm.id}`);
       const events = extractEvents(fixtureId, detail, flipped);
@@ -260,7 +301,15 @@ async function pollOnce() {
     } catch (_) { /* per-match event failure shouldn't abort the cycle */ }
   }
 
-  return { date: isoDate, matches: mapped.length, live, events: eventCount };
+  return {
+    date: todayEt(),
+    days: days.length,
+    matches: liveRows.length,
+    results: resultRows.length,
+    live,
+    events: eventCount,
+    backfillDays,
+  };
 }
 
 Deno.serve(async (req) => {
@@ -272,7 +321,7 @@ Deno.serve(async (req) => {
     });
   }
   try {
-    const summary = await pollOnce();
+    const summary = await pollOnce(requestedBackfillDays(req));
     return new Response(JSON.stringify({ ok: true, ...summary }), {
       headers: { "Content-Type": "application/json" },
     });
