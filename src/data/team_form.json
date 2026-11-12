@@ -97,7 +97,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:56.899Z"
+    "fetchedAt": "2026-11-12T17:16:48.091Z"
   },
   "France": {
     "apiId": 2,
@@ -197,7 +197,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:48.332Z"
+    "fetchedAt": "2026-11-12T17:16:39.550Z"
   },
   "Germany": {
     "apiId": 25,
@@ -297,7 +297,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:32.230Z"
+    "fetchedAt": "2026-11-12T17:16:25.909Z"
   },
   "Spain": {
     "apiId": 9,
@@ -397,7 +397,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:38.842Z"
+    "fetchedAt": "2026-11-12T17:16:31.802Z"
   },
   "Portugal": {
     "apiId": 27,
@@ -497,7 +497,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:57.874Z"
+    "fetchedAt": "2026-11-12T17:16:49.244Z"
   },
   "Netherlands": {
     "apiId": 34,
@@ -597,7 +597,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:37.137Z"
+    "fetchedAt": "2026-11-12T17:16:29.592Z"
   },
   "Belgium": {
     "apiId": 1,
@@ -697,7 +697,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:43.930Z"
+    "fetchedAt": "2026-11-12T17:16:35.876Z"
   },
   "Croatia": {
     "apiId": 3,
@@ -797,7 +797,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:54.039Z"
+    "fetchedAt": "2026-11-12T17:16:45.550Z"
   },
   "Switzerland": {
     "apiId": 15,
@@ -897,7 +897,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:15.352Z"
+    "fetchedAt": "2026-11-12T17:16:09.936Z"
   },
   "Austria": {
     "apiId": 44,
@@ -997,7 +997,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:53.004Z"
+    "fetchedAt": "2026-11-12T17:16:44.562Z"
   },
   "Scotland": {
     "apiId": 35,
@@ -1097,7 +1097,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:22.463Z"
+    "fetchedAt": "2026-11-12T17:16:16.622Z"
   },
   "Sweden": {
     "apiId": 14,
@@ -1197,7 +1197,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:34.674Z"
+    "fetchedAt": "2026-11-12T17:16:27.702Z"
   },
   "Czechia": {
     "apiId": 29,
@@ -1297,7 +1297,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:14.340Z"
+    "fetchedAt": "2026-11-12T17:16:09.059Z"
   },
   "Bosnia": {
     "apiId": 21,
@@ -1397,7 +1397,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:16.411Z"
+    "fetchedAt": "2026-11-12T17:16:10.909Z"
   },
   "Türkiye": {
     "apiId": 777,
@@ -1497,7 +1497,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:37.947Z"
+    "fetchedAt": "2026-11-12T17:16:30.846Z"
   },
   "Norway": {
     "apiId": 53,
@@ -1597,7 +1597,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:46.916Z"
+    "fetchedAt": "2026-11-12T17:16:38.873Z"
   },
   "Argentina": {
     "apiId": 26,
@@ -1697,7 +1697,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:52.171Z"
+    "fetchedAt": "2026-11-12T17:16:43.321Z"
   },
   "Brazil": {
     "apiId": 6,
@@ -1797,7 +1797,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:23.122Z"
+    "fetchedAt": "2026-11-12T17:16:17.694Z"
   },
   "Uruguay": {
     "apiId": 32,
@@ -1897,7 +1897,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:43.229Z"
+    "fetchedAt": "2026-11-12T17:16:34.836Z"
   },
   "Colombia": {
     "apiId": 8,
@@ -1997,7 +1997,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:13.388Z"
+    "fetchedAt": "2026-11-12T17:16:08.096Z"
   },
   "Ecuador": {
     "apiId": 57,
@@ -2097,7 +2097,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:31.436Z"
+    "fetchedAt": "2026-11-12T17:16:24.942Z"
   },
   "Paraguay": {
     "apiId": 38,
@@ -2197,7 +2197,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:26.515Z"
+    "fetchedAt": "2026-11-12T17:16:20.685Z"
   },
   "Morocco": {
     "apiId": 31,
@@ -2297,7 +2297,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:20.815Z"
+    "fetchedAt": "2026-11-12T17:16:15.179Z"
   },
   "Algeria": {
     "apiId": 46,
@@ -2397,7 +2397,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:59.168Z"
+    "fetchedAt": "2026-11-12T17:16:50.156Z"
   },
   "Senegal": {
     "apiId": 37,
@@ -2497,7 +2497,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:49.231Z"
+    "fetchedAt": "2026-11-12T17:16:40.552Z"
   },
   "Ivory Coast": {
     "apiId": 42,
@@ -2597,7 +2597,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:29.875Z"
+    "fetchedAt": "2026-11-12T17:16:23.370Z"
   },
   "Egypt": {
     "apiId": 36,
@@ -2697,7 +2697,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:44.667Z"
+    "fetchedAt": "2026-11-12T17:16:36.638Z"
   },
   "Tunisia": {
     "apiId": 49,
@@ -2797,33 +2797,25 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:35.857Z"
+    "fetchedAt": "2026-11-12T17:16:28.721Z"
   },
   "Ghana": {
     "apiId": 22,
     "fotmobId": 6714,
     "played": 10,
-    "wins": 1,
+    "wins": 2,
     "draws": 2,
-    "losses": 7,
-    "goalsFor": 7,
-    "goalsAgainst": 19,
-    "goalDiff": -12,
-    "winRate": 10,
-    "avgGoalsFor": 0.7,
-    "avgGoalsAgainst": 1.9,
-    "ppg": 0.5,
-    "formScore": 17,
-    "recentForm": "LLLDWDLLLL",
+    "losses": 6,
+    "goalsFor": 8,
+    "goalsAgainst": 14,
+    "goalDiff": -6,
+    "winRate": 20,
+    "avgGoalsFor": 0.8,
+    "avgGoalsAgainst": 1.4,
+    "ppg": 0.8,
+    "formScore": 28,
+    "recentForm": "LLDWDLLLLW",
     "matches": [
-      {
-        "date": "2026-03-27",
-        "opponent": "Austria",
-        "result": "L",
-        "score": "1-5",
-        "competition": "Friendlies",
-        "home": false
-      },
       {
         "date": "2026-03-30",
         "opponent": "Germany",
@@ -2895,9 +2887,17 @@
         "score": "2-4",
         "competition": "Africa Cup of Nations Qualification Grp. C",
         "home": true
+      },
+      {
+        "date": "2026-11-12",
+        "opponent": "Somalia",
+        "result": "W",
+        "score": "2-0",
+        "competition": "Africa Cup of Nations Qualification Grp. C",
+        "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:55.043Z"
+    "fetchedAt": "2026-11-12T17:16:46.332Z"
   },
   "South Africa": {
     "apiId": 181,
@@ -2997,7 +2997,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:11.285Z"
+    "fetchedAt": "2026-11-12T17:16:06.419Z"
   },
   "Cape Verde": {
     "apiId": 204,
@@ -3097,7 +3097,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:39.854Z"
+    "fetchedAt": "2026-11-12T17:16:32.922Z"
   },
   "DR Congo": {
     "apiId": 164,
@@ -3197,7 +3197,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:19.470Z"
+    "fetchedAt": "2026-11-12T17:16:14.390Z"
   },
   "Japan": {
     "apiId": 30,
@@ -3297,7 +3297,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:33.382Z"
+    "fetchedAt": "2026-11-12T17:16:26.761Z"
   },
   "South Korea": {
     "apiId": 48,
@@ -3397,7 +3397,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:24.085Z"
+    "fetchedAt": "2026-11-12T17:16:18.746Z"
   },
   "Iran": {
     "apiId": 45,
@@ -3489,7 +3489,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:45.871Z"
+    "fetchedAt": "2026-11-12T17:16:37.464Z"
   },
   "Saudi Arabia": {
     "apiId": 60,
@@ -3589,33 +3589,25 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:41.395Z"
+    "fetchedAt": "2026-11-12T17:16:33.990Z"
   },
   "Uzbekistan": {
     "apiId": 330,
     "fotmobId": 8700,
     "played": 10,
-    "wins": 4,
+    "wins": 3,
     "draws": 0,
-    "losses": 6,
-    "goalsFor": 18,
-    "goalsAgainst": 24,
-    "goalDiff": -6,
-    "winRate": 40,
-    "avgGoalsFor": 1.8,
-    "avgGoalsAgainst": 2.4,
-    "ppg": 1.2,
-    "formScore": 39,
-    "recentForm": "WWLLLLLWWL",
+    "losses": 7,
+    "goalsFor": 17,
+    "goalsAgainst": 26,
+    "goalDiff": -9,
+    "winRate": 30,
+    "avgGoalsFor": 1.7,
+    "avgGoalsAgainst": 2.6,
+    "ppg": 0.9,
+    "formScore": 30,
+    "recentForm": "WLLLLLWWLL",
     "matches": [
-      {
-        "date": "2026-03-27",
-        "opponent": "Gabon",
-        "result": "W",
-        "score": "3-1",
-        "competition": "Friendlies",
-        "home": true
-      },
       {
         "date": "2026-03-30",
         "opponent": "Venezuela",
@@ -3687,9 +3679,17 @@
         "score": "0-2",
         "competition": "Friendlies",
         "home": false
+      },
+      {
+        "date": "2026-11-12",
+        "opponent": "Russia",
+        "result": "L",
+        "score": "2-3",
+        "competition": "Friendlies",
+        "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:12.363Z"
+    "fetchedAt": "2026-11-12T17:16:07.322Z"
   },
   "Jordan": {
     "apiId": 163,
@@ -3789,7 +3789,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:59.891Z"
+    "fetchedAt": "2026-11-12T17:16:51.292Z"
   },
   "Iraq": {
     "apiId": 162,
@@ -3889,7 +3889,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:50.035Z"
+    "fetchedAt": "2026-11-12T17:16:41.515Z"
   },
   "Qatar": {
     "apiId": 184,
@@ -3989,7 +3989,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:18.636Z"
+    "fetchedAt": "2026-11-12T17:16:12.982Z"
   },
   "Australia": {
     "apiId": 24,
@@ -4089,7 +4089,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:27.377Z"
+    "fetchedAt": "2026-11-12T17:16:21.336Z"
   },
   "USA": {
     "apiId": 13,
@@ -4189,7 +4189,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:25.161Z"
+    "fetchedAt": "2026-11-12T17:16:19.552Z"
   },
   "Mexico": {
     "apiId": 16,
@@ -4289,7 +4289,7 @@
         "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:10.415Z"
+    "fetchedAt": "2026-11-12T17:16:05.459Z"
   },
   "Canada": {
     "apiId": 43,
@@ -4389,7 +4389,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:17.762Z"
+    "fetchedAt": "2026-11-12T17:16:12.189Z"
   },
   "Panama": {
     "apiId": 130,
@@ -4489,7 +4489,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:56.073Z"
+    "fetchedAt": "2026-11-12T17:16:47.227Z"
   },
   "Haiti": {
     "apiId": 274,
@@ -4589,7 +4589,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:21.659Z"
+    "fetchedAt": "2026-11-12T17:16:15.902Z"
   },
   "Curaçao": {
     "apiId": 619,
@@ -4689,7 +4689,7 @@
         "home": false
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:28.598Z"
+    "fetchedAt": "2026-11-12T17:16:22.577Z"
   },
   "New Zealand": {
     "apiId": 199,
@@ -4698,24 +4698,16 @@
     "wins": 3,
     "draws": 2,
     "losses": 5,
-    "goalsFor": 20,
-    "goalsAgainst": 24,
-    "goalDiff": -4,
+    "goalsFor": 21,
+    "goalsAgainst": 23,
+    "goalDiff": -2,
     "winRate": 30,
-    "avgGoalsFor": 2,
-    "avgGoalsAgainst": 2.4,
+    "avgGoalsFor": 2.1,
+    "avgGoalsAgainst": 2.3,
     "ppg": 1.1,
-    "formScore": 37,
-    "recentForm": "WLLDLLDWWL",
+    "formScore": 38,
+    "recentForm": "LLDLLDWWLW",
     "matches": [
-      {
-        "date": "2026-03-30",
-        "opponent": "Chile",
-        "result": "W",
-        "score": "4-1",
-        "competition": "Friendlies",
-        "home": true
-      },
       {
         "date": "2026-06-03",
         "opponent": "Haiti",
@@ -4787,8 +4779,16 @@
         "score": "1-2",
         "competition": "Friendlies",
         "home": false
+      },
+      {
+        "date": "2026-11-12",
+        "opponent": "India",
+        "result": "W",
+        "score": "5-0",
+        "competition": "Friendlies",
+        "home": true
       }
     ],
-    "fetchedAt": "2026-11-11T16:48:51.048Z"
+    "fetchedAt": "2026-11-12T17:16:42.407Z"
   }
 }
