@@ -381,8 +381,8 @@
       "avgGoalsFor": 1.96,
       "avgGoalsAgainst": 0.65,
       "cleanSheetRate": 53.5,
-      "recentForm": "WDWWWLDWWL",
-      "formScore": 69
+      "recentForm": "DWWWLDWWLW",
+      "formScore": 71
     },
     "competitive": {
       "played": 62,
@@ -557,8 +557,8 @@
       "avgGoalsFor": 2.19,
       "avgGoalsAgainst": 1.22,
       "cleanSheetRate": 29.9,
-      "recentForm": "WWWLLDLWDW",
-      "formScore": 59
+      "recentForm": "WWLLDLWDWW",
+      "formScore": 61
     },
     "competitive": {
       "played": 65,
@@ -645,8 +645,8 @@
       "avgGoalsFor": 2.29,
       "avgGoalsAgainst": 0.97,
       "cleanSheetRate": 40,
-      "recentForm": "WDWWLDWDWW",
-      "formScore": 73
+      "recentForm": "DWWLDWDWWL",
+      "formScore": 62
     },
     "competitive": {
       "played": 77,
@@ -733,7 +733,7 @@
       "avgGoalsFor": 1.83,
       "avgGoalsAgainst": 1.13,
       "cleanSheetRate": 32.3,
-      "recentForm": "WWWWLWWWWD",
+      "recentForm": "WWWLWWWWDW",
       "formScore": 84
     },
     "competitive": {
@@ -1349,8 +1349,8 @@
       "avgGoalsFor": 1.39,
       "avgGoalsAgainst": 1.34,
       "cleanSheetRate": 34.1,
-      "recentForm": "WWWLLDLWLW",
-      "formScore": 54
+      "recentForm": "WWLLDLWLWL",
+      "formScore": 43
     },
     "competitive": {
       "played": 67,
@@ -1437,8 +1437,8 @@
       "avgGoalsFor": 2.35,
       "avgGoalsAgainst": 0.8,
       "cleanSheetRate": 49.1,
-      "recentForm": "WDWDLWWWWW",
-      "formScore": 76
+      "recentForm": "DWDLWWWWWL",
+      "formScore": 67
     },
     "competitive": {
       "played": 56,
@@ -1877,8 +1877,8 @@
       "avgGoalsFor": 2.13,
       "avgGoalsAgainst": 0.77,
       "cleanSheetRate": 46.8,
-      "recentForm": "WWLWDLWDWW",
-      "formScore": 66
+      "recentForm": "WLWDLWDWWL",
+      "formScore": 56
     },
     "competitive": {
       "played": 59,
@@ -2141,8 +2141,8 @@
       "avgGoalsFor": 1.75,
       "avgGoalsAgainst": 0.9,
       "cleanSheetRate": 50.9,
-      "recentForm": "WWWLLWLDWL",
-      "formScore": 55
+      "recentForm": "WWLLWLDWLW",
+      "formScore": 54
     },
     "competitive": {
       "played": 51,
@@ -2581,8 +2581,8 @@
       "avgGoalsFor": 2.07,
       "avgGoalsAgainst": 0.89,
       "cleanSheetRate": 47.3,
-      "recentForm": "DDWLWLWWLW",
-      "formScore": 58
+      "recentForm": "DWLWLWWLWW",
+      "formScore": 65
     },
     "competitive": {
       "played": 63,
@@ -2669,8 +2669,8 @@
       "avgGoalsFor": 1.89,
       "avgGoalsAgainst": 0.76,
       "cleanSheetRate": 50,
-      "recentForm": "WLDWLDLDLW",
-      "formScore": 42
+      "recentForm": "LDWLDLDLWL",
+      "formScore": 32
     },
     "competitive": {
       "played": 53,
@@ -2845,8 +2845,8 @@
       "avgGoalsFor": 1.51,
       "avgGoalsAgainst": 0.72,
       "cleanSheetRate": 51.5,
-      "recentForm": "LDWDWLDWLW",
-      "formScore": 54
+      "recentForm": "DWDWLDWLWD",
+      "formScore": 57
     },
     "competitive": {
       "played": 66,
@@ -3021,8 +3021,8 @@
       "avgGoalsFor": 0.9,
       "avgGoalsAgainst": 1.22,
       "cleanSheetRate": 32.9,
-      "recentForm": "LWLWDWLWWW",
-      "formScore": 64
+      "recentForm": "WLWDWLWWWW",
+      "formScore": 73
     },
     "competitive": {
       "played": 48,
@@ -3197,8 +3197,8 @@
       "avgGoalsFor": 1.18,
       "avgGoalsAgainst": 1.05,
       "cleanSheetRate": 39.2,
-      "recentForm": "DDLDWWWWWW",
-      "formScore": 69
+      "recentForm": "DLDWWWWWWL",
+      "formScore": 66
     },
     "competitive": {
       "played": 54,
@@ -3373,8 +3373,8 @@
       "avgGoalsFor": 1.39,
       "avgGoalsAgainst": 0.8,
       "cleanSheetRate": 45.5,
-      "recentForm": "LDLDWLWWWD",
-      "formScore": 52
+      "recentForm": "DLDWLWWWDW",
+      "formScore": 61
     },
     "competitive": {
       "played": 53,
@@ -3461,7 +3461,7 @@
       "avgGoalsFor": 1.61,
       "avgGoalsAgainst": 0.87,
       "cleanSheetRate": 48.3,
-      "recentForm": "WLLLLLWWLL",
+      "recentForm": "LLLLLWWLLW",
       "formScore": 30
     },
     "competitive": {
@@ -3549,7 +3549,7 @@
       "avgGoalsFor": 1.5,
       "avgGoalsAgainst": 1.07,
       "cleanSheetRate": 42.3,
-      "recentForm": "WLDLLLLLDD",
+      "recentForm": "LDLLLLLDDW",
       "formScore": 21
     },
     "competitive": {
@@ -3725,7 +3725,7 @@
       "avgGoalsFor": 1.61,
       "avgGoalsAgainst": 1.26,
       "cleanSheetRate": 35.8,
-      "recentForm": "LDDLLWWDLL",
+      "recentForm": "DDLLWWDLLL",
       "formScore": 29
     },
     "competitive": {
@@ -3813,8 +3813,8 @@
       "avgGoalsFor": 1.11,
       "avgGoalsAgainst": 0.85,
       "cleanSheetRate": 41.5,
-      "recentForm": "LDLWLWWLDW",
-      "formScore": 48
+      "recentForm": "DLWLWWLDWD",
+      "formScore": 51
     },
     "competitive": {
       "played": 59,
